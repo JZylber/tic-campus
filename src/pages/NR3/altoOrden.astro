@@ -98,14 +98,12 @@ code={`
   hacer un ciclo que recorra el array y vaya agregando los nombres a un nuevo
   array. Algo así:
 </p>
-<!-- prettier-ignore -->
-<pre><code class="language-javascript">
-      let nombres = [];
+<CodeBlock lang="js"
+code={`let nombres = [];
       for (let i = 0; i < estudiantes.length; i++) {
         nombres.push(estudiantes[i].nombre);
       }
-      // nombres = ["Ivo", "Carolina", "Lucía", "Paula", "Darío", "Julián"]
-      </code></pre>
+      // nombres = ["Ivo", "Carolina", "Lucía", "Paula", "Darío", "Julián"]`}
 <p>
   Este es un claro caso para poder usar map, ya que tengo que hacer la misma
   operación en todos elementos. Usando map, el ciclo queda:
@@ -171,15 +169,14 @@ code={`
   tercero, puedo armar el siguiente programa:
 </p>
 <!-- prettier-ignore -->
-<pre><code class="language-javascript">
-      let tercero = [];
+<CodeBlock lang="js"
+code={`let tercero = [];
       for (let i = 0; i < estudiantes.length; i++) {
         if (estudiantes[i].año === 3) {
           tercero.push(estudiantes[i]);
         }
       }
-      // tercero = [{ nombre: "Ivo", apellido: "Degange", edad: 15, año: 3 }, { nombre: "Lucía", apellido: "Parrondo", edad: 15, año: 3 }]
-    </codecode></pre>
+      // tercero = [{ nombre: "Ivo", apellido: "Degange", edad: 15, año: 3 }, { nombre: "Lucía", apellido: "Parrondo", edad: 15, año: 3 }]`}` />
 <p>Usando filter, el ciclo queda:</p>
 <!-- prettier-ignore -->
 <pre><code class="language-javascript">
@@ -221,15 +218,14 @@ code={`
   reducir el array a un único valor ya que necesito la suma de todas las edades
   para luego dividir por la longitud del array. En código:
 </p>
-<!-- prettier-ignore -->
-<pre><code class="language-javascript">
-      let sumaEdades = 0;
+<CodeBlock
+lang="js"
+code ={`let sumaEdades = 0;
       for (let i = 0; i < estudiantes.length; i++) {
         sumaEdades += estudiantes[i].edad;
       }
       let promedio = sumaEdades / estudiantes.length;
-      // promedio = 16.166..
-      </code></pre>
+      // promedio = 16.166..`} />
 <p>Ahora, usando <em>reduce</em>:</p>
 <!-- prettier-ignore -->
 <pre><code class="language-javascript">
@@ -308,8 +304,9 @@ code={`
   Supongamos el siguiente ejemplo. Quiero quedarme con el nombre más largo (en
   cantidad de letras) de los estudiantes de 3ero. Usando nuestros viejos modos:
 </p>
-<!-- prettier-ignore -->
-<pre><code class="language-javascript">
+<CodeBlock
+lang="js"
+code={`
         // Estudiantes de 3ero
         let tercero = [];
         for (let i = 0; i < estudiantes.length; i++) {
@@ -329,25 +326,24 @@ code={`
             nombreMásLargo = nombres[i];
           }
         }
-        console.log(nombreMásLargo);// "Lucía"
-      </code></pre>
+        console.log(nombreMásLargo);// "Lucía"`}/>
+
 <p>
   Ahora, usando <em>map, filter</em> y <em>reduce</em> una después de la otra...
 </p>
-<!-- prettier-ignore -->
-<pre><code class="language-javascript">
-        let nombreMásLargo = estudiantes
-          .filter((estudiante) => {return estudiante.año === 3})
-          .map((estudiante) => {return estudiante.nombre})
-          .reduce((acumulador, nombre) => {
-            if(nombre.length > acumulador.length){
-              return nombre
-            } else {
-              return acumulador
-            }
-          }, "");
-        console.log(nombreMásLargo);// "Lucía"
-      </code></pre>
+<CodeBlock
+lang="js"
+code={` let nombreMásLargo = estudiantes
+        .filter((estudiante) => {return estudiante.año === 3})
+        .map((estudiante) => {return estudiante.nombre})
+        .reduce((acumulador, nombre) => {
+          if(nombre.length > acumulador.length){
+            return nombre
+          } else {
+            return acumulador
+          }
+        }, "");
+      console.log(nombreMásLargo);// "Lucía"`}/>=
 <p><em>Biutiful</em>.</p>
 <h2>Cuadro comparativo</h2>
 <p>A continuación un cuadro comparativo entre las 3 funciones:</p>

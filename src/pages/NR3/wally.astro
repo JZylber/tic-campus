@@ -1,4 +1,6 @@
 ---
+import InlineCodeBlock from "../../components/articles/inline-code-block/InlineCodeBlock.astro";
+
 export const partial = true;
 ---
 
@@ -14,17 +16,17 @@ export const partial = true;
 </p>
 <ol>
   <li>
-    Inicializar la carpeta como proyecto de <em>Node JS</em> haciendo
-    <code class="language-bash">npm init</code>
+    Inicializar la carpeta como proyecto de <em>Node JS</em> haciendo <InlineCodeBlock
+      code="npm init"
+      lang="bash"
+    />.
   </li>
   <li>Crear un archivo <em>index.js</em></li>
   <li>
     Importar la función
     <code class="language-javascript">generarEspacio</code> del archivo
     <em>busqueda.js</em> usando
-    <code class="language-javascript"
-      >import {generarEspacio} from "./busqueda.js";</code
-    >.
+    <InlineCodeBlock code={`import {generarEspacio} from "./busqueda.js";`} />.
   </li>
   <li>
     La función generarEspacio toma un parámetro, <em>n</em>, que es el número
