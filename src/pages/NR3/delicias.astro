@@ -1,0 +1,90 @@
+---
+export const partial = true;
+---
+
+<h2>Consigna Base</h2>
+<p>
+  Estamos a cargo de una panadería, <em>Las Delicias de Montañeses</em>, y
+  queremos diseñar un sistema para calcular los precios de los distintos
+  productos, siguiendo las siguientes reglas. Como los precios en pesos son muy
+  fluctuantes y van a cambiar entre que escriba esta consigna y ustedes la
+  hagan, vamos a usar una moneda ficticia, el <em>Patacón</em>.
+</p>
+<ul>
+  <li>
+    <strong>Facturas:</strong> Se venden a 200p la unidad. Si se compra una docena
+    o más, se hace un descuento y vale 120p la unidad
+  </li>
+  <li><strong>Empanadas y Canastitas:</strong> Se venden a 250p la unidad.</li>
+  <li>
+    <strong>Masitas dulces: </strong> Se venden a 400p la unidad. Si se compran 9
+    o más, se hace un descuento y vale 350p la unidad
+  </li>
+</ul>
+<p>
+  Para simplificar el problema, vamos a hacer que el cliente solo pueda pedir un
+  tipo de producto (o facturas, o empanadas, o canastitas, o masitas dulces).
+</p>
+<ol>
+  <li>
+    Crear un archivo html y otro archivo js. Linkear el archivo js en el html
+  </li>
+  <li>
+    Declarar 2 variables que representan los datos recibidos, y tomar sus
+    valores con <code>prompt</code>
+    <ul>
+      <li>El producto a comprar: "factura","empanada","canastita","masita"</li>
+      <li>La cantidad</li>
+    </ul>
+  </li>
+  <li>
+    Hacer un programa que, <strong>con un único nivel de if</strong> (es decir, sin
+    ifs dentro ifs), que devuelva el precio de la compra. Solo se puede comprar un
+    producto. Usar un <code>alert</code> para reflejar dicho precio
+  </li>
+</ol>
+<h2>Consigna Manija</h2>
+<h3>El pirata Morgan</h3>
+<p>
+  Las llamadas <em>"Leyes de De Morgan"</em> (nada que ver con el pirata, es solo
+  un chiste) son algunas de las propiedades básicas de la artimética booleana y teoría
+  de conjuntos. En castellano, son propiedades de las operaciones entre booleanos.
+  Les incluyo acá su versión sencilla. Supongamos A y B booleanos (true o false):
+</p>
+<ul>
+  <li>no(A y B) = (no A) o (no B)</li>
+  <li>no(A o B) = (no A) y (no B)</li>
+</ul>
+<p>
+  Como ven, describen como se lleva la negación (no) cuando la distribuyo
+  relativo a la conjunción (y) y disyunción (o). Pueden ver más sobre las leyes
+  de De Morgan en este
+  <a href="https://en.wikipedia.org/wiki/De_Morgan%27s_laws">link.</a>
+</p>
+<p>
+  Ahora si, la consigna. Como robar un barco es una empresa costosa (balas,
+  pólvora, capital humano), el pirata morgan solo roba barcos cuyo botín sea
+  mayor a 10000 talones de oro. Como además tiene códigos, no roba barcos que
+  han sido robados recientemente. A continuación, el código que resuelve este
+  problema:
+</p>
+<!-- prettier-ignore -->
+guage-javascript">let valorBotín = Number(prompt("Ingresar el valor del botín"));
+let fueRobadoReciente = prompt("¿Fue robado recientemente? (si/no)");
+fueRobadoReciente = fueRobadoReciente === "si";//Podría ir directo al lado del prompt, pero para que no se mareen tanto
+if(!(valorBotín < 10000 || fueRobadoReciente)){
+    alert("Disponible para robar")
+} else {
+    alert("No robar")
+}</code></pre>
+<p>
+  Modificar el código
+<p>
+  Modificar el código usando las leyes de De Morgan para que en vez de la
+  condicion del if usar un o, use un y. Algunas otras propiedades de booleanos
+  que les pueden servir:
+</p>
+<ul>
+  <li>no(no(A)) = A</li>
+  <li>no(A > n) = A <= n (y pueden deducir con menor también, es similar)</li>
+</ul>

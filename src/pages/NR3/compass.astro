@@ -1,0 +1,45 @@
+---
+export const partial = true;
+---
+
+<h2>Consigna Base</h2>
+<p>
+  En la 2da guerra mundial, las fuerzas armadas nazis utilizaban un sistema de
+  encriptación de mensajes que ellos consideraban inquebrable: <em>Enigma</em>.
+  Sin embargo, no estamos frente a los nazis. Estamos junto al ejército aliado
+  en Libia, y nuestro enemigo no son los nazis alemanes, sino los fascistas
+  italianos. Y estos son bastante más flojos para comunicaciones secretas, y en
+  particular, usan el cifrado césar, que es fácilmente quebrable. Comienza
+  "Operación Compás".
+</p>
+<p>
+  El cifrado césar solo puede tener tantas opciones como letras en el
+  abecedario, ya que números más grandes o más chicos dan un cifrado igual a los
+  de 0 a 26 (27 ya vuelve a ser igual a 0). Entonces, para descifrar un mensaje,
+  alcanza con probar las 27 combinaciones posibles y ver cual da un mensaje
+  razonable.
+</p>
+<p>
+  Crear un programa que ingresando un mensaje, muestre en pantalla las 27
+  combinaciones posibles (0 a 26 inclusive) del mensaje descifrado bajo el
+  esquema de césar. Cuentan con código HTML para ingresar un mensaje, un botón
+  para arrancar el descifrado y una lista vacía en donde colocar las 27 opciones
+  (ids "mensaje", "descifrar" y "mensajesDescifrados" respectivamente). Esta
+  última sugiero que sea una lista ordenada y cada elemento un
+  <code class="language-html">&ltli&gt</code>, pero lo pueden cambiar.
+</p>
+<p>
+  Además, cuentan con una función en JS para descifrar mensajes en césar, que
+  recibe un mensaje y un número de desplazamiento y devuelve el mensaje
+  descifrado. Esta vuelta acepta espacios y puntuación.
+</p>
+<p>
+  Para terminar, descifren el siguiente mensaje interceptado por los italianos,
+  y determinen en que clave estaba cifrado:
+</p>
+<p class="old-message">
+  xwlziu lmzzwbizuwa mu inzpki, xmzw qitia xmztpbpzmtwa ycm xizbiu bissizpuma
+  iubma lm omzdpzswa.
+</p>
+<h2>Consigna Manija</h2>
+<p>(Pendiente)</p>

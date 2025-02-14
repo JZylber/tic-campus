@@ -1,0 +1,69 @@
+---
+export const partial = true;
+---
+
+<h2>Consigna Base</h2>
+<p>
+  A partir de abril, la tarifa de transporte varía dependiendo si la sube está
+  registrada o no. Adjunto el cuadro tarifario que va a regir
+  <a
+    href="https://www.argentina.gob.ar/noticias/comienzan-regir-las-nuevas-tarifas-para-el-transporte-partir-del-6-de-febrero"
+    >acá</a
+  >
+  (sin nominalizar es sin registrar). Vamos a armar un programa que, dado los kilómetros
+  a viajar y si la sube está registrada o no, determine el valor del boleto de colectivo.
+  Para que no sea muy largo, nos vamos a restringir a distancias menores a 12km.
+</p>
+<ol>
+  <li>
+    Crear un archivo html y otro archivo js. Linkear el archivo js en el html
+  </li>
+  <li>
+    Declarar 2 variables que representan los datos recibidos, y tomar sus
+    valores con <code class="language-javascript">prompt</code>
+    <ul>
+      <li>Los km a recorrer (número de 0 a 12)</li>
+      <li>Algún texto que represente si la sube está registrada o no</li>
+    </ul>
+  </li>
+  <li>Imprimir por consola el valor del boleto</li>
+</ol>
+<h2>Consigna Manija</h2>
+<h3>Número del 1 al 10</h3>
+<p>
+  No es tán fácil generar aleatoriedad en la computadora. En muchos casos, nos
+  conformamos con pseudo aleatoriedad, osea, no son del todo al azar, pero para
+  la gran mayoría de los usos nos alcanza. No me voy a meter en como se hace
+  esto último, pero es suficientemente común que muchos lenguajes proveen
+  funciones nativas que lo hagan. Javascript tiene una forma de generar números
+  al azar, que es <code class="language-javascript">Math.random()</code>, que
+  devuelve números al azar entre 0 y 1.
+</p>
+<p>
+  ¿Pero y si quiero generar números en otro intervalo? Bueno, puedo aprovechar
+  los números entre 0 y 1 generados al azar, y usarlos para generar en cualquier
+  intervalo. Por ejemplo, si quiero generar números enteros del 1 al 10, puedo
+  adaptar los resultados del
+  <code class="language-javascript">Math.random()</code>. Divido el intervalo en
+  10, y en base a donde "cae" el número, el número que le toca.
+</p>
+<ul>
+  <li>
+    Si el resultado de <code class="language-javascript">Math.random()</code> es
+    menor a 0.1, es 1
+  </li>
+  <li>
+    Si el resultado de <code class="language-javascript">Math.random()</code> es
+    mayor a 0.1 pero menor a 0.2, es 2
+  </li>
+  <li>
+    Si el resultado de <code class="language-javascript">Math.random()</code> es
+    mayor a 0.2 pero menor a 0.2, es 3
+  </li>
+  <li>etc ...</li>
+  <li>
+    Si el resultado de <code class="language-javascript">Math.random()</code> es
+    mayor a 0.9, es 10
+  </li>
+</ul>
+<p>Crear un programa que devuelva un número entero al azar entre 1 y 10</p>

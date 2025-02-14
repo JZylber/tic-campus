@@ -1,0 +1,122 @@
+---
+export const partial = true;
+---
+
+<p>
+  <strong
+    >¡NO SE OLVIDEN DE ARMAR EL .gitignore para excluir todo lo que no quieren
+    commitear!</strong
+  >
+  Veo un node_modules pusheado y se llevan la materia automáticamente.
+</p>
+<p>
+  Este TP, obviamente, usa SoqueTIC. Para instalarlo, pueden hacerlo igual que
+  cualquier otra librería usando npm:
+  <code class="language-bash">npm i soquetic</code>
+</p>
+<h2>Punto 0</h2>
+<p>
+  ¡Tenemos que ayudar a las <em>Weather Girls</em>! Ellas no solo pronostican
+  lluvia de hombres, sino como su nombre indica, hacen pronóstico del tiempo en
+  general.
+</p>
+<p>
+  Para eso, vamos a hacer una aplicación que da el pronóstico del tiempo a 7
+  días para las capitales provinciales de Argentina. Para construir este mapa,
+  necesitamos que el backend responda (onEvent) a 2 eventos del frontend:
+</p>
+<ul>
+  <li>
+    <em>"ciudades"</em>: devuelve un objeto con parte del contenido del archivo
+    <em>ciudades.json</em>. En particular, solo las capitales provinciales y
+    nacionales. Estas son aquellas ciudades cuyo atributo <em>capital</em> es
+    "admin" o "primary".
+  </li>
+  <li>
+    <em>"limites"</em>: devuelve un objeto con 2 atributos,
+    <em>nacional</em> que tiene el contenido del archivo
+    <em>limiteNacional.json</em> y <em>provincial</em> que tiene el contenido
+    del archivo <em>limiteProvincial.json</em>.
+  </li>
+</ul>
+<p>
+  Si no hacen esto bien, les va a crashear el front. Revisen la consola por
+  errores.
+</p>
+<h2>Punto 1</h2>
+<p>
+  Ahora si, queremos la información del pronóstico del tiempo. Para eso,
+  responder al evento <em>"pronostico"</em> en SoqueTIC. Este evento recibe de
+  parámetro un lugar, que es un objeto con los atributos latitud y longitud. Es
+  decir, si quiero el pronóstico de buenos aires, me llegaría el siguiente
+  objeto:
+</p>
+<!-- prettier-ignore -->
+<pre>
+<code class="language-javascript">
+{latitud: -34.6033, longitud: -58.3817}</code>
+</pre>
+<p>
+  Con eso, buscar el pronóstico del tiempo. Para eso, vamos a la
+  <strong>API de pronóstico del tiempo de OpenMeteo</strong>. No se las voy a
+  explicar. Lean la documentación que pueden acceder de este
+  <a
+    href="https://open-meteo.com/en/docs#latitude=-34.6131&longitude=-58.3772&current=&hourly="
+    >link</a
+  >. En resumen, implica instalar un paquete de npm y hacer un llamado
+  asincrónico usando la función
+  <code class="language-javascript">fetchWeatherApi</code>. Lean los detalles
+  igual.
+</p>
+<p>
+  En particular, nos interesa las siguientes categorías
+  <strong>diarias</strong>:
+</p>
+<ul>
+  <li>temperature_2m_max</li>
+  <li>temperature_2m_min</li>
+  <li>sunshine_duration</li>
+  <li>rain_sum</li>
+  <li>showers_sum</li>
+  <li>snowfall_sum</li>
+  <li>precipitation_probability_max</li>
+</ul>
+<p>
+  Llamen a la API pidiéndoles esas categorías y procesar la respuesta que les de
+  para el front. La función de procesar la respuesta ya está hecha, se encuentra
+  en el archivo <em>auxiliares.js</em> y se llama
+  <code class="language-javascript">weatherResponse2Array</code>. Toma dos
+  parámetros: la respuesta de la API y la lista de categorías (la misma que le
+  pidieron a la API). Lo que retorne esta función es lo que deben enviar al
+  front.
+</p>
+<p><strong>TIPS:</strong></p>
+<ul>
+  <li>
+    OpenMeteo les muestra código de ejemplo. En el gráfico, hay una pestaña de
+    <em>typescript</em> que tiene lo que ustedes quieren. Typescript no es nada
+    más que javascript pero con tipos (a lo C++).
+  </li>
+  <li>
+    Ya lo puse antes, pero lo vuelvo a repetir para enfatizarlo: todo el cacho
+    de código que viene después de
+    <code class="language-javascript">fetchWeatherApi</code> lo resuelve la
+    función que les doy yo.
+  </li>
+</ul>
+<h2>Punto 2 (MANIJA)</h2>
+<p>
+  Hacer un llamado por lugar geográfico es bastante ineficiente, más si las API
+  calls son limitadas. La API sin embargo, nos permite obtener el pronóstico de
+  varios lugares a la vez.
+</p>
+<p>
+  Modificar tanto el frontend como el backend para que se haga una única API
+  call con todas las ciudades, y al hacer click en cada una simplemente cargue
+  el pronóstico de esa ciudad.
+</p>
+<p>
+  <strong>TIP:</strong> la función auxiliar
+  <code class="language-javascript">weatherResponse2Array</code> también está
+  bastante preparada para esto, alcanza con modificarle el return.
+</p>

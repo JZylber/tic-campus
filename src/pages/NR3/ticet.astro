@@ -1,0 +1,91 @@
+---
+export const partial = true;
+---
+
+<h2>Consigna Base</h2>
+<p>
+  Estamos a cargo de hacer un sistema para venta de entradas para recitales:
+  <em>TICet</em>. El html/css ya fue programado por otra persona, a nosotros nos
+  queda hacer la parte funcional. En particular, cada vez que hacemos click en
+  un artista, que se muestre el precio de la entrada.
+</p>
+<p>
+  Ya contamos con algunas cosas. En particular, tenemos la lista de precios de
+  las entradas (en <em>Patacones</em>) y el
+  <code class="language-html">id</code> del elemento al que se le hace click:
+</p>
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Artista</th>
+      <th>id</th>
+      <th>Precio entrada</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Taylor Swift</td>
+      <td>taylor</td>
+      <td>10000p</td>
+    </tr>
+    <tr>
+      <td>King Gizzard and the Lizard Wizard</td>
+      <td>kgatlw</td>
+      <td>7000p</td>
+    </tr>
+    <tr>
+      <td>Dillom</td>
+      <td>dillom</td>
+      <td>2000p</td>
+    </tr>
+    <tr>
+      <td>Marilina Bertoldi</td>
+      <td>marilina</td>
+      <td>1000p</td>
+    </tr>
+    <tr>
+      <td>Winona Riders</td>
+      <td>winona</td>
+      <td>750p</td>
+    </tr>
+    <tr>
+      <td>Lali</td>
+      <td>lali</td>
+      <td>2250p</td>
+    </tr>
+  </tbody>
+</table>
+<p>
+  Además, contamos con una función,
+  <code class="language-javascript">escribirValor</code>, que toma cualquier
+  texto y lo muestra en la caja debajo del título "Valor Entrada".
+</p>
+<p>
+  Usen esta función para completar el programa, y al hacer click en los artistas
+  muestre el precio de la entrada.
+</p>
+<h2>Consigna Manija</h2>
+<p>
+  Nos interesa además que se vea gráficamente cual es el artista seleccionado.
+  Una forma de hacer eso es aplicarle cambios gráficos a las tarjetas de
+  artistas. Para eso, cuentan con la clase de css <em>selected</em> que tiene que
+  estar en el elemento seleccionado.
+</p>
+<p>
+  Es decir, deben hacer que cuando hacen click en un elemento, debe agregar la
+  clase a ese artista y sacarle la clase al que fue clickeado anteriormente.
+  Algunos tips:
+</p>
+<ul>
+  <li>
+    Para "togglear" (agregar si no está, sacar si está) pueden ver como hacerlo
+    acá:
+    <a href="https://www.w3schools.com/howto/howto_js_toggle_class.asp"
+      >https://www.w3schools.com/howto/howto_js_toggle_class.asp</a
+    >.
+  </li>
+  <li>
+    Tengan en cuenta de guardarse de alguna forma el elemento clickeado
+    anteriormente para sacarle la clase.
+  </li>
+</ul>

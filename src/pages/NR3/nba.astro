@@ -1,0 +1,82 @@
+---
+export const partial = true;
+---
+
+<h2>Consigna Base</h2>
+<p>
+  Estamos a cargo de planificar las fechas del campeonato de basquet
+  norteamericano (NBA) y queremos crear un programa que nos facilite armar las
+  siguientes fechas. La idea es poder elegir dos equipos que juegan en la
+  siguiente fecha, y que se vayan listando los matchups que vamos armando.
+</p>
+<p>
+  Para esto, ya contamos con dos
+  <code class="language-html">&ltselect&gt</code> para elegir entre equipos, un botón
+  para programar la fecha y un
+  <code class="language-html">&ltdiv&gt</code> para poner las fechas. Los
+  <code class="language-html">id</code> de los
+  <code class="language-html">&ltselect&gt</code> son <em>"equipo1"</em> y
+  <em>"equipo2"</em> respectivamente, el botón para programar la fecha tiene
+  <code class="language-html">id = "boton"</code> y el div donde poner las fechas
+  tiene <code class="language-html">id = "fechas"</code>.
+</p>
+<p>
+  Crear un programa que al hacer click en "programar fecha" agregue una fecha
+  entre los dos equipos seleccionados. Esta debe ser en forma de un
+  <code class="language-html">div</code>. Algunas ayudas:
+</p>
+<ul>
+  <li>
+    Los equipos los pueden sacar del atributo
+    <code class="language-html">value</code> de los select, de ids
+    <em>"equipo1"</em> y <em>"equipo2"</em> respectivamente.
+  </li>
+  <li>
+    Pueden crear un div nuevo con
+    <code class="language-javascript">document.createElement("div")</code>.
+  </li>
+  <li>
+    Para agregarle texto a un div, pueden modificar el atributo
+    <code class="language-javascript">textContent</code>.
+  </li>
+  <li>
+    Para agregar el <code class="language-html">&ltdiv&gt</code> creado a las fechas
+    sin borrar las anteriores, pueden usar la función
+    <code class="language-javascript">appendChild</code> del div fechas. Se usa de
+    la forma
+    <code class="language-javascript"
+      >&ltdivFechas&gt.appendChild(&ltdivFechaNueva&gt)</code
+    >. Cuando uso &ltalgo&gt no es código Javascript, es una forma de decir
+    "como sea que esté ese elemento referenciado en su programa", ya sea en una
+    variable, objeto, etc. Pueden googlear
+    <code class="language-javascript">appendChild</code> si tienen dudas, es algo
+    estándar del lenguaje, no es algo mío.
+  </li>
+</ul>
+<h2>Consigna Manija</h2>
+<p>
+  Hacer que al agregar la fecha no solo sea los nombres de los equipos, sino
+  también los logos de dichos equipos. Algunas ayudas:
+</p>
+<ul>
+  <li>
+    Está la función
+    <code class="language-javascript">obtenerLogoEquipo</code> que dado el nombre
+    de un equipo, devuelve el path (donde está el archivo) del logo. Esto se puede
+    usar de forma directa como atributo
+    <code class="language-html">src</code> de un tag
+    <code class="language-html">&ltimg&gt</code>
+  </li>
+  <li>
+    Para armar algo medianamente prolijo, les sugiero inspirarse en como hago
+    los selectores. Es una combinación de divs que se muestran como flex.
+  </li>
+  <li>
+    Es probable que tengan que hacer varios elementos html, o aprovechar el
+    atributo <code class="language-javascript">innerHtml</code> (Googleen).
+  </li>
+  <li>
+    También es probable que tengan que agregar css apropiado. Lo más fácil es
+    aprovechar la idea de clases en css.
+  </li>
+</ul>

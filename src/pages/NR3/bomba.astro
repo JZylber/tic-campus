@@ -1,0 +1,71 @@
+---
+export const partial = true;
+---
+
+<p>
+  <strong
+    >¡NO SE OLVIDEN DE ARMAR EL .gitignore para excluir todo lo que no quieren
+    commitear!</strong
+  >
+  Veo un node_modules pusheado y se llevan la materia automáticamente.
+</p>
+<p>
+  Este TP usa la librería Serialport. Para instalarla, pueden hacerlo igual que
+  cualquier otra librería usando npm:
+  <code class="language-bash">npm i serialport</code>
+</p>
+<h2>Consigna</h2>
+<p>
+  ¡La carrera por la bomba está en marcha! Los estados unidos llevan a cabo el
+  proyecto manhattan en donde las mentes mas brillantes del mundo científico
+  trabajan a contrarreloj para desarrollar la primera bomba atómica y derrotar a
+  la alemania nazi.
+</p>
+<p>
+  La primera detonación de prueba fue llamada trinity. Te encomendaron hacer el
+  sistema de detonación, que es una simple contraseña de 4 dígitos. ¡Pero te la
+  olvidaste! Está la bomba activada, y una orden de suspender la detonación. Tu
+  misión es encontrar la contraseña para poder detenerla a tiempo. ¡Y tenés un
+  solo intento!
+</p>
+<p>
+  Pero contamos con algunas pistas. En particular, hay programadas unas placas
+  arduino que dado los últimos 4 dígitos de tu DNI y una contraseña, nos dice si
+  es correcta o incorrecta. Se pueden usar estas placas para ir probando
+  contraseñas hasta obtener la correcta. En particular, las placas funcionan de
+  la siguiente forma:
+</p>
+<ol>
+  <li>
+    Las placas arduino tienen un puerto serial que se conecta a la computadora
+    por USB. El baudrate es de 115200.
+  </li>
+  <li>
+    Al iniciarse, <strong>el arduino envía un primer mensaje</strong>, que dice
+    "AVAILABLE\n". Este mensaje indica que el arduino está listo para recibir
+    mensajes. Recuerden que "\n" es el caracter que representa un salto de
+    línea. <strong>TIP:</strong> para limpiar el dato recibido (sacarle el salto
+    de línea y otras giladas con las que venga adelante o atrás), pueden usar el
+    método <code class="language-javascript">trim()</code> de JavaScript.
+  </li>
+  <li>
+    El arduino recibe mensajes de la forma "&ltúltimos 4 dígitos de tu
+    DNI&gt,&ltcontraseña a probar&gt\n" (Recuerden que "\n" es el caracter que
+    representa un salto de línea) y responde con "1\n" si la contraseña es
+    correcta, o "0\n" si la contraseña es incorrecta.
+  </li>
+</ol>
+<p>
+  Habiendo descubierto la contraseña, construyan
+  <strong>otro</strong> programa que simplemente ponga por el puerto serial la contraseña
+  descubierta. Este programa lo van a usar para desactivar la bomba
+  <em>"real"</em> que tenemos los profes. <strong>IMPORTANTE:</strong> A diferencia
+  de las placas anteriores, no envía el primer mensaje de "AVAILABLE\n". Pueden enviar
+  la contraseña apenas abre el puerto serial.
+</p>
+<p>
+  <strong
+    >La actividad se considera hecha cuando se acercan a la mesa y logren
+    desactivar la bomba. ¡Tienen un solo intento!</strong
+  >
+</p>

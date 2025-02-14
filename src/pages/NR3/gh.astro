@@ -1,0 +1,67 @@
+---
+export const partial = true;
+---
+
+<p>
+  El control de gran hermano quiere ver los votos a medida que llegan. Para eso,
+  le llegan datos de los mensajes de texto que manda la gente. Nuestro trabajo
+  es crear un programa que los muestre en la forma deseada por la producción.
+</p>
+<h2>Consigna</h2>
+<ol>
+  <li>
+    Crear un archivo html y otro archivo js. Linkear el archivo js en el html
+  </li>
+  <li>
+    Declarar 2 variables que representan los datos recibidos
+    <ul>
+      <li>
+        El número de teléfono en forma de
+        <code class="language-javascript">string</code> y con el código de área.
+        Ejemplo: "1154672810"
+      </li>
+      <li>
+        El nombre del integrante a eliminar en forma de
+        <code class="language-javascript">string</code>. Ejemplo: "Juliana"
+      </li>
+    </ul>
+  </li>
+  <li>
+    Hacer los pasos necesarios para terminar imprimiendo por consola "Voto para
+    &lt;participante&gt; del número &lt;número recortado&gt;", donde "número
+    recortado" es el número de teléfono sin el código de área, osea, los últimos
+    8 dígitos. Para el ejemplo anterior, debería mostrar "Voto para Juliana del
+    número 54672810"
+  </li>
+</ol>
+<h2>Consigna manija</h2>
+<h3>¡No le digan a Caro/Darío!</h3>
+<p>
+  Para convertir un número de binario a decimal, alcanza con ir dividiendo por 2
+  y quedándose con los restos de forma inversa (repasen la clase de Caro/Darío).
+  Armar un programa que convierta un número en el sistema decimal menor a 256 y
+  lo convierta en un string que sea el número en binario en 8 bits. Osea,
+  incluso si necesito menos bits para representarlo, agregarle los 0s de
+  adelante faltantes. Por ejemplo, el número 7 debería dar "00000111". Algunos
+  tips:
+</p>
+<ul>
+  <li>
+    Para tomar el resto de la división, se usa el operador
+    <code class="language-javascript">%</code>
+  </li>
+  <li>
+    Para tomar el cociente entero de la división, puedo redondear para abajo la
+    división. Redondear para abajo en programación es <em>floor</em>, googleen
+    como hacerlo en JS
+  </li>
+  <li>
+    Aprovechen el operador <code class="language-javascript">+</code> para ir armando
+    el string. Pueden iniciar la variable con un string vacío, ""
+  </li>
+  <li>
+    Que el número sea más chico que 8 bits no es problema. Seguir dividiendo a 0
+    por 2 da cociente 0 y resto 0, haciendo que se agreguen los 0 de adelante
+    sin hacer demasiado esfuerzo
+  </li>
+</ul>

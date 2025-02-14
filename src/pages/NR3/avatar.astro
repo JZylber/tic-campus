@@ -1,0 +1,89 @@
+---
+export const partial = true;
+import { Prism } from "@astrojs/prism";
+---
+
+<h2>Consigna Base</h2>
+<p>
+  Queremos armar un programa en donde el usuario elija un conjunto de
+  características para generar un avatar. En particular, tenemos 6 opciones para
+  la ropa, 8 para la boca, 4 para los ojos y 6 para el pelo.
+</p>
+<p>
+  Para poder cambiar entre opciones, hay que modificar el objeto
+  <code class="language-javascript">avatar</code> que inicia de la siguiente forma:
+</p>
+<pre>
+<Prism lang="js" code={`
+  let avatar = {
+    ropa: 1,
+    boca: 1,
+    ojos: 1,
+    pelo: 1
+}
+`} />  
+</pre>
+<p>
+  En particular, la función
+  <code class="language-javascript">actualizarAvatar</code> usa este objeto para
+  construir el avatar. Es decir, para modificar el avatar, se deben modificar los
+  atributos del objeto <code class="language-javascript">avatar</code> y luego llamar
+  a la función
+  <code class="language-javascript">actualizarAvatar</code>.
+</p>
+<p>
+  Completar el código para que al hacer click en el botón
+  <em>"Generar Avatar"</em> (id = "generar") se regenere el avatar basado en las
+  opciones seleccionadas por el usuario.
+</p>
+<p>
+  <strong>Importante:</strong> para ver que opcion está actualmente elegida por el
+  usuario, se puede tomar el atributo <em>value</em> del elemento select. Los id
+  de los elementos select son "ropa", "boca", "ojos" y "pelo".
+</p>
+<h2>Consigna Manija</h2>
+<p>
+  Si miran la carpeta <em>img</em>, existe también una imagen para anteojos.
+  Modificar el programa para que también permita ponerle/sacarle anteojos al
+  avatar.
+</p>
+<p>Tips Importantes:</p>
+<ul>
+  <li>
+    El truco para armar el avatar es superponer imágenes. Necesitan armar otra
+    imagen junto a las otras, respetando las clases y dandole un id propio.
+  </li>
+  <li>
+    Tienen que agregar un nuevo select junto a los otros para elegir entre
+    con/sin anteojos. Noten que los select tienen un label para decir a que
+    categoría pertenecen y están encerrados en un div para que se acomoden bien
+    en el espacio.
+  </li>
+  <li>
+    Tienen que modificar el objeto
+    <code class="language-javascript">avatar</code> para que acepte la categoria
+    anteojos (puede ser un booleano en vez de un número).
+  </li>
+  <li>
+    <p>
+      Tienen que modificar la función
+      <code class="language-javascript">actualizarAvatar</code> para que saque/ponga
+      anteojos dependiendo del estado del objeto. Yo sugiero alguna de estas dos
+      formas:
+    </p>
+    <ol>
+      <li>
+        Tocar el atributo
+        <code class="language-javascript">style.display</code> de la imagen y setearlo
+        en "block"(visible) o "none"(invisible).
+      </li>
+      <li>
+        Usando un truco similar al usado en la consigna manija de
+        <em>TICet</em>, crear una clase css que tenga "display: none", y
+        agregarla/quitarla a la lista de clases (atributo
+        classlist.add(&ltnombreClase&gt) o classlist.remove(&ltnombreClase&gt))
+        dependiendo si quiero que el elemento esté visible o no.
+      </li>
+    </ol>
+  </li>
+</ul>

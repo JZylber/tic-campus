@@ -1,0 +1,118 @@
+---
+export const partial = true;
+---
+
+<h2>Consigna Base</h2>
+<p>
+  El cifrado césar es una de las primeras técnicas de encriptación de mensajes.
+  Pueden leer más acá:
+  <a href="https://es.wikipedia.org/wiki/Cifrado_C%C3%A9sar"
+    >https://es.wikipedia.org/wiki/Cifrado_C%C3%A9sar</a
+  >.
+</p>
+<p>
+  Vamos a construir un programa que cifre y descifre usando esta técnica. Para
+  ello, ya cuentan con dos funciones hechas por mí:
+</p>
+<ul>
+  <li>
+    <code class="language-javascript">cifrar</code>: recibe una palabra (string)
+    y una clave (number), y devuelve la palabra cifrada.
+  </li>
+  <li>
+    <code class="language-javascript">descifrar</code>: recibe una palabra
+    cifrada (string) y una clave (number), y devuelve la palabra descifrada.
+  </li>
+</ul>
+<p>
+  Las funciones tienen código con algunas cosas que no vimos, pero no se
+  preocupen, ustedes tienen que usarlas solamente.
+</p>
+<p>
+  Hacer un programa que tome 3 inputs del usuario por
+  <code class="language-javascript">prompt</code>:
+</p>
+<ol>
+  <li>Una palabra</li>
+  <li>Una clave (un número)</li>
+  <li>Una acción a realizar: cifrar o descifrar</li>
+</ol>
+<p>Luego, descifrar los siguientes mensajes</p>
+<ul>
+  <li><em>"¿fmxntpy fg, ndgfa?"</em> con clave -15</li>
+  <li>
+    <em>"sz hsbiwrd rs zo kwro, sz jbwksghd n idrd zd rsaoh"</em> con clave 42
+  </li>
+</ul>
+<p>Pueden buscar a que están haciendo referencia googleándolas</p>
+<p>
+  Además, ¡cifren sus propios mensajes! Piensen un mensaje divertido que quieran
+  compartir e incluyan el mensaje cifrado y la clave en el html de esta
+  actividad.
+</p>
+<h2>Consigna Manija</h2>
+<h3>Tarjetas de crédito</h3>
+<p>
+  La validación de tarjetas de crédito depende de muchos factores. En
+  particular, los primeros dígitos suelen corresponder a la red a la que
+  pertenece. Vamos a hacer un programa que, dado un número de tarjeta de
+  crédito, determine a que red pertenece. Para no volvernos locos, nos vamos a
+  concentrar en las 3 redes más usadas en argentina: AMEX, VISA y MASTERCARD,
+  que siguen las siguientes reglas:
+</p>
+<ul>
+  <li>AMEX: comienza con 34 o 37</li>
+  <li>VISA: comienza con 4</li>
+  <li>MASTERCARD: comienza con 51, 52, 53, 54 o 55</li>
+</ul>
+<p>
+  La lista completa la pueden ver en
+  <a
+    href="https://en.wikipedia.org/wiki/Payment_card_number#Issuer_identification_number_(IIN)"
+    >https://en.wikipedia.org/wiki/Payment_card_number#Issuer_identification_number_(IIN)</a
+  >.
+</p>
+<p>
+  Para hacernos la vida un poco más sencilla, les propongo hacer una función,
+  <code class="language-javascript">obtenerPrefijo</code>, que, dado un número y
+  el tamaño del prefijo, nos devuelva el prefijo. Por ejemplo,
+  <code class="language-javascript">obtenerPrefijo(456789010075598, 2)</code>
+  devuelva 45.
+</p>
+<p>
+  Pero, ¿Cómo hacemos esto? Bueno, podemos aprovechar una técnica similar a la
+  que hicimos en la actividad de <em>Gran Hermano</em>. Dividir por una potencia
+  de 10, pero quedarnos con el cociente entero. Por ejemplo, 678559 / 10^2 =
+  6785, 678559 / 10^4 = 67
+</p>
+<p>Ahora si, lo que hay que hacer</p>
+<ol>
+  <li>
+    Crear la función
+    <code class="language-javascript">obtenerPrefijo</code> que, dado un número y
+    el tamaño del prefijo, nos devuelva el prefijo.
+  </li>
+  <li>
+    Tomar un número de tarjeta de crédito por prompt (para simplificar asuman
+    que son siempre de 16 dígitos)
+  </li>
+  <li>
+    Usando la función <code class="language-javascript">obtenerPrefijo</code>,
+    determinar la red de la tarjeta (AMEX, VISA o MASTERCARD)
+  </li>
+  <li>Devolver el resultado por alert</li>
+</ol>
+<p><strong>TIPS IMPORTANTES</strong></p>
+<ul>
+  <li>
+    En <code class="language-javascript">obtenerPrefijo</code>, la potencia de
+    10 por la cual hay que dividir es longitudNumero - longitudPrefijo. Como no
+    saben sacar la longitud de un número, simplifico el problema diciendo que
+    todas las tarjetas son de 16 dígitos, por lo tanto, longitudNumero = 16
+  </li>
+  <li>
+    Javascript no tiene división entera, pero pueden lograr el mismo efecto
+    redondeando para abajo el resultado de la división normal. Esto se puede
+    hacer con la función <code class="language-javascript">Math.floor</code>
+  </li>
+</ul>

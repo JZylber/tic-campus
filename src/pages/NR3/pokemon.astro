@@ -1,0 +1,138 @@
+---
+export const partial = true;
+---
+
+<p>
+  <strong
+    >¡NO SE OLVIDEN DE ARMAR EL .gitignore para excluir todo lo que no quieren
+    commitear!</strong
+  >
+  Veo un node_modules pusheado y se llevan la materia automáticamente.
+</p>
+<p>
+  Este TP, obviamente, usa SoqueTIC. Para instalarlo, pueden hacerlo igual que
+  cualquier otra librería usando npm:
+  <code class="language-bash">npm i soquetic</code>
+</p>
+<p>
+  Para levantar el frontend hay que usar, como siempre, LiveServer. El archivo
+  index.html te permite recorrer los distintos puntos de la consigna.
+</p>
+<h2>Consigna</h2>
+<p>
+  La Pokédex es la base de datos de todos los pókemon. Queremos construir una
+  tabla que nos deje filtrar por algunos parámetros, además de registar que
+  pókemon fuimos capturando. Contamos con la información en el archivo
+  pokemon.json.
+</p>
+<p>
+  Armar un programa usando Node JS y SoqueTIC que permita responder a los
+  siguientes mensajes:
+</p>
+<ul>
+  <li>
+    <em>"pokemon"</em>: Recibe como parámetro un objeto con 3 atributos: type,
+    generation y legendary. Se debe filtrar la lista de pókemon en base a estos
+    criterios de la siguiente forma:
+    <ul>
+      <li>
+        <strong>type</strong>: Siempre es de tipo
+        <code class="language-javascript">string</code>. Si dice "all", se deben
+        devolver todos los pókemon independiente del tipo. Si dice otro valor,
+        se deben devolver los pókemon de ese tipo,
+        <strong
+          >tanto los que tienen ese tipo como tipo principal o como subtipo</strong
+        >.
+      </li>
+      <li>
+        <strong>generation</strong>: Siempre es de tipo
+        <code class="language-javascript">string</code>. Si dice "all", se deben
+        devolver todos los pókemon independiente de la generación. Si dice otro
+        valor, se deben devolver los pókemon de esa generación.
+      </li>
+      <li>
+        <strong>legendary</strong>: Siempre es de tipo
+        <code class="language-javascript">boolean</code>. Si es
+        <code class="language-javascript">false</code>, se deben devolver todos
+        los pókemon que no sean legendarios. Si es
+        <code class="language-javascript">true</code>, se deben devolver todos
+        los pókemon <strong>incluyendo los legendarios</strong>.
+      </li>
+    </ul>
+  </li>
+  <li>
+    <em>"capture"</em>: Recibe como parámetro un objeto con 2 atributos: id y
+    captured. Se debe modificar el pókemon con el id recibido para que su
+    atributo Captured sea el valor recibido (ya es
+    <code class="language-javascript">boolean</code>).
+    <strong>Actualizar el archivo pokemon.json para reflejar este cambio</strong
+    >.
+  </li>
+</ul>
+<p>
+  Haciendo este punto, obtienen un 8. Si quieren el 10, tienen que hacer la
+  consigna manija
+</p>
+<h2>Consigna manija</h2>
+<p>Haciendo esta consign llegan al 10.</p>
+<p>
+  La idea es tratar de ver los stats (características como ataque, defensa, etc)
+  de los pokemon por tipo. Para eso, contamos con otro frontend (manija.html).
+  Para hacer este punto, hay que responder al mensaje <em>"statsByType"</em>.
+</p>
+<p>Este mensaje recibe un objeto con 3 atributos:</p>
+<ul>
+  <li>
+    <strong>generation</strong>: Valor de tipo
+    <code class="language-javascript">string</code>. Si vale "all", entonces no
+    se debe filtrar por generación. Si vale otro valor, se deben devolver los
+    pókemon de esa generación.
+  </li>
+  <li>
+    <strong>legendary</strong>: Valor de tipo
+    <code class="language-javascript">boolean</code>. Si es
+    <code class="language-javascript">false</code>, entonces no se deben incluir
+    los legendarios. Si es <code class="language-javascript">true</code>,
+    entonces se deben incluir los legendarios.
+  </li>
+  <li>
+    <strong>megaEvolution</strong>: Valor de tipo
+    <code class="language-javascript">boolean</code>. Si es
+    <code class="language-javascript">false</code>, entonces no se deben incluir
+    las mega evoluciones. Si es <code class="language-javascript">true</code>,
+    entonces se deben incluir las mega evoluciones.
+    <strong>Para saber si un pókemon es una mega evolución</strong> pueden importar
+    la función que se encuentra en el archivo auxiliares.js. La función se llama
+    <code class="language-javascript">isMegaEvolution</code> que toma un parámetro,
+    el nombre del pókemon y devuelve
+    <code class="language-javascript">true</code> si es una mega evolución y
+    <code class="language-javascript">false</code> si no lo es.
+  </li>
+</ul>
+<p>
+  Luego de haber filtrado, se deben tomar los promedios de stats por tipo. Es
+  decir, por cada tipo de los pókemon que quedaron, se deben calcular los
+  promedios de cada stat (HP, Ataque, Defensa, Ataque Especial, Defensa Especial
+  y Velocidad). Redondear a 2 cifras decimales para que se vea razonable.
+  Finalmente, devolver una lista de objetos en donde cada objeto tiene el
+  atributo "type" que indica el tipo de pókemon y los atributos "HP", "Attack",
+  "Defense", "Sp. Atk", "Sp. Def", "Speed" que indican los promedios de cada
+  stat.
+  <strong>Se considera que el tipo de un pókemon es el tipo principal</strong>,
+  es decir el atributo "Type 1".
+</p>
+<p><strong>SUGERENCIAS:</strong></p>
+<ol>
+  <li>Filtrar primero antes de hacer cualquier cuenta.</li>
+  <li>
+    Recorrer los pókemon filtrados e ir acumulando la suma de los stats por tipo
+    y contar cuantos hay por cada tipo.
+  </li>
+  <li>
+    Teniendo la suma y la cantidad, se pueden dividir. No se olviden de
+    redondear.
+  </li>
+  <li>
+    Lo que sea que haya quedado, adaptarlo al formato pedido para el retorno.
+  </li>
+</ol>

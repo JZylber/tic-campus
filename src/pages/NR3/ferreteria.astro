@@ -1,0 +1,107 @@
+---
+export const partial = true;
+---
+
+<p>
+  Están reemplazando a Darín en su ferretería, y se sabe que lo clientes no
+  tienen en claro que pedir. Para eso, Darín nos dejó una tabla de traducción,
+  para saber a que productos refiere el cliente.
+</p>
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Pedido</th>
+      <th>Producto</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>alicante</td>
+      <td>alicate</td>
+    </tr>
+    <tr>
+      <td>tiki tiki</td>
+      <td>destornillador</td>
+    </tr>
+    <tr>
+      <td>clavo a rosca</td>
+      <td>tornillo</td>
+    </tr>
+    <tr>
+      <td>cuchuflete</td>
+      <td>arandela</td>
+    </tr>
+    <tr>
+      <td>pituto</td>
+      <td>tarugo</td>
+    </tr>
+  </tbody>
+</table>
+<p>
+  Además, contamos con el listado de productos y sus precios. Nuevamente,
+  usaremos la moneda ficticia, el <em>Patacón</em>.
+</p>
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Producto</th>
+      <th>Precio</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>alicate</td>
+      <td>1000p</td>
+    </tr>
+    <tr>
+      <td>destornillador</td>
+      <td>1000p</td>
+    </tr>
+    <tr>
+      <td>tornillo</td>
+      <td>0.5p</td>
+    </tr>
+    <tr>
+      <td>arandela</td>
+      <td>0.75p</td>
+    </tr>
+    <tr>
+      <td>tarugo</td>
+      <td>1.1p</td>
+    </tr>
+  </tbody>
+</table>
+<p>
+  Armar un programa que, dado un pedido del cliente, diga el costo del producto.
+  Debe responder a tanto los pedidos correctos como confusos. Por ejemplo, si el
+  cliente pide un "alicate" (correcto) como "alicante" (confusos) se debe decir
+  1000p. Limitarse a los pedidos confusos de la tabla. El pedido del cliente
+  debe ingresarse por <code>prompt</code> y el resultado debe devolverse por
+  <code>alert</code>.
+</p>
+<h2>Extras</h2>
+<p>
+  La máxima nota en caso de haber completado el TP es 8. Para conseguir mas
+  nota, se pueden hacer algunos de los siguientes extras.
+  <strong
+    >Para que el punto extra sea corregido, se debe detallar en el HTML que
+    punto extra hicieron, de lo contrario no cuenta.</strong
+  >
+</p>
+<ul>
+  <li>
+    <strong>(1 punto)</strong> Existen dos tipos de destornillador, los planos o
+    de pala, y los philips o estrella, que valen 1000p y 1500p respectivamente. Si
+    el usuario pide un destornillador, pedirle la aclaración entre "plano","pala","philips","estrella"
+    para darle el precio correcto.
+  </li>
+  <li>
+    <strong>(1 punto)</strong> Permitir no solo decir el producto, sino también la
+    cantidad de dicho producto, y dar el precio correcto (valor unitario x cantidad).
+  </li>
+</ul>
+<h2>Entrega</h2>
+<p>
+  Se deben entregar dos archivos, el html y el js asociado que resuelven la
+  consigna. Para entregarlos en el campus, deben comprimirlo como un único .zip.
+</p>

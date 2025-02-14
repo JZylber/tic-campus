@@ -1,0 +1,80 @@
+---
+export const partial = true;
+---
+
+<h2>Consigna Base</h2>
+<p>
+  La avenida avellaneda en flores es un lugar icónico de la ciudad de buenos
+  aires para ir a comprar ropa. Se consigue ropa a muy bajo costo, especialmente
+  si uno compra en cantidad. En general, a partir de cierta número de prendas,
+  se accede a un precio mayorista, es decir, sale menos la unidad, resultando en
+  un descuento importante.
+</p>
+<p>Nos dejaron a cargo de un local, y tenemos la siguiente lista de precios:</p>
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Producto</th>
+      <th>Precio minorista</th>
+      <th>Precio mayorista</th>
+      <th>Min. unidades p/precio mayorista</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>pantalon</td>
+      <td>1500p</td>
+      <td>1000p</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>remera</td>
+      <td>800p</td>
+      <td>600p</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <td>medias</td>
+      <td>300p</td>
+      <td>200p</td>
+      <td>12</td>
+    </tr>
+    <tr>
+      <td>calzoncillo</td>
+      <td>500p</td>
+      <td>350p</td>
+      <td>12</td>
+    </tr>
+    <tr>
+      <td>bombacha</td>
+      <td>500p</td>
+      <td>350p</td>
+      <td>12</td>
+    </tr>
+  </tbody>
+</table>
+<p>
+  Recuerden que "p" es <em>Patacones</em> y no pesos. Demos un ejemplo. Supongamos
+  que compro remeras. Si compro 3 remeras, tengo que usar el precio minorista, ya
+  que el mayorista es a partir de 6 prendas, osea, 3x800p = 2400p. En cambio, si
+  compro 9, como supera el mínimo para precio mayorista, la cuenta sería 9x600p =
+  5400p.
+</p>
+<p>
+  Como encargados del local, tenemos un programa que ingresando la prenda y
+  cantidad, nos calcula el total. Sin embargo ¡Se nos traspapeló una función! La
+  función <code>calcularPrecioTotal</code> está siendo usada en el programa pero
+  no está declarada en ningún lado. Completar el programa creando la función
+  <code>calcularPrecioTotal</code>. Esta toma 4 parámetros:
+</p>
+<ul>
+  <li>cantidad: la cantidad del producto a comprar</li>
+  <li>precioMinorista: el precio minorista del producto</li>
+  <li>precioMayorista: el precio mayorista del producto</li>
+  <li>
+    minUnidadesMayorista: el mínimo de unidades para acceder al precio mayorista
+  </li>
+</ul>
+<p>La función debe retornar el precio total de la compra.</p>
+<h2>Consigna Manija</h2>
+<p>(Pendiente)</p>

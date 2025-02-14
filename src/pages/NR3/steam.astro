@@ -1,0 +1,83 @@
+---
+export const partial = true;
+---
+
+<h2>Consigna general</h2>
+<p>
+  Los precios en steam están nuevamente dolarizados. ¿Cuánto sale un juego en
+  realidad?
+</p>
+<p>
+  El precio en pesos de un juego está determinado por el dólar tarjeta, que se
+  calcula de la siguiente forma:
+</p>
+<ul>
+  <li>Su precio en dólares multiplicado por el dólar oficial</li>
+  <li>
+    Un recargo del 30% por el impuesto PAIS (sobre el valor en pesos a dólar
+    oficial)
+  </li>
+  <li>
+    Otro recargo del 30% por el impuesto a las ganancias (sobre el valor en
+    pesos a dólar oficial)
+  </li>
+</ul>
+<p>
+  Hacer un programa en javascript que calcule el precio en pesos de un juego
+</p>
+<ol>
+  <li>
+    Crear un archivo html y otro archivo js. Linkear el archivo js en el html
+  </li>
+  <li>Declarar una variable que sea el precio en dólares</li>
+  <li>
+    Calcular el precio en pesos siguiendo las reglas descritas anteriormente y
+    guardar dicho valor en otra variable
+  </li>
+  <li>Imprimir por consola ese valor</li>
+</ol>
+<h2>Consigna manija</h2>
+<h3>Clamping</h3>
+<p>
+  En videojuegos, hay stats (valores para habilidades) que suben o bajan por
+  distintos factores. Para evitar que excedan valores deseados, ya sea números
+  muy grandes o muy chicos, se <i>clampean</i> esos valores, es decir, se les pone
+  un piso y un techo. Si superan esos valores, se los restringe a esos límites. Por
+  ejemplo, supongamos que quiero que un determinado valor no sea mayor a 60 y no
+  sea menor a 0. Para valores más grandes como 70 se los deja en 60, para valores
+  más chicos como -10 se los deja en 0, y para valores en el rango como 38 se los
+  deja en 38.
+</p>
+<p>¿Cómo se logra esto? Bueno, hay basicamente dos formas:</p>
+<ul>
+  <li>
+    Para que un número no se pase para arriba, puedo elegir el
+    <strong>mínimo</strong> entre el techo y mi valor. Si el valor es más chico que
+    el techo, va a quedar el valor ya que es más chico, osea, es el mínimo entre
+    los dos valores. Siguiendo el ejemplo de 60 como límite superior, el mínimo entre
+    38 y 60 es 38. Si en cambio, el valor es más grande, el valor que va a quedar
+    es el techo. Con el mismo ejemplo, el mínimo entre 65 y 60 es 60.
+  </li>
+  <li>
+    Para que un número no se pase para abajo, puedo elegir el
+    <strong>máximo</strong> entre el piso y mi valor. Si el valor es más grande que
+    el piso, va a quedar el valor ya que es más grande, osea, es el máximo entre
+    los dos valores. Siguiendo el ejemplo de 0 como límite inferior, el máximo entre
+    38 y 0 es 38. Si en cambio, el valor es más chico, el valor que va a quedar es
+    el piso. Con el mismo ejemplo, el máximo entre -16 y 0 es 0.
+  </li>
+</ul>
+<p>Escribir código para <em>clampear</em> un número entre 0 y 60.</p>
+<ol>
+  <li>
+    Crear un archivo html y otro archivo js. Linkear el archivo js en el html
+  </li>
+  <li>Crear una variable para el número a clampear</li>
+  <li>Googleen como hacer máximos y mínimos en javascript</li>
+  <li>Clampear el número entre 0 y 60. Imprimir por consola el resultado</li>
+  <li>
+    Verificar que el clamping funciona probando que números más chicos de 0
+    quedan en 0, números entre 0 y 60 quedan como están, y números mayores a 60
+    quedan en 60
+  </li>
+</ol>
