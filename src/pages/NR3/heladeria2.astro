@@ -1,4 +1,6 @@
 ---
+import InlineCodeBlock from "../../components/articles/inline-code-block/InlineCodeBlock.astro";
+
 export const partial = true;
 ---
 
@@ -35,11 +37,10 @@ export const partial = true;
     la lista de objetos que se encuentra data/pedidos.json.
     <strong>Debe retornar un objeto</strong> que contenga el atributo
     <code class="language-javascript">ok</code> con el valor
-    <code class="language-javascript">true</code> si el pedido fue guardado
-    correctamente, o <code class="language-javascript">false</code> si no se
-    pudo guardar. Por ejemplo se envía el objeto
-    <code class="language-javascript">{ok:true}</code> si se guardó
-    correctamente.
+    <code class="language-javascript">true</code> si el pedido fue guardado correctamente,
+    o <code class="language-javascript">false</code> si no se pudo guardar. Por ejemplo
+    se envía el objeto
+    <InlineCodeBlock lang="js" code={`{ok:true}`} /> si se guardó correctamente.
   </li>
 </ul>
 <p>
@@ -58,8 +59,7 @@ export const partial = true;
   Hacer un pequeño frontend (HTML + JS) que le consulte al backend por los
   pedidos hechos y los muestre. Van a tener que agregarle funcionalidad al
   backend par cumplir con esto. Pueden hacerlo en modo fiaca y hacer simplemente
-  un <code class="language-javascript">console.log</code> de lo obtenido en el
-  backend.
+  un <code class="language-javascript">console.log</code> de lo obtenido en el backend.
 </p>
 <h2>Consigna Manija II</h2>
 <p>

@@ -1,4 +1,6 @@
 ---
+import CodeBlock from "../../components/articles/code-block/CodeBlock.astro";
+
 export const partial = true;
 ---
 
@@ -68,23 +70,30 @@ export const partial = true;
   han sido robados recientemente. A continuación, el código que resuelve este
   problema:
 </p>
-<!-- prettier-ignore -->
-guage-javascript">let valorBotín = Number(prompt("Ingresar el valor del botín"));
+<CodeBlock
+  code={`
+let valorBotín = Number(prompt("Ingresar el valor del botín"));
 let fueRobadoReciente = prompt("¿Fue robado recientemente? (si/no)");
 fueRobadoReciente = fueRobadoReciente === "si";//Podría ir directo al lado del prompt, pero para que no se mareen tanto
 if(!(valorBotín < 10000 || fueRobadoReciente)){
     alert("Disponible para robar")
 } else {
     alert("No robar")
-}</code></pre>
+}
+`}
+  lang="javascript"
+/>
 <p>
   Modificar el código
-<p>
-  Modificar el código usando las leyes de De Morgan para que en vez de la
-  condicion del if usar un o, use un y. Algunas otras propiedades de booleanos
-  que les pueden servir:
+  <p>
+    Modificar el código usando las leyes de De Morgan para que en vez de la
+    condicion del if usar un o, use un y. Algunas otras propiedades de booleanos
+    que les pueden servir:
+  </p>
+  <ul>
+    <li>no(no(A)) = A</li>
+    <li>
+      no(A &gt; n) = A &le; n (y pueden deducir con menor también, es similar)
+    </li>
+  </ul>
 </p>
-<ul>
-  <li>no(no(A)) = A</li>
-  <li>no(A > n) = A <= n (y pueden deducir con menor también, es similar)</li>
-</ul>

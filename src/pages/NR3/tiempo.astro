@@ -1,4 +1,6 @@
 ---
+import CodeBlock from "../../components/articles/code-block/CodeBlock.astro";
+
 export const partial = true;
 ---
 
@@ -29,14 +31,14 @@ export const partial = true;
   <li>
     <em>"ciudades"</em>: devuelve un objeto con parte del contenido del archivo
     <em>ciudades.json</em>. En particular, solo las capitales provinciales y
-    nacionales. Estas son aquellas ciudades cuyo atributo <em>capital</em> es
-    "admin" o "primary".
+    nacionales. Estas son aquellas ciudades cuyo atributo <em>capital</em> es "admin"
+    o "primary".
   </li>
   <li>
     <em>"limites"</em>: devuelve un objeto con 2 atributos,
     <em>nacional</em> que tiene el contenido del archivo
-    <em>limiteNacional.json</em> y <em>provincial</em> que tiene el contenido
-    del archivo <em>limiteProvincial.json</em>.
+    <em>limiteNacional.json</em> y <em>provincial</em> que tiene el contenido del
+    archivo <em>limiteProvincial.json</em>.
   </li>
 </ul>
 <p>
@@ -46,16 +48,16 @@ export const partial = true;
 <h2>Punto 1</h2>
 <p>
   Ahora si, queremos la información del pronóstico del tiempo. Para eso,
-  responder al evento <em>"pronostico"</em> en SoqueTIC. Este evento recibe de
-  parámetro un lugar, que es un objeto con los atributos latitud y longitud. Es
-  decir, si quiero el pronóstico de buenos aires, me llegaría el siguiente
-  objeto:
+  responder al evento <em>"pronostico"</em> en SoqueTIC. Este evento recibe de parámetro
+  un lugar, que es un objeto con los atributos latitud y longitud. Es decir, si quiero
+  el pronóstico de buenos aires, me llegaría el siguiente objeto:
 </p>
-<!-- prettier-ignore -->
-<pre>
-<code class="language-javascript">
-{latitud: -34.6033, longitud: -58.3817}</code>
-</pre>
+<CodeBlock
+  lang="js"
+  code={`
+  {latitud: -34.6033, longitud: -58.3817}
+  `}
+/>
 <p>
   Con eso, buscar el pronóstico del tiempo. Para eso, vamos a la
   <strong>API de pronóstico del tiempo de OpenMeteo</strong>. No se las voy a
@@ -94,14 +96,14 @@ export const partial = true;
 <ul>
   <li>
     OpenMeteo les muestra código de ejemplo. En el gráfico, hay una pestaña de
-    <em>typescript</em> que tiene lo que ustedes quieren. Typescript no es nada
-    más que javascript pero con tipos (a lo C++).
+    <em>typescript</em> que tiene lo que ustedes quieren. Typescript no es nada más
+    que javascript pero con tipos (a lo C++).
   </li>
   <li>
     Ya lo puse antes, pero lo vuelvo a repetir para enfatizarlo: todo el cacho
     de código que viene después de
-    <code class="language-javascript">fetchWeatherApi</code> lo resuelve la
-    función que les doy yo.
+    <code class="language-javascript">fetchWeatherApi</code> lo resuelve la función
+    que les doy yo.
   </li>
 </ul>
 <h2>Punto 2 (MANIJA)</h2>
@@ -117,6 +119,6 @@ export const partial = true;
 </p>
 <p>
   <strong>TIP:</strong> la función auxiliar
-  <code class="language-javascript">weatherResponse2Array</code> también está
-  bastante preparada para esto, alcanza con modificarle el return.
+  <code class="language-javascript">weatherResponse2Array</code> también está bastante
+  preparada para esto, alcanza con modificarle el return.
 </p>

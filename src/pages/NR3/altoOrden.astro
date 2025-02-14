@@ -1,8 +1,8 @@
 ---
 export const partial = true;
-import { Prism } from '@astrojs/prism';
-import CodeBlock from '../../components/articles/code-block/CodeBlock.astro';
-import InlineCodeBlock from '../../components/articles/inline-code-block/InlineCodeBlock.astro';
+import { Prism } from "@astrojs/prism";
+import CodeBlock from "../../components/articles/code-block/CodeBlock.astro";
+import InlineCodeBlock from "../../components/articles/inline-code-block/InlineCodeBlock.astro";
 ---
 
 <p>
@@ -10,36 +10,39 @@ import InlineCodeBlock from '../../components/articles/inline-code-block/InlineC
   <strong>funciones que toman a otras funciones de parámetro</strong>. Osea,
   funciones de funciones. Veamos un ejemplo:
 </p>
-<CodeBlock lang="js"
-code={`
-        function suma(a, b) {
-          return a + b;
-        }
-        function resta(a, b) {
-          return a - b;
-        }
-        function operacion(a, b, fn) {
-          return fn(a, b);
-        }
-        console.log(operacion(5, 3, suma)); // 8
-        console.log(operacion(5, 3, resta)); // 2`} /> 
+<CodeBlock
+  lang="js"
+  code={`
+  function suma(a, b) {
+    return a + b;
+  }
+  function resta(a, b) {
+    return a - b;
+  }
+  function operacion(a, b, fn) {
+    return fn(a, b);
+  }
+  console.log(operacion(5, 3, suma)); // 8
+  console.log(operacion(5, 3, resta)); // 2`}
+/>
 <p>
   En este ejemplo, la función
-  <InlineCodeBlock lang="js" code="operacion"/> es la función de alto
-  orden, y el parámetro fn es el parámetro función. Fijese como aprovecho el
-  hecho que es una función para llamarla con los parámetros a y b. En el caso de
-  llamar a <InlineCodeBlock lang="js" code="operacion"/> con
-  <InlineCodeBlock lang="js" code="suma"/>, los números suman, mientras que
-  al llamarla con <InlineCodeBlock lang="js" code="resta"/>, los números
-  restan.
+  <InlineCodeBlock lang="js" code="operacion" /> es la función de alto orden, y el
+  parámetro fn es el parámetro función. Fijese como aprovecho el hecho que es una
+  función para llamarla con los parámetros a y b. En el caso de llamar a <InlineCodeBlock
+    lang="js"
+    code="operacion"
+  /> con
+  <InlineCodeBlock lang="js" code="suma" />, los números suman, mientras que al
+  llamarla con <InlineCodeBlock lang="js" code="resta" />, los números restan.
 </p>
 <p>
   Si lo piensan, ¡ya conocen un montón!
   <code class="language-javascript">addEventListener</code>,
   <code class="language-javascript">onEvent</code>,
   <code class="language-javascript">port.on</code> y
-  <code class="language-javascript">forEach</code> son todas funciones de alto
-  orden, ¡Toman otras funciones de parámetros!.
+  <code class="language-javascript">forEach</code> son todas funciones de alto orden,
+  ¡Toman otras funciones de parámetros!.
 </p>
 <h2>Antes de seguir...</h2>
 <p>
@@ -53,20 +56,22 @@ code={`
     >Shulian, ¿OTRA FORMA de hacer ciclos? Ya vimos como 20... while, for,
     forEach</em
   >. Y yo les que digo <em>sí</em>, pero cada vez es mejor: a medida que tenemos
-  programas más complejos, <strong>abstraer</strong> los ciclos nos permite
-  escribir código más breve, más claro y más fácil de mantener. Además, es menos
-  propenso a errores.
+  programas más complejos, <strong>abstraer</strong> los ciclos nos permite escribir
+  código más breve, más claro y más fácil de mantener. Además, es menos propenso
+  a errores.
 </p>
 <p>
   Para explicar voy a dar ejemplos, que van a ser todos sobre el siguiente array
-  de estudiantes (<code class="language-typescript"
-    >{nombre: string, apellido: string, año: number, edad: number}</code
-  >):
+  de estudiantes (
+  <InlineCodeBlock
+    lang="js"
+    code={`{nombre: string, apellido: string, año: number, edad: number}`}
+  />
+  ):
 </p>
-<!-- prettier-ignore -->
-<pre>
-  
-  <code class="language-javascript">
+<CodeBlock
+  lang="js"
+  code={`
         let estudiantes = [
           { nombre: "Ivo", apellido: "Degange", edad: 15, año: 3 },
           { nombre: "Carolina", apellido: "Kupcevich", edad: 16, año: 4 },
@@ -75,22 +80,23 @@ code={`
           { nombre: "Darío", apellido: "Mischener", edad: 16, año: 4 },
           { nombre: "Julián", apellido: "Zylber", edad: 17, año: 5 },
         ];
-        </code></pre>
+      `}
+/>
 <p>
   Además, vamos a hablar todo el tiempo de dos funciones: la función de alto
   orden, y la función que toma de parámetro. En el caso del ejemplo anterior,
-  <code class="language-javascript">operacion</code> era la función de alto
-  orden, y la función parámetro era <code class="language-javascript">fn</code>.
-  Para no volverme loco y que sea hiper confuso que esté todo el tiempo hablando
-  de dos funciones, a esta segunda función parámetro (<em>fn</em>) la voy a
-  empezar a llamar <strong>callback</strong>. Ahora si, sigamos.
+  <code class="language-javascript">operacion</code> era la función de alto orden,
+  y la función parámetro era <code class="language-javascript">fn</code>. Para
+  no volverme loco y que sea hiper confuso que esté todo el tiempo hablando de
+  dos funciones, a esta segunda función parámetro (<em>fn</em>) la voy a empezar
+  a llamar <strong>callback</strong>. Ahora si, sigamos.
 </p>
 <h2>Map</h2>
 <p>
-  La función <code class="language-javascript">map</code> es una función que
-  dado un array y un callback, y devuelve un nuevo array con los elementos
-  resultantes de llamar a callback con cada elemento del array. Dicho callback
-  debe recibir un parámetro que va a ser cada elemento del array.
+  La función <code class="language-javascript">map</code> es una función que dado
+  un array y un callback, y devuelve un nuevo array con los elementos resultantes
+  de llamar a callback con cada elemento del array. Dicho callback debe recibir un
+  parámetro que va a ser cada elemento del array.
 </p>
 <p>
   Veamos el siguiente ejemplo. Dada la lista de estudiantes que di en la sección
@@ -98,21 +104,25 @@ code={`
   hacer un ciclo que recorra el array y vaya agregando los nombres a un nuevo
   array. Algo así:
 </p>
-<CodeBlock lang="js"
-code={`let nombres = [];
+<CodeBlock
+  lang="js"
+  code={`let nombres = [];
       for (let i = 0; i < estudiantes.length; i++) {
         nombres.push(estudiantes[i].nombre);
       }
       // nombres = ["Ivo", "Carolina", "Lucía", "Paula", "Darío", "Julián"]`}
+/>
 <p>
   Este es un claro caso para poder usar map, ya que tengo que hacer la misma
   operación en todos elementos. Usando map, el ciclo queda:
 </p>
-<!-- prettier-ignore -->
-<pre><code class="language-javascript">
+<CodeBlock
+  lang="js"
+  code={`
       let nombres = estudiantes.map((estudiante) => {return estudiante.nombre});
       // nombres = ["Ivo", "Carolina", "Lucía", "Paula", "Darío", "Julián"]
-      </code></pre>
+      `}
+/>
 <p>
   En este caso, el callback toma a un estudiante y devuelve su nombre. Entonces,
   resumiendo:
@@ -138,8 +148,8 @@ code={`let nombres = [];
   ¿Se acuerdan del cifrado césar? Pueden googlearlo nuevamente. Implementar,
   usando <code class="language-javascript">map</code>, la función
   <code class="language-typescript">cifrar(palabra:string,clave:number)</code>
-  que dada una palabra string y una clave numérica, devuelve la palabra cifrada
-  usando César.
+  que dada una palabra string y una clave numérica, devuelve la palabra cifrada usando
+  César.
   <strong
     >Pueden usar la solución que les di en clase como punto de partida.</strong
   >
@@ -159,30 +169,23 @@ code={`let nombres = [];
 <p>
   La función filter es la que tiene el nombre más intuitivo: filtra un array.
   Toma un callback, que toma un elemento, y devuelve
-  <code class="language-javascript">true</code> si quiero que ese elemento esté
-  en el array resultante, y <code class="language-javascript">false</code> si
-  no. Es decir, filter ejecuta el callback sobre cada elemento del array, y si
-  el callback devuelve true, ese elemento va a estar en el array final.
+  <code class="language-javascript">true</code> si quiero que ese elemento esté en
+  el array resultante, y <code class="language-javascript">false</code> si no. Es
+  decir, filter ejecuta el callback sobre cada elemento del array, y si el callback
+  devuelve true, ese elemento va a estar en el array final.
 </p>
 <p>
   Veamos un ejemplo. Si quiero de la lista de estudiantes quedarme con los de
   tercero, puedo armar el siguiente programa:
 </p>
-<!-- prettier-ignore -->
-<CodeBlock lang="js"
-code={`let tercero = [];
-      for (let i = 0; i < estudiantes.length; i++) {
-        if (estudiantes[i].año === 3) {
-          tercero.push(estudiantes[i]);
-        }
-      }
-      // tercero = [{ nombre: "Ivo", apellido: "Degange", edad: 15, año: 3 }, { nombre: "Lucía", apellido: "Parrondo", edad: 15, año: 3 }]`}` />
 <p>Usando filter, el ciclo queda:</p>
-<!-- prettier-ignore -->
-<pre><code class="language-javascript">
+<CodeBlock
+  lang="js"
+  code={`
       let tercero = estudiantes.filter((estudiante) => {return estudiante.año === 3});
       // tercero = [{ nombre: "Ivo", apellido: "Degange", edad: 15, año: 3 }, { nombre: "Lucía", apellido: "Parrondo", edad: 15, año: 3 }]
-      </code></pre>
+      `}
+/>
 <p>¡Una belleza! Resumiendo:</p>
 <ul>
   <li>
@@ -192,8 +195,8 @@ code={`let tercero = [];
   <li>
     El callback toma un elemento del array y devuelve
     <code class="language-javascript">true</code> o
-    <code class="language-javascript">false</code> dependiendo si el elemento
-    debe o no aparecer en el array filtrado.
+    <code class="language-javascript">false</code> dependiendo si el elemento debe
+    o no aparecer en el array filtrado.
   </li>
   <li>
     El resultado de filter es un nuevo array con el mismo tipo de elementos del
@@ -219,20 +222,23 @@ code={`let tercero = [];
   para luego dividir por la longitud del array. En código:
 </p>
 <CodeBlock
-lang="js"
-code ={`let sumaEdades = 0;
+  lang="js"
+  code={`let sumaEdades = 0;
       for (let i = 0; i < estudiantes.length; i++) {
         sumaEdades += estudiantes[i].edad;
       }
       let promedio = sumaEdades / estudiantes.length;
-      // promedio = 16.166..`} />
+      // promedio = 16.166..`}
+/>
 <p>Ahora, usando <em>reduce</em>:</p>
-<!-- prettier-ignore -->
-<pre><code class="language-javascript">
+<CodeBlock
+  lang="js"
+  code={`
       let suma = estudiantes.reduce((acumulador, estudiante) => {return acumulador + estudiante.edad}, 0);
       let promedio = suma / estudiantes.length;
       // promedio = 16.166..
-      </code></pre>
+      `}
+/>
 <p>¿Eh? ¿Que es esa magia? Vayamos paso a paso...</p>
 <ul>
   <li>
@@ -245,8 +251,8 @@ code ={`let sumaEdades = 0;
     primero) y el elemento.
   </li>
   <li>
-    El <strong>callback</strong> retorna el valor del acumulador a ser enviado
-    al siguiente elemento.
+    El <strong>callback</strong> retorna el valor del acumulador a ser enviado al
+    siguiente elemento.
   </li>
   <li>
     Reduce entonces, se puede pensar de la siguiente forma:
@@ -280,18 +286,21 @@ code ={`let sumaEdades = 0;
     datos del año 2013.
   </li>
   <li>
-    Aplicando <code class="language-javascript">reduce</code> al resultado del
-    filtro, contar todas las vacas que había ese año.
+    Aplicando <code class="language-javascript">reduce</code> al resultado del filtro,
+    contar todas las vacas que había ese año.
   </li>
 </ol>
 <p>
   ¿Se animan a hacer algo más complejo? En vez de devolver la cantidad de vacas
   del año 2013, usar
-  <code class="language-javascript">reduce</code> para armar un objeto que
-  guarde la cantidad de vacas por año. Es decir, el objeto debería tener la
-  forma
-  <code class="language-typescript">{2008: number, 2009: number, ...}</code>.
-  <strong>TIP:</strong> piensen el tipo y valor inicial del acumulador...
+  <code class="language-javascript">reduce</code> para armar un objeto que guarde
+  la cantidad de vacas por año. Es decir, el objeto debería tener la forma
+  <InlineCodeBlock
+    lang="js"
+    code={`{2008: number, 2009: number, ...}`}
+    .
+    <strong>TIP:</InlineCodeBlock
+  > piensen el tipo y valor inicial del acumulador...
 </p>
 <h2>Encadenamiento de funciones</h2>
 <p>
@@ -305,8 +314,8 @@ code ={`let sumaEdades = 0;
   cantidad de letras) de los estudiantes de 3ero. Usando nuestros viejos modos:
 </p>
 <CodeBlock
-lang="js"
-code={`
+  lang="js"
+  code={`
         // Estudiantes de 3ero
         let tercero = [];
         for (let i = 0; i < estudiantes.length; i++) {
@@ -326,14 +335,15 @@ code={`
             nombreMásLargo = nombres[i];
           }
         }
-        console.log(nombreMásLargo);// "Lucía"`}/>
+        console.log(nombreMásLargo);// "Lucía"`}
+/>
 
 <p>
   Ahora, usando <em>map, filter</em> y <em>reduce</em> una después de la otra...
 </p>
 <CodeBlock
-lang="js"
-code={` let nombreMásLargo = estudiantes
+  lang="js"
+  code={` let nombreMásLargo = estudiantes
         .filter((estudiante) => {return estudiante.año === 3})
         .map((estudiante) => {return estudiante.nombre})
         .reduce((acumulador, nombre) => {
@@ -343,7 +353,8 @@ code={` let nombreMásLargo = estudiantes
             return acumulador
           }
         }, "");
-      console.log(nombreMásLargo);// "Lucía"`}/>=
+      console.log(nombreMásLargo);// "Lucía"`}
+/>
 <p><em>Biutiful</em>.</p>
 <h2>Cuadro comparativo</h2>
 <p>A continuación un cuadro comparativo entre las 3 funciones:</p>
@@ -402,21 +413,23 @@ code={` let nombreMásLargo = estudiantes
   Bueno, yo les di información incompleta. En todos los casos, los
   <strong>callback</strong>, luego del parámetro del elemento (el primero para
   map y filter, el segundo para reduce) pueden tomar
-  <strong>opcionalmente</strong> 2 parámetros más: el índice del elemento y el
-  array completo.
+  <strong>opcionalmente</strong> 2 parámetros más: el índice del elemento y el array
+  completo.
 </p>
 <p>
   Supongamos que de nuestra lista de estudiantes queremos armar dos grupos, y
   los vamos a armar dependiendo de la posición en la lista: pares por un lado,
   impares por el otro. Usando <em>filter</em>...
 </p>
-<!-- prettier-ignore -->
-<pre><code class="language-javascript">
+<CodeBlock
+  lang="js"
+  code={` 
         let grupoPar = estudiantes.filter((estudiante, i) => {return i % 2 === 0});
         // grupoPar = [{ nombre: "Ivo", apellido: "Degange", edad: 15, año: 3 }, { nombre: "Lucía", apellido: "Parrondo", edad: 15, año: 3 }, { nombre: "Darío", apellido: "Mischener", edad: 16, año: 4 }]
         let grupoImpar = estudiantes.filter((estudiante, i) => {return i % 2 === 1});
         // grupoImpar = [{ nombre: "Carolina", apellido: "Kupcevich", edad: 16, año: 4 }, { nombre: "Paula", apellido: "Sapochnik", edad: 18, año: 5 }, { nombre: "Julián", apellido: "Zylber", edad: 17, año: 5 }]
-      </code></pre>
+        `}
+/>
 <p>
   Basta para mí basta para todos. ¡Usénlas de ahora en más! Si las saben, chau
   for y forEach.

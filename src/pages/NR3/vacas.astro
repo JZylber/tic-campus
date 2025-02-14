@@ -1,4 +1,6 @@
 ---
+import CodeBlock from "../../components/articles/code-block/CodeBlock.astro";
+
 export const partial = true;
 ---
 
@@ -38,8 +40,7 @@ export const partial = true;
 </p>
 <p>
   <strong
-    >Sin el punto 0 bien hecho no pueden correr ninguno de los otros
-    puntos</strong
+    >Sin el punto 0 bien hecho no pueden correr ninguno de los otros puntos</strong
   >
 </p>
 <h2>Punto 1</h2>
@@ -52,30 +53,29 @@ export const partial = true;
 </p>
 <p>
   Responder al evento <em>"datosBovinos"</em>, que recibe un objeto de 4
-  atributos, año, provincia (que contiene el <strong>id</strong> de la
-  provincia), departamento (que contiene el <strong>id</strong> del
-  departamento) y bovino. Usando la información de vacas.json, debe devolver la
-  cantidad de bovinos que hay en ese año, provincia, departamento y tipo de
-  bovino. Por ejemplo, si se envía el objeto:
+  atributos, año, provincia (que contiene el <strong>id</strong> de la provincia),
+  departamento (que contiene el <strong>id</strong> del departamento) y bovino. Usando
+  la información de vacas.json, debe devolver la cantidad de bovinos que hay en ese
+  año, provincia, departamento y tipo de bovino. Por ejemplo, si se envía el objeto:
 </p>
-<!-- prettier-ignore -->
-<pre><code class="language-javascript">
-{
+<CodeBlock
+  lang="js"
+  code={`
   año: 2010,
   provincia: 70,
   departamento: 70119,
   bovino: "vaquillonas"
-}
-          </code>
-        </pre>
+}`}
+/>
+
 <p>
   debe devolver 2785. Para que prueben, esos datos corresponden a la provincia
   de San Juan, departamento de Valle Fértil.
 </p>
 <h2>Punto 2</h2>
 <p>
-  Responder al evento <em>"datosAñoProvincia"</em> que recibe un objeto con dos
-  atributos: año y provincia (que contiene el id, no el nombre).
+  Responder al evento <em>"datosAñoProvincia"</em> que recibe un objeto con dos atributos:
+  año y provincia (que contiene el id, no el nombre).
 </p>
 <p>
   Devolver una lista con todos los objetos de vacas.json que cumplan con ser de
@@ -83,8 +83,8 @@ export const partial = true;
 </p>
 <h2>Punto 3 (MANIJA)</h2>
 <p>
-  Responder al evento <em>"variacionPorProvincia"</em> con una lista que
-  contenga objetos de la forma:
+  Responder al evento <em>"variacionPorProvincia"</em> con una lista que contenga
+  objetos de la forma:
 </p>
 <ol>
   <li>Atributo "nombre", con el nombre de la provincia</li>
@@ -94,9 +94,9 @@ export const partial = true;
       >el porcentaje de aumento o disminución entre el total de bovinos por
       provincia</strong
     >
-    para el total de bovinos para cada categoría (vacas, novillos, novillitos,
-    terneros, terneras, toros, toritos, bueyes). Es decir, tiene que haber un
-    atributo por cada categoría.
+    para el total de bovinos para cada categoría (vacas, novillos, novillitos, terneros,
+    terneras, toros, toritos, bueyes). Es decir, tiene que haber un atributo por
+    cada categoría.
   </li>
 </ol>
 <p>
@@ -110,8 +110,7 @@ export const partial = true;
   0% si sigue en 0.
 </p>
 <p>
-  <strong>SUGERENCIA:</strong> para hacer este ejercicio, se sugiere hacer lo
-  siguiente
+  <strong>SUGERENCIA:</strong> para hacer este ejercicio, se sugiere hacer lo siguiente
 </p>
 <ol>
   <li>
