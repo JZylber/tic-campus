@@ -1,6 +1,8 @@
 ---
 export const partial = true;
 import { Prism } from '@astrojs/prism';
+import CodeBlock from '../../components/articles/code-block/CodeBlock.astro';
+import InlineCodeBlock from '../../components/articles/inline-code-block/InlineCodeBlock.astro';
 ---
 
 <p>
@@ -8,9 +10,8 @@ import { Prism } from '@astrojs/prism';
   <strong>funciones que toman a otras funciones de parámetro</strong>. Osea,
   funciones de funciones. Veamos un ejemplo:
 </p>
-<!-- prettier-ignore -->
-<pre>
-  <Prism lang="js" code={`
+<CodeBlock lang="js"
+code={`
         function suma(a, b) {
           return a + b;
         }
@@ -22,15 +23,14 @@ import { Prism } from '@astrojs/prism';
         }
         console.log(operacion(5, 3, suma)); // 8
         console.log(operacion(5, 3, resta)); // 2`} /> 
-</pre>
 <p>
   En este ejemplo, la función
-  <code class="language-javascript">operacion</code> es la función de alto
+  <InlineCodeBlock lang="js" code="operacion"/> es la función de alto
   orden, y el parámetro fn es el parámetro función. Fijese como aprovecho el
   hecho que es una función para llamarla con los parámetros a y b. En el caso de
-  llamar a <code class="language-javascript">operacion</code> con
-  <code class="language-javascript">suma</code>, los números suman, mientras que
-  al llamarla con <code class="language-javascript">resta</code>, los números
+  llamar a <InlineCodeBlock lang="js" code="operacion"/> con
+  <InlineCodeBlock lang="js" code="suma"/>, los números suman, mientras que
+  al llamarla con <InlineCodeBlock lang="js" code="resta"/>, los números
   restan.
 </p>
 <p>

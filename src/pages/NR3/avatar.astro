@@ -1,6 +1,8 @@
 ---
 export const partial = true;
-import { Prism } from "@astrojs/prism";
+import { Code } from "astro:components";
+import CodeBlock from "../../components/articles/code-block/CodeBlock.astro";
+import InlineCodeBlock from "../../components/articles/inline-code-block/InlineCodeBlock.astro";
 ---
 
 <h2>Consigna Base</h2>
@@ -11,25 +13,24 @@ import { Prism } from "@astrojs/prism";
 </p>
 <p>
   Para poder cambiar entre opciones, hay que modificar el objeto
-  <code class="language-javascript">avatar</code> que inicia de la siguiente forma:
+  <InlineCodeBlock lang="js" code={"avatar"} /> que inicia de la siguiente forma:
 </p>
-<pre>
-<Prism lang="js" code={`
+<CodeBlock
+  lang="js"
+  code={`
   let avatar = {
     ropa: 1,
     boca: 1,
     ojos: 1,
     pelo: 1
-}
-`} />  
-</pre>
+  };`}
+/>
 <p>
   En particular, la función
-  <code class="language-javascript">actualizarAvatar</code> usa este objeto para
-  construir el avatar. Es decir, para modificar el avatar, se deben modificar los
-  atributos del objeto <code class="language-javascript">avatar</code> y luego llamar
-  a la función
-  <code class="language-javascript">actualizarAvatar</code>.
+  <InlineCodeBlock lang="js" code="actualizarAvatar" /> usa este objeto para construir
+  el avatar. Es decir, para modificar el avatar, se deben modificar los atributos
+  del objeto <InlineCodeBlock lang="js" code="avatar" /> y luego llamar a la función
+  <InlineCodeBlock lang="js" code="actualizarAvatar" />.
 </p>
 <p>
   Completar el código para que al hacer click en el botón
@@ -61,27 +62,30 @@ import { Prism } from "@astrojs/prism";
   </li>
   <li>
     Tienen que modificar el objeto
-    <code class="language-javascript">avatar</code> para que acepte la categoria
-    anteojos (puede ser un booleano en vez de un número).
+    <InlineCodeBlock lang="js" code="avatar" /> para que acepte la categoria anteojos
+    (puede ser un booleano en vez de un número).
   </li>
   <li>
     <p>
       Tienen que modificar la función
-      <code class="language-javascript">actualizarAvatar</code> para que saque/ponga
+      <InlineCodeBlock lang="js" code="actualizarAvatar" /> para que saque/ponga
       anteojos dependiendo del estado del objeto. Yo sugiero alguna de estas dos
       formas:
     </p>
     <ol>
       <li>
         Tocar el atributo
-        <code class="language-javascript">style.display</code> de la imagen y setearlo
+        <InlineCodeBlock lang="js" code="style.display" /> de la imagen y setearlo
         en "block"(visible) o "none"(invisible).
       </li>
       <li>
         Usando un truco similar al usado en la consigna manija de
         <em>TICet</em>, crear una clase css que tenga "display: none", y
         agregarla/quitarla a la lista de clases (atributo
-        classlist.add(&ltnombreClase&gt) o classlist.remove(&ltnombreClase&gt))
+        <InlineCodeBlock lang="js" code={"classlist.add(<nombreClase>)"} /> o <InlineCodeBlock
+          lang="js"
+          code={"classlist.remove(<nombreClase>)"}
+        />
         dependiendo si quiero que el elemento esté visible o no.
       </li>
     </ol>

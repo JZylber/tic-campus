@@ -1,0 +1,7 @@
+---
+import { Code } from "astro:components";
+
+const { code, lang } = Astro.props;
+---
+
+<Code inline lang={lang} code={code} inline class="px-2 py-1 rounded-sm" />
