@@ -7,6 +7,8 @@ import "../styles/global.css";
 
 <Layout>
   <h1>Hola</h1>
-  <button hx-get="/NR3/altoOrden" hx-target="#doc">Load</button>
-  <div id="doc"></div>
+  <span
+    x-data="{currentSection: $store.section.currentSection}"
+    x-text="currentSection"
+    x-effect="currentSection = $store.section.currentSection"></span>
 </Layout>

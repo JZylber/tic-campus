@@ -9,4 +9,16 @@ body {
 
 @theme {
   --font-sans: "Lato", sans-serif;
+  --color-sh-black: rgb(27, 27, 27);
+  --color-sh-dark-gray: #2a2a2a;
+  --color-sh-purple: rgb(195, 172, 250);
+  --color-sh-light-purple: rgba(229, 222, 252, 1);
+  --color-sh-blue: rgba(34, 190, 251, 1);
+  --color-sh-light-blue: rgba(216, 238, 255, 1);
+  --color-sh-red: rgba(255, 52, 59, 1);
+  --color-sh-light-red: rgba(255, 238, 239, 1);
+  --color-sh-yellow: rgba(253, 176, 29, 1);
+  --color-sh-light-yellow: rgba(254, 250, 236, 1);
+  --color-sh-green: rgba(31, 203, 95, 1);
+  --color-sh-light-green: rgba(233, 253, 242, 1);
 }

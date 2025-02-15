@@ -1,0 +1,34 @@
+---
+interface Item {
+  name: string;
+  icon: string;
+}
+
+const items = [
+  { name: "home", icon: "home" },
+  { name: "actividades", icon: "school" },
+  { name: "reentregas", icon: "replay" },
+  { name: "programa", icon: "event_note" },
+  { name: "material", icon: "construction" },
+] as Item[];
+---
+
+<nav
+  class="flex flex-col gap-y-2 bg-sh-black text-white p-4 w-[250px] shrink-0 h-full leading-normal rounded-xl"
+  x-data={`{items: ${JSON.stringify(items)}}`}
+>
+  <template x-for="item in items">
+    <div
+      x-on:click="$store.section.changeSection(item.name)"
+      class="flex items-center p-2 cursor-pointer gap-x-4 rounded-md"
+      x-bind:class="{ 'bg-sh-dark-gray': $store.section.currentSection === item.name }"
+    >
+      <span x-text="item.icon" class="material-symbols-outlined text-[24px]"
+      ></span>
+      <span
+        class="text-lg"
+        x-text="item.name[0].toUpperCase() + item.name.slice(1, item.name.length)"
+      ></span>
+    </div>
+  </template>
+</nav>
