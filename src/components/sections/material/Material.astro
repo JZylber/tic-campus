@@ -1,7 +1,43 @@
 ---
+import { getSubjectMaterial } from "../../../aux/fetchData";
 import SectionLayout from "../SectionLayout.astro";
+
+interface Props {
+  subject: string;
+}
+
+const { subject } = Astro.props;
+const material = await getSubjectMaterial(subject);
 ---
 
 <SectionLayout name="material">
-  <span>material</span>
+  <div
+    class="grid gap-2 grid-cols-[repeat(auto-fill,minmax(300px,1fr))] auto-rows-fr"
+  >
+    <template x-for={`material in ${JSON.stringify(material)}`}>
+      <a
+        class="flex flex-col p-4 border-2 border-gray-300 rounded-xl cursor-pointer hover:shadow-lg gap-y-2 bg-gray-50"
+        x-bind:href="material.link"
+      >
+        <img
+          x-bind:src="material.image"
+          alt="imagen material"
+          class="rounded-xl object-cover w-full aspect-video"
+        />
+        <div
+          class="rounded-full py px-2 w-fit"
+          x-bind:class="{
+      'bg-sh-light-blue text-sh-blue': material.type === 'Tutorial',
+      'bg-sh-light-yellow text-sh-yellow': material.type === 'Herramienta',
+      'bg-sh-light-red text-sh-red': material.type === 'Demo',
+      'bg-sh-light-purple text-sh-purple': material.type === 'Bibliografía',
+      'bg-sh-light-green text-sh-green': material.type === 'Extra'}"
+        >
+          <span x-text="material.type"></span>
+        </div>
+        <h2 class="font-semibold text-[16px]" x-text="material.name"></h2>
+        <p x-text="material.description" class="text-gray-600"></p>
+      </a>
+    </template>
+  </div>
 </SectionLayout>

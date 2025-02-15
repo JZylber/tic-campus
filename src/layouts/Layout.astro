@@ -1,7 +1,3 @@
----
-import Navbar from "../components/navbar/Navbar.astro";
----
-
 <!doctype html>
 <html lang="en">
   <head>
@@ -26,7 +22,6 @@ import Navbar from "../components/navbar/Navbar.astro";
       class="w-full h-[calc(100vh-64px-1rem)] gap-x-4 flex font-lato relative"
       x-data="{}"
     >
-      <Navbar />
       <slot />
     </div>
     <script is:inline src="/src/aux/stores.ts" type="module"></script>
