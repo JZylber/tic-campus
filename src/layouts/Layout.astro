@@ -1,3 +1,7 @@
+---
+import Stores from "../components/stores/Stores.astro";
+---
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -24,6 +28,6 @@
     >
       <slot />
     </div>
-    <script is:inline src="/src/aux/stores.ts" type="module"></script>
+    <Stores />
   </body>
 </html>
