@@ -11,7 +11,7 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
   },
-  site: "https://jzylber.github.io/tic-campus",
+  site: "https://jzylber.github.io",
   build: {
     assets: "astro",
   },
