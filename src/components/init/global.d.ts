@@ -8,4 +8,5 @@ declare global {
     subject: string
   ) => Promise<{ activitiesRedo: string; markedActivitiesRedo: string }>;
   var getSubjectMaterial: (subject: string) => Promise<Material[]>;
+  var getCourseLink: (course: string) => Promise<string>;
 }
