@@ -62,7 +62,7 @@ const { subject, course } = Astro.params;
     <Home />
     <Activities />
     <Redos />
-    <Program />
+    <Program year={parseInt(course[2])} />
     <Material subject={subject} />
   </main>
 </Layout>
