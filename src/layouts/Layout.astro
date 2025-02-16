@@ -1,5 +1,5 @@
 ---
-import Stores from "../components/stores/Stores.astro";
+import Stores from "../components/init/Stores.astro";
 ---
 
 <!doctype html>
@@ -29,5 +29,6 @@ import Stores from "../components/stores/Stores.astro";
       <slot />
     </div>
     <Stores />
+    <script src="/src/components/init/main.ts"></script>
   </body>
 </html>
