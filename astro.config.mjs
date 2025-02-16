@@ -7,9 +7,13 @@ import tailwindcss from "@tailwindcss/vite";
 // https://astro.build/config
 export default defineConfig({
   integrations: [alpinejs()],
-
+  output: "static",
   vite: {
     plugins: [tailwindcss()],
   },
   site: "https://jzylber.github.io",
+  base: "campus",
+  build: {
+    assets: "astro",
+  },
 });
