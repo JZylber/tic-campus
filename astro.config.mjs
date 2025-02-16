@@ -12,7 +12,6 @@ export default defineConfig({
     plugins: [tailwindcss()],
   },
   site: "https://jzylber.github.io",
-  base: "campus",
   build: {
     assets: "astro",
   },
