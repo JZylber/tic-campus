@@ -15,4 +15,5 @@ export default defineConfig({
   build: {
     assets: "astro",
   },
+  base: "/tic-campus/",
 });
