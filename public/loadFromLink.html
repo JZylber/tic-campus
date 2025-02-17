@@ -1,0 +1,45 @@
+<script>
+  let campusLink =
+    "https://campus.ort.edu.ar/secundaria/belgrano/tic/descargar/repositorioarchivo/2185515/index.html";
+  let parent = document.currentScript.closest(".bodySitio");
+  const baseURL = "https://jzylber.github.io/";
+  let campusText = fetch(campusLink)
+    .then((response) => {
+      return response.text();
+    })
+    .then((html) => {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, "text/html");
+      // Append all link and style tags to head
+      doc.querySelectorAll("link, style").forEach((el) => {
+        document.head.appendChild(el);
+      });
+      // Create copies of all script tags and append them to the head
+      doc.querySelectorAll("script").forEach((el) => {
+        let script = document.createElement("script");
+        // Copy all script attributes
+        for (let i = 0; i < el.attributes.length; i++) {
+          script.setAttribute(el.attributes[i].name, el.attributes[i].value);
+        }
+        script.innerHTML = el.innerHTML;
+        document.head.appendChild(script);
+      });
+      // Create a div tag with the id "leftoverinformation", display none and append all breadcrumbs and menu to it
+      let leftoverDiv = document.createElement("div");
+      leftoverDiv.style.display = "none";
+      leftoverDiv.id = "leftoverinformation";
+      let breadcrumbs = document
+        .querySelectorAll("a.breadcrumb")
+        .forEach((el) => {
+          leftoverDiv.innerHTML += el.outerHTML;
+        });
+      // Get the div with classes col and s1 and add to the template
+      let menu = document.querySelector(".col.s1 ul");
+      if (menu) {
+        leftoverDiv.innerHTML += menu.outerHTML;
+      }
+
+      //Set parents innerHTML to template + doc body innerHtml
+      parent.innerHTML = leftoverDiv.outerHTML + doc.body.innerHTML;
+    });
+</script>
