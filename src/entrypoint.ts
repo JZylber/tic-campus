@@ -25,7 +25,7 @@ export default (Alpine: Alpine) => {
     },
     init() {
       if (isOnCampus()) {
-        this.changeURL("https://jzylber.github.io/tic-campus");
+        this.changeURL("https://jzylber.github.io/");
       }
     },
   } as {
