@@ -1,0 +1,21 @@
+<style>
+  .htmx-indicator {
+    opacity: 0;
+    z-index: -100;
+    transition: opacity 500ms ease-in;
+  }
+  .htmx-request .htmx-indicator {
+    opacity: 1;
+    z-index: 100;
+  }
+  .htmx-request.htmx-indicator {
+    opacity: 1;
+    z-index: 100;
+  }
+</style>
+
+<div
+  class="htmx-indicator absolute flex justify-center items-center h-full w-full bg-gray-50"
+>
+  <div class="loader"></div>
+</div>
