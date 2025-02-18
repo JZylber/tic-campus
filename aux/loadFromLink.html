@@ -59,7 +59,7 @@
   if (menu) {
     leftoverDiv.innerHTML += menu.outerHTML;
   }
-  shadow.appendChild(leftoverDiv);
+  body.appendChild(leftoverDiv);
   // Get all script tags
   const scripts = [...doc.querySelectorAll("script")];
   //Remove from doc
@@ -89,8 +89,6 @@
     } else {
       newScript.innerText = el.innerText;
     }
-    //Remove el
-    el.remove();
     shadow.appendChild(newScript);
   });
 </script>
