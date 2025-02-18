@@ -1,92 +1,91 @@
-<script>
+<script type="module" id="campus-insertion">
   const subject = "Desarrollo de Aplicaciones Informáticas";
   const course = "NR5A";
   let campusLink = encodeURI(
     `https://jzylber.github.io/tic-campus/${subject}-${course}`
   );
-  let parent = document.currentScript.closest(".bodySitio");
   const baseURL = "https://jzylber.github.io/";
-  let campusText = fetch(campusLink)
-    .then((response) => {
+  const fetchTagContent = (url) => {
+    return fetch(url).then((response) => {
       return response.text();
-    })
-    .then((html) => {
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(html, "text/html");
-      // Append all link and style tags to head
-      doc.querySelectorAll("link, style").forEach((el) => {
-        // All link tags with href that starts with /tic-campus should be added the base URL at the front
-        if (
-          el.href &&
-          el.href.startsWith("https://campus.ort.edu.ar/tic-campus")
-        ) {
-          el.setAttribute(
-            "href",
-            el.href.replace("https://campus.ort.edu.ar/", baseURL)
-          );
-        }
-        document.head.appendChild(el);
-      });
-      // Create copies of all script tags and append them to the head
-      doc.querySelectorAll("script").forEach((el) => {
-        let script = document.createElement("script");
-        // Copy all script attributes
-        for (let i = 0; i < el.attributes.length; i++) {
-          script.setAttribute(el.attributes[i].name, el.attributes[i].value);
-        }
-        // if src attribute starts with /tic-campus should be added the base URL at the front
-        if (
-          script.src &&
-          script.src.startsWith("https://campus.ort.edu.ar/tic-campus")
-        ) {
-          script.setAttribute(
-            "src",
-            script.src.replace("https://campus.ort.edu.ar/", baseURL)
-          );
-        }
-        script.innerHTML = el.innerHTML;
-
-        document.body.appendChild(script);
-      });
-      // Create a div tag with the id "leftoverinformation", display none and append all breadcrumbs and menu to it
-      let leftoverDiv = document.createElement("div");
-      leftoverDiv.style.display = "none";
-      leftoverDiv.id = "leftoverinformation";
-      let breadcrumbs = document
-        .querySelectorAll("a.breadcrumb")
-        .forEach((el) => {
-          leftoverDiv.innerHTML += el.outerHTML;
-        });
-      // Get the div with classes col and s1 and add to the template
-      let menu = document.querySelector(".col.s1 ul");
-      if (menu) {
-        leftoverDiv.innerHTML += menu.outerHTML;
-      }
-      //script tags in doc body that start with /tic-campus should be added the base URL at the front
-      doc.body.querySelectorAll("script").forEach((el) => {
-        // new script tag
-        let script = document.createElement("script");
-        // Copy all script attributes
-        for (let i = 0; i < el.attributes.length; i++) {
-          script.setAttribute(el.attributes[i].name, el.attributes[i].value);
-        }
-        // if src attribute starts with /tic-campus should be added the base URL at the front
-        if (
-          el.src &&
-          el.src.startsWith("https://campus.ort.edu.ar/tic-campus")
-        ) {
-          script.setAttribute(
-            "src",
-            script.src.replace("https://campus.ort.edu.ar/", baseURL)
-          );
-        }
-        script.innerHTML = el.innerHTML;
-        // remove the script tag from the doc
-        el.remove();
-        // append the script tag to the end of the body
-        document.body.appendChild(script);
-      });
-      //Set parents innerHTML to template + doc body innerHtml
-      parent.innerHTML = leftoverDiv.outerHTML + doc.body.innerHTML;
     });
+  };
+
+  let campusHTML = await fetch(campusLink).then((response) => {
+    return response.text();
+  });
+  // Clear parent and add shadow DOM
+  let parent = document
+    .getElementById("campus-insertion")
+    .closest(".bodySitio");
+  parent.id = "campus-insertion";
+  parent.innerHTML = "";
+  const shadow = parent.attachShadow({ mode: "open" });
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(campusHTML, "text/html");
+  // Append all link and style tags to head
+  const linkTags = [...doc.querySelectorAll("link, style")].map(async (el) => {
+    // All link tags with href that starts with /tic-campus should be added the base URL at the front
+    if (el.href && el.href.startsWith("https://campus.ort.edu.ar/tic-campus")) {
+      const url = el.href.replace("https://campus.ort.edu.ar/", baseURL);
+      const newStyle = document.createElement("style");
+      newStyle.innerText = await fetchTagContent(url);
+      shadow.appendChild(newStyle);
+    } else {
+      if (el.tagName === "LINK") {
+        shadow.appendChild(el);
+        // Clone element and append it to head
+        const newLink = el.cloneNode();
+        newLink.href = el.href;
+        document.head.appendChild(newLink);
+      } else {
+        shadow.appendChild(el);
+      }
+    }
+  });
+  await Promise.all(linkTags);
+  // Create a div tag with the id "leftoverinformation", display none and append all breadcrumbs and menu to it
+  let leftoverDiv = document.createElement("div");
+  leftoverDiv.style.display = "none";
+  leftoverDiv.id = "leftoverinformation";
+  let breadcrumbs = document.querySelectorAll("a.breadcrumb").forEach((el) => {
+    leftoverDiv.innerHTML += el.outerHTML;
+  });
+  const startScript = document.createElement("script");
+  startScript.async = false;
+  startScript.innerText = `document.addEventListener("alpine:initialized", () => {Alpine.initTree(document.getElementById("campus-insertion").shadowRoot)});`;
+  const triggerDOMContentLoaded = () => {
+    document.dispatchEvent(new CustomEvent("DOMContentLoaded"));
+  };
+  // Get the div with classes col and s1 and add to the template
+  let menu = document.querySelector(".col.s1 ul");
+  if (menu) {
+    leftoverDiv.innerHTML += menu.outerHTML;
+  }
+  shadow.appendChild(leftoverDiv);
+  // Get all script tags, create new script tags and append them to the shadow DOM
+  for (const el of doc.querySelectorAll("script")) {
+    const newScript = document.createElement("script");
+    newScript.addEventListener("load", triggerDOMContentLoaded);
+    newScript.async = false;
+    // Copy all atributtes from the original script tag
+    for (let i = 0; i < el.attributes.length; i++) {
+      newScript.setAttribute(el.attributes[i].name, el.attributes[i].value);
+    }
+    // If the script tag has a src attribute, fetch the content and set it as innerText
+    if (el.src) {
+      // If the source is a relative path, add the base URL at the front
+      if (el.src.startsWith("https://campus.ort.edu.ar/tic-campus")) {
+        newScript.src = el.src.replace("https://campus.ort.edu.ar/", baseURL);
+      }
+      newScript.innerText = el.innerText;
+    } else {
+      newScript.innerText = el.innerText;
+    }
+    //Remove el
+    el.remove();
+    shadow.appendChild(newScript);
+  }
+  //Set parents innerHTML to template + doc body innerHtml
+  shadow.innerHTML += doc.body.innerHTML;
 </script>
