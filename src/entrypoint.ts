@@ -35,6 +35,8 @@ export default (Alpine: Alpine) => {
   const shadowContainer = document.querySelector("#campus-insertion");
   if (shadowContainer !== null && isOnCampus()) {
     // Butchering of types but OH WELL
-    Alpine.initTree(shadowContainer.shadowRoot as unknown as HTMLElement);
+    const shadow = shadowContainer.shadowRoot as unknown as HTMLElement;
+    Alpine.initTree(shadow);
+    (htmx.process as unknown as (e: HTMLElement) => void)(shadow);
   }
 };
