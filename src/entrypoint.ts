@@ -37,6 +37,6 @@ export default (Alpine: Alpine) => {
     // Butchering of types but OH WELL
     const shadow = shadowContainer.shadowRoot as unknown as HTMLElement;
     Alpine.initTree(shadow);
-    (htmx.process as unknown as (e: HTMLElement) => void)(shadow);
+    window.htmx.process(shadow);
   }
 };
