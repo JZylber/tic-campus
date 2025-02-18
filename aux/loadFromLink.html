@@ -1,0 +1,92 @@
+<script>
+  const subject = "Desarrollo de Aplicaciones Informáticas";
+  const course = "NR5A";
+  let campusLink = encodeURI(
+    `https://jzylber.github.io/tic-campus/${subject}-${course}`
+  );
+  let parent = document.currentScript.closest(".bodySitio");
+  const baseURL = "https://jzylber.github.io/";
+  let campusText = fetch(campusLink)
+    .then((response) => {
+      return response.text();
+    })
+    .then((html) => {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, "text/html");
+      // Append all link and style tags to head
+      doc.querySelectorAll("link, style").forEach((el) => {
+        // All link tags with href that starts with /tic-campus should be added the base URL at the front
+        if (
+          el.href &&
+          el.href.startsWith("https://campus.ort.edu.ar/tic-campus")
+        ) {
+          el.setAttribute(
+            "href",
+            el.href.replace("https://campus.ort.edu.ar/", baseURL)
+          );
+        }
+        document.head.appendChild(el);
+      });
+      // Create copies of all script tags and append them to the head
+      doc.querySelectorAll("script").forEach((el) => {
+        let script = document.createElement("script");
+        // Copy all script attributes
+        for (let i = 0; i < el.attributes.length; i++) {
+          script.setAttribute(el.attributes[i].name, el.attributes[i].value);
+        }
+        // if src attribute starts with /tic-campus should be added the base URL at the front
+        if (
+          script.src &&
+          script.src.startsWith("https://campus.ort.edu.ar/tic-campus")
+        ) {
+          script.setAttribute(
+            "src",
+            script.src.replace("https://campus.ort.edu.ar/", baseURL)
+          );
+        }
+        script.innerHTML = el.innerHTML;
+
+        document.body.appendChild(script);
+      });
+      // Create a div tag with the id "leftoverinformation", display none and append all breadcrumbs and menu to it
+      let leftoverDiv = document.createElement("div");
+      leftoverDiv.style.display = "none";
+      leftoverDiv.id = "leftoverinformation";
+      let breadcrumbs = document
+        .querySelectorAll("a.breadcrumb")
+        .forEach((el) => {
+          leftoverDiv.innerHTML += el.outerHTML;
+        });
+      // Get the div with classes col and s1 and add to the template
+      let menu = document.querySelector(".col.s1 ul");
+      if (menu) {
+        leftoverDiv.innerHTML += menu.outerHTML;
+      }
+      //script tags in doc body that start with /tic-campus should be added the base URL at the front
+      doc.body.querySelectorAll("script").forEach((el) => {
+        // new script tag
+        let script = document.createElement("script");
+        // Copy all script attributes
+        for (let i = 0; i < el.attributes.length; i++) {
+          script.setAttribute(el.attributes[i].name, el.attributes[i].value);
+        }
+        // if src attribute starts with /tic-campus should be added the base URL at the front
+        if (
+          el.src &&
+          el.src.startsWith("https://campus.ort.edu.ar/tic-campus")
+        ) {
+          script.setAttribute(
+            "src",
+            script.src.replace("https://campus.ort.edu.ar/", baseURL)
+          );
+        }
+        script.innerHTML = el.innerHTML;
+        // remove the script tag from the doc
+        el.remove();
+        // append the script tag to the end of the body
+        document.body.appendChild(script);
+      });
+      //Set parents innerHTML to template + doc body innerHtml
+      parent.innerHTML = leftoverDiv.outerHTML + doc.body.innerHTML;
+    });
+</script>
