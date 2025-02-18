@@ -51,9 +51,6 @@
   let breadcrumbs = document.querySelectorAll("a.breadcrumb").forEach((el) => {
     leftoverDiv.innerHTML += el.outerHTML;
   });
-  const startScript = document.createElement("script");
-  startScript.async = false;
-  startScript.innerText = `document.addEventListener("alpine:initialized", () => {console.log('pepe');Alpine.initTree(document.getElementById("campus-insertion").shadowRoot)});`;
   const triggerDOMContentLoaded = () => {
     document.dispatchEvent(new CustomEvent("DOMContentLoaded"));
   };
