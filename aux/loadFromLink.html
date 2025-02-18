@@ -53,7 +53,7 @@
   });
   const startScript = document.createElement("script");
   startScript.async = false;
-  startScript.innerText = `document.addEventListener("alpine:initialized", () => {Alpine.initTree(document.getElementById("campus-insertion").shadowRoot)});`;
+  startScript.innerText = `document.addEventListener("alpine:initialized", () => {console.log('pepe');Alpine.initTree(document.getElementById("campus-insertion").shadowRoot)});`;
   const triggerDOMContentLoaded = () => {
     document.dispatchEvent(new CustomEvent("DOMContentLoaded"));
   };
@@ -63,11 +63,21 @@
     leftoverDiv.innerHTML += menu.outerHTML;
   }
   shadow.appendChild(leftoverDiv);
-  // Get all script tags, create new script tags and append them to the shadow DOM
-  for (const el of doc.querySelectorAll("script")) {
+  // Get all script tags
+  const scripts = [...doc.querySelectorAll("script")];
+  //Remove from doc
+  scripts.forEach((el) => {
+    el.remove();
+  });
+  //Set parents innerHTML to template + doc body innerHtml
+  shadow.innerHTML += doc.body.innerHTML;
+  scripts.forEach((el, index) => {
     const newScript = document.createElement("script");
-    newScript.addEventListener("load", triggerDOMContentLoaded);
     newScript.async = false;
+    // If last script tag, trigger DOMContentLoaded
+    if (index === scripts.length - 1) {
+      newScript.addEventListener("load", triggerDOMContentLoaded);
+    }
     // Copy all atributtes from the original script tag
     for (let i = 0; i < el.attributes.length; i++) {
       newScript.setAttribute(el.attributes[i].name, el.attributes[i].value);
@@ -85,7 +95,5 @@
     //Remove el
     el.remove();
     shadow.appendChild(newScript);
-  }
-  //Set parents innerHTML to template + doc body innerHtml
-  shadow.innerHTML += doc.body.innerHTML;
+  });
 </script>
