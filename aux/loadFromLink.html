@@ -24,26 +24,20 @@
   const parser = new DOMParser();
   const doc = parser.parseFromString(campusHTML, "text/html");
   // Append all link and style tags to head
-  const linkTags = [...doc.querySelectorAll("link, style")].map(async (el) => {
+  const linkTags = [...doc.querySelectorAll("link, style")].map((el) => {
     // All link tags with href that starts with /tic-campus should be added the base URL at the front
     if (el.href && el.href.startsWith("https://campus.ort.edu.ar/tic-campus")) {
-      const url = el.href.replace("https://campus.ort.edu.ar/", baseURL);
-      const newStyle = document.createElement("style");
-      newStyle.innerText = await fetchTagContent(url);
-      shadow.appendChild(newStyle);
+      el.href = el.href.replace("https://campus.ort.edu.ar/", baseURL);
     } else {
       if (el.tagName === "LINK") {
-        shadow.appendChild(el);
         // Clone element and append it to head
         const newLink = el.cloneNode();
         newLink.href = el.href;
         document.head.appendChild(newLink);
-      } else {
-        shadow.appendChild(el);
       }
     }
+    shadow.appendChild(el);
   });
-  await Promise.all(linkTags);
   // Create a div tag with the id "leftoverinformation", display none and append all breadcrumbs and menu to it
   let leftoverDiv = document.createElement("div");
   leftoverDiv.style.display = "none";
@@ -68,11 +62,6 @@
   });
   //Set parents innerHTML to template + doc body innerHtml
   shadow.innerHTML += doc.body.innerHTML;
-  // Put the Layout script in the scripts list at the front
-  scripts = [
-    ...scripts.filter((el) => el.src.includes("Layout")),
-    ...scripts.filter((el) => !el.src.includes("Layout")),
-  ];
   scripts.forEach((el, index) => {
     const newScript = document.createElement("script");
     newScript.async = false;
@@ -90,10 +79,8 @@
       if (el.src.startsWith("https://campus.ort.edu.ar/tic-campus")) {
         newScript.src = el.src.replace("https://campus.ort.edu.ar/", baseURL);
       }
-      newScript.innerText = el.innerText;
-    } else {
-      newScript.innerText = el.innerText;
     }
+    newScript.innerText = el.innerText;
     shadow.appendChild(newScript);
   });
 </script>
