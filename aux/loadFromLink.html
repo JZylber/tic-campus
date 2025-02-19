@@ -28,6 +28,9 @@
     // All link tags with href that starts with /tic-campus should be added the base URL at the front
     if (el.href && el.href.startsWith("https://campus.ort.edu.ar/tic-campus")) {
       el.href = el.href.replace("https://campus.ort.edu.ar/", baseURL);
+      const newLink = el.cloneNode();
+      newLink.href = el.href;
+      document.head.appendChild(newLink);
     } else {
       if (el.tagName === "LINK") {
         // Clone element and append it to head
@@ -64,7 +67,6 @@
   shadow.innerHTML += doc.body.innerHTML;
   scripts.forEach((el, index) => {
     const newScript = document.createElement("script");
-    newScript.async = false;
     // If last script tag, trigger DOMContentLoaded
     if (index === scripts.length - 1) {
       newScript.addEventListener("load", triggerDOMContentLoaded);
