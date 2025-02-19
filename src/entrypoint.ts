@@ -18,13 +18,13 @@ export default (Alpine: Alpine) => {
     changeSection: (section: string) => void;
   });
   Alpine.store("baseURL", {
-    dataURL: "",
+    dataURL: "/tic-campus",
     changeURL(url) {
       this.dataURL = url;
     },
     init() {
       if (isOnCampus()) {
-        this.changeURL("https://jzylber.github.io/tic-campus");
+        this.changeURL("https://jzylber.github.io" + this.dataURL);
       }
     },
   } as {
