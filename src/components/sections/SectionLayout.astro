@@ -1,4 +1,6 @@
 ---
+import BreadCrumbs from "./BreadCrumbs.astro";
+
 interface Props {
   name: string;
 }
@@ -11,5 +13,6 @@ const { name } = Astro.props;
   class="absolute inset-0 w-full h-full bg-gray-50 overflow-y-scroll overflow-x-hidden flex flex-col p-4 gap-y-4"
   x-transition
 >
+  <BreadCrumbs />
   <slot />
 </section>
