@@ -96,7 +96,7 @@ const { open, articleURL, content, course } = Astro.props;
           <div
             class="flex justify-start w-full"
             x-data="{ passing: false, mark: -1, comment: '', redo: false }"
-            x-init={`
+            x-effect={`
                   if(${content}.type === 'Actividad') {
                     const activity = $store.student.activities.find(activity => activity.id === ${content}.id);
                     passing = activity.done;
@@ -106,9 +106,10 @@ const { open, articleURL, content, course } = Astro.props;
                   else if(${content}.type === 'Trabajo Práctico') {
                     const activityMark = $store.student.marks.find(mark => mark.id === ${content}.id);
                     const specialActivity = $store.student.activities.find(activity => activity.id === ${content}.id);
-                    if (activityMark) {mark = activityMark.mark;
-                    passing = mark >= 6;
-                    comment = activityMark.comment;}
+                    if (activityMark) {
+                      mark = activityMark.mark;
+                      passing = mark >= 6;
+                      comment = activityMark.comment;}
                     else if(specialActivity) {
                       passing = specialActivity.done;
                       comment = specialActivity.comment;
