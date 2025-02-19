@@ -39,7 +39,7 @@ const coursesByYear = (await getAllCourses()).reduce((acc, course) => {
             <template x-for="course in courses">
               <a
                 class="cursor-pointer bg-gray-200 aspect-square w-20 rounded-xl flex justify-center items-center text-gray-600 text-[20px] hover:bg-sh-black hover:text-white transition-colors"
-                x-bind:href="`/tic-campus/${course.subject}-${course.id}`"
+                x-bind:href="`/tic-campus/${course.subject}/${course.id}`"
               >
                 <span x-text="course.name"></span>
               </a>
