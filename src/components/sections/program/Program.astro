@@ -3,16 +3,16 @@ import Loader from "../../loader/Loader.astro";
 import SectionLayout from "../SectionLayout.astro";
 
 interface Props {
-  year: number;
+  subject: string;
 }
 
-const { year } = Astro.props;
+const { subject } = Astro.props;
 ---
 
 <SectionLayout name="programa">
   <div
     x-data="{html: '', loading: true}"
-    x-init={`html = await fetchHTMLData($store.baseURL.dataURL + '/programs/${year}'); loading = false;`}
+    x-init={`html = await fetchHTMLData($store.baseURL.dataURL + '/${subject}/program'); loading = false;`}
     class="w-full h-full"
   >
     <h1 class="text-[36px] font-bold text-center p-4">
