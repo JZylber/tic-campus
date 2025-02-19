@@ -17,6 +17,7 @@
   </head>
   <body>
     <script>
+      import { fade } from "astro:transitions";
       import {
         getSubjectData,
         getSubjectProgram,
@@ -25,9 +26,8 @@
         getSubjectMaterial,
         getCourseGroupLink,
       } from "../aux/fetchData";
-      import htmx from "htmx.org";
 
-      htmx.config.selfRequestsOnly = false;
+      import { fetchHTMLData } from "../aux/loadData";
 
       window.getSubjectData = getSubjectData;
       window.getSubjectProgram = getSubjectProgram;
@@ -35,7 +35,7 @@
       window.getSubjectRedoLinks = getSubjectRedoLinks;
       window.getSubjectMaterial = getSubjectMaterial;
       window.getCourseLink = getCourseGroupLink;
-      window.htmx = htmx;
+      window.fetchHTMLData = fetchHTMLData;
     </script>
     <div
       class="w-full h-[calc(100vh-64px-1rem)] gap-x-4 flex font-lato relative"

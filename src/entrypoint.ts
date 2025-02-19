@@ -1,5 +1,4 @@
 import type { Alpine } from "alpinejs";
-
 const isOnCampus = () => {
   const host = window.location.host;
   return host === "campus.ort.edu.ar";
@@ -25,7 +24,7 @@ export default (Alpine: Alpine) => {
     },
     init() {
       if (isOnCampus()) {
-        this.changeURL("https://jzylber.github.io");
+        this.changeURL("https://jzylber.github.io/tic-campus");
       }
     },
   } as {
@@ -37,6 +36,5 @@ export default (Alpine: Alpine) => {
     // Butchering of types but OH WELL
     const shadow = shadowContainer.shadowRoot as unknown as HTMLElement;
     Alpine.initTree(shadow);
-    window.htmx.process(shadow);
   }
 };

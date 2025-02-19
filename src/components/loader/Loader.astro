@@ -1,21 +1,14 @@
-<style>
-  .htmx-indicator {
-    opacity: 0;
-    z-index: -100;
-    transition: opacity 500ms ease-in;
-  }
-  .htmx-request .htmx-indicator {
-    opacity: 1;
-    z-index: 100;
-  }
-  .htmx-request.htmx-indicator {
-    opacity: 1;
-    z-index: 100;
-  }
-</style>
+---
+interface Props {
+  show: string;
+}
+
+const { show } = Astro.props;
+---
 
 <div
-  class="htmx-indicator absolute flex justify-center items-center h-full w-full bg-gray-50 top-0 left-0"
+  class="absolute flex justify-center items-center h-full w-full bg-gray-50 top-0 left-0"
+  x-show={`${show}`}
 >
   <div class="loader"></div>
 </div>
