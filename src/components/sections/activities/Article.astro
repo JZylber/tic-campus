@@ -1,15 +1,190 @@
 ---
+import Loader from "../../loader/Loader.astro";
+
 interface Props {
-  open: boolean;
+  open: string;
   articleURL: string;
+  content: string;
+  course: string;
 }
 
-const { open, articleURL } = Astro.props;
+const { open, articleURL, content, course } = Astro.props;
 ---
 
-<section
-  x-show={`$store.section.currentSection === 'activities' && `}
-  class="absolute inset-0 w-full h-full bg-gray-50 overflow-y-scroll overflow-x-hidden flex flex-col p-4 gap-y-4"
-  x-transition
+<article
+  x-show={`$store.section.currentSection === 'actividades' && ${open} && ${content} !== null`}
+  x-data="{ loading: true}"
+  class="absolute inset-0 w-full h-full bg-gray-50 overflow-y-scroll flex flex-col py-4 px-8"
+  x-transition:enter="transition ease-in duration-500"
+  x-transition:enter-start="translate-x-full border-l border-gray-400"
+  x-transition:enter-end="translate-x-0 border-l border-gray-400"
+  x-transition:leave="transition ease-out duration-500"
+  x-transition:leave-start="translate-x-0 border-l border-gray-400"
+  x-transition:leave-end="translate-x-full border-l border-gray-400"
+  x-effect={`
+    if(${content} !== null){
+        loading = true;
+        $refs.content.innerHTML = await fetchHTMLData(${articleURL});
+        loading = false;}
+        `}
 >
-</section>
+  <div
+    class="flex justify-between w-full items-center pb-2 mb-2 border-b-2 border-gray-300"
+  >
+    <div class="flex gap-x-4 self-stretch">
+      <template x-if={`${content} && ${content}.repositoryURL !== ''`}>
+        <a
+          class="bg-primary-purple px-3 py-2 rounded-xl cursor-pointer flex justify-center gap-x-3 w-36 items-center hover:shadow-md"
+          x-bind:href={`${content}.repositoryURL`}
+        >
+          <span>Repositorio</span>
+          <svg
+            height="24"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+          >
+            <path
+              d="M2.5 18.5C2.5 20.43 4.07 22 6 22s3.5-1.57 3.5-3.5c0-1.58-1.06-2.903-2.5-3.337v-3.488c.244.273.509.527.813.744 1.18.844 2.617 1.098 3.918 1.098.966 0 1.853-.14 2.506-.281a3.5 3.5 0 0 0 3.264 2.265c1.93 0 3.5-1.57 3.5-3.5s-1.57-3.5-3.5-3.5a3.5 3.5 0 0 0-3.404 2.718c-1.297.321-3.664.616-5.119-.426-.666-.477-1.09-1.239-1.306-2.236C8.755 7.96 9.5 6.821 9.5 5.5 9.5 3.57 7.93 2 6 2S2.5 3.57 2.5 5.5c0 1.58 1.06 2.903 2.5 3.337v6.326c-1.44.434-2.5 1.757-2.5 3.337zm15-8c.827 0 1.5.673 1.5 1.5s-.673 1.5-1.5 1.5S16 12.827 16 12s.673-1.5 1.5-1.5zm-10 8c0 .827-.673 1.5-1.5 1.5s-1.5-.673-1.5-1.5S5.173 17 6 17s1.5.673 1.5 1.5zm-3-13C4.5 4.673 5.173 4 6 4s1.5.673 1.5 1.5S6.827 7 6 7s-1.5-.673-1.5-1.5z"
+            ></path>
+          </svg>
+        </a>
+      </template>
+      <template x-if={`${content} && ${content}.handInURL !== ''`}>
+        <a
+          class="bg-primary-purple px-3 py-2 rounded-xl cursor-pointer flex justify-center gap-x-3 w-36 items-center hover:shadow-md"
+          x-bind:href={`${content}.handInURL`}
+        >
+          <span>Entrega</span>
+          <span class="material-symbols-outlined text-[24px]">
+            move_to_inbox
+          </span>
+        </a>
+      </template>
+    </div>
+    <div
+      x-on:click={`${open} = false`}
+      class="border-gray-400 border-2 p-2 rounded-xl cursor-pointer flex justify-center items-center hover:shadow-md"
+    >
+      <span x-text="'close'" class="material-symbols-outlined text-[24px]"
+      ></span>
+    </div>
+  </div>
+  <Loader show="loading" />
+  <div x-show="!loading" class="flex flex-col gap-y-4">
+    <div class="flex justify-between">
+      <div class="self-stretch flex flex-col justify-between">
+        <h1
+          x-text={`${content} ? ${content}.name : ''`}
+          class="text-[48px] font-bold"
+        >
+        </h1>
+        <template
+          x-if={`$store.student.course === '${course}' &&
+              ((${content}.type === 'Actividad' &&
+                $store.student.activities.find(
+                  (activity) => activity.id === ${content}.id
+                )) ||
+                (${content}.type === 'Trabajo Práctico' &&
+                  ($store.student.marks.find(
+                    (activity) => activity.id === ${content}.id
+                  )) || $store.student.activities.find(
+                    (activity) => activity.id === ${content}.id
+                  )))`}
+        >
+          <div
+            class="flex justify-start w-full"
+            x-data="{ passing: false, mark: -1, comment: '', redo: false }"
+            x-init={`
+                  if(${content}.type === 'Actividad') {
+                    const activity = $store.student.activities.find(activity => activity.id === ${content}.id);
+                    passing = activity.done;
+                    comment = activity.comment;
+                    redo = activity.inRevision;
+                  }
+                  else if(${content}.type === 'Trabajo Práctico') {
+                    const activityMark = $store.student.marks.find(mark => mark.id === ${content}.id);
+                    const specialActivity = $store.student.activities.find(activity => activity.id === ${content}.id);
+                    if (activityMark) {mark = activityMark.mark;
+                    passing = mark >= 6;
+                    comment = activityMark.comment;}
+                    else if(specialActivity) {
+                      passing = specialActivity.done;
+                      comment = specialActivity.comment;
+                    }
+                    }
+                `}
+          >
+            <div
+              class="px-4 py-2 rounded-full flex justify-center items-center gap-x-4 text-[20px]"
+              x-bind:class="{
+                  'bg-primary-light-yellow text-primary-yellow': redo,
+                  'bg-primary-light-green text-primary-green ': passing && !redo,
+                  'bg-primary-light-red text-primary-red': !passing && !redo,
+                }"
+            >
+              <span
+                x-bind:class="{
+                  'material-symbols-outlined text-[24px]': mark === -1,
+                }"
+                x-text="(() => {
+                          if (redo) {
+                            return 'more_horiz';
+                          } else if(mark === -1) {
+                            if(passing) {
+                              return 'check';
+                            }
+                            else {
+                              return 'close';
+                            }
+                          }
+                          else {
+                            return mark;
+                          }
+                        })()"
+              ></span>
+              <span
+                x-text={`(() => {
+                    if(redo) {
+                      return 'En Revisión'
+                    }
+                    if(comment) {
+                      return comment
+                    }
+                    else {
+                      if(${content}.type === 'Actividad') {
+                        if(passing) {
+                          return 'Hecha'
+                        }
+                        else {
+                          return 'Pendiente'
+                        }
+                      }
+                      else {
+                        if(passing) {
+                          return 'Aprobado'
+                        }
+                        else {
+                          return 'En Proceso'
+                        }
+                      }
+                    }
+                  })()`}></span>
+            </div>
+          </div>
+        </template>
+      </div>
+      <img
+        x-bind:src={`${content} !== null?${content}.imgURL:''`}
+        alt="imagen actividad"
+        class="rounded-xl overflow-hidden aspect-square max-h-48 object-cover"
+      />
+    </div>
+    <div
+      x-ref="content"
+      class="flex flex-col [&>h2]:py-2 [&>h2]:text-[32px] [&>h3]:text-[24px] [&>h3]:py-2 [&>p]:py [&>p]:indent-4 [&>p]:text-gray-600 [&>ul]:py-2 [&>ul]:list-disc [&>ul]:list-inside [&>ul]:indent-4 [&>ul>li]:text-gray-600 [&>ul>li]:list-disc [&>ul>li+li]:mt-1 [&>ol]:py-2 [&>ol]:list-decimal [&>ol]:list-inside [&>ol]:indent-4 [&>ol>li]:text-gray-600 [&>ol>li+li]:mt-1 [&>table]:rounded-xl [&>table]:overflow-hidden [&>table]:my-2 [&>table]:mx-4 [&>table>thead]:bg-primary-black [&>table>thead]:text-white [&>table>thead>tr>th]:p-2 [&>table>tbody]:bg-gray-200 [&>table>tbody>tr>td]:p-2 [&>table>tbody>tr>td]:text-center"
+    >
+    </div>
+  </div>
+</article>
