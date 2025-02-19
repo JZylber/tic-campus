@@ -10,7 +10,19 @@
       return response.text();
     });
   };
-
+  // Create a div tag with the id "leftoverinformation", display none and append all breadcrumbs and menu to it
+  let leftoverDiv = document.createElement("div");
+  leftoverDiv.style.display = "none";
+  leftoverDiv.id = "leftoverinformation";
+  let breadcrumbs = document.querySelectorAll("a.breadcrumb").forEach((el) => {
+    leftoverDiv.innerHTML += el.outerHTML;
+  });
+  // Get the div with classes col and s1 and add to the template
+  let menu = document.querySelector(".col.s1 ul");
+  if (menu) {
+    leftoverDiv.innerHTML += menu.outerHTML;
+  }
+  body.appendChild(leftoverDiv);
   let campusHTML = await fetch(campusLink).then((response) => {
     return response.text();
   });
@@ -41,22 +53,9 @@
     }
     shadow.appendChild(el);
   });
-  // Create a div tag with the id "leftoverinformation", display none and append all breadcrumbs and menu to it
-  let leftoverDiv = document.createElement("div");
-  leftoverDiv.style.display = "none";
-  leftoverDiv.id = "leftoverinformation";
-  let breadcrumbs = document.querySelectorAll("a.breadcrumb").forEach((el) => {
-    leftoverDiv.innerHTML += el.outerHTML;
-  });
   const triggerDOMContentLoaded = () => {
     document.dispatchEvent(new CustomEvent("DOMContentLoaded"));
   };
-  // Get the div with classes col and s1 and add to the template
-  let menu = document.querySelector(".col.s1 ul");
-  if (menu) {
-    leftoverDiv.innerHTML += menu.outerHTML;
-  }
-  body.appendChild(leftoverDiv);
   // Get all script tags
   let scripts = [...doc.querySelectorAll("script")];
   //Remove from doc
