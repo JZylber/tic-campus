@@ -1,6 +1,16 @@
 import type { Alpine } from "alpinejs";
 import type { Activity, MarkedActivity } from "./aux/types";
-import { getStudentData } from "./aux/fetchData";
+import {
+  getActivitiesAndMarks,
+  getRedos,
+  getStudentData,
+  getSubjectMarkingCriteria,
+} from "./aux/fetchData";
+
+export const round = (num: number, decimals: number) => {
+  return Math.round(num * Math.pow(10, decimals)) / Math.pow(10, decimals);
+};
+
 const isOnCampus = () => {
   const host = window.location.host;
   return host === "campus.ort.edu.ar";
@@ -40,6 +50,7 @@ export default (Alpine: Alpine) => {
     name: "",
     surname: "",
     course: "",
+    subject: "",
     id: -1,
     activities: [],
     marks: [],
@@ -66,6 +77,15 @@ export default (Alpine: Alpine) => {
       this.surname = surname;
       this.course = course;
       this.id = id;
+      if (this.subject !== "" && this.id !== -1) {
+        this.calculateMarks();
+      }
+    },
+    setSubject(subject: string) {
+      this.subject = subject;
+      if (subject !== "" && this.id !== -1) {
+        this.calculateMarks();
+      }
     },
     async init() {
       let studentName = defaultStudent;
@@ -85,7 +105,6 @@ export default (Alpine: Alpine) => {
         };
       }
       let student = await getStudentData(studentName.name, studentName.surname);
-      console.log(student);
       if (student) {
         this.setStudent(
           student.name,
@@ -95,10 +114,86 @@ export default (Alpine: Alpine) => {
         );
       }
     },
+    regularActivities() {
+      return this.activities.filter(
+        (activity) => !activity.special && !activity.inRevision
+      );
+    },
+    specialActivities() {
+      return this.activities.filter((activity) => activity.special);
+    },
+    markedActivities() {
+      return this.marks.filter((activity) => !activity.inRevision);
+    },
+    allMarkedActivitiesPassed() {
+      return this.markedActivities().every((activity) => activity.mark >= 6);
+    },
+    allSpecialActivitiesDone() {
+      return this.specialActivities().every((activity) => activity.done);
+    },
+    async calculateMarks() {
+      let [{ activities, marks }, { proportion, specialActivities }, redos] =
+        await Promise.all([
+          getActivitiesAndMarks(this.id),
+          getSubjectMarkingCriteria(this.subject),
+          getRedos(parseInt(this.course.slice(2)), this.name, this.surname),
+        ]);
+      this.activities = activities.map((activity) => ({
+        ...activity,
+        inRevision: redos.includes(activity.id),
+        special: specialActivities.includes(activity.id),
+      }));
+      this.marks = marks.map((mark) => ({
+        ...mark,
+        inRevision: redos.includes(mark.id),
+      }));
+      this.markData.proportion = proportion;
+      // Esta cuenta no tiene en cuenta que un estudiante pueda estar en múltiples materias
+      this.markData.activities.total = this.regularActivities().length;
+      this.markData.markedActivities.total = this.markedActivities().length;
+      this.markData.activities.done = this.regularActivities().filter(
+        (activity) => activity.done
+      ).length;
+      this.markData.markedActivities.passed = this.markedActivities().filter(
+        (activity) => activity.mark >= 6
+      ).length;
+      this.markData.activities.markContribution =
+        this.markData.activities.total > 0
+          ? round(
+              (this.markData.activities.done / this.markData.activities.total) *
+                (1 - proportion) *
+                10,
+              2
+            )
+          : 10 * (1 - proportion);
+      this.markData.markedActivities.markContribution =
+        this.markData.markedActivities.total > 0
+          ? round(
+              (this.marks
+                .filter((activity) => !redos.includes(activity.id))
+                .reduce((acc, m) => acc + m.mark, 0) /
+                this.markData.markedActivities.total) *
+                proportion,
+              2
+            )
+          : 10 * proportion;
+      this.markData.averageMark = round(
+        this.markData.activities.markContribution +
+          this.markData.markedActivities.markContribution,
+        2
+      );
+      const allSpecialActivitiesDone = this.allSpecialActivitiesDone();
+      const allMarkedActivitiesPassed = this.allMarkedActivitiesPassed();
+      this.markData.finalMark =
+        allSpecialActivitiesDone && allMarkedActivitiesPassed
+          ? Math.round(this.markData.averageMark)
+          : Math.min(4, Math.round(this.markData.averageMark));
+    },
   } as {
     name: string;
     surname: string;
     course: string;
+    subject: string;
     id: number;
     activities: Array<Activity>;
     marks: Array<MarkedActivity>;
@@ -123,6 +218,13 @@ export default (Alpine: Alpine) => {
       course: string,
       id: number
     ) => void;
+    setSubject: (subject: string) => void;
+    regularActivities: () => Array<Activity>;
+    specialActivities: () => Array<Activity>;
+    markedActivities: () => Array<MarkedActivity>;
+    allSpecialActivitiesDone: () => boolean;
+    allMarkedActivitiesPassed: () => boolean;
+    calculateMarks: () => Promise<void>;
   });
   const shadowContainer = document.querySelector("#campus-insertion");
   if (shadowContainer !== null && isOnCampus()) {

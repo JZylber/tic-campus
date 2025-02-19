@@ -6,6 +6,7 @@ import Redos from "../../../components/sections/redo/Redos.astro";
 import Program from "../../../components/sections/program/Program.astro";
 import Material from "../../../components/sections/material/Material.astro";
 import Navbar from "../../../components/navbar/Navbar.astro";
+import Mark from "../../../components/sections/mark/Mark.astro";
 
 export function getStaticPaths() {
   return [
@@ -57,11 +58,13 @@ const { subject, course } = Astro.params;
   <Navbar course={course} />
   <main
     class="relative grow bg-gray-50 border border-gray-300 rounded-xl overflow-hidden"
+    x-init={`$store.student.setSubject('${subject}')`}
   >
     <Home subject={subject} course={course} />
     <Activities subject={subject} course={course} />
     <Redos subject={subject} />
     <Program subject={subject} />
     <Material subject={subject} />
+    <Mark subject={subject} />
   </main>
 </Layout>
