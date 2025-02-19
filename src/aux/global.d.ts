@@ -1,6 +1,8 @@
 import { Course, Material, UnitData } from "./types";
+import { Alpine as AlpineType } from "alpinejs";
 
 declare global {
+  var Alpine: AlpineType;
   var getSubjectData: (subject: string, course: string) => Promise<UnitData[]>;
   var getSubjectProgram: (subject: string) => Promise<string>;
   var getSubjectPresentation: (subject: string) => Promise<string>;

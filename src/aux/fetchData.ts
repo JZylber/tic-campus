@@ -1,11 +1,11 @@
 import Fuse from "fuse.js";
 import type {
-  ActivityData,
+  Activity,
   Content,
   Course,
-  MarkedActivityData,
+  MarkedActivity,
   Material,
-  UnitData,
+  Unit,
 } from "./types";
 
 let dataSheetId = "1VZ_KPk4aZJFPlAgx188y0wW8p3psbbtZgix1L8a-5kE";
@@ -115,7 +115,7 @@ export const getSubjectData = async (course: string, subject: string) => {
     } as Content;
   });
   let contentsByUnit = availableContents.reduce(
-    (acc: Record<string, UnitData>, content) => {
+    (acc: Record<string, Unit>, content) => {
       let unitName = content.unit;
       if (acc[unitName]) {
         acc[unitName].contents.push(content);
@@ -292,8 +292,8 @@ export const getActivitiesAndMarks = async (studentId: number) => {
     marksPromise,
   ]);
   return {
-    activities: activities as Array<ActivityData>,
-    marks: marks as Array<MarkedActivityData>,
+    activities: activities as Array<Activity>,
+    marks: marks as Array<MarkedActivity>,
   };
 };
 
