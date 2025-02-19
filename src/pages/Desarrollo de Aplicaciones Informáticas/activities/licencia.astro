@@ -1,0 +1,125 @@
+---
+import CodeBlock from "../../../components/articles/code-block/CodeBlock.astro";
+
+export const partial = true;
+---
+
+<h2>Introducción</h2>
+<p>
+  Muchos de ustedes van a sacar la licencia este año. ¿Saben los lugares para
+  hacer los distintos trámites? Para eso, el gobierno de la ciudad nos pidió que
+  hagamos un boceto de aplicación que permita consultar por sedes en base a
+  barrio o en base a la actividad, y que registre las impresiones (vistas) de
+  cada sede. El programa fue terminado, pero se le pidió a <em>Chano</em> que lo
+  lleve, chocó, y ¡Perdimos algunas funciones! Ahora queda arreglar el programa con
+  las funciones faltantes.
+</p>
+<h2>Explicación del programa</h2>
+<ol>
+  <li>
+    <p>
+      Se toma un archivo csv con la información de las sedes (<code
+        >cargar_csv</code
+      >)
+    </p>
+  </li>
+  <li>
+    <p>
+      Con los datos, se construye una lista de sedes, donde cada sede es un
+      diccionario:
+    </p>
+    <CodeBlock
+      language="python"
+      code={`Sede = {
+        'nombre': str,
+        'actividad': str,
+        'direccion': str,
+        'barrio': str,
+        'impresiones': int
+      }`}
+    />
+
+    <p>
+      <code>impresiones</code> no se incluye, solo aparece si al menos alguien averigua
+      por dicha sede.
+    </p>
+  </li>
+  <li>
+    <p>Se construyen otros 2 diccionarios a modo de índice:</p>
+    <ul>
+      <li>
+        <code>sedes_por_barrio</code>: Toma la lista de sedes, y construye un
+        diccionario con pares <code>barrio:lista de sedes</code>
+      </li>
+      <li>
+        <code>sedes_por_actividad</code>: Toma la lista de sedes, y construye un
+        diccionario con pares <code>actividad:lista de sedes</code>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>
+      Se le pide al usuario que ingrese una opcion, entre elegir por barrio, por
+      actividad, o terminar el programa
+    </p>
+  </li>
+  <li>
+    <p>
+      En caso de que se elija barrio o actividad, se llama a la función
+      <code>seleccionar_desde_opciones</code> que permite seleccionar una sede desde
+      alguno de los diccionarios índice (<code>por barrio</code> o
+      <code>por actividad</code>)
+    </p>
+  </li>
+  <li>
+    <p>Se muestra la información de la sede y se marca la impresión/vista</p>
+  </li>
+  <li>
+    <p>
+      Al finalizar el programa, se muestran los nombres de las sedes y sus
+      impresiones/vistas.
+    </p>
+  </li>
+</ol>
+<h2>Consigna</h2>
+<p>Reconstruir el programa creando las funciones perdidas:</p>
+<ul>
+  <li>
+    <code>sedes_por_barrio</code>: Toma la lista de sedes, y construye un
+    diccionario con pares <code>barrio:lista de sedes</code>.
+  </li>
+  <li>
+    <code>sedes_por_actividad</code>: Toma la lista de sedes, y construye un
+    diccionario con pares <code>actividad:lista de sedes</code>.
+  </li>
+  <li>
+    <code>marcar_impresion</code>: Toma una sede y marca que alguien realizó una
+    impresión/vista. Recuerden que las sedes no tienen la clave
+    <code>impresiones</code> si nadie consultó por ella hasta ahora.
+  </li>
+</ul>
+<h2>Extra</h2>
+<ol>
+  <li>
+    <code>sedes_por_barrio</code> y <code>sedes_por_actividad</code> son muy parecidas.
+    ¿Se animan a hacerlas una única función?
+  </li>
+  <li>
+    Opciones 1 y 2 son muy parecidas. Modificar el programa para que no haga
+    falta usar <code>if</code> para distinguir entre opciones 1 y 2, osea, en vez
+    de tener
+    <pre><code class="language-python">if opcion == 1:
+    # Cosas que hace opcion 1
+elif opcion == 2:
+    # Cosas que hace opcion 2
+elif opcion == 3:
+    # Terminar el programa
+</code></pre>
+    tener algo así:
+    <pre><code class="language-python">if opcion &gt;= 1 and opcion &lt;= 2:
+    # Cosas que hace opcion 1 o opcion 2
+elif opcion == 3:
+    # Terminar el programa
+</code></pre>
+  </li>
+</ol>

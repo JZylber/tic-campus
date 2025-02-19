@@ -1,0 +1,112 @@
+---
+export const partial = true;
+---
+
+<h2>Introducción</h2>
+<p>
+  El título hace referencia a la icónica banda de punk/reggae argentina, Todos
+  tus Muertos:
+  <a href="https://www.youtube.com/watch?v=__OZv9zn5oM"
+    >https://www.youtube.com/watch?v=__OZv9zn5oM</a
+  >
+</p>
+<h2>Consigna</h2>
+<h3>Mate</h3>
+<p>
+  Vamos a construir el mate. Para eso, declarar una clase Mate que tenga las
+  siguientes características:
+</p>
+<ul>
+  <li>
+    No tome parámetros en su constructor. Al iniciarse, un mate puede ser cebado
+    20 veces sin lavarse.
+  </li>
+  <li>Tenga un método <code>cebar</code>.</li>
+  <li>
+    Tenga un método <code>lavado</code>, que devuelva <code>True</code> si el mate
+    está lavado, <code>False</code> si no.
+  </li>
+  <li>
+    Tenga un método <code>cambiar_yerba</code>, que devuelva el mate a su estado
+    inicial con 20 cebadas nuevas. No importa si está lavado o le quedan
+    cebadas, al cambiar la yerba siempre se vuelve a las 20 cebadas
+  </li>
+</ul>
+<p>
+  Para probar pueden correr los tests con el comando
+  <code>python -m pytest test_mate.py::TestMate</code>
+</p>
+<h3>Mateador</h3>
+<p>
+  Ahora vamos a modelar a los tomadores de mate. Construir una clase
+  <code>Mateador</code> que tenga las siguientes características:
+</p>
+<ul>
+  <li>
+    El constructor toma 3 parámetros:
+    <ol>
+      <li>Un nombre (<code>string</code>).</li>
+      <li>Si acepta mates lavados (<code>bool</code>).</li>
+      <li>Cantidad de mates a tomar (<code>int</code>).</li>
+    </ol>
+  </li>
+  <li>
+    Un método <code>cebar_y_tomar</code>, que tome a un mate de parámetro, lo
+    cebe, y lo tome. Si el mate está lavado y el mateador no acepta mates
+    lavados, no debe cebarlo ni tomarlo (si el mateador acepta lavados lo toma
+    igual).
+  </li>
+  <li>
+    Un método <code>mates_tomados</code> que devuelva el número de mates tomados.
+  </li>
+  <li>
+    Un método gracias que devuelva <code>True</code> si tomó todos los mates deseados
+    (el pasado en el constructor),<code>False</code> si no.
+  </li>
+</ul>
+<p>
+  Para probar pueden correr los tests con el comando
+  <code>python -m pytest test_mate.py::TestMateador</code>
+</p>
+<h3>Ronda de Mates</h3>
+<p>
+  ¡Ahora queda armar una ronda de mates! Construir una función,
+  <code>ronda_de_mates</code>, que tome una lista de mateadores (lista de
+  objetos mateadores) y un mate. Debe funcionar de la siguiente forma:
+</p>
+<ul>
+  <li>
+    Se va pasando el mate en el orden de la lista, y cada mateador ceba y toma.
+    Las reglas anteriores se mantienen, si el mate está lavado y el mateador no
+    acepta lavados, no lo toma.
+  </li>
+  <li>Cada mateador toma solo los mates deseados, no más ni menos.</li>
+  <li>Al reiniciar la ronda, si el mate está lavado, se cambia la yerba.</li>
+  <li>
+    La función termina cuando todos los mateadores toman todos los mates y se
+    termina la vuelta.
+  </li>
+  <li>La función retorna la cantidad de vueltas que se dieron.</li>
+</ul>
+<p>
+  Para este punto, no solo deben hacer la función si no además escribir casos de
+  test <strong>usando la librería pytest</strong>. En el archivo
+  <code>test_mate</code> completar dentro de la clase
+  <code>TestRondaDeMates</code> tests para esta función. Como mínimo incluyan estos
+  casos:
+</p>
+<ul>
+  <li>
+    Una ronda donde todos los mateadores van a tomar la misma cantidad de mates
+  </li>
+  <li>Una ronda donde los mateadores toman números distintos de mates.</li>
+  <li>
+    Una ronda donde haya al menos un mateador que no tome mates lavados, el mate
+    se lave en algún momento y el mateador en cuestión saltee esa ronda.
+  </li>
+</ul>
+<p>
+  <strong>TIP:</strong> Como <em>no</em> pueden acceder a los estados intermedios
+  de <code>ronda_de_mates</code>, vean que sus casos afecten la cuenta final del
+  total de vueltas.
+</p>

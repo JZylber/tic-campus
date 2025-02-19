@@ -1,0 +1,125 @@
+---
+import CodeBlock from "../../../components/articles/code-block/CodeBlock.astro";
+
+export const partial = true;
+---
+
+<h2 id="introducción">Introducción</h2>
+<p>
+  Una forma de analizar discursos es quedarse con las palabras claves mas
+  usadas. No es una métrica súper formal, pero es una buena puerta de entrada.
+  Los/Las presidentes hacen discursos inaugurales cuando inician su mandato.
+  ¿Son todos iguales, o reflejan personas y épocas?
+</p>
+<h2 id="consigna">Consigna</h2>
+<h3 id="archivos-previos">Archivos previos</h3>
+<p>Este tp cuenta con algunos archivos base</p>
+<ul>
+  <li>
+    3 archivos txt, con los discursos inaugurales de alfonsín (1983), cfk (2007)
+    y milei (2023). Está bien variado: radical, peronista y libertario. De esta
+    forma, soy inimputable en cuanto a acusaciones de
+    <em
+      >&quot;zurdo adoctrinador&quot;, &quot;liberfacho&quot;,
+      &quot;radical&quot;, &quot;ñoqui del estado&quot;</em
+    >, etc.
+  </li>
+  <li>
+    1 archivo <code>main.py</code>, con algunas funciones ya hechas, algunas
+    para la parte I y otras para la parte II.
+    <ul>
+      <li>
+        <code>obtener_palabras</code> que toma de parámetro el nombre del archivo
+        a leer, y devuelve una lista con todas las palabras del archivo. (Parte I)
+      </li>
+      <li>
+        <code>top_n_palabras</code> que toma dos parámetros: un diccionario de
+        <code>palabras:cantidad</code> y la cantidad de palabras a tomar, y devuelve
+        una lista de tuplas <code>palabras:cantidad</code> con las primeras &quot;n&quot;
+        (el número pasado como 2do parámetro) palabras mas usadas. (Parte I)
+      </li>
+      <li>
+        <code>limpiar_palabras</code> que toma una lista de palabras y las &quot;limpia&quot;,
+        osea, devuelve una lista con las mismas palabras pero sin signos de puntuación.
+        (Parte II)
+      </li>
+      <li>
+        <code>sacar_conectores</code> que tomar una lista de palabras y devuelve
+        otra lista de palabras pero sin las palabras conectoras (y, o, de, desde,
+        etc). (Parte II)
+      </li>
+    </ul>
+  </li>
+</ul>
+<h3 id="requisitos">Requisitos</h3>
+<p>
+  Para poder hacer este tp, vamos a usar una librería, <code>nltk</code>, para
+  procesar lenguaje natural. En python, las librerías se installan con
+  <code>pip</code>. En este caso,
+</p>
+<pre><code class="language-cmd">pip install --user nltk
+</code></pre>
+<h3 id="parte-i">Parte I</h3>
+<p>
+  Crear un programa que, dado el nombre de un archivo de texto, devuelva el top
+  20 de palabras más usadas. Para este punto pueden leer el archivo usando la
+  función <code>obtener_palabras</code> y pueden, dado un diccionario
+  <code>palabra:cantidad</code> (para cada palabra cuantas apariciones tiene), sacar
+  el top 20 con la función <code>top_n_palabras</code>.
+</p>
+<p>
+  ¿Que es un diccionario <code>palabra:cantidad</code>? Supongamos que tengo el
+  texto
+</p>
+<pre><code>mi vieja mula ya no es lo que era, ya no es lo que era
+</code></pre>
+<p>un diccionario contando las palabras por cantidad sería:</p>
+<CodeBlock
+  lang="python"
+  code={`{
+  "mi":1,
+  "vieja":1,
+  "mula":1,
+  "ya":2,
+  "no":2,
+  "es":2,
+  "lo":2,
+  "que":2,
+  "era":2
+}`}
+/>
+<p>
+  <strong>IMPORTANTE:</strong> Para que está actividad tenga algún sentido pedagógico
+  y aprendan algo, por favor no usen ni chatGPT de forma directa (no le pidan la
+  solución). Y si googlean, vean de no usar el método
+  <code>get</code> de diccionarios. Es solo por ahora para practicar, después les
+  muestro como se usa.
+</p>
+<p>
+  Pero Shulian, ¡Son todos artículos! &quot;de&quot;, &quot;a&quot;,
+  &quot;y&quot;, etc. Calma. Pasen al punto II.
+</p>
+<h3 id="parte-ii">Parte II</h3>
+<p>Vamos a emprolijar un poco el dataset.</p>
+<ol>
+  <li>
+    Eliminar signos de puntuación y mayúsculas. Pueden usar la función
+    <code>limpiar_palabras</code>.
+  </li>
+  <li>
+    Eliminar artículos y otras palabras conectoras. Acá es donde usamos
+    <code>nltk</code>, y pueden usar la función <code>sacar_conectores</code>.
+  </li>
+</ol>
+<p>Prueben que ande. Mucho mejor, ¿No?</p>
+<h3 id="extra-opcional">Extra (opcional)</h3>
+<p>
+  Estaría bueno algún gráfico bonito con colores, ¿no?. Vean de mostrar el
+  resultado como <code>Wordcloud</code>. ¿Cómo se hace eso? La respuesta empieza
+  con <strong>G</strong> y termina con <strong>oogle</strong>.
+</p>
+<h3 id="parte-iii">Parte III</h3>
+<p>
+  Corran el programa con los 3 discursos. ¿Que les llama la atención? Tomen nota
+  de los que les llamó la atención para discutir.
+</p>

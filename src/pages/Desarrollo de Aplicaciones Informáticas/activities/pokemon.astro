@@ -1,0 +1,163 @@
+---
+export const partial = true;
+---
+
+<h2>Introducción</h2>
+<p><em>La introducción fue escrita por ChatGPT y editada por mí</em></p>
+<p>
+  Los Pokémon son criaturas ficticias que existen en el universo de los
+  videojuegos, series de televisión y cartas coleccionables de Pokémon. Cada
+  Pokémon tiene su propia apariencia, habilidades y estadísticas, como puntos de
+  vida (HP), ataque y nivel. Además, cada Pokémon pertenece a uno o más tipos
+  elementales, como Fuego, Agua, Planta, Eléctrico, entre otros. Estos tipos
+  juegan un papel fundamental en las batallas Pokémon, ya que cada tipo tiene
+  fortalezas y debilidades frente a otros.
+</p>
+<h2>Tests</h2>
+<p>
+  Esta vuelta los tests los escribí yo! No solo están separados en
+  <em>TestSuites</em> (conjuntos de tests) sino que se autocorren al pushear el repositorio.
+  Para verificar que toda la consigna esté bien hecha, pueden correr
+</p>
+<p><code>python -m pytest tests.py</code></p>
+<h2>Consigna</h2>
+<h3>Punto 1 - Pokémon</h3>
+<p>
+  Completar las 3 clases Pokémon, <code>WaterType</code>, <code>FireType</code>,
+  <code>PlantType</code> (en el archivo <code>classes.py</code>) que desciendan
+  de una clase padre (abstracta). Las clases deben cumplir lo siguiente:
+</p>
+<ul>
+  <li>
+    Inicializarse con un nombre (<code>string</code>) y un nivel (<code
+      >integer</code
+    >), que deben guardarse en el atributo
+    <code>name</code> y <code>lvl</code> respectivamente.
+  </li>
+  <li>
+    Iniciar con un atributo <code>hp</code> que se inicialice con el siguiente valor
+    <code>(base_hp_tipo)x(1 + nivel/10)</code>. El atributo base por tipo se
+    encuentra en la tabla debajo.
+  </li>
+  <li>
+    Iniciar con un atributo <code>atk</code> que se inicialice con el siguiente valor
+    <code>(base_ataque_tipo)x(1 + nivel/10)</code>. El atributo base por tipo se
+    encuentra en la tabla debajo.
+  </li>
+</ul>
+<p>Atributos base (o su valor en nivel 0):</p>
+<table>
+  <thead>
+    <tr>
+      <th>Tipo</th>
+      <th>HP</th>
+      <th>Ataque</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>PlantType</code></td>
+      <td>45</td>
+      <td>4.9</td>
+    </tr>
+    <tr>
+      <td><code>FireType</code></td>
+      <td>40</td>
+      <td>5.3</td>
+    </tr>
+    <tr>
+      <td><code>WaterType</code></td>
+      <td>42</td>
+      <td>5.1</td>
+    </tr>
+  </tbody>
+</table>
+<p>
+  <strong
+    >Pueden agregar otras cosas que necesiten para que la clase funcione.</strong
+  >
+  ¡Piensen que cosas van a la clase padre!
+</p>
+<h4>TESTS</h4>
+<p>Para verificar que este punto esté bien pueden correr</p>
+<p><code>python -m pytest tests.py::TestPokemon</code></p>
+<h3>Punto 2 - Ataques</h3>
+<p>
+  Ahora vamos a hacer que puedan atacar. Para eso, en las 3 clases tienen que
+  hacer lo siguiente:
+</p>
+<ul>
+  <li>
+    Crear el método <code>take_damage</code> que tome un daño(<code>int</code> o
+    <code>float</code>), y se lo reste al hp. El hp debe permanecer un número
+    entero, por lo tanto los números decimales los <em>redondea</em> antes de restar.
+  </li>
+  <li>
+    Crear el método <code>fainted</code> que devuelva un
+    <code>boolean</code>(<code>True</code> o <code>False</code>) si el pókemon
+    está desmayado. Se considera desmayado si recibió tanto daño como su
+    <code>hp</code> o más.
+  </li>
+  <li>
+    Crear el método <code>attack</code> que tome a otro pokémon y le saque tanto
+    daño como ataque tiene
+    <strong>multiplicado por un factor que depende de los tipos de ambos</strong
+    >. Este multiplicador se debe a que los tipos tienen fortalezas y
+    debilidades frente a otros tipos, que aumentan o reducen su efectividad. Por
+    ejemplo, los tipo fuego multiplican su daño x2 para los tipo planta y por la
+    mitad para los tipo agua. Debajo se encuentra la tabla con los
+    multiplicadores:
+  </li>
+</ul>
+<table>
+  <thead>
+    <tr>
+      <th>Atacante\Defensor</th>
+      <th><code>PlantType</code></th>
+      <th><code>FireType</code></th>
+      <th><code>WaterType</code></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>PlantType</code></td>
+      <td>x1</td>
+      <td>x0.5</td>
+      <td>x2</td>
+    </tr>
+    <tr>
+      <td><code>FireType</code></td>
+      <td>x2</td>
+      <td>x1</td>
+      <td>x0.5</td>
+    </tr>
+    <tr>
+      <td><code>WaterType</code></td>
+      <td>x0.5</td>
+      <td>x2</td>
+      <td>x1</td>
+    </tr>
+  </tbody>
+</table>
+<p>
+  <strong
+    >Pueden agregar otras cosas que necesiten para que la clase funcione.</strong
+  >
+  ¡Piensen que cosas van a la clase padre!
+</p>
+<h4>TESTS</h4>
+<p>Para verificar que este punto esté bien pueden correr</p>
+<p><code>python -m pytest tests.py::TestAttack</code></p>
+<h3>Punto 3 - Batallas</h3>
+<p>
+  Ahora si, los vamos a hacer pelear. Completar la función
+  <code>pokemon_battle</code> (en el archivo <code>battle.py</code>) que toma 2
+  pókemon y los hace pelear hasta que uno gana. ¿Qué implica una pelea? Implica
+  que se atacan de a turnos hasta que alguno se desmaya. Comienza el primer
+  pokémon pasado por parámetro. La función retorna el pokémon ganador (el
+  pokémon entero, no sólo el nombre). Pueden meter prints en el medio para que
+  vean como está funcionando.
+</p>
+<h4>TESTS</h4>
+<p>Para verificar que este punto esté bien pueden correr</p>
+<p><code>python -m pytest tests.py::TestBattle</code></p>

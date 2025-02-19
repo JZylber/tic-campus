@@ -1,0 +1,284 @@
+---
+export const partial = true;
+---
+
+<h2>Introducción</h2>
+<p>
+  ¡La búsqueda continúa! Sherlock obtuvo el programa correcto, pero no le sirvió
+  para validar su tarjeta de crédito. Además de los prefijos, se debe aplicar el
+  algoritmo de luhn, que se asegura que no haya errores de tipeo en la tarjeta.
+  Entonces, les encargó a ustedes, desarrolladores, que armen el programa para
+  verificar tarjetas, pero esta vez en python.
+</p>
+<h2>Explicación</h2>
+<p>
+  Esta sección está para que entiendan el objetivo, pero el trabajo es más
+  guiado. Pueden ir directo a consigna y volver a esta sección a medida que
+  necesiten.
+</p>
+<p>La validación de tarjetas de crédito se hace en dos pasos:</p>
+<ol>
+  <li>
+    <p>
+      Validar que la tarjeta sea de algún emisor válido, sea Visa, Mastercard,
+      etc.
+    </p>
+  </li>
+  <li><p>Verificar validez mediante el algoritmo de Luhn.</p></li>
+</ol>
+<p>
+  A continuación detallo este proceso. Para más información, pueden ir a
+  <a
+    href="https://www.forbes.com/advisor/credit-cards/what-does-your-credit-card-number-mean/"
+    >https://www.forbes.com/advisor/credit-cards/what-does-your-credit-card-number-mean/</a
+  >
+</p>
+<h3>Validación del tipo de tarjeta</h3>
+<p>
+  La tarjeta es de un tipo válido si el prefijo y longitud cumplen con alguna de
+  las compañías que las emiten. A continuación está la tabla de empresas y sus
+  prefijos y longitudes asociadas.
+</p>
+<table>
+  <thead>
+    <tr>
+      <th>Tipo de Tarjeta</th>
+      <th>Prefijo</th>
+      <th>Digitos</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>American Express</td>
+      <td>34 ó 37</td>
+      <td>15</td>
+    </tr>
+    <tr>
+      <td>Mastercard</td>
+      <td>51 a 55 inclusive</td>
+      <td>16</td>
+    </tr>
+    <tr>
+      <td>Visa</td>
+      <td>4</td>
+      <td>13 ó 16</td>
+    </tr>
+    <tr>
+      <td>Diners Club y Carte Blanche</td>
+      <td>36 ó 38, o 300 a 305 inclusive</td>
+      <td>14</td>
+    </tr>
+    <tr>
+      <td>Discover</td>
+      <td>6011</td>
+      <td>16</td>
+    </tr>
+    <tr>
+      <td>JCB</td>
+      <td>2123 ó 1800</td>
+      <td>15</td>
+    </tr>
+    <tr>
+      <td>JCB</td>
+      <td>3</td>
+      <td>16</td>
+    </tr>
+  </tbody>
+</table>
+<h3>Algoritmo de Luhn</h3>
+<p>
+  Luhn es un algoritmo sencillo para chequear si el número de tarjeta es válido.
+  No es tanto una medida de seguridad para evitar fraude, sino más bien es para
+  detectar errores de tipeo o de errores en el envío de datos. Funciona de la
+  siguiente manera:
+</p>
+<ol>
+  <li>Se toman todos los dígitos pares de un número de tarjeta.</li>
+  <li>Se multiplican estos dígitos por 2.</li>
+  <li>Se suman todos los dígitos del resultado del ítem 2.</li>
+  <li>Se toman todos los dígitos impares del número de tarjeta.</li>
+  <li>Se suman estos dígitos al resultado del ítem 3.</li>
+  <li>
+    Se toma el resto de dividir a esta suma por 10 (suma % 10). Si este resto
+    final es 0, la tarjeta es válida, si no, no lo es.
+  </li>
+</ol>
+<p>
+  <strong>EJEMPLO</strong> Supongamos que tengo el número de tarjeta: 4624 7482 3324
+  9080.
+</p>
+<ol>
+  <li>
+    Tomo los dígitos pares: <strong>4</strong>6<strong>2</strong>4
+    <strong>7</strong>4<strong>8</strong>2
+    <strong>3</strong>3<strong>2</strong>4
+    <strong>9</strong>0<strong>8</strong>0.
+  </li>
+  <li>Los multiplico por 2:</li>
+</ol>
+<pre><code>4 × 2 = 8
+2 × 2 = 4
+7 × 2 = 14
+8 × 2 = 16
+3 × 2 = 6
+2 × 2 = 4
+9 × 2 = 18
+8 × 2 = 16
+</code></pre>
+<ol start="3">
+  <li>
+    Sumo los dígitos obtenidos: 8 + 4 + 1 + 4 + 1 + 6 + 6 + 4 + 1 + 8 + 1 + 6 =
+    50.
+  </li>
+  <li>
+    Tomo los dígitos impares: 4<strong>6</strong>2<strong>4</strong>
+    7<strong>4</strong>8<strong>2</strong> 3<strong>3</strong>2<strong>4</strong
+    >
+    9<strong>0</strong>8<strong>0</strong>
+  </li>
+  <li>
+    Sumo los dígitos: 6 + 4 + 4 + 2 + 3 + 4 + 0 + 0 = 23. Luego, lo sumo al
+    resultado del ítem 3: 50 + 23 = 73.
+  </li>
+  <li>Tomo resto de dividir por 10: 73 %10 = 3</li>
+</ol>
+<p>Como el resto NO es 0, entonces este número de tarjeta es inválido.</p>
+<h2>Consigna</h2>
+<p>
+  Para hacer el ejercicio deben bajar los archivos del campus. Ustedes solo van
+  a completar el archivo main.py, los otros archivos son para que corran los
+  tests. Los tests se corren escribiendo
+  <code>python -m pytest test_tarjeta.py</code> en la consola. Recuerden que la consola
+  debe estar abierta en el lugar donde se encuentran los archivos, si no tienen que
+  especificar la ruta al escribir el nombre del archivo. También se pueden correr
+  para cada ejercicio parcialmente, y cómo se hace esto está aclarado en cada ejercicio.
+</p>
+<ol>
+  <li>
+    <p>
+      Completar la función <code>digitos</code>, que dado un string que contiene
+      solo dígitos me indique cuántos dígitos hay.
+      <strong>¡TESTEEN!</strong> Corran los tests con
+      <code>python -m pytest test_tarjeta.py::TestDigitos</code>.
+    </p>
+  </li>
+  <li>
+    <p>
+      Completar <code>obtener_prefijo</code>, que dado un string que contiene
+      solo dígitos y un número n, de los primeros n dígitos de dicho string en
+      forma de entero. Pueden asumir que n no es mayor a la longitud del string
+      pasado por parámetro. <strong>¡TESTEEN!</strong> Corran los tests con
+      <code>python -m pytest test_tarjeta.py::TestPrefijos</code>.
+    </p>
+  </li>
+  <li>
+    <p>
+      Completar la función <code>tipo_tarjeta</code>, que dado un numero de
+      tarjeta (un string que contiene solo dígitos) valida si es una tarjeta
+      Mastercard, Visa, American Express o es inválida. Para esto, debe devolver
+      el string Mastercard, American Express, Visa o Invalid. Deben usar las
+      funciones de los ítems anteriores. Pueden usar el esqueleto propuesto o
+      borrarlo y empezar de cero si les resulta confuso. Traten de que haya un
+      único if por compañía bancaria, pero no es obligatorio. A continuación la
+      parte relevante de la tabla:
+    </p>
+  </li>
+</ol>
+<table>
+  <thead>
+    <tr>
+      <th>Tipo de Tarjeta</th>
+      <th>Prefijo</th>
+      <th>Dígitos</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>American Express</td>
+      <td>34 ó 37</td>
+      <td>15</td>
+    </tr>
+    <tr>
+      <td>Mastercard</td>
+      <td>51 a 55 inclusive</td>
+      <td>16</td>
+    </tr>
+    <tr>
+      <td>Visa</td>
+      <td>4</td>
+      <td>13 ó 16</td>
+    </tr>
+  </tbody>
+</table>
+<p>
+  <strong>¡TESTEEN!</strong> Corran los tests con
+  <code>python -m pytest test_tarjeta.py::TestTarjetas</code>. También pueden
+  correrlos para cada empresa individualmente (son los mismos pero separados)
+  con:
+</p>
+<p><code>python -m pytest test_tarjeta.py::TestTarjetas::TestAmex</code></p>
+<p><code>python -m pytest test_tarjeta.py::TestTarjetas::TestVisa</code></p>
+<p>
+  <code>python -m pytest test_tarjeta.py::TestTarjetas::TestMastercard</code>
+</p>
+<p>
+  <code>python -m pytest test_tarjeta.py::TestTarjetas::TestInvalidas</code>
+</p>
+<ol start="4">
+  <li>
+    <p>
+      Completar <code>digitos_impares</code>, que dado un número de tarjeta (un
+      string que contiene solo dígitos), devuelva la lista de los dígitos en
+      posiciones impares. Las posiciones se cuentan de atrás para adelante, es
+      decir, en el número 459, el 9 sería la primera posición, el 5 la segunda y
+      el 4 la tercera. Ejemplo: Si el número de tarjeta es 45623, la función
+      debe devolver <code>[4,6,3]</code>. Si el número de tarjeta es 456231, la
+      función debe devolver <code>[5,2,1]</code> (pueden variar el orden, lo importante
+      es que est ́en los correctos). <strong>TIP</strong>: Tal vez recorrer de
+      atrás para adelante tenga más sentido...
+      <strong>¡TESTEEN!</strong> Corran los tests con
+      <code>python -m pytest test_tarjeta.py::TestDigitosImpares</code>.
+    </p>
+  </li>
+  <li>
+    <p>
+      Completar <code>digitos_pares</code>, que dado un número de tarjeta (un
+      string que contiene solo dígitos), devuelva la lista de dígitos en
+      posiciones pares contadas de atrás hacia adelante, de forma análoga al
+      item anterior (pueden variar el orden, lo importante es que estén los
+      correctos). <strong>¡TESTEEN!</strong> Corran los tests con
+      <code>python -m pytest test_tarjeta.py::TestDigitosPares</code>.
+    </p>
+  </li>
+  <li>
+    <p>
+      Completar <code>sumar_digitos</code>, que dada una lista de números,
+      devuelva la suma de los dígitos de todos los números. Ejemplo: Si los
+      números son <code>[16,3,456]</code>, la función debe devolver 25 ya que
+      1+6+3+4+5+6 = 25. <strong>TIP</strong>: Puede que les sirva reconvertir
+      los números a string para “extraer” los dígitos.
+      <strong>¡TESTEEN!</strong> Corran los tests con
+      <code>python -m pytest test_tarjeta.py::TestSumaDigitos</code>.
+    </p>
+  </li>
+  <li>
+    <p>
+      Completar la función <code>luhn</code> que aplica el Algoritmo de Luhn a un
+      número de tarjeta (un string que contiene solo d ígitos) y devuelva True o
+      False (los valores booleanos, no texto) si la tarjeta es válida on no para
+      Luhn. El algoritmo es el que está en la explicación de la sección anterior.
+      Es esperado que usen las funciones de los ítems 4, 5 y 6.
+      <strong>¡TESTEEN!</strong> Corran los tests con
+      <code>python -m pytest test_tarjeta.py::TestLuhn</code>.
+    </p>
+  </li>
+  <li>
+    <p>
+      Finalmente, completar la función validar tarjeta dado un número de tarjeta
+      (un string que contiene solo dígitos), devuelva True o False (los valores
+      booleanos, no texto) si la tarjeta es válida o no. Es esperado que usen
+      las funciones de los items 3 y 7. <strong>¡TESTEEN!</strong> Corran los tests
+      con <code>python -m pytest test_tarjeta.py::TestValidar</code>.
+    </p>
+  </li>
+</ol>

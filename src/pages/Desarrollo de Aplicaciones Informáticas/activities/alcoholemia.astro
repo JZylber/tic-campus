@@ -1,0 +1,195 @@
+---
+export const partial = true;
+---
+
+<div
+  style="
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-top: 56.25%;
+    padding-bottom: 0;
+    box-shadow: 0 2px 8px 0 rgba(63, 69, 81, 0.16);
+    margin-top: 1.6em;
+    margin-bottom: 0.9em;
+    overflow: hidden;
+    border-radius: 8px;
+    will-change: transform;
+  "
+>
+  <iframe
+    allow="fullscreen"
+    allowfullscreen="allowfullscreen"
+    loading="lazy"
+    src="https://www.canva.com/design/DAFQYmmqMFM/view?embed"
+    style="
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      border: none;
+      padding: 0;
+      margin: 0;
+    "
+  ></iframe>
+</div>
+<h2>Consigna</h2>
+<p>
+  Utilizando HTML y javascript, realizar una pequeña aplicación en donde el
+  usuario pueda obtener su nivel de alcoholemia. El usuario debe ingresar el %
+  de alcohol de la bebida y la cantidad de dicha bebida ingerida, y con esa
+  información debe calcular la masa de alcohol ingerida. Recordemos cómo se
+  calculaba:
+</p>
+<ol>
+  <li>
+    Del volumen total de la consumición, tomamos el porcentaje de alcohol de la
+    bebida y con eso calculamos el volumen de alcohol. Por ejemplo, en 500cc de
+    una bebida de graduación de 50% hay 250cc de alcohol.
+  </li>
+  <li>
+    Tomamos el volumen de alcohol obtenido anteriormente, y con la densidad del
+    etanol puro (0,789g/ml) obtenemos la masa (masa = densidad x volumen).
+  </li>
+</ol>
+<p>
+  Sin embargo, la gente no necesariamente sabe/recuerda los porcentajes de
+  alcohol de determinadas bebidas. Para eso, vamos a incluir el porcentaje
+  promedio de alcohol y el volumen de una consumición estándar de las bebidas
+  que se encuentran en la siguiente
+  <a
+    href="https://campus.ort.edu.ar/secundaria/belgrano/quimica/articulo/1127924/4-formas-de-expresar-concentracion-graduacion-alcoholica"
+    >tabla</a
+  >
+</p>
+<p>
+  Como lo que importa es la alcoholemia, es decir, la concentración de alcohol
+  etílico (etanol) en sangre, expresada cómo gramos de etanol por cada litro de
+  sangre, necesitamos también los datos del cuerpo de la persona, en particular:
+</p>
+<ul>
+  <li>El peso</li>
+  <li>
+    Sexo y tipo de cuerpo (para obtener los coeficientes se encuentran en este
+    <a
+      href="https://campus.ort.edu.ar/secundaria/belgrano/quimica/articulo/1127949/alcoholemia-concentracion-de-alcohol-en-sangre"
+      >link</a
+    >).
+    <strong
+      >No puede ser simplemente exponer la información, la aplicación debe tener
+      una forma de ingresar esta información de forma automática, eligiendo de
+      opciones</strong
+    >.
+  </li>
+</ul>
+<p>
+  Con esta información, se debe calcular la alcoholemia. Con el peso y el
+  coeficiente (R), calculan los litros de sangre en el organismo, y la
+  alcholemia es la masa dividida este total: alcoholemia = masa_etanol / (R x
+  peso).
+</p>
+<p>
+  Además, queremos incluir el factor tiempo, para tener en cuenta la eliminación
+  del etanol con el tiempo. Esto es útil si por ejemplo queremos estimar el
+  tiempo hasta tener un nivel legal para manejar (<strong
+    >¡Recuerden que es sólo una estimación!</strong
+  >). Para eso, debemos pedirle al usuario el tiempo desde consumido. Usando a
+  que la alcoholemia desciende 0.15 g/L por hora que transcurre, modificar el
+  cálculo de la alcoholemia tomando en cuenta esta eliminación.
+</p>
+<p>
+  Por último, nos interesa también informar las consecuencias de ese nivel de
+  alcoholemia, por ejemplo, si usamos la app para estimar consumos futuros.
+  Calculada la alcoholemia, exponer en el html el estado dado el nivel
+  calculado. Saquen la información de esta
+  <a
+    href="https://campus.ort.edu.ar/secundaria/belgrano/quimica/articulo/1128361/6-alcoholemia-y-efectos-en-nuestro-organismo"
+    >página</a
+  >.
+</p>
+<p>Dados estos lineamientos generales, la aplicación debe cumplir:</p>
+<ul>
+  <li>
+    Capacidad de ingresar manualmente el porcentaje de alcohol y el volumen de
+    consumición.
+  </li>
+  <li>
+    Una forma de acceder al porcentaje de alcohol y consumición estándar de las
+    bebidas provistas.
+    <strong
+      >No alcanza simplemente con poner la información, debe haber un mecanismo
+      de relleno automático al elegir una bebida</strong
+    >.
+  </li>
+  <li>Capacidad de ingresar manualmente el peso.</li>
+  <li>Capacidad de elegir sexo y tipo de cuerpo de forma independiente.</li>
+  <li>
+    Validación de los valores ingresados, no simplemente calcular y devolver
+    resultados erróneos. En particular:
+    <ul>
+      <li>
+        Asegurarse que haya valores de porcentaje de alcohol y valor consumido.
+      </li>
+      <li>
+        Asegurarse que el porcentaje de alcohol sea un número entre 0 y 100,
+        permitiendo hasta 1 cifra decimal.
+      </li>
+      <li>
+        (Depende de la implementación) Asegurarse que la bebida elegida sea una
+        de las bebidas de las que contamos con información.
+      </li>
+      <li>Asegurarse haya valores de peso válidos (mayores a 0).</li>
+      <li>Asegurarse que haya valores de sexo y tipo de cuerpo.</li>
+      <li>
+        La combinación sexo-tipo de cuerpo debe ser una de las combinaciones de
+        la tabla.
+      </li>
+    </ul>
+  </li>
+  <li>El resultado debe aparecer por html, no por consola ni por alerta.</li>
+</ul>
+<p>
+  Para hacerlo más prolijo, se sugiere editar el css para que la interfaz sea
+  más clara. No es obligatorio igual, puede quedar simplemente el HTML y
+  Javascript en archivos separados.
+</p>
+<h2>Extras</h2>
+<p>
+  Como siempre, pueden sumar puntos a la nota del trabajo haciendo alguno de los
+  extras sugeridos:
+</p>
+<ul>
+  <li>
+    (hasta 2 puntos) Agregarle diseño y color con css a la página. Flex y Grid
+    son herramientas muy útiles, dejo un tutorial/juego para aprender cada uno:
+    <ul>
+      <li>
+        <a href="https://flexboxfroggy.com/">Flexbox Froggy</a> (para aprender flexbox)
+      </li>
+      <li>
+        <a href="https://cssgridgarden.com/">Grid Garden</a> (para aprender grid)
+      </li>
+    </ul>
+  </li>
+  <li>
+    (1 punto) Calcular el tiempo aproximado para estar debajo del límite legal
+    argentino. Pueden permitirle al usuario otro nivel de alcoholemia, ya sea
+    por que se puede usar en otros países, o porque desea el tiempo estimado
+    para llegar a ese grado de alcoholemia.
+  </li>
+  <li>
+    (hasta 2 puntos) Capacidad de ingresar múltiples bebidas. Además, pueden dar
+    la opción de ver que bebidas fueron ingresando, pudiendo modificar o
+    eliminarlas.
+  </li>
+</ul>
+<p>
+  También cualquier otro extra que se les ocurra y conversado previamente
+  conmigo.
+</p>
+<h2>Entrega</h2>
+<p>
+  Hacen push en el repositorio de su grupo y suben el hash del commit al campus
+  con todos los miembros del grupo.
+</p>

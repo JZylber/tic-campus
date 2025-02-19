@@ -1,0 +1,224 @@
+---
+export const partial = true;
+---
+
+<p>
+  Para el que no conoce al crack:
+  <a href="https://en.wikipedia.org/wiki/Magnus_Carlsen"
+    >https://en.wikipedia.org/wiki/Magnus_Carlsen</a
+  >
+</p>
+<p>
+  Y Magnus derrotando a jugadores de alto nivel con unas copas encima:
+  <a href="https://www.youtube.com/watch?v=K-Kz7bo5tKE"
+    >https://www.youtube.com/watch?v=K-Kz7bo5tKE</a
+  >
+</p>
+<p>
+  Recuerden instalar pygame y pytest! <code>pip install pygame</code> y
+  <code>pip install pytest</code>.
+</p>
+<h2>Reglas de juego</h2>
+<p>
+  Para hacer este ejercicio, tienen que saber como se mueven las piezas de
+  ajedrez y como se cuentan los puntos. Esto se encuentra libremente en
+  internet. Para el último punto tienen que semi entender un jaque, ¡Consulten!
+</p>
+<p>En este ajedrez rudimentario no tomamos en cuenta:</p>
+<ul>
+  <li>Promoción de fichas (peón a reina u otras fichas)</li>
+  <li>Enroque</li>
+  <li>
+    Algunas condiciones de empate: <em>Dead Position</em>,
+    <em>Threefold Repetition</em> y <em>50-Move Rule</em>.
+  </li>
+</ul>
+<p>
+  Sin embargo, con el diseño con objetos, ¡Al finalizar el ejercicio puede que
+  se imaginen como implementar esas funciones!
+</p>
+<h2>Especificaciones del programa</h2>
+<p>
+  El programa cuenta con distintos archivos que tienen distintas partes del
+  programa
+</p>
+<h3>Ajedrez</h3>
+<p>
+  Este archivo cuenta con todo lo necesario para correr la interfaz gráfica. Usa
+  la librería pygame, y es el archivo que tienen que correr para ver la
+  interfaz. A diferencia de todo el resto del programa, está pensado más con una
+  lógica funcional que con P.O.O.
+</p>
+<h3>Tablero</h3>
+<p>
+  Define la clase tablero a ser usada en el juego. Cuenta con diversos métodos
+  para obtener y mover piezas. No hace falta que le realicen ninguna
+  modificación.
+</p>
+<p>
+  <strong>IMPORTANTE:</strong> Las posiciones <code>(x,y)</code> en el tablero no
+  son las tradicionales de los ejes cartesianos. <code>x</code> es fila e
+  <code>y</code> columna, por lo tanto, <code>x</code> sería el eje vertical e
+  <code>y</code> el horizontal.
+</p>
+<h3>Lógica</h3>
+<p>
+  Cuenta con la lógica de máquina de estados necesaria para el desarrollo del
+  juego. Van a tener que modificar algunas cosas para los últimos dos puntos.
+  Dejo la lógica de los estados a continuación:
+</p>
+<p>
+  <img
+    src="https://raw.githubusercontent.com/JZylber/Magnus/main/assets/Estados-Ajedrez.png"
+    alt="Diagrama de Estados"
+  />
+</p>
+<h3>Piezas</h3>
+<p>
+  Declaración y lógica de las piezas de ajedrez. Hay alguna piezas ya hechas, y
+  otras que tiene que completar/arreglar en ciertos puntos de la consigna.
+</p>
+<h3>Jugador</h3>
+<p>
+  Declaración y constructor incompleto de la clase <code>Jugador</code>, a ser
+  completada en el punto de la consigna correspondiente.
+</p>
+<h3>Tests</h3>
+<p>
+  Están los tests separados en 2 archivos, para que no sea un mega archivo y mas
+  o menos se separen por temas, pero pueden correr todos juntos con
+  <code>python -m pytest</code>. Pueden correr tests individuales usando los
+  comandos que se incluyen en cada punto de la consigna.
+</p>
+<h2>Consigna</h2>
+<h3>Movimiento Piezas</h3>
+<p>
+  Para este ejercicio, pueden asumir que la pieza está en la posición que dice
+  estar, y que las posiciones son válidas (es decir, no caen fuera del tablero).
+</p>
+<h4>Alfil</h4>
+<p>
+  Github Copilot sugirió una solución para implementar el movimiento del alfil,
+  que es la que está en el archivo. Sin embargo, esta no anda. Revisando en
+  internet, el siguiente foro de matemática sugiere la siguiente solución a ese
+  problema:
+  <a
+    href="https://math.stackexchange.com/questions/1566115/formula-that-describes-the-movement-of-a-bishop-in-chess"
+    >https://math.stackexchange.com/questions/1566115/formula-that-describes-the-movement-of-a-bishop-in-chess</a
+  >. Arreglar/Rehacer el método <code>is_valid_move</code> del alfil. Recordamos
+  que el alfil se mueve diagonalmente sin saltar piezas.
+</p>
+<p>
+  Para correr <strong>SOLO</strong> los tests del alfil, usar
+  <code>python -m pytest test_piezas.py::TestBishop</code>.
+</p>
+<h4>Torre</h4>
+<p>
+  ¡La torre no sabe moverse! Completar el método <code>is_valid_move</code> de la
+  torre para que sepa como hacerlo. Recordamos que la torre se mueve horizontalmente
+  y verticalmente sin saltar piezas.
+  <strong>TIP:</strong> Pueden usar el principio de la solución del alfil para hacer
+  algo parecido. ¡Tal vez convenga partir en movimiento horizontal y vertical por
+  separado!
+</p>
+<p>
+  Para correr <strong>SOLO</strong> los tests de la torre, usar
+  <code>python -m pytest test_piezas.py::TestRook</code>
+</p>
+<h4>Reina</h4>
+<p>
+  Ahora, con lo que hicimos con la torre y el alfil, completar el método
+  <code>is_valid_move</code> de la reina. Recordamos que la reina se mueve horizontalmente,
+  verticalmente y diagonalmente sin saltar piezas.
+</p>
+<p>
+  Para correr <strong>SOLO</strong> los tests de la reina, usar
+  <code>python -m pytest test_piezas.py::TestQueen</code>
+</p>
+<h3>Jugadores</h3>
+<h4>Puntos</h4>
+<p>
+  De los jugadores no sólo nos importa el color, si no también los puntos y las
+  piezas que fue capturando. Para eso, completen la clase
+  <code>Jugador</code> que:
+</p>
+<ul>
+  <li>Se inicialice con el color (white/black)</li>
+  <li>
+    Tenga un método points que devuelva los puntos del jugador, que se calculan
+    en base a las piezas capturadas del oponente:
+    <ul>
+      <li>1 por peón</li>
+      <li>3 por alfil o caballo</li>
+      <li>5 por torre</li>
+      <li>9 por reina</li>
+    </ul>
+  </li>
+  <li>
+    Tenga un método <code>capture_piece</code> que reciba una pieza y la capture.
+  </li>
+  <li>
+    Tenga un método <code>captured_pieces</code> que no tome parámetros y devuelva
+    una lista de las piezas capturadas por dicho jugador.
+  </li>
+</ul>
+<p>
+  Para correr <strong>SOLO</strong> los tests de los puntos, usar
+  <code>python -m pytest test_jugador.py::TestPoints</code>
+</p>
+<h4>Lógica de Juego</h4>
+<p>
+  Lo siguiente es un diagrama de como interactúan las distintas partes del
+  juego:
+</p>
+<p>
+  <img
+    src="https://raw.githubusercontent.com/JZylber/Magnus/main/assets/Logica-Juego.png"
+    alt="Lógica de Juego"
+  />
+</p>
+<p>
+  Como muestra el diagrama, falta la conexión entre la lógica de juego (máquina
+  de estados) y el jugador. En particular, los estados deberían informarle a los
+  jugadores las piezas que van siendo capturadas. Es por eso que la interfaz no
+  refleja ni los puntos ni las piezas capturadas, es información que va a buscar
+  al jugador y el jugador no tiene. Para eso, deben modificar dichos estados (<code
+    >logica.py</code
+  >) para que el jugador reciba las piezas que va capturando. Piensen, ¿En qué
+  estado tiene sentido que el jugador capture una pieza? <strong>TIP:</strong> Los
+  jugadores están en los atributos
+  <code>player</code> y <code>oponent</code> del estado.
+</p>
+<p>
+  Para correr <strong>SOLO</strong> los tests del estado, usar
+  <code>python -m pytest test_jugador.py::TestPieceCapture</code>
+</p>
+<h4>Final del juego</h4>
+<p>
+  En este momento el juego no termina ni tiene en cuenta jaques. Modificar los
+  estados para que:
+</p>
+<ul>
+  <li>No permita un movimiento válido de piezas si implica quedar en jaque</li>
+  <li>
+    Terminar el juego (osea pasar al estado <code>GameEnd</code>) cuando se hace
+    un movimiento válido que implica jaque mate o empate. El player es quien
+    efectuó el movimiento final, no se rota como en <code>TurnStart</code>.
+  </li>
+</ul>
+<p>
+  <strong>IMPORTANTE:</strong> No tienen que hacer todo de 0.
+  <code>GameEnd</code> ya está hecho, y el tablero cuenta con un montón de métodos
+  que les pueden servir, como <code>isChecked</code>,
+  <code>isCheckmate</code>, <code>isStalemate</code> y otros. Vean las declaraciones
+  de los métodos para ver que toman de parámetro y que devuelven.
+</p>
+<p>
+  Para correr <strong>SOLO</strong> los tests del estado del juego, usar
+  <code>python -m pytest test_estado.py</code>.
+</p>
+<h2>Calificación</h2>
+<p>
+  El tp no tiene nota numérica, pero es obligatorio para aprobar el año. Se
+  considera aprobado si pasa todos los tests.
+</p>

@@ -1,0 +1,90 @@
+---
+export const partial = true;
+---
+
+<p>
+  Miguel Ángel Pichetto es uno de los dirigentes mas longevos del congreso de la
+  nación. Paso por ambas cámaras (diputados y senadores) y pasó por los
+  principales partidos del país: Fue jefe del senado durante el kirchnerismo,
+  fue candidato a vicepresidente de Mauricio Macri, y ahora es uno de los
+  principales armadores en diputados del gobierno de la libertad avanza.
+  Completo. Conoce las cámaras mejor que su casa, y es un doctor honoris causa
+  en rosca.
+</p>
+<p>
+  Pero uno no llega a diputado por magia. Es elegido. Democráticamente. Pero no
+  es como los presidentes: se votan en conjunto, por lista. ¿Como se hace esto?
+</p>
+<h2>Parte 1</h2>
+<p>
+  Las bancas de diputados se asignan proporcionalmente en base a los votos que
+  obtuvo cada lista en la elección. Pero muchas veces no se pueden dividir bien,
+  y sería muy conflictivo si no hay una forma unívoca de asignación. Existen
+  algoritmos de asignación proporcional, y particular, en argentina se usa una
+  modificación del sistema D&#39;Hondt.
+</p>
+<p>
+  <strong>Todavía no busquen como es</strong>. Lo vamos a ver más adelante. Solo
+  tienen que saber que para repartir las bancas, necesita esencialmente 3 cosas:
+</p>
+<ul>
+  <li>Los votos por agrupación</li>
+  <li>Las bancas a repartir</li>
+  <li>
+    El total del padrón (este número no es solamente la suma de votos, cuenta
+    también quienes no fueron a votar, los votos en blanco y los anulados)
+  </li>
+</ul>
+<p>
+  La idea es construir tests para esta función hipotética. Ponganle el nombre
+  que quieran, pero como dije antes, toma 3 parámetros. Los votos por agrupación
+  van a ser <code>list[int]</code>, y las bancas y el padrón, enteros. La
+  función retorna una lista de bancas por agrupación (<code>list[int]</code>) en
+  el mismo orden para la lista de votos.
+</p>
+<p>
+  Por ejemplo, en 2023, San Juan renovaba 3 bancas de diputados. De un total de
+  607413 electores, LA LIBERTAD AVANZA obtuvo 145782 votos, UNION POR LA PATRIA
+  145188 votos y JUNTOS POR EL CAMBIO 107908 votos. Recibieron una banca cada
+  uno. Es decir, de nuestra función hipotética <em>f</em>, debería ocurrir que
+  <code>f([145782,145188,107908],3,607413)</code> debería devolver
+  <code>[1,1,1]</code>.
+</p>
+<p>
+  Piensen un conjunto de tests para esta función, y escribanlos para
+  <code>pytest</code>. Pueden usar resultados de elecciones anteriores como
+  referencia. Pueden ver datos de elecciones anteriores en:
+  <a href="https://resultados.mininterior.gob.ar/"
+    >https://resultados.mininterior.gob.ar/</a
+  >. Para ver votos y bancas del 2023, pueden ver:
+  <a
+    href="https://www.pagina12.com.ar/601412-resultados-elecciones-2023-mapas-interactivos-con-los-datos-"
+    >https://www.pagina12.com.ar/601412-resultados-elecciones-2023-mapas-interactivos-con-los-datos-</a
+  >.
+</p>
+<h2>Parte 2</h2>
+<p>
+  Ahora si, hacer el programa. Pueden ver como es el algoritmo en los siguientes
+  links:
+</p>
+<ul>
+  <li>
+    <a
+      href="https://chequeado.com/el-explicador/como-funciona-el-sistema-dhondt-conoce-como-se-cuentan-los-votos-y-se-reparten-las-bancas-del-congreso-nacional/"
+      >https://chequeado.com/el-explicador/como-funciona-el-sistema-dhondt-conoce-como-se-cuentan-los-votos-y-se-reparten-las-bancas-del-congreso-nacional/</a
+    >
+  </li>
+  <li>
+    <a
+      href="https://buenosaires.gob.ar/sites/default/files/media/document/2021/11/03/cf6fa751bd98e12d862873d24f0417820d5d6f5c.pdf"
+      >https://buenosaires.gob.ar/sites/default/files/media/document/2021/11/03/cf6fa751bd98e12d862873d24f0417820d5d6f5c.pdf</a
+    >
+  </li>
+  <li>
+    <a href="https://es.wikipedia.org/wiki/Sistema_D%27Hondt"
+      >https://es.wikipedia.org/wiki/Sistema_D%27Hondt</a
+    >
+  </li>
+</ul>
+<p>Obviamente, corran los tests que hicieron para ver si está bien.</p>
+<p>Habiendo hecho el programa, ¿Cambiarían los tests que hicieron?</p>

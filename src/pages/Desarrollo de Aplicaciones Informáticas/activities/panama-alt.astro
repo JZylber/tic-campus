@@ -1,0 +1,375 @@
+---
+import CodeBlock from "../../../components/articles/code-block/CodeBlock.astro";
+
+export const partial = true;
+---
+
+<p>
+  <strong
+    >Esta consigna es exclusiva para quienes se copiaron en el trabajo original</strong
+  >
+</p>
+<h2>Funcionamiento</h2>
+<p>
+  Toda esta sección explica el funcionamiento del canal. Pueden probarlo con el
+  simulador, <code>canal_diagram.py</code>. A continuación un diagrama de las
+  esclusas que vamos a usar para explicar el software.
+</p>
+<p>
+  <img
+    src="https://jzylber.github.io/campus-data/img/canal-diagram.png"
+    alt="Diagrama del canal"
+  />
+</p>
+<h3>Estado del Canal</h3>
+<p>
+  El componente principal del sistema de control del canal es el estado. Este es
+  un diccionario que cuentan con toda la información de las esclusas en un
+  determinado momento. El estado inicial del canal es el siguiente:
+</p>
+<CodeBlock
+  language="python"
+  code={`{
+    "locks": ["","",""],
+    "locks_water_level": ["low","low","low"],
+    "queue_upstream": [],
+    "queue_downstream": [],
+    "gates": [False,False,False,False],
+    "direction": "upstream",
+    "control": [],
+    "open": True
+}`}
+/>
+<p>¿Pero qué es cada cosa?</p>
+<ul>
+  <li>
+    <strong>locks</strong>: Lista de 3 posiciones, una para cada esclusa (0,1,2)
+    como están en el diagrama. Si hay algún barco en la esclusa, aparece su
+    nombre en la posición correspondiente.
+  </li>
+  <li>
+    <strong>locks_water_level</strong>: Lista de 3 posiciones, una para cada
+    esclusa (0,1,2) como están en el diagrama. Representan el nivel del agua en
+    dicha esclusa. Hay 4 opciones de nivel, <em>high</em>, <em>low</em>,
+    <em>draining</em>, <em>filling</em>.
+  </li>
+  <li>
+    <strong>queue_upstream</strong>: Lista. Contiene los barcos esperando para
+    entrar al canal desde el punto más alto, <em>upstream</em>, del canal.
+  </li>
+  <li>
+    <strong>queue_downstream</strong>: Lista. Contiene los barcos esperando para
+    entrar al canal desde el punto más bajo, <em>downstream</em>, del canal.
+  </li>
+  <li>
+    <strong>gates</strong>: Lista de 4 posiciones, una para cada compuerta
+    (0,1,2,3). La 0 es entre el punto más bajo del canal y la esclusa 1, la 1 es
+    entre la esclusa 1 y la 2, la 2 es entre la esclusa 2 y la 3, y la 3 es
+    entre la esclusa 3 y el punto más alto del canal. Si la compuerta está
+    abierta, el valor es True, si está cerrada, el valor es False.
+  </li>
+  <li>
+    <strong>direction</strong>: Dirección en la que está operando el canal.
+    Puede tomar dos valores, <em>upstream</em> y <em>downstream</em>.
+  </li>
+  <li>
+    <strong>control</strong>: Lista de comandos a ser ejecutados por el control.
+    Se va a explicar más en la fase I.
+  </li>
+  <li>
+    <strong>open</strong>: Booleano que dice si está abierto o no el canal. Si
+    el canal está cerrado, los barcos de las filas rio abajo o rio arriba no
+    pueden ingresar al canal.
+  </li>
+</ul>
+<h3>Fase I: Ejecutar comandos de control pendientes</h3>
+<p>
+  Antes, tenemos que entender que es el control, una de las partes principales
+  del estado. El control es una lista de tuplas de la forma
+  <code>(&lt;tiempo&gt;, &lt;comando&gt;)</code>, que simulan acciones que
+  llevan tiempo, y el programa debe actualizar el estado del canal cuando dichas
+  acciones se completan. El <em>tiempo</em> es simplemente un entero que representa
+  la cuenta regresiva hasta necesitar ejecutar el comando. En la fase I, se ejecutan
+  comandos cuyo tiempo es 0. Al ejecutarlos se eliminan de la lista de control ¿Pero
+  que tipos de comandos hay?
+</p>
+<ol>
+  <li>
+    <p>
+      <strong>Comando move</strong>: Este tiene la forma de
+      <code>&quot;move &lt;origen&gt; &lt;destino&gt;&quot;</code>. Este comando
+      representa la finalización del movimiento de un barco, y al ejecutarse
+      mueve el nombre del barco de <code>&lt;origen&gt;</code> a
+      <code>&lt;destino&gt;</code> y cierra (<code>False</code>) la compuerta
+      entre origen y destino. Por ejemplo, el comando
+      <code>&quot;move qd 0&quot;</code> mueve el barco de la fila río abajo, es
+      decir saca el primer elemento de <em>queue_upstream</em> (recuerden que el
+      nombre está dado por la dirección a recorrer y no el lugar donde están) y lo
+      pone en la esclusa 0.Además, cierra la compuerta 0.
+    </p>
+  </li>
+  <li>
+    <p>
+      <strong>Comando level</strong>: Este tiene la forma de
+      <code>&quot;level &lt;esclusa&gt; &lt;nivel&gt;&quot;</code>. Este comando
+      representa la finalización de un cambio de nivel en una esclusa, y al
+      ejecutarse cambia el nivel de la esclusa referida al nivel deseado. Por
+      ejemplo, el comando <code>&quot;level 1 high&quot;</code> setea el nivel de
+      la esclusa 1 en <em>high</em>.
+    </p>
+  </li>
+  <li>
+    <p>
+      <strong>Comando direction</strong>: Este tiene la forma de
+      <code>&quot;direction &lt;abrir&gt; &lt;dirección&gt;&quot;</code>. Este
+      comando representa el intento de cambio en la dirección del canal. Cuando
+      se ejecuta, primero se chequea si el canal está vacío. Si la respuesta es
+      no, se cierra el canal (<code
+        >&lt;canal-state&gt;[&quot;open&quot;] = False</code
+      >) a la espera de que los barcos restantes despejen el canal. En este
+      caso, se agrega un comando de 1 minuto para ejecución el próximo ciclo y
+      que vuelva a chequear si el canal está vacío, de la forma
+      <code>(1,&quot;direction &lt;abrir&gt; &lt;dirección&gt;&quot;)</code>. Si
+      en cambio el canal está vacío, se cambia la dirección a la deseada, y si
+      abrir es igual a &quot;open&quot;, se reabre el canal (<code
+        >&lt;canal-state&gt;[&quot;open&quot;] = True</code
+      >)
+    </p>
+  </li>
+</ol>
+<h3>Fase II: Mover barcos a través de las esclusas</h3>
+<p>
+  Cuando ya hay barcos en las esclusas, hay toda una lógica para ver si un barco
+  puede avanzar de esclusa o salir del canal, o hay que modificar los niveles de
+  las esclusas.
+</p>
+<p>
+  Si la dirección es <em>upstream</em>, y el barco se encuentra en una esclusa
+  con nivel bajo (<em>low</em>), se debe elevar el nivel del agua en la esclusa
+  en la que está presente. Esto se hace cambiando el nivel de agua a
+  <em>filling</em> y agregar el comando de elevar el nivel al control, que dura 10
+  minutos. El comando entonces sería
+  <code>(10, level &lt;esclusa&gt; high)</code>. Para dirección
+  <em>downstream</em>, ocurre lo mismo cuando está en una esclusa de nivel alto
+  (<em>high</em>). Se debe bajar el nivel del agua, y esto se hace cambiando el
+  nivel a <em>draining</em> y agregar el comando de bajar el nivel al control, que
+  sería de la forma <code>(10, level &lt;esclusa&gt; low)</code>.
+</p>
+<p>
+  Cuando el barco está listo para pasar a la siguiente esclusa, es decir, en una
+  esclusa de nivel alto (<em>high</em>) cuando la dirección es
+  <em>upstream</em> o de nivel bajo (<em>low</em>) cuando la dirección es
+  <em>downstream</em>, se chequean las siguientes cosas:
+</p>
+<ol>
+  <li>
+    Si hay un barco en la siguiente esclusa, no se hace nada (al menos en
+    términos de este barco, el otro barco puede realizar acciones como subir el
+    nivel de su esclusa).
+  </li>
+  <li>
+    Si el nivel está <em>draining</em> o <em>filling</em> de la siguiente esclusa,
+    tampoco puede hacer nada.
+  </li>
+  <li>
+    Si el nivel está alto (<em>high</em>) en el caso de que la dirección sea
+    <em>upstream</em>, debemos bajarlo para que el barco pueda cambiar de
+    esclusa. Esto es setear el nivel de la siguiente esclusa en
+    <em>draining</em> y agregar el comando correspondiente, es decir
+    <code>(10, level &lt;esclusa-a-moverse&gt; low)</code>. Si el nivel está
+    bajo (<em>low</em>) en el caso de que la dirección sea <em>downstream</em>,
+    debemos subrilo para que el barco pueda cambiar de esclusa. Esto es setear
+    el nivel de la siguiente esclusa en <em>filling</em> y agregar el comando correspondiente,
+    es decir
+    <code>(10, level &lt;esclusa-a-moverse&gt; high)</code>.
+  </li>
+</ol>
+<p>
+  Si el nivel está alto (<em>high</em>) en la esclusa menor, bajo (<em>low</em>)
+  en la esclusa superior, y no hay barcos en la esclusa a la que quiere moverse
+  (dependiendo la dirección del canal), el barco <strong>PUEDE</strong> avanzar a
+  la siguiente esclusa. Cuando estas condiciones están dadas, ocurren las siguientes
+  cosas en el estado:
+</p>
+<ol>
+  <li>
+    Se abre la compuerta correspondiente (<code>True</code>) entre la esclusa
+    actual y la esclusa siguiente o salida del canal
+  </li>
+  <li>
+    Se agrega al control el comando para iniciar la salida de esclusa, que dura
+    2 minutos. Es decir, se agrega de la forma
+    <code>(2, &quot;move &lt;origen&gt; &lt;destino&gt;&quot;)</code>
+  </li>
+</ol>
+<p>
+  En el caso de querer salir del canal, esclusa 0 si es <em>downstream</em>,
+  esclusa 2 si es <em>upstream</em>, alcanza solo con que el nivel de la esclusa
+  actual sea el correcto: <em>low</em> para salir del canal por su extremo río abajo
+  y <em>high</em> para salir del canal por su extremo río arriba. Para salir, es
+  simplemente un caso particular de la salida descrita anteriormente. Se abre la
+  compuerta correspondiente, y se agrega el comando de salida al control: <code
+    >(2, &quot;move 2 u&quot;)</code
+  > cuando la dirección es
+  <em>upstream</em>, <code>(2, &quot;move 0 d&quot;)</code> cuando la dirección es
+  <em>downstream</em>.
+</p>
+<p>
+  Además, los barcos no pueden retroceder, es decir, moverse en una dirección
+  opuesta a la dirección en la que está funcionando el canal actualmente.
+</p>
+<h3>Fase III: Mover barcos al canal desde las filas</h3>
+<p>
+  Finalmente, el programa ve si hay barcos que quieren entrar al canal.
+  Obviamente, tiene que estar el canal abierto. Si la dirección es
+  <em>upstream</em>, debo chequear si hay barcos en la fila,
+  <em>queue_downstream</em> (<em>downstream</em> porque ingresan desde río abajo).
+  En caso de que haya:
+</p>
+<ul>
+  <li>Si la esclusa 0 está ocupada por un barco no hago nada.</li>
+  <li>
+    Si la esclusa 0 está <em>draining</em> o <em>filling</em> tampoco hago nada.
+  </li>
+  <li>
+    Si la esclusa 0 está <em>high</em> debo bajar su nivel a <em>low</em>. Esto
+    se hace igual que con las esclusas, setear el nivel a <em>draining</em> y agregar
+    el comando <code>(10, level 0 low)</code>.
+  </li>
+  <li>
+    Si la esclusa está <em>low</em>, puedo entrar al canal. Esto se hace
+    abriendo la compuerta 0 y agregando el comando correspondiente,
+    <code>(2, &quot;move qd 0&quot;)</code>.
+  </li>
+</ul>
+<p>
+  En el caso de dirección <em>downstream</em>, es muy parecido. Si hay barcos en
+  la fila, <em>queue_upstream</em> (<em>upstream</em> porque ingresan desde río arriba):
+</p>
+<ul>
+  <li>Si la esclusa 2 está ocupada por un barco no hago nada.</li>
+  <li>
+    Si la esclusa 2 está <em>draining</em> o <em>filling</em> tampoco hago nada.
+  </li>
+  <li>
+    Si la esclusa 2 está <em>low</em> debo subir su nivel a <em>high</em>. Esto
+    se hace igual que con las esclusas, setear el nivel a <em>filling</em> y agregar
+    el comando <code>(10, level 2 high)</code>.
+  </li>
+  <li>
+    Si la esclusa está <em>high</em>, puedo entrar al canal. Esto se hace
+    abriendo la compuerta 3 y agregando el comando correspondiente,
+    <code>(2, &quot;move qu 2&quot;)</code>.
+  </li>
+</ul>
+<h2>Librerías</h2>
+<p>
+  Para hacer este tp, se necesitan esencialmente 2 librerías: pytest para los
+  tests, y pygame para los diagramas. Esto se hace con:
+</p>
+<pre><code class="language-bash">pip install --user pytest
+pip install --user pygame
+</code></pre>
+<h2>Simulador</h2>
+<p>
+  Para correr el simulador y ver interactivamente como funciona el canal, deben
+  tener instalada la librería <code>pygame</code> y correr el archivo
+  <code>canal_diagram.py</code>. ¿Qué es interactivo en el diagrama?
+</p>
+<ul>
+  <li>
+    El reloj, al hacer click avanza un minuto. Un minuto es ejecutar las 3
+    fases. Primero fase I (ejecutar comandos pendientes), después fase II
+    (barcos dentro de canal) y por último fase III (barcos a la espera en las
+    distintas filas)
+  </li>
+  <li>Los <code>+</code> suman un barco a la fila del lado en que están.</li>
+  <li>Las flechas a ambos lados invierten la dirección del canal.</li>
+  <li>
+    El botón <code>DEBUG</code> permite ver <strong>parcialmente</strong> el estado,
+    en particular los barcos en las esclusas, los niveles de agua, las compuertas,
+    y el control. Las filas, la dirección y si está abierto o no se ve claramente
+    en pantalla, así que no se incluyó en las características que se ven en el debug.
+  </li>
+</ul>
+<h2>Consigna</h2>
+<p>
+  Construir un conjunto de tests para la función
+  <code>execute_control</code> que se encarga de la <strong>fase I</strong> del programa
+  de control. La función <code>execute_control(canal_state)</code> toma el estado
+  del canal y ejecuta <strong>todos</strong> los comandos con tiempo 0. Retorna el
+  estado del canal al finalizar la ejecución de la función.
+</p>
+<p><strong>Los tests deben estar en un archivo aparte.</strong></p>
+<p>Algunos puntos que sus tests deben cumplir:</p>
+<ul>
+  <li>
+    Pueden asumir que los comandos siempre siguen la estructura descrita, no
+    tienen que probar comandos inexistentes o comandos &quot;mal armados&quot;
+    (con menos o más parámetros).
+  </li>
+  <li>
+    Pueden asumir que los parámetros son correctos, no tienen que probar
+    comandos cuyos parámetros son cosas inválidas.
+  </li>
+  <li>
+    Pueden asumir que el estado inicial es válido, es decir, realizable desde la
+    ejecución del programa. No tiene que probar la ejecución de comandos desde
+    estados imposibles.
+  </li>
+  <li>
+    Es importante que prueben por separado los casos en donde los parámetros
+    involucran lugares fuera del canal (filas y salidas).
+  </li>
+  <li>
+    Es importante que si los comandos implican esclusas, probarlas con y sin
+    barcos.
+  </li>
+  <li>
+    Es importante que prueben <strong>todos</strong> los comandos en ambas direcciones
+    del canal.
+  </li>
+  <li>
+    Es importante que prueben algún caso de ejecución de múltiples comandos.
+  </li>
+  <li>
+    Es importante que prueben algún caso en donde el control tenga comandos que
+    no tengan que ser ejecutados esta ronda.
+  </li>
+  <li>
+    Es importante que chequeen todo el estado del canal, independiente de si el
+    comando debería o no afectar esa parte del estado.
+  </li>
+  <li>
+    Es importante que los tests se limiten a la función
+    <code>execute_control</code>.
+  </li>
+  <li>Es importante que los nombres sean descriptivos y apropiados al caso.</li>
+  <li>
+    Es importante que los tests tengan lo mínimo indispensable para probar el
+    caso, no debería haber comportamiento accidental.
+  </li>
+</ul>
+<h2>Archivos</h2>
+<p>El tp cuenta con los siguientes archivos:</p>
+<ul>
+  <li>
+    carpeta <em>assets</em>: contiene todas las imágenes para correr el
+    simulador.
+  </li>
+  <li><em>canal.py</em>: Funciones que ejecutan la lógica del canal.</li>
+  <li><em>canal_diagram.py</em>: Interfaz gráfica para correr el simulador.</li>
+</ul>
+<h2>Evaluación</h2>
+<p>
+  Como este es un tp para recuperar el contenido de un trabajo práctico que
+  entregaron copiado, su máxima nota posible es 6 (seis). La aprobación de este
+  trabajo se da si:
+</p>
+<ul>
+  <li>Se cumplen todos los puntos descritos en la consigna.</li>
+  <li>
+    Los integrantes del grupo <strong>realizan una defensa oral</strong> de su trabajo
+    (a coordinar con el docente).
+  </li>
+</ul>

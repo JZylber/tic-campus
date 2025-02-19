@@ -1,0 +1,49 @@
+---
+export const partial = true;
+---
+
+<p>Para armar un juego de truco, nos interesa modelar las cartas y el mazo</p>
+<h2>Punto 1: Cartas</h2>
+<p>
+  Armar un clase <code>Carta</code> en donde el constructor tome 2 parámetros: número
+  y palo. Guardar esa información en atributos. Además, sobreescribir el método <code
+    >__str__</code
+  >, que se llama cuando se imprime el objeto o se pasa a str. Hacerlo para que
+  devuelva una representación apropiada del objeto, como &quot;1 de basto&quot;.
+</p>
+<h2>Punto 2: Mazo</h2>
+<p>
+  Armar una clase <code>Mazo</code> en donde el constructor
+  <strong>no tome parámetros</strong> pero se incialice con las 40 cartas de baraja
+  española necesarias para jugar al truco.
+</p>
+<p>Además, debe contar con los siguientes métodos:</p>
+<ul>
+  <li><code>mezclar</code>: mezcla las cartas que lo conforman.</li>
+  <li>
+    <code>sacar_carta</code>: saca una carta del tope del mazo, y la devuelve.
+  </li>
+  <li>
+    <code>poner_carta(carta)</code>: toma una carta y la pone al final del mazo.
+    Pueden asumir que la carta es una que no se encuentra en el mazo.
+  </li>
+</ul>
+<p>
+  Por último, al igual que carta, sobreescriban el método
+  <code>__str__</code> para que se vean las cartas que componen al mazo.
+  <strong>TIP:</strong> aprovechen que cuando llaman al print() o str() usan el
+  <code>__str__</code> de <code>Carta</code>.
+</p>
+<h2>Punto 3: Manos</h2>
+<p>
+  Hacer una función que dado un mazo de cartas, y un número de jugadores (entre
+  2 y 6), reparta del mazo tantas manos como jugadores. Una mano es un conjunto
+  de 3 cartas sacadas del mazo. Entonces, la función debe retornar una lista de
+  manos (lista de listas). ¡No se olviden de mezclar el mazo antes de repartir!
+</p>
+<h2>Punto 4 (EXTRA): Orden</h2>
+<p>
+  Construir una función, que dadas dos cartas, A y B, devuelva, en términos de
+  la jerarquía de cartas de truco, 1 si A vale más que B, 0 si pardan (empatan)
+  o -1 si B vale más que A.
+</p>
