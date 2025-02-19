@@ -1,0 +1,33 @@
+---
+interface Props {
+  fraction: string;
+}
+
+const { fraction } = Astro.props;
+---
+
+<div
+  class="relative flex items-center justify-center w-14 h-14"
+  x-data={`{ fraction:  ${fraction}}`}
+  x-effect={`fraction = ${fraction}`}
+>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    version="1.1"
+    width="3.5rem"
+    height="3.5rem"
+    viewBox="0 0 160 160"
+    class="absolute -rotate-90"
+  >
+    <circle
+      class="fill-none stroke-sh-purple stroke-[16px] [stroke-dasharray:440]"
+      cx="80"
+      cy="80"
+      r="70"
+      stroke-linecap="round"
+      x-bind:style="{ strokeDashoffset: 440*(1-fraction) }"></circle>
+  </svg>
+  <span
+    class="text-sh-purple font-semibold text-[14px]"
+    x-text="`${Math.round(fraction*100)}%`"></span>
+</div>
