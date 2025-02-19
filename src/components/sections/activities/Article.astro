@@ -81,7 +81,7 @@ const { open, articleURL, content, course } = Astro.props;
         >
         </h1>
         <template
-          x-if={`$store.student.course === '${course}' &&
+          x-if={`${content} && $store.student.course === '${course}' &&
               ((${content}.type === 'Actividad' &&
                 $store.student.activities.find(
                   (activity) => activity.id === ${content}.id

@@ -54,7 +54,7 @@ const { subject, course } = Astro.params;
 ---
 
 <Layout>
-  <Navbar />
+  <Navbar course={course} />
   <main
     class="relative grow bg-gray-50 border border-gray-300 rounded-xl overflow-hidden"
   >

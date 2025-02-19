@@ -81,6 +81,7 @@ const { subject, course } = Astro.props;
                             if(results) {
                               passed = results.done;
                               pending = false;
+                              redo = results.inRevision;
                             }}
                             else if(content.type === 'Trabajo Práctico') {
                               const results = $store.student.marks.find(mark => mark.id === content.id);
@@ -88,13 +89,15 @@ const { subject, course } = Astro.props;
                               if(results) {
                                 passed = results.mark >= 6;
                                 pending = false;
+                                redo = results.inRevision;
                               }
                               else if(specialActivity) {
                                 passed = specialActivity.done;
                                 pending = false;
+                                redo = specialActivity.inRevision;
                               }
                             }
-                          redo = $store.student.markData.redosInRevision.includes(content.id);
+                          
                             "
                   >
                   </span>

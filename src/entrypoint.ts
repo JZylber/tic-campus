@@ -1,9 +1,13 @@
 import type { Alpine } from "alpinejs";
 import type { Activity, MarkedActivity } from "./aux/types";
+import { getStudentData } from "./aux/fetchData";
 const isOnCampus = () => {
   const host = window.location.host;
   return host === "campus.ort.edu.ar";
 };
+
+const courseRegex = /NR\d[A-Z]/;
+const defaultStudent = { name: "Julian Ariel", surname: "Zylber" };
 
 export default (Alpine: Alpine) => {
   Alpine.store("section", {
@@ -54,6 +58,43 @@ export default (Alpine: Alpine) => {
         passed: 0,
       },
     },
+    setStudent(name: string, surname: string, course: string, id: number) {
+      if (!courseRegex.test(course)) {
+        throw new Error(`Invalid course name: ${course}`);
+      }
+      this.name = name;
+      this.surname = surname;
+      this.course = course;
+      this.id = id;
+    },
+    async init() {
+      let studentName = defaultStudent;
+      if (isOnCampus()) {
+        const data = await fetch(
+          "https://campus.ort.edu.ar/ajaxactions/GetLoggedInData",
+          {
+            headers: {
+              accept: "application/json",
+            },
+          }
+        ).then((res) => res.json());
+        const studentData = data.nombre.split("<br/>");
+        studentName = {
+          name: studentData[0],
+          surname: studentData[1],
+        };
+      }
+      let student = await getStudentData(studentName.name, studentName.surname);
+      console.log(student);
+      if (student) {
+        this.setStudent(
+          student.name,
+          student.surname,
+          student.course,
+          student.id
+        );
+      }
+    },
   } as {
     name: string;
     surname: string;
@@ -76,6 +117,12 @@ export default (Alpine: Alpine) => {
         passed: number;
       };
     };
+    setStudent: (
+      name: string,
+      surname: string,
+      course: string,
+      id: number
+    ) => void;
   });
   const shadowContainer = document.querySelector("#campus-insertion");
   if (shadowContainer !== null && isOnCampus()) {

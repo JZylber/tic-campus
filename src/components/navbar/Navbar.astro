@@ -1,4 +1,8 @@
 ---
+interface Props {
+  course: string;
+}
+
 interface Item {
   name: string;
   icon: string;
@@ -11,6 +15,8 @@ const items = [
   { name: "programa", icon: "event_note" },
   { name: "material", icon: "construction" },
 ] as Item[];
+
+const { course } = Astro.props;
 ---
 
 <nav
@@ -29,6 +35,35 @@ const items = [
         class="text-lg"
         x-text="item.name[0].toUpperCase() + item.name.slice(1, item.name.length)"
       ></span>
+    </div>
+  </template>
+  <template
+    x-if={`$store.student.course === '${course}' && $store.student.markData.finalMark`}
+  >
+    <div
+      class="w-full rounded-2xl bg-primary-purple p-4 mt-auto mb-10 flex flex-col items-center gap-y-3 text-primary-dark-gray"
+    >
+      <span class="text-[20px] font-semibold">Nota Parcial</span>
+      <div
+        class="flex flex-col items-center gap-y-1"
+        x-data="{ passed: false }"
+        x-init="passed = $store.studentData.markData.finalMark >= 6"
+      >
+        <div
+          class="text-[30px] font-bold border-4 border-primary-dark-gray rounded-full aspect-square flex justify-center items-center"
+        >
+          <span x-text="$store.studentData.markData.finalMark"></span>
+        </div>
+        <span
+          x-text="passed ? 'Aprobado' : 'En Proceso'"
+          class="text-[16px] font-semibold"></span>
+      </div>
+      <p
+        class="text-gray-600 cursor-pointer"
+        x-on:click="$store.sections.changeSection('nota')"
+      >
+        <span class="hover:underline">Más Información</span>
+      </p>
     </div>
   </template>
 </nav>
