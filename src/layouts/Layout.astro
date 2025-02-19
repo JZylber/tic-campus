@@ -27,6 +27,8 @@
       } from "../aux/fetchData";
       import htmx from "htmx.org";
 
+      htmx.config.selfRequestsOnly = false;
+
       window.getSubjectData = getSubjectData;
       window.getSubjectProgram = getSubjectProgram;
       window.getSubjectPresentation = getSubjectPresentation;
