@@ -18,23 +18,26 @@ export interface Content {
   repositoryURL: string;
 }
 
-export interface UnitData {
+export interface Unit {
   name: string;
   order: number;
   contents: Array<Content>;
 }
 
-export interface ActivityData {
+export interface Activity {
   id: number;
   name: string;
   done: boolean;
+  inRevision: boolean;
+  special: boolean;
   comment: string;
 }
 
-export interface MarkedActivityData {
+export interface MarkedActivity {
   id: number;
   name: string;
   mark: number;
+  inRevision: boolean;
   comment: string;
 }
 
