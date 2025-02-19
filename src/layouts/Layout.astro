@@ -20,26 +20,6 @@ import "../styles/global.css";
     <title>TIC Campus</title>
   </head>
   <body>
-    <script>
-      import {
-        getSubjectData,
-        getSubjectProgram,
-        getSubjectPresentation,
-        getSubjectRedoLinks,
-        getSubjectMaterial,
-        getCourseGroupLink,
-      } from "../aux/fetchData";
-
-      import { fetchHTMLData } from "../aux/loadData";
-
-      window.getSubjectData = getSubjectData;
-      window.getSubjectProgram = getSubjectProgram;
-      window.getSubjectPresentation = getSubjectPresentation;
-      window.getSubjectRedoLinks = getSubjectRedoLinks;
-      window.getSubjectMaterial = getSubjectMaterial;
-      window.getCourseLink = getCourseGroupLink;
-      window.fetchHTMLData = fetchHTMLData;
-    </script>
     <div
       class="w-full h-[calc(100vh-64px-1rem)] gap-x-4 flex font-lato relative"
       x-data="{}"

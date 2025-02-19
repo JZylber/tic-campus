@@ -5,7 +5,22 @@ import {
   getRedos,
   getStudentData,
   getSubjectMarkingCriteria,
+  getSubjectData,
+  getSubjectProgram,
+  getSubjectPresentation,
+  getSubjectRedoLinks,
+  getSubjectMaterial,
+  getCourseGroupLink,
 } from "./aux/fetchData";
+import { fetchHTMLData } from "./aux/loadData";
+
+window.getSubjectData = getSubjectData;
+window.getSubjectProgram = getSubjectProgram;
+window.getSubjectPresentation = getSubjectPresentation;
+window.getSubjectRedoLinks = getSubjectRedoLinks;
+window.getSubjectMaterial = getSubjectMaterial;
+window.getCourseLink = getCourseGroupLink;
+window.fetchHTMLData = fetchHTMLData;
 
 export const round = (num: number, decimals: number) => {
   return Math.round(num * Math.pow(10, decimals)) / Math.pow(10, decimals);
