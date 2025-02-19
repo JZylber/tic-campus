@@ -61,13 +61,18 @@
   }
   body.appendChild(leftoverDiv);
   // Get all script tags
-  const scripts = [...doc.querySelectorAll("script")];
+  let scripts = [...doc.querySelectorAll("script")];
   //Remove from doc
   scripts.forEach((el) => {
     el.remove();
   });
   //Set parents innerHTML to template + doc body innerHtml
   shadow.innerHTML += doc.body.innerHTML;
+  // Put the Layout script in the scripts list at the front
+  scripts = [
+    ...scripts.filter((el) => el.src.includes("Layout")),
+    ...scripts.filter((el) => !el.src.includes("Layout")),
+  ];
   scripts.forEach((el, index) => {
     const newScript = document.createElement("script");
     newScript.async = false;
