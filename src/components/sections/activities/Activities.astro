@@ -21,12 +21,12 @@ const { subject, course } = Astro.props;
       <h1 class="text-[36px] font-bold text-center p-4">Actividades</h1>
       <template x-for="unit in unitsData" :key="unit.order">
         <div
-          class="border-2 border-gray-300 p-4 rounded-xl"
+          class="border-2 border-gray-300 rounded-xl"
           x-data="{ open: false }"
         >
           <div
-            class="flex justify-between items-center cursor-pointer"
-            x-on:click="open = !open"
+            class="flex justify-between items-center cursor-pointer p-4"
+            @click="open = !open"
           >
             <div class="text-[24px] font-bold">
               <span x-text="`Unidad ${unit.order}: `"></span><span
@@ -39,7 +39,11 @@ const { subject, course } = Astro.props;
               chevron_right
             </span>
           </div>
-          <div x-show="open" class="flex flex-col gap-y-2 py-4" x-transition>
+          <div
+            x-show="open"
+            class="flex flex-col gap-y-2 pb-4 px-4"
+            x-transition
+          >
             <template x-for="content in unit.contents">
               <div
                 class="cursor-pointer border-l-4 border-gray-50 px-4 hover:border-sh-purple inline-flex items-baseline"
