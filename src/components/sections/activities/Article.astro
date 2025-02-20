@@ -99,6 +99,7 @@ const { open, articleURL, content, course } = Astro.props;
             x-effect={`
                   if(${content}.type === 'Actividad') {
                     const activity = $store.student.activities.find(activity => activity.id === ${content}.id);
+                    mark = -1;
                     passing = activity.done;
                     comment = activity.comment;
                     redo = activity.inRevision;
@@ -109,10 +110,14 @@ const { open, articleURL, content, course } = Astro.props;
                     if (activityMark) {
                       mark = activityMark.mark;
                       passing = mark >= 6;
-                      comment = activityMark.comment;}
+                      comment = activityMark.comment;
+                      redo = activityMark.inRevision;
+                      }
                     else if(specialActivity) {
+                      mark = -1;
                       passing = specialActivity.done;
                       comment = specialActivity.comment;
+                      redo = specialActivity.inRevision;
                     }
                     }
                 `}
@@ -127,7 +132,7 @@ const { open, articleURL, content, course } = Astro.props;
             >
               <span
                 x-bind:class="{
-                  'material-symbols-outlined text-[24px]': mark === -1,
+                  'material-symbols-outlined text-[24px]': redo || mark === -1,
                 }"
                 x-text="(() => {
                           if (redo) {
