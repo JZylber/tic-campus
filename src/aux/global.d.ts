@@ -12,4 +12,8 @@ declare global {
   var getSubjectMaterial: (subject: string) => Promise<Material[]>;
   var getCourseLink: (course: string) => Promise<string>;
   var fetchHTMLData: (url: string) => Promise<string>;
+  var prepareCrumbs: () => {
+    crumbs: Array<{ text: string; link: string }>;
+    menu: Array<string>;
+  };
 }

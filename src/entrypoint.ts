@@ -12,7 +12,7 @@ import {
   getSubjectMaterial,
   getCourseGroupLink,
 } from "./aux/fetchData";
-import { fetchHTMLData } from "./aux/loadData";
+import { fetchHTMLData, prepareCrumbs } from "./aux/loadData";
 
 window.getSubjectData = getSubjectData;
 window.getSubjectProgram = getSubjectProgram;
@@ -21,6 +21,7 @@ window.getSubjectRedoLinks = getSubjectRedoLinks;
 window.getSubjectMaterial = getSubjectMaterial;
 window.getCourseLink = getCourseGroupLink;
 window.fetchHTMLData = fetchHTMLData;
+window.prepareCrumbs = prepareCrumbs;
 
 export const round = (num: number, decimals: number) => {
   return Math.round(num * Math.pow(10, decimals)) / Math.pow(10, decimals);

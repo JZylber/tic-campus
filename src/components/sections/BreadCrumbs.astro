@@ -1,24 +1,11 @@
 <div
-  x-data="{ crumbs: [{text: 'prueba1',link: ''},{text: 'prueba2',link: ''},{text: 'prueba3',link: ''}], menu: ['<a>Test1</a>','<a>Test2</a>'] }"
-  x-init="let leftovers = document.querySelectorAll('#leftoverinformation a.breadcrumb');
-  if(leftovers.length > 0) {
-    crumbs = [];
-    leftovers.forEach((el) => {
-      crumbs.push({text: el.innerText, link: el.href});
-    });
-  }
-  menuLeftoverLinks = document.querySelectorAll('#leftoverinformation ul a');
-  if(menuLeftoverLinks.length > 0) {
-    menu = [];
-    menuLeftoverLinks.forEach((el) => {
-      menu.push(el.outerHTML);
-    });
-  }
-  "
+  x-data="{ crumbs: [], menu: [] }"
+  x-init="let {cr,me} = prepareCrumbs(); crumbs = cr; menu = me;"
   class="flex justify-between items-center gap-x-4"
+  x-show="crumbs.length > 0 || menu.length > 0"
 >
   <div
-    class="text-[16px] text-gray-400 [&>a+a]:before:content-['/'] [&>a+a]:before:px-2"
+    class="text-[12px] text-gray-400 [&>a+a]:before:content-['/'] [&>a+a]:before:px-2"
   >
     <template x-for="crumb in crumbs">
       <a
