@@ -25,7 +25,7 @@ export const prepareCrumbs = () => {
       iTags.forEach((i) => {
         let span = document.createElement("span");
         span.classList.add("material-symbols-outlined");
-        span.classList.add("text-[20px]");
+        span.classList.add("text-[16px]");
         span.innerText = i.innerText;
         i.replaceWith(span);
       });
