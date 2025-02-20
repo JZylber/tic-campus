@@ -1,6 +1,6 @@
 <div
   x-data="{ crumbs: [], menu: [] }"
-  x-init="let {cr,me} = prepareCrumbs(); crumbs = cr; menu = me;"
+  x-init="let {crumbs,menu} = prepareCrumbs(); $data.crumbs = crumbs; $data.menu = menu;"
   class="flex justify-between items-center gap-x-4"
   x-show="crumbs.length > 0 || menu.length > 0"
 >
