@@ -10,7 +10,7 @@ export const prepareCrumbs = () => {
   ) as NodeListOf<HTMLAnchorElement>;
   let crumbs = [
     { text: "prueba1", link: "" },
-    { text: "prueba1", link: "" },
+    { text: "prueba2", link: "" },
   ] as Array<{ text: string; link: string }>;
   let menu = [] as Array<string>;
   if (leftovers.length > 0) {
