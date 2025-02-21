@@ -50,7 +50,8 @@ const { course } = Astro.props;
         x-init="passed = $store.student.markData.finalMark >= 6"
       >
         <div
-          class="text-[30px] font-bold border-4 border-sh-dark-gray rounded-full aspect-square flex justify-center items-center"
+          class="text-[30px] font-bold border-4 bg-sh-light-purple rounded-full aspect-square flex justify-center items-center"
+          x-bind:class="{ 'border-sh-dark-gray text-sh-dark-gray': passed, 'border-sh-red text-sh-red': !passed }"
         >
           <span x-text="$store.student.markData.finalMark"></span>
         </div>
