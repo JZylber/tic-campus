@@ -8,7 +8,10 @@ export const prepareCrumbs = () => {
   let leftovers = document.querySelectorAll(
     "#leftoverinformation a.breadcrumb"
   ) as NodeListOf<HTMLAnchorElement>;
-  let crumbs = [] as Array<{ text: string; link: string }>;
+  let crumbs = [
+    { text: "prueba1", link: "" },
+    { text: "prueba1", link: "" },
+  ] as Array<{ text: string; link: string }>;
   let menu = [] as Array<string>;
   if (leftovers.length > 0) {
     leftovers.forEach((el) => {
