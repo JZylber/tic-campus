@@ -6,6 +6,7 @@
 >
   <div
     class="text-[14px] text-gray-400 [&>a+a]:before:content-['/'] [&>a+a]:before:px-2"
+    x-show="crumbs.length > 0"
   >
     <template x-for="crumb in crumbs">
       <a
@@ -18,6 +19,7 @@
     id="menu"
     class="rounded-lg border-2 border-gray-300 w-8 h-8 flex justify-center items-center cursor-pointer relative shrink-0"
     x-data="{open: false}"
+    x-show="menu.length > 0"
     @click.stop="open = !open"
     @click.outside="open = false"
   >
