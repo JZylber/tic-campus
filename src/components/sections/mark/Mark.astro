@@ -5,8 +5,10 @@ import Progress from "./Progress.astro";
 
 <SectionLayout name="nota">
   <h1 class="text-[36px] font-bold text-center p-4">Nota</h1>
-  <div class="flex gap-x-8 py-4 justify-center">
-    <div class="flex flex-col gap-y-2 shrink-0">
+  <div class="flex flex-col md:flex-row gap-x-8 pt-4 md:pb-4 justify-center">
+    <div
+      class="flex flex-col gap-y-2 shrink-0 pb-2 border-b-2 border-gray-300 md:pb-0 md:border-b-0"
+    >
       <div
         class="rounded-2xl text-white grow flex flex-col gap-y-1 p-2 justify-center items-center"
         x-bind:class="{
@@ -22,7 +24,7 @@ import Progress from "./Progress.astro";
           x-text="$store.student.markData.finalMark >= 6 ? 'Aprobado' : 'En Proceso'"
         ></span>
       </div>
-      <div class="flex items-center gap-x-4">
+      <div class="flex items-center gap-x-2 md:gap-x-4">
         <span
           class="material-symbols-outlined"
           x-text="$store.student.markData.averageMark >= 6 ? 'check_circle' : 'cancel'"
@@ -31,11 +33,11 @@ import Progress from "./Progress.astro";
           'text-sh-red': $store.student.markData.averageMark < 6
             }"
         ></span>
-        <span class="text-[18px] text-gray-600 shrink-0"
+        <span class="text-[14px] md:text-[18px] text-gray-600 shrink-0"
           >Promedio mayor o igual a 6</span
         >
       </div>
-      <div class="flex items-center gap-x-4">
+      <div class="flex items-center gap-x-2 md:gap-x-4">
         <span
           class="material-symbols-outlined"
           x-text="$store.student.allMarkedActivitiesPassed() ? 'check_circle' : 'cancel'"
@@ -44,11 +46,11 @@ import Progress from "./Progress.astro";
           'text-sh-red': !$store.student.allMarkedActivitiesPassed()
             }"
         ></span>
-        <span class="text-[18px] text-gray-600 shrink-0"
+        <span class="text-[14px] md:text-[18px] text-gray-600 shrink-0"
           >Actividades con nota aprobadas</span
         >
       </div>
-      <div class="flex items-center gap-x-4">
+      <div class="flex items-center gap-x-2 md:gap-x-4">
         <span
           class="material-symbols-outlined"
           x-text="$store.student.allSpecialActivitiesDone()? 'check_circle' : 'cancel'"
@@ -57,7 +59,7 @@ import Progress from "./Progress.astro";
           'text-sh-red': !$store.student.allSpecialActivitiesDone()
             }"
         ></span>
-        <span class="text-[18px] text-gray-600 shrink-0"
+        <span class="text-[14px] md:text-[18px] text-gray-600 shrink-0"
           >Actividades obligatorias hechas</span
         >
       </div>
@@ -68,7 +70,7 @@ import Progress from "./Progress.astro";
         x-data="{ progress: 1 }"
         x-effect="progress = $store.student.markData.activities.total > 0 ? $store.student.markData.activities.done/$store.student.markData.activities.total : 1"
       >
-        <p class="text-[18px] text-gray-600">
+        <p class="text-[14px] md:text-[18px] text-gray-600">
           <span
             class="text-sh-black"
             x-text="$store.student.markData.activities.done"></span>
@@ -85,7 +87,7 @@ import Progress from "./Progress.astro";
         x-data="{ progress: 1 }"
         x-effect="progress = $store.student.markData.markedActivities.total > 0 ? $store.student.markData.markedActivities.passed/$store.student.markData.markedActivities.total : 1"
       >
-        <p class="text-[18px] text-gray-600">
+        <p class="text-[14px] md:text-[18px] text-gray-600">
           <span
             class="text-sh-black"
             x-text="$store.student.markData.markedActivities.passed"></span>
@@ -102,7 +104,7 @@ import Progress from "./Progress.astro";
         x-data="{progress: 1}"
         x-effect="progress = ($store.student.specialActivities()).length > 0 ? ($store.student.specialActivities()).filter(spAct => spAct.done).length / ($store.student.specialActivities()).length: 1"
       >
-        <p class="text-[18px] text-gray-600">
+        <p class="text-[14px] md:text-[18px] text-gray-600">
           <span
             class="text-sh-black"
             x-text="$store.student.specialActivities().filter(spAct => spAct.done).length"
