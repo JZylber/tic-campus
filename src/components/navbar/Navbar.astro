@@ -41,7 +41,7 @@ const items = [
     </div>
     <template x-for="item in items">
       <div
-        x-on:click="$store.section.changeSection(item.name)"
+        @click="$store.section.changeSection(item.name); open = false"
         class="flex h-[calc(28px+var(--spacing)*4)] items-center p-2 cursor-pointer gap-x-4 rounded-md"
         x-bind:class="{ 'bg-sh-dark-gray': $store.section.currentSection === item.name }"
       >
@@ -55,8 +55,7 @@ const items = [
           x-transition.duration.300></span>
       </div>
     </template>
-
-    <!-- <MarkLink course={course} /> -->
+    <MarkLink minimized="!open && isMobile" course={course} open="open" />
   </div>
   <div
     class="absolute top-0 left-full bg-sh-black opacity-30 h-full w-[calc(100vw-var(--spacing)*12-24px)] z-10"
