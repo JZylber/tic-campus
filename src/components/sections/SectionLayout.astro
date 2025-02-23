@@ -10,7 +10,7 @@ const { name } = Astro.props;
 
 <section
   x-show={`$store.section.currentSection === '${name}'`}
-  class="absolute inset-0 w-full h-full bg-gray-50 overflow-y-scroll overflow-x-hidden flex flex-col py-4 px-8 gap-y-4"
+  class="absolute inset-0 w-full h-full bg-gray-50 overflow-y-scroll overflow-x-hidden flex flex-col py-4 px-4 md:px-8 gap-y-4"
   x-transition
 >
   <BreadCrumbs />
