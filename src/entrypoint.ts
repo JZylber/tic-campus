@@ -13,7 +13,6 @@ import {
   getCourseGroupLink,
 } from "./aux/fetchData";
 import { fetchHTMLData, prepareCrumbs } from "./aux/loadData";
-import { string } from "astro:schema";
 
 window.getSubjectData = getSubjectData;
 window.getSubjectProgram = getSubjectProgram;
