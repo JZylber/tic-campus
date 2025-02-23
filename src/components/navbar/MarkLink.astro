@@ -1,0 +1,53 @@
+---
+interface Props {
+  course: string;
+  minimized: string;
+  open: string;
+}
+
+const { course, minimized, open } = Astro.props;
+---
+
+<template
+  x-if={`$store.student.course === '${course}' && $store.student.markData.finalMark`}
+>
+  <div
+    class="grow flex flex-col justify-end"
+    x-data="{ minimized: false, passed: false }"
+    x-init="passed = $store.student.markData.finalMark >= 6"
+    x-effect={`minimized = ${minimized}`}
+  >
+    <div x-show="minimized" x-transition.opacity>
+      <div
+        class="w-[calc(24px+var(--spacing)*4)] aspect-square text-[20px] font-bold border-4 bg-white rounded-full flex justify-center items-center"
+        x-bind:class="{ 'border-sh-dark-gray text-sh-dark-gray': passed, 'border-sh-red text-sh-red': !passed }"
+        @click={`$store.section.changeSection('nota'); ${open} = false`}
+      >
+        <span x-text="$store.student.markData.finalMark"></span>
+      </div>
+    </div>
+    <div
+      class="w-full rounded-2xl bg-sh-purple p-4 flex flex-col items-center gap-y-3 text-sh-dark-gray"
+      x-show="!minimized"
+    >
+      <span class="text-[20px] font-semibold">Nota Parcial</span>
+      <div class="flex flex-col items-center gap-y-1">
+        <div
+          class="text-[30px] font-bold border-4 bg-sh-light-purple rounded-full aspect-square flex justify-center items-center"
+          x-bind:class="{ 'border-sh-dark-gray text-sh-dark-gray': passed, 'border-sh-red text-sh-red': !passed }"
+        >
+          <span x-text="$store.student.markData.finalMark"></span>
+        </div>
+        <span
+          x-text="passed ? 'Aprobado' : 'En Proceso'"
+          class="text-[16px] font-semibold"></span>
+      </div>
+      <p
+        class="text-gray-600 cursor-pointer"
+        @click={`$store.section.changeSection('nota'); ${open} = false`}
+      >
+        <span class="hover:underline">Más Información</span>
+      </p>
+    </div>
+  </div>
+</template>
