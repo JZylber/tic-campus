@@ -10,7 +10,7 @@ const { subject } = Astro.props;
 
 <SectionLayout name="material">
   <div
-    class="grid gap-2 grid-cols-[repeat(auto-fill,minmax(300px,1fr))] auto-rows-fr"
+    class="flex flex-col md:grid gap-2 grid-cols-[repeat(auto-fill,minmax(300px,1fr))] auto-rows-fr"
     x-data="{ materials: [] }"
     x-init={`materials= await window.getSubjectMaterial('${subject}')`}
   >
@@ -22,7 +22,7 @@ const { subject } = Astro.props;
         <img
           x-bind:src="material.image"
           alt="imagen material"
-          class="rounded-xl object-cover w-full aspect-video"
+          class="max-md:hidden rounded-xl object-cover w-full aspect-video"
         />
         <div
           class="rounded-full py px-2 w-fit"
