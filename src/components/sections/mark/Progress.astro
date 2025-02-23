@@ -14,10 +14,8 @@ const { fraction } = Astro.props;
   <svg
     xmlns="http://www.w3.org/2000/svg"
     version="1.1"
-    width="3.5rem"
-    height="3.5rem"
     viewBox="0 0 160 160"
-    class="absolute -rotate-90"
+    class="absolute -rotate-90 w-[2rem] h-[2rem] md:w-[3.5rem] md:h-[3.5rem]"
   >
     <circle
       class="fill-none stroke-sh-purple stroke-[16px] [stroke-dasharray:440]"
@@ -28,6 +26,6 @@ const { fraction } = Astro.props;
       x-bind:style="{ strokeDashoffset: 440*(1-fraction) }"></circle>
   </svg>
   <span
-    class="text-sh-purple font-semibold text-[14px]"
+    class="text-sh-purple font-semibold text-[8px] md:text-[14px]"
     x-text="`${Math.round(fraction*100)}%`"></span>
 </div>

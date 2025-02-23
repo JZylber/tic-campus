@@ -5,8 +5,10 @@ import Progress from "./Progress.astro";
 
 <SectionLayout name="nota">
   <h1 class="text-[36px] font-bold text-center p-4">Nota</h1>
-  <div class="flex gap-x-8 py-4 justify-center">
-    <div class="flex flex-col gap-y-2 shrink-0">
+  <div class="flex flex-col md:flex-row gap-x-8 pt-4 md:pb-4 justify-center">
+    <div
+      class="flex flex-col gap-y-2 shrink-0 pb-2 border-b-2 border-gray-300 md:pb-0 md:border-b-0"
+    >
       <div
         class="rounded-2xl text-white grow flex flex-col gap-y-1 p-2 justify-center items-center"
         x-bind:class="{
@@ -22,7 +24,7 @@ import Progress from "./Progress.astro";
           x-text="$store.student.markData.finalMark >= 6 ? 'Aprobado' : 'En Proceso'"
         ></span>
       </div>
-      <div class="flex items-center gap-x-4">
+      <div class="flex items-center gap-x-2 md:gap-x-4">
         <span
           class="material-symbols-outlined"
           x-text="$store.student.markData.averageMark >= 6 ? 'check_circle' : 'cancel'"
@@ -31,11 +33,11 @@ import Progress from "./Progress.astro";
           'text-sh-red': $store.student.markData.averageMark < 6
             }"
         ></span>
-        <span class="text-[18px] text-gray-600 shrink-0"
+        <span class="text-[14px] md:text-[18px] text-gray-600 shrink-0"
           >Promedio mayor o igual a 6</span
         >
       </div>
-      <div class="flex items-center gap-x-4">
+      <div class="flex items-center gap-x-2 md:gap-x-4">
         <span
           class="material-symbols-outlined"
           x-text="$store.student.allMarkedActivitiesPassed() ? 'check_circle' : 'cancel'"
@@ -44,11 +46,11 @@ import Progress from "./Progress.astro";
           'text-sh-red': !$store.student.allMarkedActivitiesPassed()
             }"
         ></span>
-        <span class="text-[18px] text-gray-600 shrink-0"
+        <span class="text-[14px] md:text-[18px] text-gray-600 shrink-0"
           >Actividades con nota aprobadas</span
         >
       </div>
-      <div class="flex items-center gap-x-4">
+      <div class="flex items-center gap-x-2 md:gap-x-4">
         <span
           class="material-symbols-outlined"
           x-text="$store.student.allSpecialActivitiesDone()? 'check_circle' : 'cancel'"
@@ -57,7 +59,7 @@ import Progress from "./Progress.astro";
           'text-sh-red': !$store.student.allSpecialActivitiesDone()
             }"
         ></span>
-        <span class="text-[18px] text-gray-600 shrink-0"
+        <span class="text-[14px] md:text-[18px] text-gray-600 shrink-0"
           >Actividades obligatorias hechas</span
         >
       </div>
@@ -68,7 +70,7 @@ import Progress from "./Progress.astro";
         x-data="{ progress: 1 }"
         x-effect="progress = $store.student.markData.activities.total > 0 ? $store.student.markData.activities.done/$store.student.markData.activities.total : 1"
       >
-        <p class="text-[18px] text-gray-600">
+        <p class="text-[14px] md:text-[18px] text-gray-600">
           <span
             class="text-sh-black"
             x-text="$store.student.markData.activities.done"></span>
@@ -85,7 +87,7 @@ import Progress from "./Progress.astro";
         x-data="{ progress: 1 }"
         x-effect="progress = $store.student.markData.markedActivities.total > 0 ? $store.student.markData.markedActivities.passed/$store.student.markData.markedActivities.total : 1"
       >
-        <p class="text-[18px] text-gray-600">
+        <p class="text-[14px] md:text-[18px] text-gray-600">
           <span
             class="text-sh-black"
             x-text="$store.student.markData.markedActivities.passed"></span>
@@ -102,7 +104,7 @@ import Progress from "./Progress.astro";
         x-data="{progress: 1}"
         x-effect="progress = ($store.student.specialActivities()).length > 0 ? ($store.student.specialActivities()).filter(spAct => spAct.done).length / ($store.student.specialActivities()).length: 1"
       >
-        <p class="text-[18px] text-gray-600">
+        <p class="text-[14px] md:text-[18px] text-gray-600">
           <span
             class="text-sh-black"
             x-text="$store.student.specialActivities().filter(spAct => spAct.done).length"
@@ -118,7 +120,7 @@ import Progress from "./Progress.astro";
     </div>
   </div>
   <div class="flex flex-col gap-y-2 py-4 border-t-2 border-gray-300">
-    <h2 class="text-[24px] font-semibold">Nota promedio</h2>
+    <h2 class="text-[20px] md:text-[24px] font-semibold">Nota promedio</h2>
     <p class="text-gray-600">
       La nota promedio se compone en un
       <span x-text="$store.student.markData.proportion*100"></span>% promediando
@@ -129,7 +131,7 @@ import Progress from "./Progress.astro";
     <div class="w-full flex justify-center">
       <div class="flex flex-col items-center py-4 max-w-2xl w-4/5">
         <svg
-          class="w-full"
+          class="max-sm:hidden w-full"
           xmlns="http://www.w3.org/2000/svg"
           version="1.1"
           viewBox="0 0 440 100"
@@ -173,47 +175,55 @@ import Progress from "./Progress.astro";
             stroke-linecap="round"
             class="stroke-sh-blue stroke-[20]"></line>
         </svg>
-        <div class="grid grid-cols-[2fr_30px_2fr_30px_1fr] grid-rows-2">
+        <div
+          class="flex flex-col md:grid grid-cols-[2fr_30px_2fr_30px_1fr] grid-rows-2"
+        >
           <div class="flex justify-center gap-x-2 text-[16px] items-center">
-            <div class="rounded-full h-[16px] w-[16px] bg-sh-purple"></div>
+            <div
+              class="max-md:hidden rounded-full h-[16px] w-[16px] bg-sh-purple"
+            >
+            </div>
             <span>Actividades con nota</span>
           </div>
           <div
-            class="col-start-3 flex justify-center gap-x-2 text-[16px] items-center"
+            class="max-md:order-4 col-start-3 flex justify-center gap-x-2 text-[16px] items-center"
           >
-            <div class="rounded-full h-[16px] w-[16px] bg-sh-blue"></div>
+            <div
+              class="max-md:hidden rounded-full h-[16px] w-[16px] bg-sh-blue"
+            >
+            </div>
             <span>Actividades de clase</span>
           </div>
           <div
-            class="col-start-5 flex justify-center gap-x-2 text-[16px] items-center"
+            class="max-md:order-7 col-start-5 flex justify-center gap-x-2 text-[16px] items-center"
           >
             <span>Promedio</span>
           </div>
           <div
-            class="row-start-2 flex justify-center gap-x-2 text-[20px] items-center text-sh-purple"
+            class="max-md:order-2 row-start-2 flex justify-center gap-x-2 text-[20px] items-center text-sh-purple"
           >
             <span
               x-text="$store.student.markData.markedActivities.markContribution"
             ></span>
           </div>
           <div
-            class="row-start-2 flex justify-center gap-x-2 text-[20px] items-center"
+            class="max-md:order-3 row-start-2 flex justify-center gap-x-2 text-[20px] items-center"
           >
             <span>+</span>
           </div>
           <div
-            class="row-start-2 flex justify-center gap-x-2 text-[20px] items-center text-sh-blue"
+            class="max-md:order-5 row-start-2 flex justify-center gap-x-2 text-[20px] items-center text-sh-blue"
           >
             <span x-text="$store.student.markData.activities.markContribution"
             ></span>
           </div>
           <div
-            class="row-start-2 flex justify-center gap-x-2 text-[20px] items-center"
+            class="border-t border-sh-black md:border-t-0 max-md:order-6 row-start-2 flex justify-center gap-x-2 text-[20px] items-center"
           >
-            <span> = </span>
+            <span class="max-md:hidden"> = </span>
           </div>
           <div
-            class="row-start-2 flex justify-center gap-x-2 text-[20px] items-center"
+            class="max-md:order-8 row-start-2 flex justify-center gap-x-2 text-[20px] items-center"
           >
             <span x-text="$store.student.markData.averageMark"></span>
           </div>
@@ -222,20 +232,22 @@ import Progress from "./Progress.astro";
     </div>
   </div>
   <div class="flex flex-col gap-y-2 py-4 border-t-2 border-gray-300">
-    <h2 class="text-[24px] font-semibold">Actividades obligatorias</h2>
-    <p class="text-gray-600">
+    <h2 class="text-[20px] md:text-[24px] font-semibold">
+      Actividades obligatorias
+    </h2>
+    <p class="text-[14px] md:text-[16px] text-gray-600">
       Todas las actividades que es necesario tener completas para poder aprobar.
     </p>
     <div class="flex justify-center">
       <div
-        class="border-gray-400 border-2 w-4/5 min-w-80 max-w-4xl rounded-xl overflow-hidden"
+        class="border-gray-400 border-2 w-full max-w-full md:w-4/5 md:min-w-80 md:max-w-4xl rounded-xl overflow-hidden"
         x-show="$store.student.specialActivities().length > 0"
       >
         <table class="border-collapse w-full">
           <thead class="bg-gray-300 text-gray-600">
             <tr>
-              <th class="p-2">Actividad</th>
-              <th class="p-2">Estado</th>
+              <th class="text-[14px] md:text-[16px] p-2">Actividad</th>
+              <th class="text-[14px] md:text-[16px] p-2">Estado</th>
             </tr>
           </thead>
           <tbody>
@@ -244,7 +256,7 @@ import Progress from "./Progress.astro";
                 class="border-t border-gray-400"
                 x-data="{redo: activity.inRevision}"
               >
-                <td class="p-2">
+                <td class="text-[14px] md:text-[16px] p-2">
                   <span x-text="activity.name"></span>
                 </td>
                 <td class="p-2">
@@ -258,11 +270,11 @@ import Progress from "./Progress.astro";
                     }"
                     >
                       <span
-                        class="material-symbols-outlined text-[20px]"
+                        class="material-symbols-outlined text-[16px]! md:text-[20px]!"
                         x-text="redo ? 'more_horiz' : (activity.done ? 'check' : 'close')"
                       ></span>
                       <span
-                        class="text-[16px]"
+                        class="text-[14px] md:text-[16px]"
                         x-text="(()=>{
                           if(redo){
                             return 'En Revisión'
@@ -288,21 +300,23 @@ import Progress from "./Progress.astro";
     </div>
   </div>
   <div class="flex flex-col gap-y-2 py-4 border-t-2 border-gray-300">
-    <h2 class="text-[24px] font-semibold">Actividades con nota</h2>
-    <p class="text-gray-600">
+    <h2 class="text-[20px] md:text-[24px] font-semibold">
+      Actividades con nota
+    </h2>
+    <p class="text-[14px] md:text-[16px] text-gray-600">
       Todos las actividades/trabajos prácticos que reciben una nota numérica. Se
       aprueban con una nota mayor o igual a 6.
     </p>
     <div class="flex justify-center">
       <div
-        class="border-gray-400 border-2 w-4/5 min-w-80 max-w-4xl rounded-xl overflow-hidden"
+        class="border-gray-400 border-2 w-full max-w-full md:w-4/5 md:min-w-80 md:max-w-4xl rounded-xl overflow-hidden"
         x-show="$store.student.marks.length > 0"
       >
         <table class="border-collapse w-full">
           <thead class="bg-gray-300 text-gray-600">
             <tr>
-              <th class="p-2">Trabajo Práctico</th>
-              <th class="p-2">Estado</th>
+              <th class="text-[14px] md:text-[16px] p-2">Trabajo Práctico</th>
+              <th class="text-[14px] md:text-[16px] p-2">Estado</th>
             </tr>
           </thead>
           <tbody>
@@ -311,7 +325,7 @@ import Progress from "./Progress.astro";
                 class="border-t border-gray-400"
                 x-data="{redo: activity.inRevision}"
               >
-                <td class="p-2">
+                <td class="text-[14px] md:text-[16px] p-2">
                   <span x-text="activity.name"></span>
                 </td>
                 <td class="p-2">
@@ -324,12 +338,16 @@ import Progress from "./Progress.astro";
                       'bg-sh-light-red text-sh-red': activity.mark < 6 && !redo
                     }"
                     >
-                      <span x-text="activity.mark" x-show="!redo"></span>
                       <span
-                        class="material-symbols-outlined text-[20px]"
+                        class="text-[14px] md:text-[16px]"
+                        x-text="activity.mark"
+                        x-show="!redo"></span>
+                      <span
+                        class="material-symbols-outlined text-[16px]! md:text-[20px]!"
                         x-text="'more_horiz'"
                         x-show="redo"></span>
                       <span
+                        class="text-[14px] md:text-[16px] text-center md:text-left"
                         x-text="(()=>{
                           if(redo){
                             return 'En Revisión'
@@ -355,22 +373,24 @@ import Progress from "./Progress.astro";
     </div>
   </div>
   <div class="flex flex-col gap-y-2 py-4 border-t-2 border-gray-300">
-    <h2 class="text-[24px] font-semibold">Actividades de clase</h2>
-    <p class="text-gray-600">
+    <h2 class="text-[20px] md:text-[24px] font-semibold">
+      Actividades de clase
+    </h2>
+    <p class="text-[14px] md:text-[16px] text-gray-600">
       Todos las actividades/trabajos prácticos que se hacen a modo de práctica
       en clase. No reciben una calificación numérica, pero se consideran hechas
       si cumplen con lo mínimo esperado para dicha clase.
     </p>
     <div class="flex justify-center">
       <div
-        class="border-gray-400 border-2 w-4/5 min-w-80 max-w-4xl rounded-xl overflow-hidden"
+        class="border-gray-400 border-2 w-full max-w-full md:w-4/5 md:min-w-80 md:max-w-4xl rounded-xl overflow-hidden"
         x-show="$store.student.activities.length > 0"
       >
         <table class="border-collapse w-full">
           <thead class="bg-gray-300 text-gray-600">
             <tr>
-              <th class="p-2">Actividad</th>
-              <th class="p-2">Estado</th>
+              <th class="text-[14px] md:text-[16px] p-2">Actividad</th>
+              <th class="text-[14px] md:text-[16px] p-2">Estado</th>
             </tr>
           </thead>
           <tbody>
@@ -381,7 +401,7 @@ import Progress from "./Progress.astro";
                 class="border-t border-gray-400"
                 x-data="{redo: activity.inRevision}"
               >
-                <td class="p-2">
+                <td class="text-[14px] md:text-[16px] p-2">
                   <span x-text="activity.name"></span>
                 </td>
                 <td class="p-2">
@@ -395,11 +415,11 @@ import Progress from "./Progress.astro";
                     }"
                     >
                       <span
-                        class="material-symbols-outlined text-[20px]"
+                        class="material-symbols-outlined text-[16px]! md:text-[20px]!"
                         x-text="redo ? 'more_horiz' : (activity.done ? 'check' : 'close')"
                       ></span>
                       <span
-                        class="text-[16px]"
+                        class="text-[14px] md:text-[16px] text-center md:text-left"
                         x-text="(()=>{
                           if(redo){
                             return 'En Revisión'
