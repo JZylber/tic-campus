@@ -54,6 +54,7 @@ export default (Alpine: Alpine) => {
           effect(() => run());
         }
       };
+      handler();
       mql.onchange = handler;
       // Be sure you clean up your listeners as a best practice
       cleanup(() => mql.removeEventListener("change", handler));
