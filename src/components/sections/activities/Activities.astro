@@ -13,41 +13,40 @@ const { subject, course } = Astro.props;
 
 <SectionLayout name="actividades">
   <div
-    class="h-full w-full"
+    class="w-full h-full"
     x-data="{ unitsData: [], loading: true, currentContent: null, articleOpen: false, articleURL:''}"
     x-init={`unitsData = await getSubjectData('${course}', '${subject}'); loading = false;`}
   >
-    <div x-show="!loading" class="flex flex-col gap-y-4">
-      <h1 class="text-[36px] font-bold text-center p-4">Actividades</h1>
-      <template x-for="unit in unitsData" :key="unit.order">
-        <div
-          class="border-2 border-gray-300 rounded-xl"
-          x-data="{ open: false }"
-        >
+    <div class="h-full w-full overflow-y-scroll">
+      <div x-show="!loading" class="flex flex-col gap-y-4">
+        <h1 class="text-[30px] md:text-[36px] font-bold text-center p-4">
+          Actividades
+        </h1>
+        <template x-for="unit in unitsData" :key="unit.order">
           <div
-            class="flex justify-between items-center cursor-pointer p-4"
-            @click="open = !open"
+            class="border-2 border-gray-300 rounded-xl"
+            x-data="{ open: false }"
           >
-            <div class="text-[24px] font-bold">
-              <span x-text="`Unidad ${unit.order}: `"></span><span
-                x-text="unit.name"></span>
-            </div>
-            <span
-              class="material-symbols-outlined text-[36px] transition-transform"
-              x-bind:class="{'rotate-90': open}"
+            <div
+              class="flex justify-between items-center cursor-pointer p-4"
+              @click="open = !open"
             >
-              chevron_right
-            </span>
-          </div>
-          <div
-            x-show="open"
-            class="flex flex-col gap-y-2 pb-4 px-4"
-            x-transition
-          >
-            <template x-for="content in unit.contents">
-              <div
-                class="cursor-pointer border-l-4 border-gray-50 px-4 hover:border-sh-purple inline-flex items-baseline"
-                x-on:click={`(() => {
+              <div class="text-[20px] md:text-[24px] font-bold">
+                <span x-text="`Unidad ${unit.order}: `"></span><span
+                  x-text="unit.name"></span>
+              </div>
+              <span
+                class="material-symbols-outlined text-[36px] transition-transform"
+                x-bind:class="{'rotate-90': open}"
+              >
+                chevron_right
+              </span>
+            </div>
+            <div x-show="open" class="flex flex-col pb-4 px-4" x-transition>
+              <template x-for="content in unit.contents">
+                <div
+                  class="cursor-pointer border-t-2 md:border-l-4 md:border-t-0 border-gray-300 md:border-gray-50 py-1 px-4 hover:border-sh-purple inline-flex items-center"
+                  x-on:click={`(() => {
                 currentContent = content;
                 if(content.textURL.startsWith('https:')){
                   window.open(content.textURL, '_blank');
@@ -55,31 +54,39 @@ const { subject, course } = Astro.props;
                   articleOpen = true; 
                   articleURL =  $store.baseURL.dataURL + '/${subject}/activities/' + content.textURL;}
                 })()`}
-              >
-                <span
-                  class="material-symbols-outlined text-[24px] self-center"
-                  x-text="(()=>{switch(content.type) {
+                >
+                  <span class="max-md:hidden">
+                    <span
+                      class="material-symbols-outlined text-[24px]"
+                      x-text="(()=>{switch(content.type) {
                           case 'Actividad': return 'psychology';
                           case 'Trabajo Práctico': return 'help';
                           case 'Encuesta': return 'checklist';
                           case 'Recuperatorio': return 'redo';
                           default: return 'description';
                         }})()"
-                >
-                </span>
-                <span
-                  class="font-semibold text-[20px] ml-4 w-2/5"
-                  x-text="content.name"></span>
-                <span class="italic text-[16px]" x-text="content.topic"></span>
-                <template
-                  x-if={`['Actividad','Trabajo Práctico','Encuesta'].includes(content.type) && $store.student.course === '${course}'`}
-                >
-                  <span
-                    class="material-symbols-outlined text-[24px] ml-auto self-center"
-                    x-data="{ passed: false, pending: true, redo: false }"
-                    x-text="(()=>{if(pending || redo) {return 'pending'} else if(passed) {return 'check_circle'} else {return 'cancel'}})()"
-                    x-bind:class="(()=>{if(pending) {return 'text-gray-400'}else if(redo){return 'text-sh-yellow'} else if(passed) {return 'text-sh-green'} else {return 'text-sh-red'}})()"
-                    x-effect="
+                    >
+                    </span>
+                  </span>
+                  <div
+                    class="flex flex-col grow md:grow-0 md:flex-row gap-x-4 md:ml-4"
+                  >
+                    <span
+                      class="font-semibold text-center md:text-left text-[16px] md:text-[20px] md:w-2/5"
+                      x-text="content.name"></span>
+                    <span
+                      class="italic text-center md:text-left text-[14px] md:text-[16px]"
+                      x-text="content.topic"></span>
+                  </div>
+                  <template
+                    x-if={`['Actividad','Trabajo Práctico','Encuesta'].includes(content.type) && $store.student.course === '${course}'`}
+                  >
+                    <span
+                      class="material-symbols-outlined text-[24px] shrink-0 md:ml-auto"
+                      x-data="{ passed: false, pending: true, redo: false }"
+                      x-text="(()=>{if(pending || redo) {return 'pending'} else if(passed) {return 'check_circle'} else {return 'cancel'}})()"
+                      x-bind:class="(()=>{if(pending) {return 'text-gray-400'}else if(redo){return 'text-sh-yellow'} else if(passed) {return 'text-sh-green'} else {return 'text-sh-red'}})()"
+                      x-effect="
                           if(content.type === 'Actividad') {
                             const results = $store.student.activities.find(activity => activity.id === content.id);
                             if(results) {
@@ -103,21 +110,23 @@ const { subject, course } = Astro.props;
                             }
                           
                             "
-                  >
-                  </span>
-                </template>
-              </div>
-            </template>
+                    >
+                    </span>
+                  </template>
+                </div>
+              </template>
+            </div>
           </div>
-        </div>
-      </template>
-      <Article
-        content="currentContent"
-        articleURL="articleURL"
-        open="articleOpen"
-        course={course}
-      />
-      <Loader show="loading" />
+        </template>
+
+        <Loader show="loading" />
+      </div>
     </div>
+    <Article
+      content="currentContent"
+      articleURL="articleURL"
+      open="articleOpen"
+      course={course}
+    />
   </div>
 </SectionLayout>

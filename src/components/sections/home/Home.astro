@@ -9,36 +9,47 @@ const { subject, course } = Astro.props;
 ---
 
 <SectionLayout name="home">
-  <header class="flex justify-between gap-x-4">
-    <h1 class="text-[60px] font-bold m-0 max-w-[75%]" x-text={`'${subject}'`}>
+  <header
+    class="flex flex-col text-center lg:text-left lg:flex-row justify-between gap-4"
+  >
+    <h1
+      class="text-[40px] md:text-[60px] font-bold m-0 lg:max-w-[75%]"
+      x-text={`'${subject}'`}
+    >
     </h1>
     <div
-      class="self-stretch flex flex-col justify-center gap-y-4 min-w-[175px] w-[250px]"
+      class="self-stretch flex flex-col items-center justify-center gap-x-4 gap-y-4 lg:min-w-[175px] lg:w-[250px]"
     >
       <a
-        class="rounded-xl bg-sh-purple p-2 flex justify-center items-center gap-x-4 hover:shadow-lg cursor-pointer"
+        class="w-full max-w-[200px] md:max-w-[250px] rounded-xl bg-sh-purple p-2 flex justify-center items-center gap-x-4 hover:shadow-lg cursor-pointer"
         x-bind:href={`await getCourseLink('${course}')`}
       >
-        <span class="material-symbols-outlined text-[28px]">groups</span>
+        <span class="max-md:hidden flex items-center justify-center"
+          ><span class="material-symbols-outlined text-[28px]">groups</span
+          ></span
+        >
         <span class="text-[20px]">Grupo</span>
       </a>
       <a
-        class="rounded-xl bg-sh-purple p-2 flex justify-center items-center gap-x-4 hover:shadow-lg cursor-pointer"
+        class="w-full max-w-[200px] md:max-w-[250px] rounded-xl bg-sh-purple p-2 flex justify-center items-center gap-x-4 hover:shadow-lg cursor-pointer"
         href="https://cheatsheets-nv.vercel.app"
       >
-        <span class="material-symbols-outlined text-[28px]">note_stack</span>
+        <span class="max-md:hidden flex items-center justify-center"
+          ><span class="material-symbols-outlined text-[28px]">note_stack</span
+          ></span
+        >
         <span class="text-[20px]">Cheatsheets</span>
       </a>
     </div>
   </header>
 
-  <p class="text-gray-600 indent-8 text-[20px] text-justify">
+  <p class="text-gray-600 indent-8 text-[16px] md:text-[20px] text-justify">
     ¡Bienvenidos! Este es el campus de la materia. Acá vas a encontrar todas las
     actividades, las clases dadas y más material. Además, si sos un estudiante
     de este curso, podés ver tus notas y tu progreso en la materia. ¡Explorá el
     menú del costado para ver más!
   </p>
-  <div class="w-full self-center">
+  <div class="w-full self-center max-sm:hidden">
     <div
       style="
         position: relative;
