@@ -13,7 +13,7 @@ const { subject, course } = Astro.props;
 
 <SectionLayout name="actividades">
   <div
-    class="h-full w-full relative"
+    class="w-full h-full"
     x-data="{ unitsData: [], loading: true, currentContent: null, articleOpen: false, articleURL:''}"
     x-init={`unitsData = await getSubjectData('${course}', '${subject}'); loading = false;`}
   >
