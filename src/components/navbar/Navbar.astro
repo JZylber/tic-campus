@@ -24,30 +24,43 @@ const items = [
 ---
 
 <nav
-  class="flex flex-col gap-y-2 bg-sh-black text-white p-4 lg:w-[250px] shrink-0 h-full leading-normal rounded-xl"
+  class="w-[calc(var(--spacing)*12+24px)] lg:w-[250px] shrink-0 h-full relative"
   x-data={`{items: ${JSON.stringify(items)},open: false, isMobile: true}`}
-  x-tw:max-lg="isMobile = true"
+  x-tw:max-lg="isMobile = true; open = false"
   x-tw:lg="isMobile = false"
 >
-  <div class="pb-4 lg:hidden">
-    <span
-      class="text-[24px] material-symbols-outlined cursor-pointer bg-gray-50 rounded-full p-2 text-sh-black"
-      x-text="'menu'"
-      x-on:click="open = !open"></span>
-  </div>
-  <template x-for="item in items">
-    <div
-      x-on:click="$store.section.changeSection(item.name)"
-      class="flex items-center p-2 cursor-pointer gap-x-4 rounded-md"
-      x-bind:class="{ 'bg-sh-dark-gray': $store.section.currentSection === item.name }"
-    >
-      <span x-text="item.icon" class="material-symbols-outlined text-[24px]"
-      ></span>
+  <div
+    class="absolute top-0 left-0 w-screen h-full flex flex-col gap-y-2 bg-sh-black text-white p-4 rounded-xl z-20 transition-[max-width] duration-300"
+    :class="{ 'max-w-[calc(var(--spacing)*12+24px)]': !open && isMobile, 'max-w-[250px]': open || !isMobile }"
+  >
+    <div class="pb-4 lg:hidden">
       <span
-        class="text-lg"
-        x-text="item.name[0].toUpperCase() + item.name.slice(1, item.name.length)"
-        x-show="open || !isMobile"></span>
+        class="text-[24px] material-symbols-outlined cursor-pointer bg-gray-50 rounded-full p-2 text-sh-black"
+        x-text="'menu'"
+        x-on:click="open = !open"></span>
     </div>
-  </template>
-  <!-- <MarkLink course={course} /> -->
+    <template x-for="item in items">
+      <div
+        x-on:click="$store.section.changeSection(item.name)"
+        class="flex h-[calc(28px+var(--spacing)*4)] items-center p-2 cursor-pointer gap-x-4 rounded-md"
+        x-bind:class="{ 'bg-sh-dark-gray': $store.section.currentSection === item.name }"
+      >
+        <span x-text="item.icon" class="material-symbols-outlined text-[24px]"
+        ></span>
+        <span
+          class="text-lg"
+          x-text="item.name[0].toUpperCase() + item.name.slice(1, item.name.length)"
+          x-show="open || !isMobile"
+          x-transition.opacity
+          x-transition.duration.300></span>
+      </div>
+    </template>
+
+    <!-- <MarkLink course={course} /> -->
+  </div>
+  <div
+    class="absolute top-0 left-full bg-sh-black opacity-30 h-full w-[calc(100vw-var(--spacing)*12-24px)] z-10"
+    x-show="open && isMobile"
+  >
+  </div>
 </nav>
