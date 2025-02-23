@@ -47,8 +47,18 @@ export default (Alpine: Alpine) => {
       const run = evaluateLater(expression);
 
       const rootStyles = getComputedStyle(document.documentElement);
-      const breakpoint = rootStyles.getPropertyValue(`--breakpoint-${value}`);
-      const mql = window.matchMedia(`(min-width: ${breakpoint})`);
+      const isMax = value.startsWith("max");
+      let breakpoint = "";
+      if (isMax) {
+        breakpoint = rootStyles.getPropertyValue(
+          `--breakpoint-${value.slice(4)}`
+        );
+      } else {
+        breakpoint = rootStyles.getPropertyValue(`--breakpoint-${value}`);
+      }
+      const mql = isMax
+        ? window.matchMedia(`(max-width: ${breakpoint})`)
+        : window.matchMedia(`(min-width: ${breakpoint})`);
       const handler = () => {
         if (mql.matches) {
           effect(() => run());

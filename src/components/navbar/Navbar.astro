@@ -25,9 +25,16 @@ const items = [
 
 <nav
   class="flex flex-col gap-y-2 bg-sh-black text-white p-4 lg:w-[250px] shrink-0 h-full leading-normal rounded-xl"
-  x-data={`{items: ${JSON.stringify(items)},open: false}`}
-  x-tw:lg="open = true"
+  x-data={`{items: ${JSON.stringify(items)},open: false, isMobile: true}`}
+  x-tw:max-lg="isMobile = true"
+  x-tw:lg="isMobile = false"
 >
+  <div class="pb-4 lg:hidden">
+    <span
+      class="text-[24px] material-symbols-outlined cursor-pointer bg-gray-50 rounded-full p-2 text-sh-black"
+      x-text="'menu'"
+      x-on:click="open = !open"></span>
+  </div>
   <template x-for="item in items">
     <div
       x-on:click="$store.section.changeSection(item.name)"
@@ -39,7 +46,7 @@ const items = [
       <span
         class="text-lg"
         x-text="item.name[0].toUpperCase() + item.name.slice(1, item.name.length)"
-        x-show="open"></span>
+        x-show="open || !isMobile"></span>
     </div>
   </template>
   <!-- <MarkLink course={course} /> -->
