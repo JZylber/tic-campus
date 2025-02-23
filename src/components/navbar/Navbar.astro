@@ -25,7 +25,8 @@ const items = [
 
 <nav
   class="flex flex-col gap-y-2 bg-sh-black text-white p-4 lg:w-[250px] shrink-0 h-full leading-normal rounded-xl"
-  x-data={`{items: ${JSON.stringify(items)}}`}
+  x-data={`{items: ${JSON.stringify(items)},open: false}`}
+  x-tw:lg="open = true"
 >
   <template x-for="item in items">
     <div
@@ -38,8 +39,8 @@ const items = [
       <span
         class="text-lg"
         x-text="item.name[0].toUpperCase() + item.name.slice(1, item.name.length)"
-      ></span>
+        x-show="open"></span>
     </div>
   </template>
-  <MarkLink course={course} />
+  <!-- <MarkLink course={course} /> -->
 </nav>

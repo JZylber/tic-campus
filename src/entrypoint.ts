@@ -43,35 +43,18 @@ export default (Alpine: Alpine) => {
       { value, expression, modifiers },
       { Alpine, evaluateLater, evaluate, effect, cleanup }
     ) => {
-      // First evaluate the special widths option users may pass in
-      const widths = evaluate(
-        'typeof twWidths === "undefined" ? {} : twWidths'
-      ) as any;
-
       // Set up the expression to be evaluated later in the listener callback
       const run = evaluateLater(expression);
 
-      // This is VERY hacky, but it will attempt to look for possibly breakpoints.
-      // There may be other ways to do this in the future (especially if TW ever makes them CSS vars)
-      Object.values(
-        document.querySelectorAll('[class*="max-w-screen-"]')
-      ).forEach((node) => {
-        // Grab the suffix like lg from max-w-screen-lg
-        const prefix = Object.values(node.classList)
-          .filter((c) => c.includes("screen"))[0]
-          .split("-")
-          .slice(-1)
-          .pop() as string;
-        // Add properties that the user didn't pass in
-        widths.hasOwnProperty(prefix) ||
-          (widths[prefix] = window.getComputedStyle(node).maxWidth);
-      });
-
-      const mql = window.matchMedia(`(max-width: ${widths[value]})`);
-      const handler = () => effect(() => run());
-      handler();
-
-      mql.addEventListener("change", handler);
+      const rootStyles = getComputedStyle(document.documentElement);
+      const breakpoint = rootStyles.getPropertyValue(`--breakpoint-${value}`);
+      const mql = window.matchMedia(`(min-width: ${breakpoint})`);
+      const handler = () => {
+        if (mql.matches) {
+          effect(() => run());
+        }
+      };
+      mql.onchange = handler;
       // Be sure you clean up your listeners as a best practice
       cleanup(() => mql.removeEventListener("change", handler));
     }
