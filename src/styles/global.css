@@ -43,6 +43,11 @@ body {
     linear-gradient(-45deg, var(--g));
   animation: l7 1.5s infinite cubic-bezier(0.3, 1, 0, 1);
 }
+
+.material-symbols-outlined {
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+}
+
 @keyframes l7 {
   33% {
     inset: -10px;
