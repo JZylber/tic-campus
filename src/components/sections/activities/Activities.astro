@@ -45,7 +45,7 @@ const { subject, course } = Astro.props;
             <div x-show="open" class="flex flex-col pb-4 px-4" x-transition>
               <template x-for="content in unit.contents">
                 <div
-                  class="cursor-pointer border-t-2 md:border-l-4 md:border-t-0 border-gray-300 md:border-gray-50 py-1 px-4 hover:border-sh-purple inline-flex items-center"
+                  class="cursor-pointer border-t-2 md:border-l-4 md:border-t-0 border-gray-300 md:border-gray-50 py-1 px-4 hover:border-sh-purple flex items-center"
                   x-on:click={`(() => {
                 currentContent = content;
                 if(content.textURL.startsWith('https:')){
@@ -55,7 +55,7 @@ const { subject, course } = Astro.props;
                   articleURL =  $store.baseURL.dataURL + '/${subject}/activities/' + content.textURL;}
                 })()`}
                 >
-                  <span class="max-md:hidden">
+                  <span class="max-md:hidden flex justify-between items-center">
                     <span
                       class="material-symbols-outlined text-[24px]"
                       x-text="(()=>{switch(content.type) {
@@ -69,10 +69,10 @@ const { subject, course } = Astro.props;
                     </span>
                   </span>
                   <div
-                    class="flex flex-col grow md:grow-0 md:flex-row gap-x-4 md:ml-4"
+                    class="flex flex-col grow md:flex-row gap-x-4 md:ml-4 items-center"
                   >
                     <span
-                      class="font-semibold text-center md:text-left text-[16px] md:text-[20px] md:w-2/5"
+                      class="font-semibold text-center md:text-left text-[16px] md:text-[20px]"
                       x-text="content.name"></span>
                     <span
                       class="italic text-center md:text-left text-[14px] md:text-[16px]"
