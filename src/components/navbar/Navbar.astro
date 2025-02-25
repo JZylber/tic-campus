@@ -24,13 +24,13 @@ const items = [
 ---
 
 <nav
-  class="w-[calc(var(--spacing)*12+24px)] lg:w-[250px] shrink-0 h-full relative"
+  class="w-[calc(var(--spacing)*12+24px)] lg:w-[250px] shrink-0 h-full relative border-gray-300 rounded-l-xl max-lg:border-y max-lg:bg-gray-50"
   x-data={`{items: ${JSON.stringify(items)},open: false, isMobile: true}`}
   x-tw:max-lg="isMobile = true; open = false"
   x-tw:lg="isMobile = false"
 >
   <div
-    class="absolute top-0 left-0 w-screen h-full flex flex-col gap-y-2 bg-sh-black text-white p-4 rounded-xl z-20 transition-[max-width] duration-300"
+    class="absolute top-0 left-0 w-screen h-full flex flex-col gap-y-2 bg-sh-black text-white p-4 rounded-r-xl sm:rounded-l-xl z-20 transition-[max-width] duration-300"
     :class="{ 'max-w-[calc(var(--spacing)*12+24px)]': !open && isMobile, 'max-w-[250px]': open || !isMobile }"
   >
     <div class="pb-4 lg:hidden">
@@ -58,7 +58,7 @@ const items = [
     <MarkLink minimized="!open && isMobile" course={course} open="open" />
   </div>
   <div
-    class="absolute top-0 left-full bg-sh-black opacity-30 h-full w-[calc(100vw-var(--spacing)*12-24px)] sm:w-[calc(95vw-var(--spacing)*12-24px)] z-10"
+    class="absolute top-0 left-full bg-sh-black opacity-30 h-full w-[calc(100vw-var(--spacing)*12-24px)] sm:w-[calc(95vw-var(--spacing)*12-24px)] z-10 sm:rounded-xl"
     x-show="open && isMobile"
   >
   </div>
