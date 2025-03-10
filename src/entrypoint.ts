@@ -238,6 +238,12 @@ export default (Alpine: Alpine) => {
         allSpecialActivitiesDone && allMarkedActivitiesPassed
           ? Math.round(this.markData.averageMark)
           : Math.min(4, Math.round(this.markData.averageMark));
+      if (
+        this.markData.activities.total === 0 &&
+        this.markData.markedActivities.total === 0
+      ) {
+        this.markData.finalMark = null;
+      }
     },
   } as {
     name: string;
