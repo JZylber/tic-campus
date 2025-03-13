@@ -38,7 +38,7 @@ const { subject } = Astro.props;
       <div
         class="w-full md:w-4/5 md:min-w-80 max-w-4xl flex flex-col md:grid grid-cols-2 grid-rows-2 gap-y-2 gap-x-6"
         x-data="{activitiesLink: '', markedActivitiesLink: ''}"
-        x-effect={`let {activitiesRedo, markedActivitiesRedo} = await getSubjectRedoLinks('${subject}'); activitiesLink = activitiesRedo; markedActivitiesLink = markedActivitiesRedo;`}
+        x-effect={`let {activitiesRedo, markedActivitiesRedo} = await getSubjectRedoLinks('${subject}', dataSheetId); activitiesLink = activitiesRedo; markedActivitiesLink = markedActivitiesRedo;`}
       >
         <a
           x-bind:href="activitiesLink"
