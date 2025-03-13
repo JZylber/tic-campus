@@ -28,6 +28,9 @@ const items = [
   x-data={`{items: ${JSON.stringify(items)},open: false, isMobile: true}`}
   x-tw:max-lg="isMobile = true; open = false"
   x-tw:lg="isMobile = false"
+  x-init="if(window.innerWidth > 1024){
+    isMobile=false
+  }"
 >
   <div
     class="absolute top-0 left-0 w-screen h-full flex flex-col gap-y-2 bg-sh-black text-white p-4 rounded-r-xl sm:rounded-l-xl z-20 transition-[max-width] duration-300"
