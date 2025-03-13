@@ -6,16 +6,17 @@ import Article from "./Article.astro";
 interface Props {
   subject: string;
   course: string;
+  year: number;
 }
 
-const { subject, course } = Astro.props;
+const { subject, course, year } = Astro.props;
 ---
 
 <SectionLayout name="actividades">
   <div
     class="w-full h-full"
     x-data="{ unitsData: [], loading: true, currentContent: null, articleOpen: false, articleURL:''}"
-    x-init={`unitsData = await getSubjectData('${course}', '${subject}'); loading = false;`}
+    x-init={`unitsData = await getSubjectData('${course}', '${subject}', dataSheetId); loading = false;`}
   >
     <div class="h-full w-full overflow-y-scroll">
       <div x-show="!loading" class="flex flex-col gap-y-4">
@@ -52,7 +53,7 @@ const { subject, course } = Astro.props;
                   window.open(content.textURL, '_blank');
                 } else {
                   articleOpen = true; 
-                  articleURL =  $store.baseURL.dataURL + '/${subject}/activities/' + content.textURL;}
+                  articleURL =  $store.baseURL.dataURL + '/${year}/${subject}/activities/' + content.textURL;}
                 })()`}
                 >
                   <span class="max-md:hidden flex justify-between items-center">

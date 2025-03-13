@@ -22,7 +22,7 @@ const { subject, course } = Astro.props;
     >
       <a
         class="w-full max-w-[200px] md:max-w-[250px] rounded-xl bg-sh-purple p-2 flex justify-center items-center gap-x-4 hover:shadow-lg cursor-pointer"
-        x-bind:href={`await getCourseLink('${course}')`}
+        x-bind:href={`await getCourseLink('${course}', dataSheetId)`}
       >
         <span class="max-md:hidden flex items-center justify-center"
           ><span class="material-symbols-outlined text-[28px]">groups</span
@@ -77,7 +77,7 @@ const { subject, course } = Astro.props;
           padding: 0;
           margin: 0;
         "
-        x-bind:src={`await getSubjectPresentation('${subject}')`}
+        x-bind:src={`await getSubjectPresentation('${subject}', dataSheetId)`}
         allowfullscreen="allowfullscreen"
         allow="fullscreen"
       >

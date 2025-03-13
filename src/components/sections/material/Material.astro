@@ -12,7 +12,7 @@ const { subject } = Astro.props;
   <div
     class="flex flex-col md:grid gap-2 grid-cols-[repeat(auto-fill,minmax(300px,1fr))] auto-rows-fr"
     x-data="{ materials: [] }"
-    x-init={`materials= await window.getSubjectMaterial('${subject}')`}
+    x-init={`materials= await window.getSubjectMaterial('${subject}', dataSheetId)`}
   >
     <template x-for={`material in materials`}>
       <a

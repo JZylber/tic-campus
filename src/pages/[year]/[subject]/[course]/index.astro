@@ -1,0 +1,33 @@
+---
+import Home from "../../../../components/sections/home/Home.astro";
+import Activities from "../../../../components/sections/activities/Activities.astro";
+import Layout from "../../../../layouts/Layout.astro";
+import Redos from "../../../../components/sections/redo/Redos.astro";
+import Program from "../../../../components/sections/program/Program.astro";
+import Material from "../../../../components/sections/material/Material.astro";
+import Navbar from "../../../../components/navbar/Navbar.astro";
+import Mark from "../../../../components/sections/mark/Mark.astro";
+import courses from "../../../../aux/courses.json";
+
+export function getStaticPaths() {
+  return courses;
+}
+
+const { subject, course, year } = Astro.params;
+const { dataSheetId } = Astro.props;
+---
+
+<Layout dataSheetId={dataSheetId}>
+  <Navbar course={course} subject={subject} />
+  <main
+    class="relative grow bg-gray-50 border-y sm:border-r lg:border-l border-gray-300 sm:rounded-r-xl lg:rounded-l-xl overflow-hidden"
+    x-init={`$store.student.getStudentData('${subject}','${dataSheetId}')`}
+  >
+    <Home subject={subject} course={course} />
+    <Activities subject={subject} course={course} year={year} />
+    <Redos subject={subject} />
+    <Program subject={subject} year={year} />
+    <Material subject={subject} />
+    <Mark subject={subject} />
+  </main>
+</Layout>

@@ -1,17 +1,27 @@
 ---
-import { getAllCourses } from "../aux/fetchData";
-import type { Course } from "../aux/types";
-import Layout from "../layouts/Layout.astro";
+import { getAllCourses } from "../../aux/fetchData";
+import type { Course } from "../../aux/types";
+import Layout from "../../layouts/Layout.astro";
 
-interface CourseByYear {
-  [year: string]: Course[];
+export async function getStaticPaths() {
+  return [{ params: { year: 2025 } }];
 }
 
-const coursesByYear = (await getAllCourses()).reduce((acc, course) => {
+interface DatedCourse extends Course {
+  year: number;
+}
+
+interface CourseByYear {
+  [year: string]: DatedCourse[];
+}
+
+const coursesByYear = (
+  await getAllCourses("1VZ_KPk4aZJFPlAgx188y0wW8p3psbbtZgix1L8a-5kE")
+).reduce((acc, course) => {
   if (!acc[course.name[0]]) {
     acc[course.name[0]] = [];
   }
-  acc[course.name[0]].push(course);
+  acc[course.name[0]].push({ ...course, year: new Date().getFullYear() });
   return acc;
 }, {} as CourseByYear);
 ---
@@ -45,7 +55,7 @@ const coursesByYear = (await getAllCourses()).reduce((acc, course) => {
             <template x-for="course in courses">
               <a
                 class="cursor-pointer bg-gray-200 w-full lg:w-20 aspect-square rounded-xl flex justify-center items-center text-gray-600 text-[20px] hover:bg-sh-black hover:text-white transition-colors"
-                x-bind:href="`/tic-campus/${course.subject}/${course.id}`"
+                x-bind:href="`/tic-campus/${course.year}/${course.subject}/${course.id}`"
               >
                 <span x-text="course.name"></span>
               </a>
