@@ -7,83 +7,14 @@ import Program from "../../../../components/sections/program/Program.astro";
 import Material from "../../../../components/sections/material/Material.astro";
 import Navbar from "../../../../components/navbar/Navbar.astro";
 import Mark from "../../../../components/sections/mark/Mark.astro";
+import courses from "../../../../aux/courses.json";
 
 export function getStaticPaths() {
-  return [
-    {
-      params: {
-        subject: "Tecnologías de la Información",
-        course: "NR3A",
-        year: 2025,
-      },
-    },
-    {
-      params: {
-        subject: "Tecnologías de la Información",
-        course: "NR3B",
-        year: 2025,
-      },
-    },
-    {
-      params: {
-        subject: "Tecnologías de la Información",
-        course: "NR3C",
-        year: 2025,
-      },
-    },
-    {
-      params: {
-        subject: "Tecnologías de la Información",
-        course: "NR3D",
-        year: 2025,
-      },
-    },
-    {
-      params: {
-        subject: "Desarrollo de Aplicaciones Informáticas",
-        course: "NR5A",
-        year: 2025,
-      },
-    },
-    {
-      params: {
-        subject: "Desarrollo de Aplicaciones Informáticas",
-        course: "NR5B",
-        year: 2025,
-      },
-    },
-    {
-      params: {
-        subject: "Desarrollo de Aplicaciones Informáticas",
-        course: "NR5C",
-        year: 2025,
-      },
-    },
-    {
-      params: {
-        subject: "Desarrollo de Aplicaciones Informáticas",
-        course: "NR5D",
-        year: 2025,
-      },
-    },
-    {
-      params: {
-        subject: "Desarrollo de Aplicaciones Informáticas",
-        course: "NR5E",
-        year: 2025,
-      },
-    },
-    {
-      params: {
-        subject: "Desarrollo de Aplicaciones Informáticas",
-        course: "NR5F",
-        year: 2025,
-      },
-    },
-  ];
+  return courses;
 }
 
 const { subject, course, year } = Astro.params;
+const { dataSheetId } = Astro.props;
 ---
 
 <Layout>
