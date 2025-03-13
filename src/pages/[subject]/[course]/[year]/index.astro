@@ -17,7 +17,7 @@ const { subject, course, year } = Astro.params;
 const { dataSheetId } = Astro.props;
 ---
 
-<Layout>
+<Layout dataSheetId={dataSheetId}>
   <Navbar course={course} subject={subject} />
   <main
     class="relative grow bg-gray-50 border-y sm:border-r lg:border-l border-gray-300 sm:rounded-r-xl lg:rounded-l-xl overflow-hidden"
