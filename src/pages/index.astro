@@ -11,7 +11,9 @@ interface CourseByYear {
   [year: string]: DatedCourse[];
 }
 
-const coursesByYear = (await getAllCourses()).reduce((acc, course) => {
+const coursesByYear = (
+  await getAllCourses("1VZ_KPk4aZJFPlAgx188y0wW8p3psbbtZgix1L8a-5kE")
+).reduce((acc, course) => {
   if (!acc[course.name[0]]) {
     acc[course.name[0]] = [];
   }

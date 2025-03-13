@@ -8,8 +8,6 @@ import type {
   Unit,
 } from "./types";
 
-let dataSheetId = "1VZ_KPk4aZJFPlAgx188y0wW8p3psbbtZgix1L8a-5kE";
-
 const getSheetData = async ({
   sheetID,
   sheetName,
@@ -58,7 +56,7 @@ const getSheetData = async ({
   return responseToObjects(response);
 };
 
-export const getAllCourses = async () => {
+export const getAllCourses = async (dataSheetId: string) => {
   const sheetID = dataSheetId;
   let coursesQuery = getSheetData({
     sheetID,
@@ -76,7 +74,11 @@ export const getAllCourses = async () => {
   });
 };
 
-export const getSubjectData = async (course: string, subject: string) => {
+export const getSubjectData = async (
+  course: string,
+  subject: string,
+  dataSheetId: string
+) => {
   const sheetID = dataSheetId;
   let unitsQuery = getSheetData({
     sheetID,
@@ -138,7 +140,10 @@ export const getSubjectData = async (course: string, subject: string) => {
   return unitsData;
 };
 
-export const getSubjectPresentation = async (subject: string) => {
+export const getSubjectPresentation = async (
+  subject: string,
+  dataSheetId: string
+) => {
   const sheetID = dataSheetId;
   let programQuery = getSheetData({
     sheetID,
@@ -150,7 +155,10 @@ export const getSubjectPresentation = async (subject: string) => {
   return program;
 };
 
-export const getSubjectProgram = async (subject: string) => {
+export const getSubjectProgram = async (
+  subject: string,
+  dataSheetId: string
+) => {
   const sheetID = dataSheetId;
   let programQuery = getSheetData({
     sheetID,
@@ -162,7 +170,10 @@ export const getSubjectProgram = async (subject: string) => {
   return program;
 };
 
-export const getSubjectMarkingCriteria = async (subject: string) => {
+export const getSubjectMarkingCriteria = async (
+  subject: string,
+  dataSheetId: string
+) => {
   const sheetID = dataSheetId;
   let programQuery = getSheetData({
     sheetID,
@@ -183,7 +194,10 @@ export const getSubjectMarkingCriteria = async (subject: string) => {
   return criteria;
 };
 
-export const getSubjectRedoLinks = async (subject: string) => {
+export const getSubjectRedoLinks = async (
+  subject: string,
+  dataSheetId: string
+) => {
   const sheetID = dataSheetId;
   let redoLinksQuery = getSheetData({
     sheetID,
@@ -201,7 +215,10 @@ export const getSubjectRedoLinks = async (subject: string) => {
   };
 };
 
-export const getSubjectMaterial = async (subject: string) => {
+export const getSubjectMaterial = async (
+  subject: string,
+  dataSheetId: string
+) => {
   const sheetID = dataSheetId;
   let materialQuery = getSheetData({
     sheetID,
@@ -220,7 +237,10 @@ export const getSubjectMaterial = async (subject: string) => {
   });
 };
 
-export const getCourseGroupLink = async (group: string) => {
+export const getCourseGroupLink = async (
+  group: string,
+  dataSheetId: string
+) => {
   const sheetID = dataSheetId;
   let groupLinkQuery = getSheetData({
     sheetID,
@@ -231,7 +251,11 @@ export const getCourseGroupLink = async (group: string) => {
   return groupLink[0]["Link Grupo"];
 };
 
-export const getStudentData = async (name: string, surname: string) => {
+export const getStudentData = async (
+  name: string,
+  surname: string,
+  dataSheetId: string
+) => {
   const allStudents = await getSheetData({
     sheetID: dataSheetId,
     sheetName: "Estudiante",
@@ -256,7 +280,7 @@ export const getStudentData = async (name: string, surname: string) => {
   }
 };
 
-const getStudentActivities = async (studentId: number) => {
+const getStudentActivities = async (studentId: number, dataSheetId: string) => {
   const allActivities = await getSheetData({
     sheetID: dataSheetId,
     sheetName: "Actividad",
@@ -270,7 +294,7 @@ const getStudentActivities = async (studentId: number) => {
   }));
 };
 
-const getStudentMarks = async (studentId: number) => {
+const getStudentMarks = async (studentId: number, dataSheetId: string) => {
   const allMarks = await getSheetData({
     sheetID: dataSheetId,
     sheetName: "Nota",
@@ -284,9 +308,12 @@ const getStudentMarks = async (studentId: number) => {
   }));
 };
 
-export const getActivitiesAndMarks = async (studentId: number) => {
-  const activitiesPromise = getStudentActivities(studentId);
-  const marksPromise = getStudentMarks(studentId);
+export const getActivitiesAndMarks = async (
+  studentId: number,
+  dataSheetId: string
+) => {
+  const activitiesPromise = getStudentActivities(studentId, dataSheetId);
+  const marksPromise = getStudentMarks(studentId, dataSheetId);
   const [activities, marks] = await Promise.all([
     activitiesPromise,
     marksPromise,
@@ -300,7 +327,8 @@ export const getActivitiesAndMarks = async (studentId: number) => {
 export const getRedos = async (
   year: number,
   studentName: string,
-  studentSurname: string
+  studentSurname: string,
+  dataSheetId: string
 ) => {
   const activitiesRedoQuery = getSheetData({
     sheetID: dataSheetId,
