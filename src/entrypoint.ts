@@ -119,6 +119,7 @@ export default (Alpine: Alpine) => {
         passed: 0,
       },
     },
+    dataSheetId: "",
     setStudent(name: string, surname: string, course: string, id: number) {
       if (!courseRegex.test(course)) {
         throw new Error(`Invalid course name: ${course}`);
@@ -133,11 +134,13 @@ export default (Alpine: Alpine) => {
     },
     setSubject(subject: string) {
       this.subject = subject;
-      if (subject !== "" && this.id !== -1) {
-        this.calculateMarks();
-      }
     },
-    async init() {
+    setDataSheetId(dataSheetId: string) {
+      this.dataSheetId = dataSheetId;
+    },
+    async getStudentData(subject: string, dataSheetId: string) {
+      this.setSubject(subject);
+      this.setDataSheetId(dataSheetId);
       let studentName = defaultStudent;
       if (isOnCampus()) {
         const data = await fetch(
@@ -154,7 +157,11 @@ export default (Alpine: Alpine) => {
           surname: studentData[1],
         };
       }
-      let student = await getStudentData(studentName.name, studentName.surname);
+      let student = await getStudentData(
+        studentName.name,
+        studentName.surname,
+        dataSheetId
+      );
       if (student) {
         this.setStudent(
           student.name,
@@ -162,6 +169,9 @@ export default (Alpine: Alpine) => {
           student.course,
           student.id
         );
+      }
+      if (subject !== "" && this.id !== -1) {
+        this.calculateMarks();
       }
     },
     regularActivities() {
@@ -184,9 +194,14 @@ export default (Alpine: Alpine) => {
     async calculateMarks() {
       let [{ activities, marks }, { proportion, specialActivities }, redos] =
         await Promise.all([
-          getActivitiesAndMarks(this.id),
-          getSubjectMarkingCriteria(this.subject),
-          getRedos(parseInt(this.course.slice(2)), this.name, this.surname),
+          getActivitiesAndMarks(this.id, this.dataSheetId),
+          getSubjectMarkingCriteria(this.subject, this.dataSheetId),
+          getRedos(
+            parseInt(this.course.slice(2)),
+            this.name,
+            this.surname,
+            this.dataSheetId
+          ),
         ]);
       this.activities = activities.map((activity) => ({
         ...activity,
@@ -268,6 +283,7 @@ export default (Alpine: Alpine) => {
         passed: number;
       };
     };
+    dataSheetId: string;
     setStudent: (
       name: string,
       surname: string,
@@ -275,12 +291,14 @@ export default (Alpine: Alpine) => {
       id: number
     ) => void;
     setSubject: (subject: string) => void;
+    setDataSheetId: (dataSheetId: string) => void;
     regularActivities: () => Array<Activity>;
     specialActivities: () => Array<Activity>;
     markedActivities: () => Array<MarkedActivity>;
     allSpecialActivitiesDone: () => boolean;
     allMarkedActivitiesPassed: () => boolean;
     calculateMarks: () => Promise<void>;
+    getStudentData: (subject: string, dataSheetId: string) => Promise<void>;
   });
   const shadowContainer = document.querySelector("#campus-insertion");
   if (shadowContainer !== null && isOnCampus()) {

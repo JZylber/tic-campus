@@ -4,7 +4,7 @@ import type { Course } from "../../aux/types";
 import Layout from "../../layouts/Layout.astro";
 
 export async function getStaticPaths() {
-  [{ params: { year: 2025 } }];
+  return [{ params: { year: 2025 } }];
 }
 
 interface DatedCourse extends Course {
