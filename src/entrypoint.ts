@@ -128,9 +128,6 @@ export default (Alpine: Alpine) => {
       this.surname = surname;
       this.course = course;
       this.id = id;
-      if (this.subject !== "" && this.id !== -1) {
-        this.calculateMarks();
-      }
     },
     setSubject(subject: string) {
       this.subject = subject;
@@ -167,7 +164,7 @@ export default (Alpine: Alpine) => {
           student.name,
           student.surname,
           student.course,
-          student.id
+          student.DNI
         );
       }
       if (subject !== "" && this.id !== -1) {

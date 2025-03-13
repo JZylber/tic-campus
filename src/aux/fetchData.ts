@@ -273,7 +273,7 @@ export const getStudentData = async (
       name: student["Nombre"] as string,
       surname: student["Apellido"] as string,
       course: student["Curso"] as string,
-      id: student["Id"] as number,
+      DNI: student["DNI"] as number,
     };
   } else {
     return null;
