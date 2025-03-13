@@ -1,7 +1,11 @@
 ---
-import { getAllCourses } from "../aux/fetchData";
-import type { Course } from "../aux/types";
-import Layout from "../layouts/Layout.astro";
+import { getAllCourses } from "../../aux/fetchData";
+import type { Course } from "../../aux/types";
+import Layout from "../../layouts/Layout.astro";
+
+export async function getStaticPaths() {
+  [{ params: { year: 2025 } }];
+}
 
 interface DatedCourse extends Course {
   year: number;
@@ -51,7 +55,7 @@ const coursesByYear = (
             <template x-for="course in courses">
               <a
                 class="cursor-pointer bg-gray-200 w-full lg:w-20 aspect-square rounded-xl flex justify-center items-center text-gray-600 text-[20px] hover:bg-sh-black hover:text-white transition-colors"
-                x-bind:href="`/tic-campus/${course.subject}/${course.id}/${course.year}`"
+                x-bind:href="`/tic-campus/${course.year}/${course.subject}/${course.id}`"
               >
                 <span x-text="course.name"></span>
               </a>

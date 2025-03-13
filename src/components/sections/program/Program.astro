@@ -4,15 +4,16 @@ import SectionLayout from "../SectionLayout.astro";
 
 interface Props {
   subject: string;
+  year: number;
 }
 
-const { subject } = Astro.props;
+const { subject, year } = Astro.props;
 ---
 
 <SectionLayout name="programa">
   <div
     x-data="{html: '', loading: true}"
-    x-init={`html = await fetchHTMLData($store.baseURL.dataURL + '/${subject}/program'); loading = false;`}
+    x-init={`html = await fetchHTMLData($store.baseURL.dataURL + '/${year}/${subject}/program'); loading = false;`}
     class="w-full h-full"
   >
     <h1 class="text-[30px] md:text-[36px] font-bold text-center p-4">

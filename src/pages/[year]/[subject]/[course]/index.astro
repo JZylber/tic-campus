@@ -24,9 +24,9 @@ const { dataSheetId } = Astro.props;
     x-init={`$store.student.setSubject('${subject}')`}
   >
     <Home subject={subject} course={course} />
-    <Activities subject={subject} course={course} />
+    <Activities subject={subject} course={course} year={year} />
     <Redos subject={subject} />
-    <Program subject={subject} />
+    <Program subject={subject} year={year} />
     <Material subject={subject} />
     <Mark subject={subject} />
   </main>
