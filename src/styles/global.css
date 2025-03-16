@@ -10,6 +10,7 @@ html {
   --font-sans: "Lato", sans-serif;
   --color-sh-black: rgb(27, 27, 27);
   --color-sh-dark-gray: #2a2a2a;
+  --color-sh-gray: #3f3f3f;
   --color-sh-purple: rgb(195, 172, 250);
   --color-sh-light-purple: rgba(229, 222, 252, 1);
   --color-sh-blue: rgba(34, 190, 251, 1);
