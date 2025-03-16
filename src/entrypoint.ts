@@ -13,6 +13,7 @@ import {
   getCourseGroupLink,
 } from "./aux/fetchData";
 import { fetchHTMLData, prepareCrumbs } from "./aux/loadData";
+import collapse from "@alpinejs/collapse";
 
 window.getSubjectData = getSubjectData;
 window.getSubjectProgram = getSubjectProgram;
@@ -36,6 +37,7 @@ const courseRegex = /NR\d[A-Z]/;
 const defaultStudent = { name: "Julian Ariel", surname: "Zylber" };
 
 export default (Alpine: Alpine) => {
+  Alpine.plugin(collapse);
   Alpine.directive(
     "tw",
     (
