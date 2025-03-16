@@ -1,8 +1,10 @@
 ---
+import InlineCodeBlock from "../../../../components/articles/code-block/InlineCodeBlock.astro";
+
 export const partial = true;
 ---
 
-<h2>Consigna general</h2>
+<h2>Consigna</h2>
 <p>
   Los precios en steam están nuevamente dolarizados. ¿Cuánto sale un juego en
   realidad?
@@ -12,27 +14,34 @@ export const partial = true;
   calcula de la siguiente forma:
 </p>
 <ul>
-  <li>Su precio en dólares multiplicado por el dólar oficial</li>
   <li>
-    Un recargo del 30% por el impuesto PAIS (sobre el valor en pesos a dólar
-    oficial)
+    Su precio en dólares multiplicado por el dólar oficial (para convertir a
+    pesos)
   </li>
   <li>
-    Otro recargo del 30% por el impuesto a las ganancias (sobre el valor en
-    pesos a dólar oficial)
+    Un recargo del 30% por el impuesto a las ganancias (sobre el valor en pesos
+    a dólar oficial)
+  </li>
+  <li>
+    Un recargo del 21% por IVA (sobre el valor en pesos a dólar oficial, sin
+    contar el impuesto a las ganancias)
   </li>
 </ul>
 <p>
-  Hacer un programa en javascript que calcule el precio en pesos de un juego
+  Hacer un programa en javascript que calcule el precio en pesos de un juego.
+  Para eso:
 </p>
 <ol>
   <li>
     Crear un archivo html y otro archivo js. Linkear el archivo js en el html
   </li>
-  <li>Declarar una variable que sea el precio en dólares</li>
+  <li>
+    Pedir ingresar el precio en dólares de un juego mediante
+    <InlineCodeBlock code="prompt" lang="javascript" /> y guardarlo en una variable.
+  </li>
   <li>
     Calcular el precio en pesos siguiendo las reglas descritas anteriormente y
-    guardar dicho valor en otra variable
+    guardar dicho valor en otra variable.
   </li>
   <li>Imprimir por consola ese valor</li>
 </ol>
@@ -72,7 +81,10 @@ export const partial = true;
   <li>
     Crear un archivo html y otro archivo js. Linkear el archivo js en el html
   </li>
-  <li>Crear una variable para el número a clampear</li>
+  <li>
+    Ingresar mediante <InlineCodeBlock code="prompt" lang="javascript" /> el número
+    a clampear y guardar en una variable
+  </li>
   <li>Googleen como hacer máximos y mínimos en javascript</li>
   <li>Clampear el número entre 0 y 60. Imprimir por consola el resultado</li>
   <li>
