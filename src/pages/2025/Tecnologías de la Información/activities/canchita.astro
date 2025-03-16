@@ -1,0 +1,63 @@
+---
+import InlineCodeBlock from "../../../../components/articles/code-block/InlineCodeBlock.astro";
+
+export const partial = true;
+---
+
+<p>
+  Estamos a cargo de organizar turnos de alquiler para una canchita de fútbol 5.
+  Los turnos son de 1 hora, y cada turno tiene un costo de $30000. Se puede
+  alquilar más de un turno, pero estos deben ser consecutivos, es decir, uno
+  pegado al otro.
+</p>
+<h2>Consigna</h2>
+<ol>
+  <li>
+    Crear un archivo html y otro archivo js. Linkear el archivo js en el html
+  </li>
+  <li>
+    Declarar 2 variables y tomar sus valores mediante prompt. Las variables son:
+    <ul>
+      <li>La hora inicial del alquilar</li>
+      <li>La duración del alquiler en horas</li>
+    </ul>
+  </li>
+  <li>
+    Hacer los pasos necesarios para terminar imprimiendo por consola "Se alquiló
+    la cancha desde las &lt;hora inicial&gt;hs hasta las &lt;hora final&gt;hs"
+    donde hora final es la hora inicial + duración. Si se alquila la cancha
+    desde las 9 por una duración de 3 horas, la consola debería imprimir: "Se
+    alquiló la cancha desde las 9hs hasta las 12hs".
+    <strong>TIP:</strong> para que la suma funcione correctamente, recordar que lo
+    ingresado por prompt son strings y la suma se hace con números.
+  </li>
+</ol>
+<h2>Consigna manija</h2>
+<p>
+  Javascript tiene un tipo de datos especial para fechas, <InlineCodeBlock
+    code="Date"
+    lang="js"
+  />. Es más difícil de usar, pero por algo estás leyendo esta sección, ¿no?
+  Googleen como se usa.
+</p>
+<p>
+  Pedir, además de la hora inicial y la duración, el día y el mes (el mes en
+  forma de número, 1 al 12). En cuanto al año, no hace falta pedirlo porque son
+  todos del año actual. Armar las variables
+  <code>fecha_inicial</code> y <code>fecha_final</code> con los datos
+  <strong>en formato Date</strong>. Terminar imprimiendo por consola "Turno:
+  &lt;fecha inicial&gt; - &lt;fecha final&gt;". Prueben las distintas
+  operaciones para convertir una fecha a un string y vean cual va mejor.
+</p>
+<p>Algunos tips importantes:</p>
+<ul>
+  <li>
+    Para construir fechas necesitan el año. Todos los turnos son del año actual,
+    y eso se puede obtener en JS. ¡Googleen cómo!
+  </li>
+  <li>Date toma los meses del 0 al 11 en vez del 1 al 12. Restar</li>
+  <li>
+    ¡Guarda con los husos horarios! Date tiene operaciones equivalentes
+    <em>Locale</em>, que tienen en cuenta el huso horario local.
+  </li>
+</ul>
