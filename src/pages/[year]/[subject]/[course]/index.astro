@@ -21,7 +21,7 @@ const { dataSheetId } = Astro.props;
   <Navbar course={course} subject={subject} />
   <main
     class="relative grow bg-gray-50 border-y sm:border-r lg:border-l border-gray-300 sm:rounded-r-xl lg:rounded-l-xl overflow-hidden"
-    x-init={`$store.student.getStudentData('${subject}','${dataSheetId}')`}
+    x-init={`$store.student.getStudentData('${subject}','${course}','${dataSheetId}')`}
   >
     <Home subject={subject} course={course} />
     <Activities subject={subject} course={course} year={year} />

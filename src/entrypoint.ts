@@ -36,6 +36,11 @@ const isOnCampus = () => {
 const courseRegex = /NR\d[A-Z]/;
 const defaultStudent = { name: "Julian Ariel", surname: "Zylber" };
 
+interface AlpineSectionStore {
+  currentSection: string;
+  changeSection: (section: string) => void;
+}
+
 export default (Alpine: Alpine) => {
   Alpine.plugin(collapse);
   Alpine.directive(
@@ -80,10 +85,7 @@ export default (Alpine: Alpine) => {
     init() {
       this.changeSection("home");
     },
-  } as {
-    currentSection: string;
-    changeSection: (section: string) => void;
-  });
+  } as AlpineSectionStore);
   Alpine.store("baseURL", {
     dataURL: "/tic-campus",
     changeURL(url) {
@@ -137,7 +139,7 @@ export default (Alpine: Alpine) => {
     setDataSheetId(dataSheetId: string) {
       this.dataSheetId = dataSheetId;
     },
-    async getStudentData(subject: string, dataSheetId: string) {
+    async getStudentData(subject: string, course: string, dataSheetId: string) {
       this.setSubject(subject);
       this.setDataSheetId(dataSheetId);
       let studentName = defaultStudent;
@@ -159,6 +161,7 @@ export default (Alpine: Alpine) => {
       let student = await getStudentData(
         studentName.name,
         studentName.surname,
+        course,
         dataSheetId
       );
       if (student) {
@@ -170,6 +173,11 @@ export default (Alpine: Alpine) => {
         );
       }
       if (subject !== "" && this.id !== -1) {
+        if (course === this.course) {
+          (Alpine.store("section") as AlpineSectionStore).changeSection(
+            "actividades"
+          );
+        }
         this.calculateMarks();
       }
     },
@@ -297,7 +305,11 @@ export default (Alpine: Alpine) => {
     allSpecialActivitiesDone: () => boolean;
     allMarkedActivitiesPassed: () => boolean;
     calculateMarks: () => Promise<void>;
-    getStudentData: (subject: string, dataSheetId: string) => Promise<void>;
+    getStudentData: (
+      subject: string,
+      course: string,
+      dataSheetId: string
+    ) => Promise<void>;
   });
   const shadowContainer = document.querySelector("#campus-insertion");
   if (shadowContainer !== null && isOnCampus()) {

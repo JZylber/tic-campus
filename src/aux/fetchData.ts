@@ -254,12 +254,13 @@ export const getCourseGroupLink = async (
 export const getStudentData = async (
   name: string,
   surname: string,
+  course: string,
   dataSheetId: string
 ) => {
   const allStudents = await getSheetData({
     sheetID: dataSheetId,
     sheetName: "Estudiante",
-    query: `SELECT *`,
+    query: `SELECT * WHERE E = "${course}"`,
   });
   const fuse = new Fuse(allStudents, {
     keys: ["Nombre", "Apellido"],
