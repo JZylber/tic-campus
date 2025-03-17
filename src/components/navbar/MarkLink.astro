@@ -21,7 +21,7 @@ const { course, minimized, open } = Astro.props;
       <div
         class="w-[calc(24px+var(--spacing)*4)] aspect-square text-[20px] font-bold border-4 bg-white rounded-full flex justify-center items-center"
         x-bind:class="{ 'border-sh-green text-sh-green': passed, 'border-sh-red text-sh-red': !passed }"
-        @click={`$store.section.changeSection('nota'); ${open} = false`}
+        @click={`$store.section.changeSection('nota',5); ${open} = false`}
       >
         <span x-text="$store.student.markData.finalMark"></span>
       </div>
@@ -44,7 +44,7 @@ const { course, minimized, open } = Astro.props;
       </div>
       <p
         class="text-gray-600 cursor-pointer"
-        @click={`$store.section.changeSection('nota'); ${open} = false`}
+        @click={`$store.section.changeSection('nota',5); ${open} = false`}
       >
         <span class="hover:underline">Más Información</span>
       </p>

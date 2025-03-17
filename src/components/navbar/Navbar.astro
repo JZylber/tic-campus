@@ -52,9 +52,9 @@ const items = [
           x-init="$watch('$store.section.currentSection', (value) => {offset = items.findIndex(item => item.name === value)})"
         >
         </div>
-        <template x-for="item in items">
+        <template x-for="(item,index) in items">
           <div
-            @click="$store.section.changeSection(item.name); open = false"
+            @click="$store.section.changeSection(item.name,index); open = false"
             class="flex h-[calc(28px+var(--spacing)*4)] items-center p-2 cursor-pointer gap-x-4 z-10"
           >
             <span

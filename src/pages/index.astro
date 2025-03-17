@@ -1,11 +1,7 @@
 ---
-import { getAllCourses } from "../../aux/fetchData";
-import type { Course } from "../../aux/types";
-import Layout from "../../layouts/Layout.astro";
-
-export async function getStaticPaths() {
-  return [{ params: { year: 2025 } }];
-}
+import { getAllCourses } from "../aux/fetchData";
+import type { Course } from "../aux/types";
+import Layout from "../layouts/Layout.astro";
 
 interface DatedCourse extends Course {
   year: number;
