@@ -38,7 +38,8 @@ const defaultStudent = { name: "Julian Ariel", surname: "Zylber" };
 
 interface AlpineSectionStore {
   currentSection: string;
-  changeSection: (section: string) => void;
+  currentSectionIndex: number;
+  changeSection: (section: string, index: number) => void;
 }
 
 export default (Alpine: Alpine) => {
@@ -79,11 +80,13 @@ export default (Alpine: Alpine) => {
   );
   Alpine.store("section", {
     currentSection: "",
-    changeSection(section) {
+    currentSectionIndex: -1,
+    changeSection(section, index) {
       this.currentSection = section;
+      this.currentSectionIndex = index;
     },
     init() {
-      this.changeSection("home");
+      this.changeSection("home", 0);
     },
   } as AlpineSectionStore);
   Alpine.store("baseURL", {
@@ -175,7 +178,8 @@ export default (Alpine: Alpine) => {
       if (subject !== "" && this.id !== -1) {
         if (course === this.course) {
           (Alpine.store("section") as AlpineSectionStore).changeSection(
-            "actividades"
+            "actividades",
+            1
           );
         }
         this.calculateMarks();

@@ -10,7 +10,7 @@ interface Props {
 const { subject, year } = Astro.props;
 ---
 
-<SectionLayout name="programa">
+<SectionLayout name="programa" position={3}>
   <div
     x-data="{html: '', loading: true}"
     x-init={`html = await fetchHTMLData($store.baseURL.dataURL + '/${year}/${subject}/program'); loading = false;`}
