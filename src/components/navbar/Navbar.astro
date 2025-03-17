@@ -33,38 +33,43 @@ const items = [
   }"
 >
   <div
-    class="absolute top-0 left-0 w-screen h-full flex flex-col gap-y-2 bg-sh-black text-white p-4 rounded-r-xl sm:rounded-l-xl z-20 transition-[max-width] duration-300"
+    class="absolute top-0 left-0 w-screen h-full flex flex-col justify-between bg-sh-black text-white p-4 rounded-r-xl sm:rounded-l-xl z-20 transition-[max-width] duration-300"
     :class="{ 'max-w-[calc(var(--spacing)*12+24px)]': !open && isMobile, 'max-w-[250px]': open || !isMobile }"
   >
-    <div class="pb-4 lg:hidden">
-      <span
-        class="text-[24px] material-symbols-outlined cursor-pointer bg-gray-50 rounded-full p-2 text-sh-black"
-        x-text="'menu'"
-        x-on:click="open = !open"></span>
-    </div>
-    <div
-      x-data="{ offset: 0 }"
-      class="absolute h-[calc(28px+var(--spacing)*4)] w-[calc(100%-var(--spacing)*8)] bg-sh-gray rounded-md transition-transform duration-300"
-      x-effect="$el.style.transform = `translateY(calc((28px + var(--spacing)*6)*${offset}))`;console.log(offset)"
-      x-init="$watch('$store.section.currentSection', (value) => {offset = items.findIndex(item => item.name === value)})"
-      x-bind:class="{ 'top-[calc(var(--spacing)*4)]': !isMobile, 'top-[calc(var(--spacing)*6+56px)]': isMobile }"
-    >
-    </div>
-    <template x-for="item in items">
-      <div
-        @click="$store.section.changeSection(item.name); open = false"
-        class="flex h-[calc(28px+var(--spacing)*4)] items-center p-2 cursor-pointer gap-x-4 z-10"
-      >
-        <span x-text="item.icon" class="material-symbols-outlined text-[24px]"
-        ></span>
+    <div class="flex flex-col gap-y-4">
+      <div class="lg:hidden">
         <span
-          class="text-lg"
-          x-text="item.name[0].toUpperCase() + item.name.slice(1, item.name.length)"
-          x-show="open || !isMobile"
-          x-transition.opacity
-          x-transition.duration.300></span>
+          class="text-[24px] material-symbols-outlined cursor-pointer bg-gray-50 rounded-full p-2 text-sh-black"
+          x-text="'menu'"
+          x-on:click="open = !open"></span>
       </div>
-    </template>
+      <div class="flex flex-col gap-y-2">
+        <div
+          x-data="{ offset: 0 }"
+          x-show="offset >= 0"
+          class="absolute h-[calc(28px+var(--spacing)*4)] w-[calc(100%-var(--spacing)*8)] bg-sh-gray rounded-md transition-transform duration-300"
+          x-effect="$el.style.transform = `translateY(calc((28px + var(--spacing)*6)*${offset}))`;console.log(offset)"
+          x-init="$watch('$store.section.currentSection', (value) => {offset = items.findIndex(item => item.name === value)})"
+        >
+        </div>
+        <template x-for="item in items">
+          <div
+            @click="$store.section.changeSection(item.name); open = false"
+            class="flex h-[calc(28px+var(--spacing)*4)] items-center p-2 cursor-pointer gap-x-4 z-10"
+          >
+            <span
+              x-text="item.icon"
+              class="material-symbols-outlined text-[24px]"></span>
+            <span
+              class="text-lg"
+              x-text="item.name[0].toUpperCase() + item.name.slice(1, item.name.length)"
+              x-show="open || !isMobile"
+              x-transition.opacity
+              x-transition.duration.300></span>
+          </div>
+        </template>
+      </div>
+    </div>
     <MarkLink minimized="!open && isMobile" course={course} open="open" />
   </div>
   <div
