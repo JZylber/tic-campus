@@ -48,7 +48,7 @@ const items = [
           x-data="{ offset: 0 }"
           x-show="offset >= 0"
           class="absolute h-[calc(28px+var(--spacing)*4)] w-[calc(100%-var(--spacing)*8)] bg-sh-gray rounded-md transition-transform duration-300"
-          x-effect="$el.style.transform = `translateY(calc((28px + var(--spacing)*6)*${offset}))`;console.log(offset)"
+          x-effect="$el.style.transform = `translateY(calc((28px + var(--spacing)*6)*${offset}))`"
           x-init="$watch('$store.section.currentSection', (value) => {offset = items.findIndex(item => item.name === value)})"
         >
         </div>

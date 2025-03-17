@@ -161,6 +161,7 @@ export default (Alpine: Alpine) => {
       let student = await getStudentData(
         studentName.name,
         studentName.surname,
+        course,
         dataSheetId
       );
       if (student) {
