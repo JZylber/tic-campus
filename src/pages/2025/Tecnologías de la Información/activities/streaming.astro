@@ -17,9 +17,10 @@ export const partial = true;
     >. <strong>IMPORTANTE:</strong> el diseño está pensado para 1920x1080, en otras
     resoluciones se va a ver distinto
   </li>
-  <li>
+  <li x-data="{link: ''}">
     El maquetado ya avanzado, que pueden descargar <a
-      x-bind:href="$store.baseURL.dataURL + '/files/StreamingARG.zip'"
+      :href="link"
+      x-effect="link = $store.baseURL.dataURL + '/files/StreamingARG.zip'"
       class="text-sh-black rounded-md bg-sh-purple px-1 py-0.5">acá</a
     >
   </li>
