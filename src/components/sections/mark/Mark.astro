@@ -1,9 +1,16 @@
 ---
 import SectionLayout from "../SectionLayout.astro";
 import Progress from "./Progress.astro";
+
+interface Props {
+  subject: string;
+  position: number;
+}
+
+const { position, subject } = Astro.props;
 ---
 
-<SectionLayout name="nota" position={5}>
+<SectionLayout name="nota" position={position}>
   <h1 class="text-[36px] font-bold text-center p-4">Nota</h1>
   <div class="flex flex-col md:flex-row gap-x-8 pt-4 md:pb-4 justify-center">
     <div

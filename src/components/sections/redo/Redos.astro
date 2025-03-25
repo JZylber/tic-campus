@@ -3,12 +3,13 @@ import SectionLayout from "../SectionLayout.astro";
 
 interface Props {
   subject: string;
+  position: number;
 }
 
-const { subject } = Astro.props;
+const { subject, position } = Astro.props;
 ---
 
-<SectionLayout name="reentregas" position={2}>
+<SectionLayout name="reentregas" position={position}>
   <div class="flex flex-col gap-y-4">
     <h1 class="text-[30px] md:text-[36px] font-bold text-center p-4">
       Reentregas
