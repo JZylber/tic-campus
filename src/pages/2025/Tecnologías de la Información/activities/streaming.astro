@@ -1,8 +1,98 @@
 ---
+import CodeBlock from "../../../../components/articles/code-block/CodeBlock.astro";
+
 export const partial = true;
 ---
 
-<h2>Consigna</h2>
-<p><em>Proximamente...</em></p>
-<h2>Consigna manija</h2>
-<p><em>Proximamente...</em></p>
+<p>
+  Nos encargaron hacer una página que linkee a los principales canales de
+  streaming. Tenemos:
+</p>
+<ul>
+  <li>
+    El diseño, hecho por sofi en
+    <a
+      href="https://www.figma.com/design/pNxn3EkWUSbWUnlVfdDwqU/TP-Shulian-Streaming?node-id=210-84&t=ixRm6JlyISmhYyqC-1"
+      class="text-sh-black rounded-md bg-sh-purple px-1 py-0.5">Figma</a
+    >. <strong>IMPORTANTE:</strong> el diseño está pensado para 1920x1080, en otras
+    resoluciones se va a ver distinto
+  </li>
+  <li>
+    El maquetado ya avanzado, que pueden descargar <a
+      :href="$store.baseURL.dataURL + '/files/StreamingARG.zip'"
+      class="text-sh-black rounded-md bg-sh-purple px-1 py-0.5">acá</a
+    >
+  </li>
+</ul>
+<p>
+  Para que les quede (casi) igual completen tanto la consigna base (obligatoria)
+  como ambas consignas manijas (opcionales).
+</p>
+<h2>Consigna base</h2>
+<p>Avancen el maquetado para que se asemeje al diseño</p>
+<ol>
+  <li>
+    Para el fondo: es de color
+    <div
+      style="
+          display: inline-block;
+          width: 16px;
+          height: 16px;
+          background-color: #030026;
+        "
+    >
+    </div>
+    #030026, y además, lleva la imagen que está en la carpeta img, "Fondo.png". ¡Googleen
+    como poner una imagen de fondo!
+  </li>
+  <li>
+    El título y el subtítulo están espantosos. Del figma, saquen la tipografía,
+    y el tamaño y color de letra. Ya que están, centrenlos.
+  </li>
+  <li>
+    ¡Ajustemos los botones! Crear una clase css con las siguientes
+    características:
+    <CodeBlock
+      lang="css"
+      code={`
+{
+    display: flex;
+    width: 486.667px;
+    height: 186.667px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 32px;
+    background: linear-gradient(117deg,rgba(255, 255, 255, 0.15) 23.56%,rgba(153, 153, 153, 0.15) 76.44%);
+    box-shadow: 0px 6.667px 26.667px 0px rgba(27, 27, 27, 0.25),2.6px -2.68px 26.667px 0px rgba(214, 214, 214, 0.17) inset,-4.018px 4.018px 4.018px 0px rgba(255, 255, 255, 0.39) inset;
+    backdrop-filter: blur(49.61956024169922px);
+}`}
+    />
+    y asignarsela a los 5 botones.
+  </li>
+</ol>
+<h2>Consigna manija I</h2>
+<ol>
+  <li>Apliquenle la tipografía correcta a la firma.</li>
+  <li>
+    A los botones, cuando hagan pasen el cursor por encima (hover), debe tener
+    las siguientes características:
+    <CodeBlock
+      lang="css"
+      code={`
+{
+    background: linear-gradient(113deg,rgba(133, 133, 133, 0.4) 6.78%,rgba(255, 255, 255, 0.4) 124.86%);
+    box-shadow: 0px 5px 20px 0px rgba(27, 27, 27, 0.25),2.01px -2.01px 20px 0px rgba(214, 214, 214, 0.17) inset,-3.013px 3.013px 3.013px 0px rgba(255, 255, 255, 0.39) inset;
+    backdrop-filter: blur(37.21466827392578px);
+}`}
+    />
+  </li>
+</ol>
+<h2>Consigna manija II</h2>
+<p>
+  El footer está raro. El borde no debería ocupar todo el ancho, ni debería
+  estar tan pegado a los íconos. Googlear y entender las propiedades de css <strong
+    >margin</strong
+  > y <strong>padding</strong>, y aplicarlas al footer para que el borde blanco
+  superior esté a 50px de los íconos/firma, y a 108px de los bordes de la
+  pantalla.
+</p>
