@@ -32,6 +32,9 @@ importers:
       fuse.js:
         specifier: ^7.1.0
         version: 7.1.0
+      pnpm:
+        specifier: ^10.6.5
+        version: 10.6.5
       tailwindcss:
         specifier: ^4.0.6
         version: 4.0.15
@@ -1199,6 +1202,11 @@ packages:
   picomatch@4.0.2:
     resolution: {integrity: sha512-M7BAV6Rlcy5u+m6oPhAPFgJTzAioX/6B0DxyvDlo9l8+T3nLKbrczg2WLUyzd45L8RqfUMyGPzekbMvX2Ldkwg==}
     engines: {node: '>=12'}
+
+  pnpm@10.6.5:
+    resolution: {integrity: sha512-zfko/KIIMs1Z7FOCZJK33CXcUk1DcLa0rb9lgD0y76psHIgUfArk6NV5psnuxxV1e1DU+jXuoXnYaOraTtBDrw==}
+    engines: {node: '>=18.12'}
+    hasBin: true
 
   postcss@8.5.3:
     resolution: {integrity: sha512-dle9A3yYxlBSrt8Fu+IpjGT8SY8hN0mlaA6GY8t0P5PjIOZemULz/E2Bnm/2dcUOena75OTNkHI76uZBNUUq3A==}
@@ -2871,6 +2879,8 @@ snapshots:
   picomatch@2.3.1: {}
 
   picomatch@4.0.2: {}
+
+  pnpm@10.6.5: {}
 
   postcss@8.5.3:
     dependencies:

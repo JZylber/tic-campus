@@ -4,6 +4,7 @@ import MarkLink from "./MarkLink.astro";
 interface Props {
   course: string;
   subject: string;
+  items: Item[];
 }
 
 interface Item {
@@ -12,15 +13,8 @@ interface Item {
   title: string;
 }
 
-const { course, subject } = Astro.props;
+const { course, subject, items } = Astro.props;
 
-const items = [
-  { name: "home", icon: "home", title: subject },
-  { name: "actividades", icon: "school", title: "Actividades" },
-  { name: "reentregas", icon: "replay", title: "Reentregas" },
-  { name: "programa", icon: "event_note", title: "Programa" },
-  { name: "material", icon: "construction", title: "Material" },
-] as Item[];
 ---
 
 <nav

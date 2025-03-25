@@ -15,10 +15,19 @@ export function getStaticPaths() {
 
 const { subject, course, year } = Astro.params;
 const { dataSheetId } = Astro.props;
+
+const items = [
+  { name: "home", icon: "home", title: subject },
+  { name: "actividades", icon: "school", title: "Actividades" },
+  { name: "reentregas", icon: "replay", title: "Reentregas" },
+  { name: "programa", icon: "event_note", title: "Programa" },
+  { name: "material", icon: "construction", title: "Material" },
+];
+
 ---
 
 <Layout dataSheetId={dataSheetId}>
-  <Navbar course={course} subject={subject} />
+  <Navbar course={course} subject={subject} items={items}/>
   <main
     class="relative grow bg-gray-50 border-y sm:border-r lg:border-l border-gray-300 sm:rounded-r-xl lg:rounded-l-xl overflow-hidden"
     x-init={`$store.student.getStudentData('${subject}','${course}','${dataSheetId}')`}
