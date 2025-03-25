@@ -191,6 +191,7 @@ const { open, articleURL, content, course } = Astro.props;
     </div>
     <div
       x-ref="content"
+      x-init="$watch('loading', (value) => {if(!loading){window.Alpine.initTree($el);console.log('hello')}})"
       class="content overflow-x-scroll flex flex-col [&>h2]:py-2 [&>h2]:text-[32px] [&>h3]:text-[24px] [&>h3]:py-2 [&>p]:py [&>p]:indent-4 [&>p]:text-gray-600 [&>ul]:py-2 [&>ol>li>ul]:list-disc [&>ol>li>ul]:list-inside [&>ol>li>ul]:indent-8 [&>ol>li>ul>li]:text-gray-600 [&>ol>li>ul>li]:list-disc [&>ol>li>ul>li+li]:mt-1 [&>ol>li>ul]:py-2 [&>ul]:list-disc [&>ul]:list-inside [&>ul]:indent-4 [&>ul>li]:text-gray-600 [&>ul>li]:list-disc [&>ul>li+li]:mt-1 [&>ol]:py-2 [&>ol]:list-decimal [&>ol]:list-inside [&>ol]:indent-4 [&>ol>li]:text-gray-600 [&>ol>li+li]:mt-1 [&>table]:rounded-xl [&>table]:overflow-hidden [&>table]:my-2 [&>table]:mx-4 [&>table>thead]:bg-sh-black [&>table>thead]:text-white [&>table>thead>tr>th]:p-2 [&>table>tbody]:bg-gray-200 [&>table>tbody>tr>td]:p-2 [&>table>tbody>tr>td]:text-center"
     >
     </div>
