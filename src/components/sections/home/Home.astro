@@ -3,12 +3,13 @@ import SectionLayout from "../SectionLayout.astro";
 interface Props {
   subject: string;
   course: string;
+  position: number;
 }
 
-const { subject, course } = Astro.props;
+const { subject, course, position } = Astro.props;
 ---
 
-<SectionLayout name="home" position={0}>
+<SectionLayout name="home" position={position}>
   <header
     class="flex flex-col text-center lg:text-left lg:flex-row justify-between gap-4"
   >

@@ -5,12 +5,13 @@ import SectionLayout from "../SectionLayout.astro";
 interface Props {
   subject: string;
   year: number;
+  position: number;
 }
 
-const { subject, year } = Astro.props;
+const { subject, year, position } = Astro.props;
 ---
 
-<SectionLayout name="programa" position={3}>
+<SectionLayout name="programa" position={position}>
   <div
     x-data="{html: '', loading: true}"
     x-init={`html = await fetchHTMLData($store.baseURL.dataURL + '/${year}/${subject}/program'); loading = false;`}

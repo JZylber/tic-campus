@@ -7,12 +7,13 @@ interface Props {
   subject: string;
   course: string;
   year: number;
+  position: number;
 }
 
-const { subject, course, year } = Astro.props;
+const { subject, course, year, position } = Astro.props;
 ---
 
-<SectionLayout name="actividades" position={1}>
+<SectionLayout name="actividades" position={position}>
   <div
     class="w-full h-full"
     x-data="{ unitsData: [], loading: true, currentContent: null, articleOpen: false, articleURL:''}"
