@@ -23,20 +23,19 @@ const items = [
   { name: "programa", icon: "event_note", title: "Programa" },
   { name: "material", icon: "construction", title: "Material" },
 ];
-
 ---
 
 <Layout dataSheetId={dataSheetId}>
-  <Navbar course={course} subject={subject} items={items}/>
+  <Navbar course={course} subject={subject} items={items} />
   <main
     class="relative grow bg-gray-50 border-y sm:border-r lg:border-l border-gray-300 sm:rounded-r-xl lg:rounded-l-xl overflow-hidden"
     x-init={`$store.student.getStudentData('${subject}','${course}','${dataSheetId}')`}
   >
-    <Home subject={subject} course={course} position={0} />
+    <Home subject={subject} course={course} position={0} presentation={true} />
     <Activities subject={subject} course={course} year={year} position={1} />
-    <Redos subject={subject} position={2}/>
+    <Redos subject={subject} position={2} />
     <Program subject={subject} year={year} position={3} />
     <Material subject={subject} position={4} />
-    <Mark subject={subject} position={5}/>
+    <Mark subject={subject} position={5} />
   </main>
 </Layout>

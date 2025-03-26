@@ -1,12 +1,14 @@
 ---
+import { undefined, ZodUndefined } from "astro:schema";
 import SectionLayout from "../SectionLayout.astro";
 interface Props {
   subject: string;
   course: string;
   position: number;
+  presentation: boolean;
 }
 
-const { subject, course, position } = Astro.props;
+const { subject, course, position, presentation } = Astro.props;
 ---
 
 <SectionLayout name="home" position={position}>
@@ -50,7 +52,7 @@ const { subject, course, position } = Astro.props;
     de este curso, podés ver tus notas y tu progreso en la materia. ¡Explorá el
     menú del costado para ver más!
   </p>
-  <div class="w-full self-center max-sm:hidden">
+  <div class="w-full self-center max-sm:hidden" x-show={presentation}>
     <div
       style="
         position: relative;
