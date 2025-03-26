@@ -2,25 +2,30 @@
 import Home from "../../../../components/sections/home/Home.astro";
 import Activities from "../../../../components/sections/activities/Activities.astro";
 import Layout from "../../../../layouts/Layout.astro";
-import Redos from "../../../../components/sections/redo/Redos.astro";
 import Program from "../../../../components/sections/program/Program.astro";
 import Material from "../../../../components/sections/material/Material.astro";
 import Navbar from "../../../../components/navbar/Navbar.astro";
-import Mark from "../../../../components/sections/mark/Mark.astro";
-import courses from "../../../../aux/courses.json";
 
 export function getStaticPaths() {
-  return courses;
+  return [
+    {
+      params: { year: 2025, course: "NR3C" },
+      props: { dataSheetId: "1Am9Ynjfoo_bWAsCWts5HJUgoFcx0dRKRLFPk_bN6EqU" },
+    },
+    {
+      params: { year: 2025, course: "NR3D" },
+      props: { dataSheetId: "1Am9Ynjfoo_bWAsCWts5HJUgoFcx0dRKRLFPk_bN6EqU" },
+    },
+  ];
 }
 
-const { subject, course, year } = Astro.params;
+const { course, year } = Astro.params;
 const { dataSheetId } = Astro.props;
+const subject = "Tecnologías de la Información";
 
 const items = [
   { name: "home", icon: "home", title: subject },
   { name: "actividades", icon: "school", title: "Actividades" },
-  { name: "reentregas", icon: "replay", title: "Reentregas" },
-  { name: "programa", icon: "event_note", title: "Programa" },
   { name: "material", icon: "construction", title: "Material" },
 ];
 ---
@@ -31,11 +36,8 @@ const items = [
     class="relative grow bg-gray-50 border-y sm:border-r lg:border-l border-gray-300 sm:rounded-r-xl lg:rounded-l-xl overflow-hidden"
     x-init={`$store.student.getStudentData('${subject}','${course}','${dataSheetId}')`}
   >
-    <Home subject={subject} course={course} position={0} presentation={true} />
+    <Home subject={subject} course={course} position={0} presentation={false} />
     <Activities subject={subject} course={course} year={year} position={1} />
-    <Redos subject={subject} position={2} />
-    <Program subject={subject} year={year} position={3} />
-    <Material subject={subject} position={4} />
-    <Mark subject={subject} position={5} />
+    <Material subject={subject} position={2} />
   </main>
 </Layout>
