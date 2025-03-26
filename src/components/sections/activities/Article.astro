@@ -34,7 +34,7 @@ const { open, articleURL, content, course } = Astro.props;
     <div class="flex gap-x-4 self-stretch">
       <template x-if={`${content} && ${content}.repositoryURL !== ''`}>
         <a
-          class="bg-sh-purple p-1 sm:px-3 sm:py-2 max-sm:aspect-square rounded-xl cursor-pointer flex justify-center gap-x-3 sm:w-36 items-center hover:shadow-md"
+          class="bg-sh-purple border-2 border-sh-dark-gray p-1 sm:px-3 sm:py-2 max-sm:aspect-square rounded-xl cursor-pointer flex justify-center gap-x-3 sm:w-36 items-center hover:shadow-md"
           x-bind:href={`${content}.repositoryURL`}
         >
           <span class="max-sm:hidden">Repositorio</span>
@@ -52,7 +52,7 @@ const { open, articleURL, content, course } = Astro.props;
       </template>
       <template x-if={`${content} && ${content}.handInURL !== ''`}>
         <a
-          class="bg-sh-purple p-1 sm:px-3 sm:py-2 max-sm:aspect-square rounded-xl cursor-pointer flex justify-center gap-x-3 sm:w-36 items-center hover:shadow-md"
+          class="bg-sh-purple border-2 border-sh-dark-gray p-1 sm:px-3 sm:py-2 max-sm:aspect-square rounded-xl cursor-pointer flex justify-center gap-x-3 sm:w-36 items-center hover:shadow-md"
           x-bind:href={`${content}.handInURL`}
         >
           <span class="max-sm:hidden">Entrega</span>
@@ -75,7 +75,7 @@ const { open, articleURL, content, course } = Astro.props;
   <div x-show="!loading" class="flex flex-col gap-y-4">
     <div class="flex flex-col md:flex-row justify-between items-center">
       <div
-        class="order-2 md:order-1 self-stretch flex flex-col justify-between gap-y-2"
+        class="order-2 md:order-1 self-stretch flex flex-col justify-center gap-y-2"
       >
         <h1
           x-text={`${content} ? ${content}.name : ''`}
@@ -183,11 +183,17 @@ const { open, articleURL, content, course } = Astro.props;
           </div>
         </template>
       </div>
-      <img
-        x-bind:src={`${content} !== null?${content}.imgURL:''`}
-        alt="imagen actividad"
-        class="order-1 md:order-2 rounded-xl overflow-hidden aspect-square w-36 md:w-40 object-cover"
-      />
+      <template
+        x-data="{imageLink: undefined}"
+        x-if="imageLink"
+        x-effect={`imageLink = (${content} && ${content}.imgURL)?? undefined;console.log(imageLink)`}
+      >
+        <img
+          x-bind:src={`${content} !== null?${content}.imgURL:''`}
+          alt="imagen actividad"
+          class="order-1 md:order-2 rounded-xl overflow-hidden aspect-square w-36 md:w-40 object-cover"
+        />
+      </template>
     </div>
     <div
       x-ref="content"
