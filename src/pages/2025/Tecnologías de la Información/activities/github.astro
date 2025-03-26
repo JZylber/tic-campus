@@ -1,4 +1,6 @@
 ---
+import ImportantBox from "../../../../components/misc/alertbox/ImportantBox.astro";
+
 export const partial = true;
 ---
 
@@ -9,10 +11,10 @@ export const partial = true;
   usamos un programa para organizar versiones, <code>git</code>, y un servicio
   de nube para poder manejar estas versiones a través de la web,
   <code>Github</code>. Vamos a aprender a usarlo en clase, pero necesito que
-  <strong>de tarea</strong> instalen algunas cosas. Ya se, ya se, tarea, pero es
-  solo crear una cuenta e instalar algo.
+  <strong>de tarea</strong> hagan algunas cosas. Ya se, ya se, tarea, pero es solo
+  crear una cuenta.
 </p>
-<h2>Cuenta</h2>
+<h2>Cuenta de Github</h2>
 <p>
   Para poder usar el servicio de nube de git, hay muchas opciones. Nosotros
   vamos a usar Github, un servicio de microsoft. Haganse una cuenta en este
@@ -21,16 +23,21 @@ export const partial = true;
   fuera del colegio, e incluso si no, es una forma de mostrar el trabajo que
   estuvieron haciendo durante años.
 </p>
-<h2>Github Desktop</h2>
-<p>
-  Además, para usar git en la compu y no morir en el intento (ya los voy a
-  torturar en 5to), vamos a usar un programa que nos ayude a usarlo. Instalen
-  Github Desktop de este link:
-  <a href="https://desktop.github.com/">https://desktop.github.com/</a>. No
-  necesitan permisos de administrador para instalarlo. Hagan login con la cuenta
-  que crearon anteriormente.
-</p>
-<p>
-  ¡Listo! Fin de la tarea. Ahora tienen todo listo para cuando aprendamos a usar
-  estas herramientas.
-</p>
+<ImportantBox>
+  <p>
+    Esta cuenta es muy muy importante. La van a usar para esta materia, para
+    proyecto, para todo TIC y probablemente para sus eventuales trabajos. Por
+    eso:
+  </p>
+  <ul class="list-disc list-inside">
+    <li>
+      Tómense el tiempo de setupear 2FA (<em>2 Factor Authentication</em>) ¡No
+      vayan a perder la cuenta!
+    </li>
+    <li>
+      Usen un mail personal, no el del colegio, asi la pueden usar cuando se
+      egresen. Pueden agregar el mail del colegio como segundo mail después, así
+      obtienen beneficios de estudiantes.
+    </li>
+  </ul>
+</ImportantBox>
