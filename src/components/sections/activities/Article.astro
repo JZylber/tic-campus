@@ -183,12 +183,17 @@ const { open, articleURL, content, course } = Astro.props;
           </div>
         </template>
       </div>
-      <img
-        x-show={`${content} !== null && ${content}.imgURL !== ''`}
-        x-bind:src={`${content} !== null?${content}.imgURL:''`}
-        alt="imagen actividad"
-        class="order-1 md:order-2 rounded-xl overflow-hidden aspect-square w-36 md:w-40 object-cover"
-      />
+      <template
+        x-data="{imageLink: undefined}"
+        x-if="imageLink"
+        x-effect={`imageLink = (${content} && ${content}.imgURL)?? undefined;console.log(imageLink)`}
+      >
+        <img
+          x-bind:src={`${content} !== null?${content}.imgURL:''`}
+          alt="imagen actividad"
+          class="order-1 md:order-2 rounded-xl overflow-hidden aspect-square w-36 md:w-40 object-cover"
+        />
+      </template>
     </div>
     <div
       x-ref="content"
