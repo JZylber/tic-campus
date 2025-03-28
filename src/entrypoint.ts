@@ -252,7 +252,8 @@ export default (Alpine: Alpine) => {
                 proportion,
               2
             )
-          : 10 * proportion;
+          : (this.markData.activities.markContribution / (1 - proportion)) *
+            proportion;
       this.markData.averageMark = round(
         this.markData.activities.markContribution +
           this.markData.markedActivities.markContribution,
@@ -269,6 +270,11 @@ export default (Alpine: Alpine) => {
         this.markData.markedActivities.total === 0
       ) {
         this.markData.finalMark = null;
+      } else {
+        this.markData.finalMark = Math.min(
+          Math.max(1, this.markData.finalMark),
+          10
+        );
       }
     },
   } as {

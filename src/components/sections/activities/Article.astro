@@ -186,7 +186,7 @@ const { open, articleURL, content, course } = Astro.props;
       <template
         x-data="{imageLink: undefined}"
         x-if="imageLink"
-        x-effect={`imageLink = (${content} && ${content}.imgURL)?? undefined;console.log(imageLink)`}
+        x-effect={`imageLink = (${content} && ${content}.imgURL)?? undefined`}
       >
         <img
           x-bind:src={`${content} !== null?${content}.imgURL:''`}
