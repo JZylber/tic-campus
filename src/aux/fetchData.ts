@@ -70,7 +70,7 @@ export const getAllCourses = async (dataSheetId: string) => {
       id: course["Id"],
       subject: course["Materia"],
       groupLink: course["Link Grupo"],
-    } as Course;
+    };
   });
 };
 
