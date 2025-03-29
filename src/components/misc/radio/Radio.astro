@@ -1,0 +1,39 @@
+---
+interface Props {
+  title: string;
+  xModel: string;
+  options: Array<{
+    value: any;
+    label: string;
+  }>;
+}
+
+const { title, xModel, options } = Astro.props;
+---
+
+<div x-data=`{options: ${JSON.stringify(options)}}`>
+  <label
+    class="text-sh-dark-gray text-[16px] font-semibold"
+    x-text={`'${title}'`}></label>
+  <div class="flex justify-between items-center mt-2">
+    <template x-for="option in options">
+      <div
+        class="w-10 aspect-square flex justify-center items-center border-2 border-sh-gray rounded-xl cursor-pointer"
+        :class=`{
+        'bg-gray-50': ${xModel} !== option.value,
+        'bg-sh-gray': ${xModel} === option.value
+        }`
+        @click=`${xModel} = option.value`
+      >
+        <span
+          x-text="option.label"
+          class="text-[24px]"
+          :class=`{
+            'text-gray-50': ${xModel} === option.value,
+            'text-sh-gray': ${xModel} !== option.value
+            }`
+        ></span>
+      </div>
+    </template>
+  </div>
+</div>

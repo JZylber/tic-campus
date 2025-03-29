@@ -2,7 +2,7 @@
 import type { Course } from "../aux/types";
 import Layout from "../layouts/Layout.astro";
 import Select from "../components/misc/select/Select.astro";
-import { undefined } from "astro:schema";
+import Radio from "../components/misc/radio/Radio.astro";
 
 const availableCourses: Course[] = [
   {
@@ -123,6 +123,15 @@ uniqueYears.push({
         class="flex flex-col gap-y-2"
       >
         <Select options={uniqueYears} title="Año" xModel="year" />
+        <Radio
+          options={[
+            { value: 3, label: "3" },
+            { value: 4, label: "4" },
+            { value: 5, label: "5" },
+          ]}
+          xModel="grade"
+          title="Año escolar"
+        />
       </form>
     </div>
   </div></Layout
