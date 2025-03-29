@@ -14,14 +14,15 @@ const { title, xModel, options, className } = Astro.props;
 
 <div
   x-data={`{options: ${JSON.stringify(options)}}`}
-  class={`flex flex-col gap-2 ${className}`}
+  class={`flex flex-col items-center md:items-start gap-2 ${className}`}
+  x-init={`if(options.length > 0)${xModel} = options[0].value`}
 >
   <label
-    class="text-sh-dark-gray text-[16px] font-semibold"
+    class="text-center md:text-left text-sh-dark-gray text-[16px] font-semibold"
     x-text={`'${title}'`}></label>
   <select
-    x-model={xModel}
-    class="w-full h-[40px] rounded-xl text-sh-dark-gray text-[16px] p-2 border-2 border-sh-gray focus:outline-none focus:ring focus:ring-sh-blue focus:border-sh-blue"
+    x-model.number={xModel}
+    class="w-full max-w-[200px] h-[40px] rounded-xl text-sh-dark-gray text-[16px] p-2 border-2 border-sh-gray focus:outline-none focus:ring focus:ring-sh-blue focus:border-sh-blue"
   >
     <template x-for="option in options">
       <option :value="option.value" x-text="option.label"></option>

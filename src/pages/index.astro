@@ -89,6 +89,20 @@ const availableCourses: Course[] = [
     division: "F",
     year: 2025,
   },
+  {
+    name: "NR3AB",
+    subject: "Proyecto",
+    grade: 3,
+    division: "AB",
+    year: 2025,
+  },
+  {
+    name: "NR3CD",
+    subject: "Proyecto",
+    grade: 3,
+    division: "CD",
+    year: 2025,
+  },
 ];
 
 const years = availableCourses.map((course) => course.year);
@@ -101,6 +115,44 @@ uniqueYears.push({
   value: 2026,
   label: "2026",
 });
+
+interface FilterableCourse {
+  year: number;
+  grade: number;
+  subject: string;
+  divisions: Array<{
+    name: string;
+    division: string;
+  }>;
+}
+
+const filterableCourses = availableCourses.reduce((acc, course) => {
+  const year = course.year;
+  const grade = course.grade;
+  const division = course.division;
+  const subject = course.subject;
+  let selectedCourse = acc.find(
+    (c) => c.year === year && c.grade === grade && c.subject === subject
+  );
+  if (!selectedCourse) {
+    selectedCourse = {
+      year,
+      grade,
+      subject,
+      divisions: [{ name: course.name, division }],
+    };
+    acc.push(selectedCourse);
+  } else {
+    selectedCourse.divisions.push({ name: course.name, division });
+  }
+  return acc;
+}, [] as FilterableCourse[]);
+filterableCourses.forEach((course) => {
+  course.divisions.sort((a, b) => a.division.localeCompare(b.division));
+});
+filterableCourses.sort((a, b) => {
+  return a.subject.localeCompare(b.subject);
+});
 ---
 
 <Layout>
@@ -111,36 +163,66 @@ uniqueYears.push({
     x-transition:leave-start="opacity-100"
     x-transition:leave-end="opacity-0"
   >
-    <div
-      class="w-full h-full flex flex-col items-center justify-center overflow-y-scroll"
-    >
-      <h1 class="text-[30px] md:text-[36px] font-bold p-4">
+    <div class="w-full h-full flex flex-col items-center overflow-y-scroll">
+      <h1 class="text-[30px] md:text-[36px] font-bold pt-4 pb-2">
         ¡Bienvenidos a TIC Campus!
       </h1>
-      <h2 class="text-[16px] md:text-[20px] p-2">
+      <h2 class="text-[16px] md:text-[20px] pb-4">
         Estas son las materias disponibles
       </h2>
       <form
-        x-data={`{year: ${uniqueYears[0].value}, grade: undefined}`}
-        class="flex flex-col gap-y-2 py-2 px-8 md:flex-row md:gap-x-8 w-full"
+        x-data={`{year: ${uniqueYears[0].value}, grade: undefined, visibleCourses: []}`}
+        class="flex flex-col gap-y-4 w-full px-8"
+        x-effect=`if(year && grade)visibleCourses = ${JSON.stringify(filterableCourses)}.filter(course => course.year === year && course.grade === grade)`
       >
-        <Select
-          options={uniqueYears}
-          title="Año"
-          xModel="year"
-          className="w-full md:w-1/4"
-        />
-        <Radio
-          options={[
-            { value: 3, label: "3" },
-            { value: 4, label: "4" },
-            { value: 5, label: "5" },
-          ]}
-          xModel="grade"
-          title="Año escolar"
-          className="w-full md:w-1/4"
-        />
+        <div class="flex flex-col gap-y-2 py-2 md:flex-row md:gap-x-8 w-full">
+          <Select
+            options={uniqueYears}
+            title="Año"
+            xModel="year"
+            className="w-full md:w-1/4"
+          />
+          <Radio
+            options={[
+              { value: 3, label: "3" },
+              { value: 4, label: "4" },
+              { value: 5, label: "5" },
+            ]}
+            xModel="grade"
+            title="Año escolar"
+            className="w-full md:w-1/4"
+          />
+        </div>
+        <div
+          class="flex flex-col gap-y-4 w-full pt-4 border-t-2 border-gray-300"
+        >
+          <span
+            class="w-full font-bold text-[20px] text-center"
+            x-show="!(year && grade)">Elegí el año y el año escolar</span
+          >
+          <template x-if="year && grade">
+            <template x-for="course in visibleCourses">
+              <div class="flex flex-col gap-2 w-full">
+                <span
+                  class="w-full font-bold text-[20px] text-center md:text-left"
+                  x-text="course.subject"></span>
+                <div class="flex gap-2 w-full flex-wrap">
+                  <template x-for="division in course.divisions">
+                    <a
+                      :href="`${$store.baseURL.dataURL}/${course.year}/${course.subject}/${division.name}`"
+                      class="flex gap-x-4 py-2 px-4 rounded-xl bg-gray-300 cursor-pointer hover:shadow-lg"
+                    >
+                      <span
+                        class="text-[16px] text-sh-dark-gray"
+                        x-text="course.grade + division.division"></span>
+                    </a>
+                  </template>
+                </div>
+              </div>
+            </template>
+          </template>
+        </div>
       </form>
     </div>
-  </div></Layout
->
+  </div>
+</Layout>
