@@ -110,10 +110,6 @@ const uniqueYears = [...new Set(years)].map((year) => ({
   value: year,
   label: year.toString(),
 }));
-uniqueYears.push({
-  value: 2026,
-  label: "2026",
-});
 
 interface FilterableCourse {
   year: number;
