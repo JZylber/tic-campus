@@ -6,12 +6,16 @@ interface Props {
     value: any;
     label: string;
   }>;
+  className?: string;
 }
 
-const { title, xModel, options } = Astro.props;
+const { title, xModel, options, className } = Astro.props;
 ---
 
-<div x-data=`{options: ${JSON.stringify(options)}}`>
+<div
+  x-data={`{options: ${JSON.stringify(options)}}`}
+  class={`flex flex-col gap-2 ${className}`}
+>
   <label
     class="text-sh-dark-gray text-[16px] font-semibold"
     x-text={`'${title}'`}></label>
