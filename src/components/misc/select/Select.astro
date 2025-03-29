@@ -1,0 +1,26 @@
+---
+interface Props {
+  title: string;
+  xModel: string;
+  options: Array<{
+    value: any;
+    label: string;
+  }>;
+}
+
+const { title, xModel, options } = Astro.props;
+---
+
+<div x-data=`{options: ${JSON.stringify(options)}}`>
+  <label
+    class="text-sh-dark-gray text-[16px] font-semibold"
+    x-text={`'${title}'`}></label>
+  <select
+    x-model={xModel}
+    class="w-full h-[40px] rounded-xl text-sh-dark-gray text-[16px] p-2 border-2 border-sh-gray focus:outline-none focus:ring focus:ring-sh-blue focus:border-sh-blue"
+  >
+    <template x-for="option in options">
+      <option :value="option.value" x-text="option.label"></option>
+    </template>
+  </select>
+</div>

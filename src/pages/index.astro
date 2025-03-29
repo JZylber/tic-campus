@@ -1,6 +1,8 @@
 ---
 import type { Course } from "../aux/types";
 import Layout from "../layouts/Layout.astro";
+import Select from "../components/misc/select/Select.astro";
+import { undefined } from "astro:schema";
 
 const availableCourses: Course[] = [
   {
@@ -88,6 +90,17 @@ const availableCourses: Course[] = [
     year: 2025,
   },
 ];
+
+const years = availableCourses.map((course) => course.year);
+const uniqueYears = [...new Set(years)].map((year) => ({
+  value: year,
+  label: year.toString(),
+}));
+
+uniqueYears.push({
+  value: 2026,
+  label: "2026",
+});
 ---
 
 <Layout>
@@ -102,31 +115,15 @@ const availableCourses: Course[] = [
       class="w-full h-full flex flex-col items-center justify-center overflow-y-scroll"
     >
       <h1 class="text-[30px] md:text-[36px] font-bold p-4">
-        Seleccioná tu curso
+        ¡Bienvenidos a TIC Campus!
       </h1>
-      <template x-for="(courses, year) in coursesByYear">
-        <div
-          class="flex items-center gap-x-8 w-full lg:w-2/3 py-4 border-t-2 border-gray-300 first-of-type:border-t-0"
-        >
-          <div
-            class="hidden text-[24px] font-bold bg-sh-blue text-white rounded-full w-10 h-10 shrink-0 lg:flex justify-center items-center mr-4"
-          >
-            <span x-text="year"></span>
-          </div>
-          <div
-            class="px-4 w-full lg:px-0 grid grid-cols-[repeat(auto-fill,minmax(100px,1fr))] auto-rows-fr gap-4 lg:flex lg:flex-wrap"
-          >
-            <template x-for="course in courses">
-              <a
-                class="cursor-pointer bg-gray-200 w-full lg:w-20 aspect-square rounded-xl flex justify-center items-center text-gray-600 text-[20px] hover:bg-sh-black hover:text-white transition-colors"
-                x-bind:href="`/tic-campus/${course.year}/${course.subject}/${course.id}`"
-              >
-                <span x-text="course.name"></span>
-              </a>
-            </template>
-          </div>
-        </div>
-      </template>
+      <h2>Estos son las materias disponibles</h2>
+      <form
+        x-data={`{year: ${uniqueYears[0].value}, grade: undefined}`}
+        class="flex flex-col gap-y-2"
+      >
+        <Select options={uniqueYears} title="Año" xModel="year" />
+      </form>
     </div>
-  </div>
-</Layout>
+  </div></Layout
+>
