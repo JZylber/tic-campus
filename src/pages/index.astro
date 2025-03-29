@@ -110,6 +110,10 @@ const uniqueYears = [...new Set(years)].map((year) => ({
   value: year,
   label: year.toString(),
 }));
+uniqueYears.push({
+  value: 2026,
+  label: "2026",
+});
 
 interface FilterableCourse {
   year: number;
@@ -170,7 +174,7 @@ filterableCourses.sort((a, b) => {
         class="flex flex-col gap-y-4 w-full px-8"
         x-effect=`if(year && grade)visibleCourses = ${JSON.stringify(filterableCourses)}.filter(course => course.year === year && course.grade === grade)`
       >
-        <div class="flex flex-col gap-y-2 py-2 md:flex-row md:gap-x-8 w-full">
+        <div class="flex flex-col gap-y-4 py-2 md:flex-row md:gap-x-8 w-full">
           <Select
             options={uniqueYears}
             title="Año"
