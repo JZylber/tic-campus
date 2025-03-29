@@ -1,64 +1,223 @@
 ---
-import { getAllCourses } from "../aux/fetchData";
 import type { Course } from "../aux/types";
 import Layout from "../layouts/Layout.astro";
+import Select from "../components/misc/select/Select.astro";
+import Radio from "../components/misc/radio/Radio.astro";
 
-interface DatedCourse extends Course {
+const availableCourses: Course[] = [
+  {
+    name: "NR3A",
+    subject: "Tecnologías de la Información",
+    grade: 3,
+    division: "A",
+    year: 2025,
+  },
+  {
+    name: "NR3B",
+    subject: "Tecnologías de la Información",
+    grade: 3,
+    division: "B",
+    year: 2025,
+  },
+  {
+    name: "NR3C",
+    subject: "Tecnologías de la Información",
+    grade: 3,
+    division: "C",
+    year: 2025,
+  },
+  {
+    name: "NR3D",
+    subject: "Tecnologías de la Información",
+    grade: 3,
+    division: "D",
+    year: 2025,
+  },
+  {
+    name: "NR4C",
+    subject: "Bases de Datos",
+    grade: 4,
+    division: "C",
+    year: 2025,
+  },
+  {
+    name: "NR4E",
+    subject: "Bases de Datos",
+    grade: 4,
+    division: "E",
+    year: 2025,
+  },
+  {
+    name: "NR5A",
+    subject: "Desarrollo de Aplicaciones Informáticas",
+    grade: 5,
+    division: "A",
+    year: 2025,
+  },
+  {
+    name: "NR5B",
+    subject: "Desarrollo de Aplicaciones Informáticas",
+    grade: 5,
+    division: "B",
+    year: 2025,
+  },
+  {
+    name: "NR5C",
+    subject: "Desarrollo de Aplicaciones Informáticas",
+    grade: 5,
+    division: "C",
+    year: 2025,
+  },
+  {
+    name: "NR5D",
+    subject: "Desarrollo de Aplicaciones Informáticas",
+    grade: 5,
+    division: "D",
+    year: 2025,
+  },
+  {
+    name: "NR5E",
+    subject: "Desarrollo de Aplicaciones Informáticas",
+    grade: 5,
+    division: "E",
+    year: 2025,
+  },
+  {
+    name: "NR5A",
+    subject: "Desarrollo de Aplicaciones Informáticas",
+    grade: 5,
+    division: "F",
+    year: 2025,
+  },
+  {
+    name: "3AB",
+    subject: "Proyecto",
+    grade: 3,
+    division: "AB",
+    year: 2025,
+  },
+  {
+    name: "3CD",
+    subject: "Proyecto",
+    grade: 3,
+    division: "CD",
+    year: 2025,
+  },
+];
+
+const years = availableCourses.map((course) => course.year);
+const uniqueYears = [...new Set(years)].map((year) => ({
+  value: year,
+  label: year.toString(),
+}));
+
+interface FilterableCourse {
   year: number;
+  grade: number;
+  subject: string;
+  divisions: Array<{
+    name: string;
+    division: string;
+  }>;
 }
 
-interface CourseByYear {
-  [year: string]: DatedCourse[];
-}
-
-const coursesByYear = (
-  await getAllCourses("1VZ_KPk4aZJFPlAgx188y0wW8p3psbbtZgix1L8a-5kE")
-).reduce((acc, course) => {
-  if (!acc[course.name[0]]) {
-    acc[course.name[0]] = [];
+const filterableCourses = availableCourses.reduce((acc, course) => {
+  const year = course.year;
+  const grade = course.grade;
+  const division = course.division;
+  const subject = course.subject;
+  let selectedCourse = acc.find(
+    (c) => c.year === year && c.grade === grade && c.subject === subject
+  );
+  if (!selectedCourse) {
+    selectedCourse = {
+      year,
+      grade,
+      subject,
+      divisions: [{ name: course.name, division }],
+    };
+    acc.push(selectedCourse);
+  } else {
+    selectedCourse.divisions.push({ name: course.name, division });
   }
-  acc[course.name[0]].push({ ...course, year: new Date().getFullYear() });
   return acc;
-}, {} as CourseByYear);
+}, [] as FilterableCourse[]);
+filterableCourses.forEach((course) => {
+  course.divisions.sort((a, b) => a.division.localeCompare(b.division));
+});
+filterableCourses.sort((a, b) => {
+  return a.subject.localeCompare(b.subject);
+});
 ---
 
 <Layout>
   <div
-    x-data={`{ coursesByYear: ${JSON.stringify(coursesByYear)}}`}
+    x-data={`{ courses: ${JSON.stringify(availableCourses)}}`}
     class="absolute h-full w-full bg-gray-50 z-50 flex flex-col items-center justify-center"
     x-transition:leave="transition ease-out duration-300"
     x-transition:leave-start="opacity-100"
     x-transition:leave-end="opacity-0"
   >
-    <div
-      class="w-full h-full flex flex-col items-center justify-center overflow-y-scroll"
-    >
-      <h1 class="text-[30px] md:text-[36px] font-bold p-4">
-        Seleccioná tu curso
+    <div class="w-full h-full flex flex-col items-center overflow-y-scroll">
+      <h1 class="text-[30px] md:text-[36px] font-bold pt-4 pb-2">
+        ¡Bienvenidos a TIC Campus!
       </h1>
-      <template x-for="(courses, year) in coursesByYear">
-        <div
-          class="flex items-center gap-x-8 w-full lg:w-2/3 py-4 border-t-2 border-gray-300 first-of-type:border-t-0"
-        >
-          <div
-            class="hidden text-[24px] font-bold bg-sh-blue text-white rounded-full w-10 h-10 shrink-0 lg:flex justify-center items-center mr-4"
-          >
-            <span x-text="year"></span>
-          </div>
-          <div
-            class="px-4 w-full lg:px-0 grid grid-cols-[repeat(auto-fill,minmax(100px,1fr))] auto-rows-fr gap-4 lg:flex lg:flex-wrap"
-          >
-            <template x-for="course in courses">
-              <a
-                class="cursor-pointer bg-gray-200 w-full lg:w-20 aspect-square rounded-xl flex justify-center items-center text-gray-600 text-[20px] hover:bg-sh-black hover:text-white transition-colors"
-                x-bind:href="`/tic-campus/${course.year}/${course.subject}/${course.id}`"
-              >
-                <span x-text="course.name"></span>
-              </a>
-            </template>
-          </div>
+      <h2 class="text-[16px] md:text-[20px] pb-4">
+        Estas son las materias disponibles
+      </h2>
+      <form
+        x-data={`{year: ${uniqueYears[0].value}, grade: undefined, visibleCourses: []}`}
+        class="flex flex-col gap-y-4 w-full px-8"
+        x-effect=`if(year && grade)visibleCourses = ${JSON.stringify(filterableCourses)}.filter(course => course.year === year && course.grade === grade)`
+      >
+        <div class="flex flex-col gap-y-4 py-2 md:flex-row md:gap-x-8 w-full">
+          <Select
+            options={uniqueYears}
+            title="Año"
+            xModel="year"
+            className="w-full md:w-1/4"
+          />
+          <Radio
+            options={[
+              { value: 3, label: "3" },
+              { value: 4, label: "4" },
+              { value: 5, label: "5" },
+            ]}
+            xModel="grade"
+            title="Año escolar"
+            className="w-full md:w-1/4"
+          />
         </div>
-      </template>
+        <div
+          class="flex flex-col gap-y-4 w-full pt-4 border-t-2 border-gray-300"
+        >
+          <span
+            class="w-full font-bold text-[20px] text-center"
+            x-show="!(year && grade)">Elegí el año y el año escolar</span
+          >
+          <template x-if="year && grade">
+            <template x-for="course in visibleCourses">
+              <div class="flex flex-col gap-2 w-full">
+                <span
+                  class="w-full font-bold text-[20px] text-center md:text-left"
+                  x-text="course.subject"></span>
+                <div class="flex gap-2 w-full flex-wrap">
+                  <template x-for="division in course.divisions">
+                    <a
+                      :href="`${$store.baseURL.dataURL}/${course.year}/${course.subject}/${division.name}`"
+                      class="flex gap-x-4 py-2 px-4 rounded-xl bg-gray-300 cursor-pointer hover:shadow-lg"
+                    >
+                      <span
+                        class="text-[16px] text-sh-dark-gray"
+                        x-text="course.grade + division.division"></span>
+                    </a>
+                  </template>
+                </div>
+              </div>
+            </template>
+          </template>
+        </div>
+      </form>
     </div>
   </div>
 </Layout>

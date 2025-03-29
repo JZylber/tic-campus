@@ -1,0 +1,45 @@
+---
+interface Props {
+  title: string;
+  xModel: string;
+  options: Array<{
+    value: any;
+    label: string;
+  }>;
+  className?: string;
+}
+
+const { title, xModel, options, className } = Astro.props;
+---
+
+<div
+  x-data=`{options: ${JSON.stringify(options)}}`
+  class=`flex flex-col gap-2 ${className}`
+>
+  <label
+    class="text-center md:text-left text-sh-dark-gray text-[16px] font-semibold"
+    x-text={`'${title}'`}></label>
+  <div class="justify-center md:justify-start items-center flex">
+    <div class="flex w-full max-w-[200px] justify-between items-center">
+      <template x-for="option in options">
+        <div
+          class="w-11 aspect-square flex justify-center items-center border-2 border-sh-gray rounded-xl cursor-pointer"
+          :class=`{
+        'bg-gray-50': ${xModel} !== option.value,
+        'bg-sh-gray': ${xModel} === option.value
+        }`
+          @click=`${xModel} = option.value`
+        >
+          <span
+            x-text="option.label"
+            class="text-[24px]"
+            :class=`{
+            'text-gray-50': ${xModel} === option.value,
+            'text-sh-gray': ${xModel} !== option.value
+            }`
+          ></span>
+        </div>
+      </template>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,32 @@
+---
+import Layout from "../../../../layouts/Layout.astro";
+import Navbar from "../../../../components/navbar/Navbar.astro";
+
+export function getStaticPaths() {
+  return [
+    {
+      params: { year: 2025, courses: "3AB" },
+      props: { dataSheetId: "" },
+    },
+    {
+      params: { year: 2025, courses: "3CD" },
+      props: { dataSheetId: "" },
+    },
+  ];
+}
+
+const { courses, year } = Astro.params;
+const { dataSheetId } = Astro.props;
+const subject = "Proyecto";
+
+const items = [{ name: "home", icon: "home", title: subject }];
+---
+
+<Layout dataSheetId={dataSheetId}>
+  <Navbar course={courses} subject={subject} items={items} />
+  <main
+    class="relative grow bg-gray-50 border-y sm:border-r lg:border-l border-gray-300 sm:rounded-r-xl lg:rounded-l-xl overflow-hidden"
+  >
+    <h1 class="text-[30px] font-bold text-center py-8">Proximamente...</h1>
+  </main>
+</Layout>
