@@ -44,8 +44,9 @@ export interface MarkedActivity {
 export interface Course {
   name: string;
   subject: string;
-  id: string;
-  groupLink: string;
+  grade: number;
+  division: string;
+  year: number;
 }
 
 export interface Material {
