@@ -90,14 +90,14 @@ const availableCourses: Course[] = [
     year: 2025,
   },
   {
-    name: "NR3AB",
+    name: "3AB",
     subject: "Proyecto",
     grade: 3,
     division: "AB",
     year: 2025,
   },
   {
-    name: "NR3CD",
+    name: "3CD",
     subject: "Proyecto",
     grade: 3,
     division: "CD",
@@ -110,11 +110,6 @@ const uniqueYears = [...new Set(years)].map((year) => ({
   value: year,
   label: year.toString(),
 }));
-
-uniqueYears.push({
-  value: 2026,
-  label: "2026",
-});
 
 interface FilterableCourse {
   year: number;
