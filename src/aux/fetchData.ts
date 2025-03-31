@@ -264,7 +264,7 @@ export const getStudentData = async (
   });
   const fuse = new Fuse(allStudents, {
     keys: ["Nombre", "Apellido"],
-    threshold: 0.5,
+    threshold: 0.4,
   });
   const students = fuse.search({ Nombre: name, Apellido: surname });
   const found = students.length > 0;
