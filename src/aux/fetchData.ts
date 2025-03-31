@@ -2,7 +2,6 @@ import Fuse from "fuse.js";
 import type {
   Activity,
   Content,
-  Course,
   MarkedActivity,
   Material,
   Unit,
@@ -114,6 +113,7 @@ export const getSubjectData = async (
       unit: contentData["Unidad"],
       handInURL: content["Entrega"],
       repositoryURL: content["Repositorio"],
+      latest: content["En curso"].toString() === "true",
     } as Content;
   });
   let contentsByUnit = availableContents.reduce(

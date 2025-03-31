@@ -17,7 +17,7 @@ const { subject, course, year, position } = Astro.props;
   <div
     class="w-full h-full"
     x-data="{ unitsData: [], loading: true, currentContent: null, articleOpen: false, articleURL:''}"
-    x-init={`unitsData = await getSubjectData('${course}', '${subject}', dataSheetId); loading = false;`}
+    x-init={`unitsData = (await getSubjectData('${course}', '${subject}', dataSheetId)).reverse(); loading = false;`}
   >
     <div class="h-full w-full overflow-y-scroll">
       <div x-show="!loading" class="flex flex-col gap-y-4">
@@ -56,6 +56,7 @@ const { subject, course, year, position } = Astro.props;
                   articleOpen = true; 
                   articleURL =  $store.baseURL.dataURL + '/${year}/${subject}/activities/' + content.textURL;}
                 })()`}
+                  x-init="if(content.latest) open = true"
                 >
                   <span class="max-md:hidden flex justify-between items-center">
                     <span
@@ -79,6 +80,16 @@ const { subject, course, year, position } = Astro.props;
                     <span
                       class="italic text-center md:text-left text-[14px] md:text-[16px]"
                       x-text="content.topic"></span>
+                    <template x-if="content.latest">
+                      <div
+                        class="flex justify-center items-center rounded-full bg-sh-purple text-white px-1.5 md:py-0.5"
+                      >
+                        <span
+                          class="font-bold uppercase text-[12px] md:text-[14px]"
+                          >nuevo</span
+                        >
+                      </div>
+                    </template>
                   </div>
                   <template
                     x-if={`['Actividad','Trabajo Práctico','Encuesta'].includes(content.type) && $store.student.course === '${course}'`}
