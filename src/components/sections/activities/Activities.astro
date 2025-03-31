@@ -17,7 +17,7 @@ const { subject, course, year, position } = Astro.props;
   <div
     class="w-full h-full"
     x-data="{ unitsData: [], loading: true, currentContent: null, articleOpen: false, articleURL:''}"
-    x-init={`unitsData = await getSubjectData('${course}', '${subject}', dataSheetId); loading = false;`}
+    x-init={`unitsData = (await getSubjectData('${course}', '${subject}', dataSheetId)).reverse(); loading = false;`}
   >
     <div class="h-full w-full overflow-y-scroll">
       <div x-show="!loading" class="flex flex-col gap-y-4">
