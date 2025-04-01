@@ -1,7 +1,26 @@
 ---
+import ImportantBox from "../../../../components/articles/alertbox/ImportantBox.astro";
+import CodeBlock from "../../../../components/articles/code-block/CodeBlock.astro";
+
 export const partial = true;
 ---
 
+<div class="hidden md:block">
+  <div
+    style="position: relative; width: 100%; height: 0; padding-top: 56.2500%;
+ padding-bottom: 0; box-shadow: 0 2px 8px 0 rgba(63,69,81,0.16); margin-top: 1.6em; margin-bottom: 0.9em; overflow: hidden;
+ border-radius: 8px; will-change: transform;"
+  >
+    <iframe
+      loading="lazy"
+      style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; border: none; padding: 0;margin: 0;"
+      src="https://www.canva.com/design/DAFg-HkcliE/view?embed"
+      allowfullscreen="allowfullscreen"
+      allow="fullscreen"
+    >
+    </iframe>
+  </div>
+</div>
 <h2>Instalación</h2>
 <p>
   Para correr el tp, necesitamos una librería de estadística para simular los
@@ -151,40 +170,40 @@ export const partial = true;
   Obviamente pueden (y se espera) que reutilicen las funciones de la parte A y
   B. Probar que funcione. Para más información, <strong>Googleen</strong>.
 </p>
-<h3 id="parte-d-por-el-10">Parte D: Por el 10</h3>
+<h3>Parte D: Por el 10</h3>
 <p>
-  Para llegar al 10, tiene que hacer una parte de experimentación, más
-  <em>a lo chona</em>. Para esto, hay que dejar los <code>.py</code> y moverse a
-  notebooks, osea, <code>.ipynb</code>.
+  Con los siguientes equipos, ejecutar 500 veces tanto el torneo de llaves como
+  torneo de liga. Contabilizar los ganadores, es decir, contar cuantas veces
+  ganó cada equipo en cada sistema. <strong
+    >Cuenten por separado los ganadores de la liga de los ganadores de las
+    llaves</strong
+  >.
 </p>
+<CodeBlock
+  lang="python"
+  code={'equipos = [("Colón",0.8,0.75), ("Ferro",0.7,0.65), ("Defensores de Belgrano",0.75,0.7), ("Quilmes",0.6,0.6), ("All Boys",0.5,0.6), ("Chacarita",0.4,0.45), ("Arsenal",0.4,0.3), ("Chaco For Ever",0.3,0.4)]'}
+/>
 <p>
-  Antes de arrancar, planteense algunas hipótesis. Algunas preguntas
-  orientadoras: ¿Qué esperan que pase en cada sistema? ¿Quiénes son los que
-  ganan más seguido? ¿Como afectan ataque y defensa en los partidos y torneos?
+  Luego de correr ambos sistemas 500 veces y contar los ganadores, responder
+  como comentarios al final del código las siguientes preguntas:
 </p>
-<p>
-  Corran los sistemas reiteradas veces (más de 100), y con equipos apropiados
-  para la hipótesis planteada. Registren lo observado, y vean que ocurrió con
-  sus hipótesis.
-</p>
-<p>
-  <strong>Tienen que registrar la experimentación</strong>. La experimentación
-  se debe registrar como bloques markdown del notebook, y deben estar si o si:
-</p>
-<ul>
+<ol>
   <li>
-    Hipótesis de que creen que va a pasar (no hace falta que sea súper formal,
-    alcanza con que digan que creen que va a pasar).
+    ¿Ganaron los mismos equipos en ambos sistemas? ¿O hay equipos que les va
+    mejor en un sistema que el otro?
   </li>
-  <li>Observaciones contrastadas con lo esperado.</li>
-</ul>
-<p>Realizar <strong>al menos</strong> 3 experimentos distintos.</p>
-<h2 id="entrega">Entrega</h2>
+  <li>
+    ¿Cómo les va a los equipos chicos (de menor ataque y defensa) en ambos
+    sistemas?
+  </li>
+  <li>¿Podrían concluir algo de la comparación entre ambos sistemas?</li>
+</ol>
+<h2>Entrega</h2>
 <p>
   La entrega se hace pusheando al repositorio creado por github classroom, y
   enviando el hash del commit en una entrega del campus.
 </p>
-<h2 id="evaluación">Evaluación</h2>
+<h2>Evaluación</h2>
 <p>
   Se va a evaluar por código funcional y legible para otras personas.
   <strong>Hay reentrega</strong>. En la reentrega pueden corregir y agregar
@@ -196,3 +215,10 @@ export const partial = true;
   <li>9: Partes A, B y C</li>
   <li>10: Partes A, B, C y D</li>
 </ul>
+<ImportantBox>
+  <p>
+    Para tener la actividad entregada, tienen que pushear y entregar el hash del
+    commit. Si faltan cualquiera de las 2 cosas no se los voy a poder corregir y
+    van a tener un uno hasta que reentreguen.
+  </p>
+</ImportantBox>
