@@ -1,0 +1,45 @@
+---
+import CodeBlock from "../../../../../components/articles/code-block/CodeBlock.astro";
+
+export const partial = true;
+---
+
+<p>
+  Con agregar/quitar elementos a la lista de peliculas, el programa sigue
+  andando
+</p>
+
+<CodeBlock
+  code={String.raw`
+boleteria_abierta = True
+peliculas = [
+    {"nombre":"Relatos Salvajes","precio":600,"cant_vendida":0},
+    {"nombre":"Esperando la Carroza","precio":400,"cant_vendida":0},
+    {"nombre":"El secreto de sus ojos","precio":500,"cant_vendida":0},
+    {"nombre":"Un cuento chino","precio":300,"cant_vendida":0},
+    {"nombre":"Nueve reinas","precio":700,"cant_vendida":0}
+             ]
+
+texto = "Elija una función: \n"
+for i,peli in enumerate(peliculas):
+    texto += f"{i + 1}) {peli["nombre"]} ({peli["precio"]})p\n"
+texto += f"{len(peliculas) + 1}) Cerrar boletería\n"
+
+while(boleteria_abierta):
+    opcion = int(input(texto))
+    if opcion >= 1 and opcion <= len(peliculas):
+        peliculas[opcion - 1]["cant_vendida"] += 1
+    elif opcion == len(peliculas) + 1:
+        boleteria_abierta = False
+        print ("Resumen de las ventas:")
+        total = 0
+        for peli in peliculas:
+            total += peli["cant_vendida"]*peli["precio"]
+            print (f"{peli["nombre"]}: {peli["cant_vendida"]}")
+        print (f"Total recaudado: {total}p")
+    else:
+        print ("La opción elegida no es válida")
+
+`}
+  lang="python"
+/>
