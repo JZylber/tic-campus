@@ -14,7 +14,6 @@ interface Item {
 }
 
 const { course, subject, items } = Astro.props;
-
 ---
 
 <nav
@@ -48,7 +47,7 @@ const { course, subject, items } = Astro.props;
         </div>
         <template x-for="(item,index) in items">
           <div
-            @click="$store.section.changeSection(item.name,index); open = false"
+            @click="$store.section.changeSection(item.name,index); open = false; $dispatch('changedsection')"
             class="flex h-[calc(28px+var(--spacing)*4)] items-center p-2 cursor-pointer gap-x-4 z-10"
           >
             <span
