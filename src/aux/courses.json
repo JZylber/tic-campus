@@ -78,5 +78,15 @@
     "props": {
       "dataSheetId": "1VZ_KPk4aZJFPlAgx188y0wW8p3psbbtZgix1L8a-5kE"
     }
+  },
+  {
+    "params": {
+      "subject": "Materia de Prueba",
+      "course": "NR5Z",
+      "year": 0
+    },
+    "props": {
+      "dataSheetId": "1ppAnySYCXVRyJtXem9A-d3uZzujJVYVSTun_lI6yZWo"
+    }
   }
 ]
