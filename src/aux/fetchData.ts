@@ -334,12 +334,12 @@ export const getRedos = async (
   const activitiesRedoQuery = getSheetData({
     sheetID: dataSheetId,
     sheetName: `Reentrega A${year}`,
-    query: `SELECT A,F WHERE B = FALSE`,
+    query: `SELECT A,F WHERE B != TRUE`,
   });
   const marksRedoQuery = getSheetData({
     sheetID: dataSheetId,
     sheetName: `Reentrega N${year}`,
-    query: `SELECT A,F WHERE B = FALSE`,
+    query: `SELECT A,F WHERE B != TRUE`,
   });
   const [activitiesRedo, marksRedo] = await Promise.all([
     activitiesRedoQuery,
