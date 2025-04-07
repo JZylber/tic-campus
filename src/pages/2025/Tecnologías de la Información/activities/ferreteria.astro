@@ -1,7 +1,19 @@
 ---
+import InlineCodeBlock from "../../../../components/articles/code-block/InlineCodeBlock.astro";
+
 export const partial = true;
 ---
 
+<h2>Introducción</h2>
+<p>
+  En la película Un Cuento Chino, el personaje de Ricardo Darín es un ferretero.
+  Como toda ferretería, hay un montón de clientes un poco pesados. Les dejo un
+  compilado de fragmentos de la película: <a
+    href="https://www.youtube.com/watch?v=zfAz8Qx8uw0"
+    class="uppercase underline text-sh-blue">Video</a
+  >
+</p>
+<h2>Consigna</h2>
 <p>
   Están reemplazando a Darín en su ferretería, y se sabe que lo clientes no
   tienen en claro que pedir. Para eso, Darín nos dejó una tabla de traducción,
@@ -76,8 +88,9 @@ export const partial = true;
   Debe responder a tanto los pedidos correctos como confusos. Por ejemplo, si el
   cliente pide un "alicate" (correcto) como "alicante" (confusos) se debe decir
   1000p. Limitarse a los pedidos confusos de la tabla. El pedido del cliente
-  debe ingresarse por <code>prompt</code> y el resultado debe devolverse por
-  <code>alert</code>.
+  debe ingresarse por <InlineCodeBlock code="prompt()" lang="javascript" /> y el
+  resultado debe devolverse por
+  <InlineCodeBlock code="alert()" lang="javascript" />.
 </p>
 <h2>Extras</h2>
 <p>
@@ -102,6 +115,6 @@ export const partial = true;
 </ul>
 <h2>Entrega</h2>
 <p>
-  Se deben entregar dos archivos, el html y el js asociado que resuelven la
-  consigna. Para entregarlos en el campus, deben comprimirlo como un único .zip.
+  La entrega se hace simplemente realizando un commit y un push al repo
+  otorgado.
 </p>
