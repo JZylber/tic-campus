@@ -1,5 +1,6 @@
 ---
 import CodeBlock from "../../../../components/articles/code-block/CodeBlock.astro";
+import InlineCodeBlock from "../../../../components/articles/code-block/InlineCodeBlock.astro";
 
 export const partial = true;
 ---
@@ -29,11 +30,8 @@ export const partial = true;
 </p>
 <ol>
   <li>
-    Crear un archivo html y otro archivo js. Linkear el archivo js en el html
-  </li>
-  <li>
     Declarar 2 variables que representan los datos recibidos, y tomar sus
-    valores con <code>prompt</code>
+    valores con <InlineCodeBlock code="prompt()" lang="javascript" />
     <ul>
       <li>El producto a comprar: "factura","empanada","canastita","masita"</li>
       <li>La cantidad</li>
@@ -42,7 +40,8 @@ export const partial = true;
   <li>
     Hacer un programa que, <strong>con un único nivel de if</strong> (es decir, sin
     ifs dentro ifs), que devuelva el precio de la compra. Solo se puede comprar un
-    producto. Usar un <code>alert</code> para reflejar dicho precio
+    producto. Usar un <InlineCodeBlock code="alert()" lang="javascript" /> para reflejar
+    dicho precio
   </li>
 </ol>
 <h2>Consigna Manija</h2>
@@ -84,16 +83,13 @@ if(!(valorBotín < 10000 || fueRobadoReciente)){
   lang="javascript"
 />
 <p>
-  Modificar el código
-  <p>
-    Modificar el código usando las leyes de De Morgan para que en vez de la
-    condicion del if usar un o, use un y. Algunas otras propiedades de booleanos
-    que les pueden servir:
-  </p>
-  <ul>
-    <li>no(no(A)) = A</li>
-    <li>
-      no(A &gt; n) = A &le; n (y pueden deducir con menor también, es similar)
-    </li>
-  </ul>
+  Modificar el código usando las leyes de De Morgan para que en vez de la
+  condicion del if usar un o, use un y. Algunas otras propiedades de booleanos
+  que les pueden servir:
 </p>
+<ul>
+  <li>no(no(A)) = A</li>
+  <li>
+    no(A &gt; n) = A &le; n (y pueden deducir con menor también, es similar)
+  </li>
+</ul>
