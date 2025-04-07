@@ -1,0 +1,17 @@
+---
+interface Props {
+  message: string;
+}
+const { message } = Astro.props;
+---
+
+<div class="flex flex-col items-center justify-center h-screen gap-y-4">
+  <span
+    class="material-symbols-outlined !text-[150px] md:!text-[200px] text-sh-red"
+    x-text="'sentiment_very_dissatisfied'"></span>
+  <h2 class="text-[30px] font-bold">Hubo un error</h2>
+  <p class="text-[16px] md:text-[20px] text-center">
+    Recargá la página. Si sigue tirando error, avisale a él/la profe.
+  </p>
+  <p>Mensaje de error: <span x-text={message}></span></p>
+</div>

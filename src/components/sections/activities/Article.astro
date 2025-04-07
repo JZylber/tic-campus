@@ -1,4 +1,5 @@
 ---
+import Error from "../../articles/error/Error.astro";
 import Loader from "../../loader/Loader.astro";
 
 interface Props {
@@ -13,7 +14,7 @@ const { open, articleURL, content, course } = Astro.props;
 
 <article
   x-show={`$store.section.currentSection === 'actividades' && ${open} && ${content} !== null`}
-  x-data="{ loading: true}"
+  x-data="{ loading: true, error: false, errorMessage: '' }"
   class="absolute top-0 left-0 w-full h-full bg-gray-50 overflow-y-scroll flex flex-col py-4 px-8"
   x-transition:enter="transition ease-in duration-500"
   x-transition:enter-start="translate-x-full border-l border-gray-400"
@@ -23,10 +24,26 @@ const { open, articleURL, content, course } = Astro.props;
   x-transition:leave-end="translate-x-full border-l border-gray-400"
   x-effect={`
     if(${content} !== null){
+        $refs.content.innerHTML = '';
         loading = true;
-        $refs.content.innerHTML = await fetchHTMLData(${articleURL});
-        loading = false;}
-        `}
+        try {
+          const response = await fetch(${articleURL});
+          if (!response.ok) {
+            throw new Error(response.statusText,{
+              message: response.statusText,
+              cause: response.status,
+            });
+          }
+          $refs.content.innerHTML = await response.text();
+          error = false;
+        } catch (err) {
+          error = true;
+          errorMessage = err.cause + ' - ' + err.message;
+        } finally {
+          loading = false;
+        }
+      }
+`}
 >
   <div
     class="flex justify-between w-full items-center pb-2 mb-2 border-b-2 border-gray-300"
@@ -72,7 +89,10 @@ const { open, articleURL, content, course } = Astro.props;
     </div>
   </div>
   <Loader show="loading" />
-  <div x-show="!loading" class="flex flex-col gap-y-4">
+  <template x-if="error">
+    <Error message="errorMessage" />
+  </template>
+  <div x-show="!(loading || error)" class="flex flex-col gap-y-4">
     <div class="flex flex-col md:flex-row justify-between items-center">
       <div
         class="order-2 md:order-1 self-stretch flex flex-col justify-center gap-y-2"
