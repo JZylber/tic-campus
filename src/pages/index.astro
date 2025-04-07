@@ -103,6 +103,20 @@ const availableCourses: Course[] = [
     division: "CD",
     year: 2025,
   },
+  {
+    name: "3CD",
+    subject: "Proyecto",
+    grade: 3,
+    division: "CD",
+    year: 2025,
+  },
+  {
+    name: "NR5Z",
+    subject: "Materia de Prueba",
+    grade: 5,
+    division: "Z",
+    year: 0,
+  },
 ];
 
 const years = availableCourses.map((course) => course.year);
@@ -168,7 +182,7 @@ filterableCourses.sort((a, b) => {
       <form
         x-data={`{year: ${uniqueYears[0].value}, grade: undefined, visibleCourses: []}`}
         class="flex flex-col gap-y-4 w-full px-8"
-        x-effect=`if(year && grade)visibleCourses = ${JSON.stringify(filterableCourses)}.filter(course => course.year === year && course.grade === grade)`
+        x-effect=`if(year !== undefined && grade !== undefined){visibleCourses = ${JSON.stringify(filterableCourses)}.filter(course => course.year === year && course.grade === grade)}`
       >
         <div class="flex flex-col gap-y-4 py-2 md:flex-row md:gap-x-8 w-full">
           <Select
@@ -193,9 +207,10 @@ filterableCourses.sort((a, b) => {
         >
           <span
             class="w-full font-bold text-[20px] text-center"
-            x-show="!(year && grade)">Elegí el año y el año escolar</span
+            x-show="year === undefined || grade === undefined"
+            >Elegí el año y el año escolar</span
           >
-          <template x-if="year && grade">
+          <template x-if="visibleCourses.length > 0">
             <template x-for="course in visibleCourses">
               <div class="flex flex-col gap-2 w-full">
                 <span
