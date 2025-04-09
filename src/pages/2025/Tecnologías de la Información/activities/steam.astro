@@ -6,8 +6,7 @@ export const partial = true;
 
 <h2>Consigna</h2>
 <p>
-  Los precios en steam están nuevamente dolarizados. ¿Cuánto sale un juego en
-  realidad?
+  Los precios en steam están dolarizados. ¿Cuánto sale un juego en realidad?
 </p>
 <p>
   El precio en pesos de un juego está determinado por el dólar tarjeta, que se
@@ -34,10 +33,14 @@ export const partial = true;
 <ol>
   <li>
     Crear un archivo html y otro archivo js. Linkear el archivo js en el html
+    usando el tag <InlineCodeBlock
+      code="<script src='nombre_de_archivo.js'></script>"
+      lang="html"
+    />.
   </li>
   <li>
     Pedir ingresar el precio en dólares de un juego mediante
-    <InlineCodeBlock code="prompt" lang="javascript" /> y guardarlo en una variable.
+    <InlineCodeBlock code="prompt()" lang="javascript" /> y guardarlo en una variable.
   </li>
   <li>
     Calcular el precio en pesos siguiendo las reglas descritas anteriormente y
@@ -50,7 +53,7 @@ export const partial = true;
 <p>
   En videojuegos, hay stats (valores para habilidades) que suben o bajan por
   distintos factores. Para evitar que excedan valores deseados, ya sea números
-  muy grandes o muy chicos, se <i>clampean</i> esos valores, es decir, se les pone
+  muy grandes o muy chicos, se <em>clampean</em> esos valores, es decir, se les pone
   un piso y un techo. Si superan esos valores, se los restringe a esos límites. Por
   ejemplo, supongamos que quiero que un determinado valor no sea mayor a 60 y no
   sea menor a 0. Para valores más grandes como 70 se los deja en 60, para valores
@@ -79,10 +82,10 @@ export const partial = true;
 <p>Escribir código para <em>clampear</em> un número entre 0 y 60.</p>
 <ol>
   <li>
-    Crear un archivo html y otro archivo js. Linkear el archivo js en el html
+    Crear otro archivo html y otro archivo js. Linkear el archivo js en el html
   </li>
   <li>
-    Ingresar mediante <InlineCodeBlock code="prompt" lang="javascript" /> el número
+    Ingresar mediante <InlineCodeBlock code="prompt()" lang="javascript" /> el número
     a clampear y guardar en una variable
   </li>
   <li>Googleen como hacer máximos y mínimos en javascript</li>
