@@ -61,6 +61,7 @@ const { subject, course, year, position } = Astro.props;
                 >
                   <span class="max-md:hidden flex justify-between items-center">
                     <span
+                      x-show="content.type !== 'Actividad'"
                       class="material-symbols-outlined text-[24px]"
                       x-text="(()=>{switch(content.type) {
                           case 'Actividad': return 'build';
@@ -71,6 +72,11 @@ const { subject, course, year, position } = Astro.props;
                         }})()"
                     >
                     </span>
+                    <img
+                      x-show="content.type === 'Actividad'"
+                      class="w-[24px] h-[24px]"
+                      :src="$store.baseURL.dataURL + '/icons/shovel.svg'"
+                    />
                   </span>
                   <div
                     class="flex flex-col grow md:flex-row gap-x-4 md:ml-4 items-center"
