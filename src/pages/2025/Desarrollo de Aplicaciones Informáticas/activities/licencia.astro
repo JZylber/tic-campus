@@ -1,5 +1,6 @@
 ---
 import CodeBlock from "../../../../components/articles/code-block/CodeBlock.astro";
+import InlineCodeBlock from "../../../../components/articles/code-block/InlineCodeBlock.astro";
 
 export const partial = true;
 ---
@@ -17,19 +18,16 @@ export const partial = true;
 <h2>Explicación del programa</h2>
 <ol>
   <li>
-    <p>
-      Se toma un archivo csv con la información de las sedes (<code
-        >cargar_csv</code
-      >)
-    </p>
+    Se toma un archivo csv con la información de las sedes (<InlineCodeBlock
+      lang="python"
+      code="cargar_csv(nombreArchivo: str)"
+    />)
   </li>
   <li>
-    <p>
-      Con los datos, se construye una lista de sedes, donde cada sede es un
-      diccionario:
-    </p>
+    Con los datos, se construye una lista de sedes, donde cada sede es un
+    diccionario:
     <CodeBlock
-      language="python"
+      lang="python"
       code={`Sede = {
         'nombre': str,
         'actividad': str,
@@ -38,88 +36,111 @@ export const partial = true;
         'impresiones': int
       }`}
     />
-
-    <p>
-      <code>impresiones</code> no se incluye, solo aparece si al menos alguien averigua
-      por dicha sede.
-    </p>
+    <InlineCodeBlock lang="python" code="impresiones" /> no se incluye, solo aparece
+    si al menos alguien averigua por dicha sede.
   </li>
   <li>
-    <p>Se construyen otros 2 diccionarios a modo de índice:</p>
+    Se construyen otros 2 diccionarios a modo de índice:
     <ul>
       <li>
-        <code>sedes_por_barrio</code>: Toma la lista de sedes, y construye un
-        diccionario con pares <code>barrio:lista de sedes</code>
+        <InlineCodeBlock
+          lang="python"
+          code="sedes_por_barrio(sedes : list[Sede])"
+        />: Toma la lista de sedes, y construye un diccionario con pares <InlineCodeBlock
+          lang="python"
+          code="{'barrio': list[Sede]}"
+        />. Las claves son los barrios y los valores son listas de sedes.
       </li>
       <li>
-        <code>sedes_por_actividad</code>: Toma la lista de sedes, y construye un
-        diccionario con pares <code>actividad:lista de sedes</code>
+        <InlineCodeBlock
+          lang="python"
+          code="sedes_por_actividad(sedes : list[Sede])"
+        />: Toma la lista de sedes, y construye un diccionario con pares <InlineCodeBlock
+          lang="python"
+          code="{'actividad': list[Sede]}"
+        />. Las claves son las actividades y los valores son listas de sedes.
       </li>
     </ul>
   </li>
   <li>
-    <p>
-      Se le pide al usuario que ingrese una opcion, entre elegir por barrio, por
-      actividad, o terminar el programa
-    </p>
+    Se le pide al usuario que ingrese una opcion, entre elegir por barrio, por
+    actividad, o terminar el programa
   </li>
   <li>
-    <p>
-      En caso de que se elija barrio o actividad, se llama a la función
-      <code>seleccionar_desde_opciones</code> que permite seleccionar una sede desde
-      alguno de los diccionarios índice (<code>por barrio</code> o
-      <code>por actividad</code>)
-    </p>
+    En caso de que se elija barrio o actividad, se llama a la función
+    <InlineCodeBlock
+      lang="python"
+      code="seleccionar_desde_opciones(opciones : dict[str, list[Sede]])"
+    />. que permite seleccionar una sede desde alguno de los diccionarios índice
+    (<InlineCodeBlock lang="python" code="por_barrio" /> o
+    <InlineCodeBlock lang="python" code="por_actividad" />)
   </li>
+  <li>Se muestra la información de la sede y se marca la impresión/vista</li>
   <li>
-    <p>Se muestra la información de la sede y se marca la impresión/vista</p>
-  </li>
-  <li>
-    <p>
-      Al finalizar el programa, se muestran los nombres de las sedes y sus
-      impresiones/vistas.
-    </p>
+    Al finalizar el programa, se muestran los nombres de las sedes y sus
+    impresiones/vistas.
   </li>
 </ol>
 <h2>Consigna</h2>
 <p>Reconstruir el programa creando las funciones perdidas:</p>
 <ul>
   <li>
-    <code>sedes_por_barrio</code>: Toma la lista de sedes, y construye un
-    diccionario con pares <code>barrio:lista de sedes</code>.
+    <InlineCodeBlock
+      lang="python"
+      code="sedes_por_barrio(sedes : list[Sede])"
+    />: Toma la lista de sedes, y construye un diccionario con pares <InlineCodeBlock
+      lang="python"
+      code="{'barrio': list[Sede]}"
+    />. Las claves son los barrios y los valores son listas de sedes.
   </li>
   <li>
-    <code>sedes_por_actividad</code>: Toma la lista de sedes, y construye un
-    diccionario con pares <code>actividad:lista de sedes</code>.
+    <InlineCodeBlock
+      lang="python"
+      code="sedes_por_actividad(sedes : list[Sede])"
+    />: Toma la lista de sedes, y construye un diccionario con pares <InlineCodeBlock
+      lang="python"
+      code="{'actividad': list[Sede]}"
+    />. Las claves son las actividades y los valores son listas de sedes.
   </li>
   <li>
-    <code>marcar_impresion</code>: Toma una sede y marca que alguien realizó una
-    impresión/vista. Recuerden que las sedes no tienen la clave
-    <code>impresiones</code> si nadie consultó por ella hasta ahora.
+    <InlineCodeBlock lang="python" code="sedes_por_actividad(sede : Sede)" />:
+    Toma una sede y marca que alguien realizó una impresión/vista. Recuerden que
+    las sedes no tienen la clave
+    <InlineCodeBlock lang="python" code="impresiones" />: si nadie consultó por
+    ella hasta ahora.
   </li>
 </ul>
 <h2>Extra</h2>
 <ol>
   <li>
-    <code>sedes_por_barrio</code> y <code>sedes_por_actividad</code> son muy parecidas.
-    ¿Se animan a hacerlas una única función?
+    <InlineCodeBlock
+      lang="python"
+      code="sedes_por_barrio(sedes : list[Sede])"
+    />: y <InlineCodeBlock
+      lang="python"
+      code="sedes_por_actividad(sedes : list[Sede])"
+    />: son muy parecidas. ¿Se animan a hacerlas una única función?
   </li>
   <li>
     Opciones 1 y 2 son muy parecidas. Modificar el programa para que no haga
-    falta usar <code>if</code> para distinguir entre opciones 1 y 2, osea, en vez
-    de tener
-    <pre><code class="language-python">if opcion == 1:
+    falta usar <em>if</em> para distinguir entre opciones 1 y 2, osea, en vez de
+    tener
+    <CodeBlock
+      lang="python"
+      code={`if opcion == 1:
     # Cosas que hace opcion 1
 elif opcion == 2:
     # Cosas que hace opcion 2
 elif opcion == 3:
-    # Terminar el programa
-</code></pre>
-    tener algo así:
-    <pre><code class="language-python">if opcion &gt;= 1 and opcion &lt;= 2:
-    # Cosas que hace opcion 1 o opcion 2
-elif opcion == 3:
-    # Terminar el programa
-</code></pre>
+    # Terminar el programa`}
+    />
   </li>
+  tener algo así:
+  <CodeBlock
+    lang="python"
+    code={`if opcion >= 1 and opcion <= 2:
+    # Cosas que hace opcion 1 u opcion 2
+elif opcion == 3:
+    # Terminar el programa`}
+  />
 </ol>
