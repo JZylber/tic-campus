@@ -1,0 +1,123 @@
+---
+import CodeBlock from "../../../../../components/articles/code-block/CodeBlock.astro";
+import InlineCodeBlock from "../../../../../components/articles/code-block/InlineCodeBlock.astro";
+
+export const partial = true;
+---
+
+<p>
+  ¿Qué ocurre cuando le pasamos parámetros a una función? Pareciese que lo
+  resuelve el lenguaje y no tenemos que preocuparnos demasiado, pero hay unos
+  aspectos importantes que tenemos que tener en cuenta para poder trabajar en
+  python.
+</p>
+<h2>Pasaje por copia</h2>
+<p>
+  Cuando pensamos una función, pensamos en una caja negra. Le pasamos cosas,
+  hace cosas, pero no afecta nada fuera de ella salvo por el resultado obtenido.
+</p>
+<p>
+  Veamos el siguiente ejemplo. Una función que suma 1, a la que le paso la
+  variable a.
+</p>
+<CodeBlock
+  lang="python"
+  code={`def suma1(x):
+    x = x + 1
+    return x
+a = 5
+print(suma1(a)) # 6
+print(a) # 5
+`}
+/>
+<p>
+  Como vemos, a pesar de que x suma y asigna, el valor original de a no se ve
+  afectado, sigue valiendo 5. Esto se llama <em>pasaje por copia</em>, ya que el
+  argumento es una copia del valor, y todo lo que ocurra con este dentro de la
+  función solo se va a reflejar en el resultado de la función, no en el valor
+  original.
+</p>
+<h2>Pasaje por referencia</h2>
+<p>
+  Veamos ahora un caso similar. Solo que ahora, en vez de sumar 1, agrego 1 a la
+  lista. Debería pasar algo similar, ¿no?
+</p>
+<CodeBlock
+  lang="python"
+  code={`def agrego1(x):
+    x.append(1)
+    return x
+a = [5]
+print(agrego1(a)) # [5, 1]
+print(a) # [5, 1]
+`}
+/>
+<p>
+  ¡Epa! ¡El valor original fue modificado! Esto se debe a que se pasó el
+  parámetro por <em>referencia</em>, es decir, se pasó una referencia al objeto,
+  y no una copia de él. Por lo tanto, cualquier modificación que se haga dentro
+  de la función se verá reflejada en el valor original.
+</p>
+<p>
+  Pero... No especificaste nada distinto al ejemplo anterior. ¿Como sé que va a
+  pasar?
+</p>
+<p>
+  <h2>¿Cuando se hace cada uno?</h2>
+  <p>
+    <strong>Depende del tipo de datos</strong>. Python pasa por copia los
+    llamados <em>objetos inmutables</em>, como:
+  </p>
+  <ul>
+    <li>números: enteros y floats</li>
+    <li>booleanos</li>
+    <li>strings</li>
+  </ul>
+  <p>Y por referencia se pasan los llamados <em>objetos mutables</em>, como:</p>
+  <ul>
+    <li>listas</li>
+    <li>diccionarios</li>
+    <li>objetos</li>
+  </ul>
+  <h2>Esquivando el pasaje por referencia</h2>
+  <p>
+    Si quiero pasar un <em>objeto mutable</em> por copia, es decir que la función
+    lo modifique a gusto sin afectar al valor a original, tengo que copiar explícitamente
+    a dicho parámetro.
+  </p>
+  <p>
+    Para copiar un objeto, python cuenta con funciones de copia. Estas pueden
+    hacer una copia poco profunda (<InlineCodeBlock
+      lang="python"
+      code="object.copy()"
+    />) o una copia profunda (<InlineCodeBlock
+      lang="python"
+      code="object.deepcopy()"
+    />) . La diferencia es que la copia poco profunda copia el objeto, pero no
+    los objetos que contiene. En cambio, la copia profunda copia el objeto y
+    todos los objetos que contiene, y así sucesivamente. Por ejemplo, si tengo
+    una lista de listas, la copia poco profunda copia la lista, pero no las
+    listas que contiene. En cambio, la copia profunda copia la lista y las
+    listas que contiene, y así sucesivamente.
+  </p>
+  <p>
+    Para entender cuando se hace cada tipo de copia, y como hacerlas en python,
+    pueden leer más en el siguiente link: <a
+      href="https://www.programiz.com/python-programming/shallow-deep-copy"
+      class="underline text-sh-blue"
+      >https://www.programiz.com/python-programming/shallow-deep-copy</a
+    >.
+  </p>
+  <h2>Corolario pretencioso</h2>
+  <p>
+    Esta sección es una manijez y está escrita para que los manijas no me
+    chillen. Python en realidad no es ni pasaje por copia ni pasaje por
+    referencia. Es <em>pasaje por asignación</em>, que explica mejor la
+    racionalidad de todo este sistema. Si tienen ganas de investigar, el
+    siguiente artículo va más en detalle: <a
+      href="https://medium.com/@devyjoneslocker/understanding-pythons-pass-by-assignment-in-the-backdrop-of-pass-by-value-vs-9f5cc602f943"
+      class="underline text-sh-blue"
+      >https://medium.com/@devyjoneslocker/understanding-pythons-pass-by-assignment-in-the-backdrop-of-pass-by-value-vs-9f5cc602f943</a
+    >.
+  </p>
+</p>
