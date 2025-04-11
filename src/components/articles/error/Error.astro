@@ -13,5 +13,5 @@ const { message } = Astro.props;
   <p class="text-[16px] md:text-[20px] text-center">
     Recargá la página. Si sigue tirando error, avisale a él/la profe.
   </p>
-  <p>Mensaje de error: <span x-text={message}></span></p>
+  <p x-text={message}></p>
 </div>

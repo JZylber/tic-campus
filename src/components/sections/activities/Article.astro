@@ -29,16 +29,21 @@ const { open, articleURL, content, course } = Astro.props;
         try {
           const response = await fetch(${articleURL});
           if (!response.ok) {
-            throw new Error(response.statusText,{
-              message: response.statusText,
-              cause: response.status,
-            });
+            let message = '';
+            if(response.status = 404) {
+              message = '(404) No se encontró la página para "' + ${content}.name + '"';
+            } else if(response.status = 500) {
+              message = '(500) Error interno del servidor';
+            } else {
+              message = '(' + response.status + ') Error desconocido';
+            }
+            throw new Error(message);
           }
           $refs.content.innerHTML = await response.text();
           error = false;
         } catch (err) {
           error = true;
-          errorMessage = err.cause + ' - ' + err.message;
+          errorMessage = err
         } finally {
           loading = false;
         }
