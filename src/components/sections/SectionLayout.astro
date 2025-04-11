@@ -4,9 +4,10 @@ import BreadCrumbs from "./BreadCrumbs.astro";
 interface Props {
   name: string;
   position: number;
+  xInit?: string;
 }
 
-const { name, position } = Astro.props;
+const { name, position, xInit } = Astro.props;
 ---
 
 <section
@@ -17,7 +18,7 @@ const { name, position } = Astro.props;
   [&::-webkit-scrollbar-thumb]:rounded-full
   [&::-webkit-scrollbar-thumb]:bg-sh-gray"
   :style="`transform: translateY(calc(100%*${offset}))`"
-  x-init=`$watch('$store.section.currentSectionIndex', (value) => {offset = ${position} - value;$el.scrollTop = 0})`
+  x-init=`$watch('$store.section.currentSectionIndex', (value) => {offset = ${position} - value;$el.scrollTop = 0});${xInit}`
 >
   <BreadCrumbs />
   <slot />

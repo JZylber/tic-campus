@@ -10,7 +10,177 @@ interface Props {
 const { position, subject } = Astro.props;
 ---
 
-<SectionLayout name="nota" position={position}>
+<script>
+  import {
+    getActivitiesAndMarks,
+    getRedos,
+    getSubjectMarkingCriteria,
+  } from "../../../aux/fetchData";
+  import type { Activity, MarkedActivity } from "../../../aux/types";
+  import { round } from "../../../entrypoint";
+
+  document.addEventListener("alpine:init", () => {
+    Alpine.store("marks", {
+      activities: [],
+      marks: [],
+      markData: {
+        finalMark: null,
+        averageMark: 0,
+        proportion: 1,
+        activities: {
+          markContribution: 0,
+          total: 0,
+          done: 0,
+        },
+        markedActivities: {
+          markContribution: 0,
+          total: 0,
+          passed: 0,
+        },
+      },
+      regularActivities() {
+        return this.activities.filter(
+          (activity) => !activity.special && !activity.inRevision
+        );
+      },
+      specialActivities() {
+        return this.activities.filter((activity) => activity.special);
+      },
+      markedActivities() {
+        return this.marks.filter((activity) => !activity.inRevision);
+      },
+      allMarkedActivitiesPassed() {
+        return this.markedActivities().every((activity) => activity.mark >= 6);
+      },
+      allSpecialActivitiesDone() {
+        return this.specialActivities().every((activity) => activity.done);
+      },
+      async calculateMarks(
+        dataSheetId: string,
+        subject: string,
+        course: string,
+        student: {
+          name: string;
+          surname: string;
+          id: number;
+        }
+      ) {
+        let [{ activities, marks }, { proportion, specialActivities }, redos] =
+          await Promise.all([
+            getActivitiesAndMarks(student.id, dataSheetId),
+            getSubjectMarkingCriteria(subject, dataSheetId),
+            getRedos(
+              parseInt(course.slice(2)),
+              student.name,
+              student.surname,
+              dataSheetId
+            ),
+          ]);
+        this.activities = activities.map((activity) => ({
+          ...activity,
+          inRevision: redos.includes(activity.id),
+          special: specialActivities.includes(activity.id),
+        }));
+        this.marks = marks.map((mark) => ({
+          ...mark,
+          inRevision: redos.includes(mark.id),
+        }));
+        this.markData.proportion = proportion;
+        // Esta cuenta no tiene en cuenta que un estudiante pueda estar en múltiples materias
+        this.markData.activities.total = this.regularActivities().length;
+        this.markData.markedActivities.total = this.markedActivities().length;
+        this.markData.activities.done = this.regularActivities().filter(
+          (activity) => activity.done
+        ).length;
+        this.markData.markedActivities.passed = this.markedActivities().filter(
+          (activity) => activity.mark >= 6
+        ).length;
+        this.markData.activities.markContribution =
+          this.markData.activities.total > 0
+            ? round(
+                (this.markData.activities.done /
+                  this.markData.activities.total) *
+                  (1 - proportion) *
+                  10,
+                2
+              )
+            : 10 * (1 - proportion);
+        this.markData.markedActivities.markContribution =
+          this.markData.markedActivities.total > 0
+            ? round(
+                (this.marks
+                  .filter((activity) => !redos.includes(activity.id))
+                  .reduce((acc, m) => acc + m.mark, 0) /
+                  this.markData.markedActivities.total) *
+                  proportion,
+                2
+              )
+            : (this.markData.activities.markContribution / (1 - proportion)) *
+              proportion;
+        this.markData.averageMark = round(
+          this.markData.activities.markContribution +
+            this.markData.markedActivities.markContribution,
+          2
+        );
+        const allSpecialActivitiesDone = this.allSpecialActivitiesDone();
+        const allMarkedActivitiesPassed = this.allMarkedActivitiesPassed();
+        this.markData.finalMark =
+          allSpecialActivitiesDone && allMarkedActivitiesPassed
+            ? Math.round(this.markData.averageMark)
+            : Math.min(4, Math.round(this.markData.averageMark));
+        if (
+          this.markData.activities.total === 0 &&
+          this.markData.markedActivities.total === 0
+        ) {
+          this.markData.finalMark = null;
+        } else {
+          this.markData.finalMark = Math.min(
+            Math.max(1, this.markData.finalMark),
+            10
+          );
+        }
+      },
+    } as {
+      activities: any[];
+      marks: any[];
+      markData: {
+        finalMark: number | null;
+        averageMark: number;
+        proportion: number;
+        activities: {
+          markContribution: number;
+          total: number;
+          done: number;
+        };
+        markedActivities: {
+          markContribution: number;
+          total: number;
+          passed: number;
+        };
+      };
+      regularActivities: () => Array<Activity>;
+      specialActivities: () => Array<Activity>;
+      markedActivities: () => Array<MarkedActivity>;
+      allSpecialActivitiesDone: () => boolean;
+      allMarkedActivitiesPassed: () => boolean;
+      calculateMarks: (
+        dataSheetId: string,
+        subject: string,
+        course: string,
+        student: {
+          name: string;
+          surname: string;
+          id: number;
+        }
+      ) => Promise<void>;
+    });
+  });
+</script>
+<SectionLayout
+  name="nota"
+  position={position}
+  xInit=`$watch('$store.student.id', (id) => {if(id !== -1){$store.marks.calculateMarks(dataSheetId, '${subject}', $store.student.course, {name:$store.student.name,surname:$store.student.surname,id:id})}})`
+>
   <h1 class="text-[36px] font-bold text-center p-4">Nota</h1>
   <div class="flex flex-col md:flex-row gap-x-8 pt-4 md:pb-4 justify-center">
     <div
@@ -19,25 +189,25 @@ const { position, subject } = Astro.props;
       <div
         class="rounded-2xl text-white grow flex flex-col gap-y-1 p-2 justify-center items-center"
         x-bind:class="{
-          'bg-sh-green': $store.student.markData.finalMark >= 6,
-          'bg-sh-red': $store.student.markData.finalMark < 6
+          'bg-sh-green': $store.marks.markData.finalMark >= 6,
+          'bg-sh-red': $store.marks.markData.finalMark < 6
         }"
       >
         <span
           class="text-[48px] font-bold"
-          x-text="$store.student.markData.finalMark"></span>
+          x-text="$store.marks.markData.finalMark"></span>
         <span
           class="text-[24px] font-semibold"
-          x-text="$store.student.markData.finalMark >= 6 ? 'Aprobado' : 'En Proceso'"
+          x-text="$store.marks.markData.finalMark >= 6 ? 'Aprobado' : 'En Proceso'"
         ></span>
       </div>
       <div class="flex items-center gap-x-2 md:gap-x-4">
         <span
           class="material-symbols-outlined"
-          x-text="$store.student.markData.averageMark >= 6 ? 'check_circle' : 'cancel'"
+          x-text="$store.marks.markData.averageMark >= 6 ? 'check_circle' : 'cancel'"
           x-bind:class="{
-          'text-sh-green': $store.student.markData.averageMark >= 6,
-          'text-sh-red': $store.student.markData.averageMark < 6
+          'text-sh-green': $store.marks.markData.averageMark >= 6,
+          'text-sh-red': $store.marks.markData.averageMark < 6
             }"
         ></span>
         <span class="text-[14px] md:text-[18px] text-gray-600 shrink-0"
@@ -47,10 +217,10 @@ const { position, subject } = Astro.props;
       <div class="flex items-center gap-x-2 md:gap-x-4">
         <span
           class="material-symbols-outlined"
-          x-text="$store.student.allMarkedActivitiesPassed() ? 'check_circle' : 'cancel'"
+          x-text="$store.marks.allMarkedActivitiesPassed() ? 'check_circle' : 'cancel'"
           x-bind:class="{
-          'text-sh-green': $store.student.allMarkedActivitiesPassed(),
-          'text-sh-red': !$store.student.allMarkedActivitiesPassed()
+          'text-sh-green': $store.marks.allMarkedActivitiesPassed(),
+          'text-sh-red': !$store.marks.allMarkedActivitiesPassed()
             }"
         ></span>
         <span class="text-[14px] md:text-[18px] text-gray-600 shrink-0"
@@ -60,10 +230,10 @@ const { position, subject } = Astro.props;
       <div class="flex items-center gap-x-2 md:gap-x-4">
         <span
           class="material-symbols-outlined"
-          x-text="$store.student.allSpecialActivitiesDone()? 'check_circle' : 'cancel'"
+          x-text="$store.marks.allSpecialActivitiesDone()? 'check_circle' : 'cancel'"
           x-bind:class="{
-          'text-sh-green': $store.student.allSpecialActivitiesDone(),
-          'text-sh-red': !$store.student.allSpecialActivitiesDone()
+          'text-sh-green': $store.marks.allSpecialActivitiesDone(),
+          'text-sh-red': !$store.marks.allSpecialActivitiesDone()
             }"
         ></span>
         <span class="text-[14px] md:text-[18px] text-gray-600 shrink-0"
@@ -75,16 +245,16 @@ const { position, subject } = Astro.props;
       <div
         class="flex gap-x-2 justify-between items-center"
         x-data="{ progress: 1 }"
-        x-effect="progress = $store.student.markData.activities.total > 0 ? $store.student.markData.activities.done/$store.student.markData.activities.total : 1"
+        x-effect="progress = $store.marks.markData.activities.total > 0 ? $store.marks.markData.activities.done/$store.marks.markData.activities.total : 1"
       >
         <p class="text-[14px] md:text-[18px] text-gray-600">
           <span
             class="text-sh-black"
-            x-text="$store.student.markData.activities.done"></span>
+            x-text="$store.marks.markData.activities.done"></span>
           de
           <span
             class="text-sh-black"
-            x-text="$store.student.markData.activities.total"></span>
+            x-text="$store.marks.markData.activities.total"></span>
           actividades de clase hechas
         </p>
         <Progress fraction="progress" />
@@ -92,16 +262,16 @@ const { position, subject } = Astro.props;
       <div
         class="flex gap-x-2 justify-between items-center"
         x-data="{ progress: 1 }"
-        x-effect="progress = $store.student.markData.markedActivities.total > 0 ? $store.student.markData.markedActivities.passed/$store.student.markData.markedActivities.total : 1"
+        x-effect="progress = $store.marks.markData.markedActivities.total > 0 ? $store.marks.markData.markedActivities.passed/$store.marks.markData.markedActivities.total : 1"
       >
         <p class="text-[14px] md:text-[18px] text-gray-600">
           <span
             class="text-sh-black"
-            x-text="$store.student.markData.markedActivities.passed"></span>
+            x-text="$store.marks.markData.markedActivities.passed"></span>
           de
           <span
             class="text-sh-black"
-            x-text="$store.student.markData.markedActivities.total"></span>
+            x-text="$store.marks.markData.markedActivities.total"></span>
           actividades con nota aprobadas
         </p>
         <Progress fraction="progress" />
@@ -109,17 +279,17 @@ const { position, subject } = Astro.props;
       <div
         class="flex gap-x-2 justify-between items-center"
         x-data="{progress: 1}"
-        x-effect="progress = ($store.student.specialActivities()).length > 0 ? ($store.student.specialActivities()).filter(spAct => spAct.done).length / ($store.student.specialActivities()).length: 1"
+        x-effect="progress = ($store.marks.specialActivities()).length > 0 ? ($store.marks.specialActivities()).filter(spAct => spAct.done).length / ($store.marks.specialActivities()).length: 1"
       >
         <p class="text-[14px] md:text-[18px] text-gray-600">
           <span
             class="text-sh-black"
-            x-text="$store.student.specialActivities().filter(spAct => spAct.done).length"
+            x-text="$store.marks.specialActivities().filter(spAct => spAct.done).length"
           ></span>
           de
           <span
             class="text-sh-black"
-            x-text="$store.student.specialActivities().length"></span>
+            x-text="$store.marks.specialActivities().length"></span>
           actividades obligatorias hechas
         </p>
         <Progress fraction="progress" />
@@ -130,9 +300,9 @@ const { position, subject } = Astro.props;
     <h2 class="text-[20px] md:text-[24px] font-semibold">Nota promedio</h2>
     <p class="text-gray-600">
       La nota promedio se compone en un
-      <span x-text="$store.student.markData.proportion*100"></span>% promediando
+      <span x-text="$store.marks.markData.proportion*100"></span>% promediando
       las actividades con nota y en un
-      <span x-text="Math.round((1 - $store.student.markData.proportion)*100)"
+      <span x-text="Math.round((1 - $store.marks.markData.proportion)*100)"
       ></span>% por la proporción de actividades hechas en clase.
     </p>
     <div class="w-full flex justify-center">
@@ -166,19 +336,19 @@ const { position, subject } = Astro.props;
           <line x1="420" y1="0" x2="420" y2="60" class="stroke-gray-400"></line>
           <text x="410" y="80" class="fill-gray-400">10</text>
           <line
-            x-show="$store.student.markData.markedActivities.markContribution >= 0.5"
+            x-show="$store.marks.markData.markedActivities.markContribution >= 0.5"
             x1="30"
             y1="30"
             y2="30"
-            x-bind:x2="40*$store.student.markData.markedActivities.markContribution + 10"
+            x-bind:x2="40*$store.marks.markData.markedActivities.markContribution + 10"
             stroke-linecap="round"
             class="stroke-sh-purple stroke-[20]"></line>
           <line
-            x-show="$store.student.markData.activities.markContribution >= 0.5"
+            x-show="$store.marks.markData.activities.markContribution >= 0.5"
             y1="30"
             y2="30"
-            x-bind:x1="40*$store.student.markData.markedActivities.markContribution + 30"
-            x-bind:x2="40*($store.student.markData.activities.markContribution + $store.student.markData.markedActivities.markContribution) + 10"
+            x-bind:x1="40*$store.marks.markData.markedActivities.markContribution + 30"
+            x-bind:x2="40*($store.marks.markData.activities.markContribution + $store.marks.markData.markedActivities.markContribution) + 10"
             stroke-linecap="round"
             class="stroke-sh-blue stroke-[20]"></line>
         </svg>
@@ -210,7 +380,7 @@ const { position, subject } = Astro.props;
             class="max-md:order-2 row-start-2 flex justify-center gap-x-2 text-[20px] items-center text-sh-purple"
           >
             <span
-              x-text="$store.student.markData.markedActivities.markContribution"
+              x-text="$store.marks.markData.markedActivities.markContribution"
             ></span>
           </div>
           <div
@@ -221,7 +391,7 @@ const { position, subject } = Astro.props;
           <div
             class="max-md:order-5 row-start-2 flex justify-center gap-x-2 text-[20px] items-center text-sh-blue"
           >
-            <span x-text="$store.student.markData.activities.markContribution"
+            <span x-text="$store.marks.markData.activities.markContribution"
             ></span>
           </div>
           <div
@@ -232,7 +402,7 @@ const { position, subject } = Astro.props;
           <div
             class="max-md:order-8 row-start-2 flex justify-center gap-x-2 text-[20px] items-center"
           >
-            <span x-text="$store.student.markData.averageMark"></span>
+            <span x-text="$store.marks.markData.averageMark"></span>
           </div>
         </div>
       </div>
@@ -248,7 +418,7 @@ const { position, subject } = Astro.props;
     <div class="flex justify-center">
       <div
         class="border-gray-400 border-2 w-full max-w-full md:w-4/5 md:min-w-80 md:max-w-4xl rounded-xl overflow-hidden"
-        x-show="$store.student.specialActivities().length > 0"
+        x-show="$store.marks.specialActivities().length > 0"
       >
         <table class="border-collapse w-full">
           <thead class="bg-gray-300 text-gray-600">
@@ -258,7 +428,7 @@ const { position, subject } = Astro.props;
             </tr>
           </thead>
           <tbody>
-            <template x-for="activity in $store.student.specialActivities()">
+            <template x-for="activity in $store.marks.specialActivities()">
               <tr
                 class="border-t border-gray-400"
                 x-data="{redo: activity.inRevision}"
@@ -317,7 +487,7 @@ const { position, subject } = Astro.props;
     <div class="flex justify-center">
       <div
         class="border-gray-400 border-2 w-full max-w-full md:w-4/5 md:min-w-80 md:max-w-4xl rounded-xl overflow-hidden"
-        x-show="$store.student.marks.length > 0"
+        x-show="$store.marks.marks.length > 0"
       >
         <table class="border-collapse w-full">
           <thead class="bg-gray-300 text-gray-600">
@@ -327,7 +497,7 @@ const { position, subject } = Astro.props;
             </tr>
           </thead>
           <tbody>
-            <template x-for="activity in $store.student.marks">
+            <template x-for="activity in $store.marks.marks">
               <tr
                 class="border-t border-gray-400"
                 x-data="{redo: activity.inRevision}"
@@ -391,7 +561,7 @@ const { position, subject } = Astro.props;
     <div class="flex justify-center">
       <div
         class="border-gray-400 border-2 w-full max-w-full md:w-4/5 md:min-w-80 md:max-w-4xl rounded-xl overflow-hidden"
-        x-show="$store.student.activities.length > 0"
+        x-show="$store.marks.activities.length > 0"
       >
         <table class="border-collapse w-full">
           <thead class="bg-gray-300 text-gray-600">
@@ -402,7 +572,7 @@ const { position, subject } = Astro.props;
           </thead>
           <tbody>
             <template
-              x-for="activity in $store.student.activities.filter(act => !act.special)"
+              x-for="activity in $store.marks.activities.filter(act => !act.special)"
             >
               <tr
                 class="border-t border-gray-400"

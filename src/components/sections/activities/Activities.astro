@@ -108,15 +108,15 @@ const { subject, course, year, position } = Astro.props;
                       x-bind:class="(()=>{if(pending) {return 'text-gray-400'}else if(redo){return 'text-sh-yellow'} else if(passed) {return 'text-sh-green'} else {return 'text-sh-red'}})()"
                       x-effect="
                           if(content.type === 'Actividad') {
-                            const results = $store.student.activities.find(activity => activity.id === content.id);
+                            const results = $store.marks.activities.find(activity => activity.id === content.id);
                             if(results) {
                               passed = results.done;
                               pending = false;
                               redo = results.inRevision;
                             }}
                             else if(content.type === 'Trabajo Práctico') {
-                              const results = $store.student.marks.find(mark => mark.id === content.id);
-                              const specialActivity = $store.student.activities.find(activity => activity.id === content.id);
+                              const results = $store.marks.marks.find(mark => mark.id === content.id);
+                              const specialActivity = $store.marks.activities.find(activity => activity.id === content.id);
                               if(results) {
                                 passed = results.mark >= 6;
                                 pending = false;

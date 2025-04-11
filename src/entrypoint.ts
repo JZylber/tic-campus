@@ -186,99 +186,6 @@ export default (Alpine: Alpine) => {
             1
           );
         }
-        this.calculateMarks();
-      }
-    },
-    regularActivities() {
-      return this.activities.filter(
-        (activity) => !activity.special && !activity.inRevision
-      );
-    },
-    specialActivities() {
-      return this.activities.filter((activity) => activity.special);
-    },
-    markedActivities() {
-      return this.marks.filter((activity) => !activity.inRevision);
-    },
-    allMarkedActivitiesPassed() {
-      return this.markedActivities().every((activity) => activity.mark >= 6);
-    },
-    allSpecialActivitiesDone() {
-      return this.specialActivities().every((activity) => activity.done);
-    },
-    async calculateMarks() {
-      let [{ activities, marks }, { proportion, specialActivities }, redos] =
-        await Promise.all([
-          getActivitiesAndMarks(this.id, this.dataSheetId),
-          getSubjectMarkingCriteria(this.subject, this.dataSheetId),
-          getRedos(
-            parseInt(this.course.slice(2)),
-            this.name,
-            this.surname,
-            this.dataSheetId
-          ),
-        ]);
-      this.activities = activities.map((activity) => ({
-        ...activity,
-        inRevision: redos.includes(activity.id),
-        special: specialActivities.includes(activity.id),
-      }));
-      this.marks = marks.map((mark) => ({
-        ...mark,
-        inRevision: redos.includes(mark.id),
-      }));
-      this.markData.proportion = proportion;
-      // Esta cuenta no tiene en cuenta que un estudiante pueda estar en múltiples materias
-      this.markData.activities.total = this.regularActivities().length;
-      this.markData.markedActivities.total = this.markedActivities().length;
-      this.markData.activities.done = this.regularActivities().filter(
-        (activity) => activity.done
-      ).length;
-      this.markData.markedActivities.passed = this.markedActivities().filter(
-        (activity) => activity.mark >= 6
-      ).length;
-      this.markData.activities.markContribution =
-        this.markData.activities.total > 0
-          ? round(
-              (this.markData.activities.done / this.markData.activities.total) *
-                (1 - proportion) *
-                10,
-              2
-            )
-          : 10 * (1 - proportion);
-      this.markData.markedActivities.markContribution =
-        this.markData.markedActivities.total > 0
-          ? round(
-              (this.marks
-                .filter((activity) => !redos.includes(activity.id))
-                .reduce((acc, m) => acc + m.mark, 0) /
-                this.markData.markedActivities.total) *
-                proportion,
-              2
-            )
-          : (this.markData.activities.markContribution / (1 - proportion)) *
-            proportion;
-      this.markData.averageMark = round(
-        this.markData.activities.markContribution +
-          this.markData.markedActivities.markContribution,
-        2
-      );
-      const allSpecialActivitiesDone = this.allSpecialActivitiesDone();
-      const allMarkedActivitiesPassed = this.allMarkedActivitiesPassed();
-      this.markData.finalMark =
-        allSpecialActivitiesDone && allMarkedActivitiesPassed
-          ? Math.round(this.markData.averageMark)
-          : Math.min(4, Math.round(this.markData.averageMark));
-      if (
-        this.markData.activities.total === 0 &&
-        this.markData.markedActivities.total === 0
-      ) {
-        this.markData.finalMark = null;
-      } else {
-        this.markData.finalMark = Math.min(
-          Math.max(1, this.markData.finalMark),
-          10
-        );
       }
     },
   } as {
@@ -287,23 +194,6 @@ export default (Alpine: Alpine) => {
     course: string;
     subject: string;
     id: number;
-    activities: Array<Activity>;
-    marks: Array<MarkedActivity>;
-    markData: {
-      finalMark: number | null;
-      averageMark: number;
-      proportion: number;
-      activities: {
-        markContribution: number;
-        total: number;
-        done: number;
-      };
-      markedActivities: {
-        markContribution: number;
-        total: number;
-        passed: number;
-      };
-    };
     dataSheetId: string;
     setStudent: (
       name: string,
@@ -313,12 +203,6 @@ export default (Alpine: Alpine) => {
     ) => void;
     setSubject: (subject: string) => void;
     setDataSheetId: (dataSheetId: string) => void;
-    regularActivities: () => Array<Activity>;
-    specialActivities: () => Array<Activity>;
-    markedActivities: () => Array<MarkedActivity>;
-    allSpecialActivitiesDone: () => boolean;
-    allMarkedActivitiesPassed: () => boolean;
-    calculateMarks: () => Promise<void>;
     getStudentData: (
       subject: string,
       course: string,
