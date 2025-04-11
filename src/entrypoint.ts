@@ -99,9 +99,13 @@ export default (Alpine: Alpine) => {
         this.changeURL("https://jzylber.github.io" + this.dataURL);
       }
     },
+    publicURL(url) {
+      return `${this.dataURL}/${url}`;
+    },
   } as {
     dataURL: string;
     changeURL: (url: string) => void;
+    publicURL: (url: string) => void;
   });
   Alpine.store("student", {
     name: "",

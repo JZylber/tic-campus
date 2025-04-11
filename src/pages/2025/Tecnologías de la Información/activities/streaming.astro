@@ -19,8 +19,7 @@ export const partial = true;
   </li>
   <li x-data="{link: ''}">
     El maquetado ya avanzado, que pueden descargar <a
-      :href="link"
-      x-effect="link = $store.baseURL.dataURL + '/files/StreamingARG.zip'"
+      :href="$store.baseURL.publicURL('/files/StreamingARG.zip')"
       class="text-sh-black rounded-md bg-sh-purple px-1 py-0.5">acá</a
     >
   </li>
