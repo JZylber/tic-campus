@@ -15,12 +15,12 @@ const { subject, course, year, position } = Astro.props;
 
 <SectionLayout name="actividades" position={position}>
   <div
-    class="w-full h-full"
+    class="w-full"
     x-data="{ unitsData: [], loading: true, currentContent: null, articleOpen: false, articleURL:''}"
     x-init={`unitsData = (await getSubjectData('${course}', '${subject}', dataSheetId)).reverse(); loading = false;`}
     @changedsection.window="articleOpen = false;"
   >
-    <div class="h-full w-full">
+    <div class="w-full">
       <div x-show="!loading" class="flex flex-col gap-y-4">
         <h1 class="text-[30px] md:text-[36px] font-bold text-center p-4">
           Actividades

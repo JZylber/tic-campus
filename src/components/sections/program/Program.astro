@@ -15,7 +15,7 @@ const { subject, year, position } = Astro.props;
   <div
     x-data="{html: '', loading: true}"
     x-init={`html = await fetchHTMLData($store.baseURL.dataURL + '/${year}/${subject}/program'); loading = false;`}
-    class="w-full h-full"
+    class="w-full"
   >
     <h1 class="text-[30px] md:text-[36px] font-bold text-center p-4">
       Programa de la Materia
