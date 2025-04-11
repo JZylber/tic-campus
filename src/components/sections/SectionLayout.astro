@@ -11,7 +11,11 @@ const { name, position } = Astro.props;
 
 <section
   x-data=`{offset: ${position}}`
-  class="absolute inset-0 w-full h-full bg-gray-50 overflow-y-auto overflow-x-hidden flex flex-col py-4 px-4 md:px-8 gap-y-4 transition-transform duration-300"
+  class="absolute inset-0 w-full h-full bg-gray-50 overflow-y-auto overflow-x-hidden flex flex-col py-4 px-4 md:px-8 gap-y-4 transition-transform duration-300 [&::-webkit-scrollbar]:w-1.5
+  [&::-webkit-scrollbar-track]:rounded-full
+  [&::-webkit-scrollbar-track]:bg-gray-200
+  [&::-webkit-scrollbar-thumb]:rounded-full
+  [&::-webkit-scrollbar-thumb]:bg-sh-gray"
   :style="`transform: translateY(calc(100%*${offset}))`"
   x-init=`$watch('$store.section.currentSectionIndex', (value) => {offset = ${position} - value;$el.scrollTop = 0})`
 >
