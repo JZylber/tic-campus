@@ -1,10 +1,6 @@
 import type { Alpine } from "alpinejs";
-import type { Activity, MarkedActivity } from "./aux/types";
 import {
-  getActivitiesAndMarks,
-  getRedos,
   getStudentData,
-  getSubjectMarkingCriteria,
   getSubjectData,
   getSubjectProgram,
   getSubjectPresentation,
