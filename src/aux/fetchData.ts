@@ -362,3 +362,20 @@ export const getRedos = async (
   const redos = studentActivitiesRedo.concat(studentMarksRedo) as Array<number>;
   return redos;
 };
+
+export const getFixedMark = async (
+  studentId: number,
+  dataSheetId: string,
+  mark: string
+) => {
+  const marks = await getSheetData({
+    sheetID: dataSheetId,
+    sheetName: `Notas Fijas`,
+    query: `SELECT G WHERE B = ${studentId} AND F = '${mark}' AND H = TRUE`,
+  });
+  if (marks.length > 0) {
+    return marks[0].Valor as string;
+  } else {
+    return null;
+  }
+};

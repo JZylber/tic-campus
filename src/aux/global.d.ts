@@ -30,4 +30,9 @@ declare global {
     crumbs: Array<{ text: string; link: string }>;
     menu: Array<string>;
   };
+  var getFixedMark: (
+    studentId: number,
+    dataSheetId: string,
+    mark: string
+  ) => Promise<string | null>;
 }

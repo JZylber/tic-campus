@@ -1,0 +1,53 @@
+---
+import Loader from "../../loader/Loader.astro";
+
+interface Props {
+  bimester: string;
+}
+
+const { bimester } = Astro.props;
+
+const mark = {
+  P: "En proceso",
+  S: "Suficiente",
+  A: "Avanzado",
+};
+const observation = {
+  M: "Adeuda tareas y/o no cumple con los plazos de entrega",
+  N: "Adeuda contenidos de aprendizaje",
+  O: "Baja participación en las claseS",
+};
+const suggestion = {
+  P: "Incrementar la participación activa en las clases",
+  Q: "Incrementar el estudio cumpliendo en tiempo y forma con el trabajo en la asignatura",
+  R: "Cumplir con las consignas y/o indicaciones complementarias propuestas por su docente (revisión y entrega de trabajos, resolución de nuevas actividades, asistencia a clases de consulta, entre otras)",
+};
+---
+
+<div
+  x-data="{loading: false, mark: '', observation: '', suggestion: ''}"
+  x-init=`
+  loading = true;
+  let fullMark = await window.getFixedMark($store.student.id,dataSheetId,'${bimester}');
+  if(fullMark) {
+    let splitMark = fullMark.split('-');
+    if(splitMark.length === 1){
+      mark =splitMark[0]; }
+    else {
+      mark = splitMark[0];
+      observation = splitMark[1];
+      suggestion = splitMark[2];
+    }
+  }
+  loading = false;`
+  class="w-full flex flex-col justify-center items-center *:min-h-full"
+>
+  <Loader show="loading" />
+  <template x-if="!loading">
+    <div class="w-full flex flex-col gap-y-4">
+      <span x-text="mark"></span>
+      <span x-text="observation"></span>
+      <span x-text="suggestion"></span>
+    </div>
+  </template>
+</div>
