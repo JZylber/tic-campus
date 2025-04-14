@@ -32,7 +32,7 @@ const isOnCampus = () => {
 };
 
 const courseRegex = /NR\d[A-Z]/;
-const defaultStudent = { name: "Valentín", surname: "Alfie" };
+const defaultStudent = { name: "Julián Ariel", surname: "Zylber" };
 
 interface AlpineSectionStore {
   currentSection: string;
