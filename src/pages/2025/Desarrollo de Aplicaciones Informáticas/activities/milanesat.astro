@@ -1,0 +1,111 @@
+---
+import CodeBlock from "../../../../components/articles/code-block/CodeBlock.astro";
+import InlineCodeBlock from "../../../../components/articles/code-block/InlineCodeBlock.astro";
+
+export const partial = true;
+---
+
+<h2>Introducción</h2>
+<p>
+  Satellogic es una empresa argentina de satélites, orgullo nacional. Sus
+  satélites tiene nombres muy patriótricos, como &quot;dulce y batata&quot; (2
+  satélites). Mi favorito es <strong>MilaneSAT</strong> que le da el nombre a esta
+  consigna.
+</p>
+<p>
+  Esta vuelta, no vamos a lanzar un satélite sino una constelación de ellos.
+  Estamos encargados de verificar que la distancia mínima (ángulo) entre ellos
+  se respete.
+</p>
+<h2>Descripción del programa</h2>
+<p>
+  La función <InlineCodeBlock lang="python" code="validate_orbit_positions" /> recibe
+  dos parámetros:
+</p>
+<CodeBlock
+  code={`def validate_orbit_positions(positions, min_distance):\n    ...`}
+  lang="python"
+/>
+<h3>Parámetros</h3>
+<ul>
+  <li>
+    <InlineCodeBlock lang="python" code="positions" />: una lista de números
+    (floats o enteros) entre 0 y 360 (no inclusivo), que representan posiciones
+    angulares en la órbita (en grados).
+  </li>
+  <li>
+    <InlineCodeBlock lang="python" code="min_distance" />: un número positivo
+    que representa la distancia mínima permitida entre dos satélites.
+  </li>
+</ul>
+<h3>Salida</h3>
+<p>La función retorna una tupla con dos elementos:</p>
+<ol>
+  <li>
+    Un valor booleano (<InlineCodeBlock lang="python" code="True" /> o<InlineCodeBlock
+      lang="python"
+      code="False"
+    />) que indica si todas las posiciones cumplen con la distancia mínima.
+  </li>
+  <li>
+    Una lista de pares de posiciones que están demasiado cerca entre sí, en caso
+    de que existan violaciones. Si no hay violaciones, la lista está vacía.
+  </li>
+</ol>
+<h3>Ejemplo</h3>
+<CodeBlock
+  code={`validate_orbit_positions([0, 90, 180, 270], 80)\n# Retorna: (True, [])\n\nvalidate_orbit_positions([10, 25, 355], 20)\n# Retorna: (False, [(10, 25), (355, 10)])`}
+  lang="python"
+/>
+<p>
+  <strong>Nota</strong>: La función considera que la órbita es circular, por lo
+  tanto también compara el último valor con el primero (por ejemplo, entre 350°
+  y 10° hay una diferencia de 20°).
+</p>
+<p>
+  Si siguen sin entender como funciona el programa, pueden hacer pruebas
+  modificando el final de la sección marcada con un comentario en <em
+    >main.py</em
+  >
+</p>
+<h2>Consigna Base</h2>
+<p>
+  En el archivo <em>test_basico.py</em>, escriban un conjunto de tests unitarios
+  usando pytest que verifiquen el comportamiento de la función en los siguientes
+  casos:
+</p>
+<ol>
+  <li>Cuando todas las posiciones están correctamente espaciadas.</li>
+  <li>Cuando hay al menos un par de satélites demasiado cerca.</li>
+  <li>Cuando los satélites están exactamente a la distancia mínima.</li>
+  <li>Cuando hay una sola posición.</li>
+  <li>Cuando no hay posiciones.</li>
+  <li>Cuando hay múltiples violaciones.</li>
+  <li>Cuando las posiciones están desordenadas.</li>
+  <li>Cuando hay dos satélites en la misma posición.</li>
+  <li>
+    Cuando la violación de distancia se da en un par de satélites que están
+    cerca al dar la vuelta.
+  </li>
+</ol>
+<p>
+  <strong>IMPORTANTE</strong>: Recuerden chequear tanto el valor booleano como
+  la lista.
+</p>
+<h2>Extra</h2>
+<p>
+  En el archivo <em>test_extra.py</em>, escriban tests que consideren entradas
+  no válidas, como por ejemplo:
+</p>
+<ol>
+  <li>Posiciones negativas o mayores o iguales a 360.</li>
+  <li>Posiciones que no son números (como strings).</li>
+  <li>
+    Un valor de min_distance igual a 0, negativo, mayor a 360 o no numérico.
+  </li>
+</ol>
+<p>
+  El programa, al encontrarse con cualquiera de esos casos, dispara una
+  excepción del tipo <InlineCodeBlock lang="python" code="ValueError" />.
+  Googleen como hacer en pytest para chequear que la excepción sea la correcta.
+</p>
