@@ -7,6 +7,7 @@ import {
   getSubjectRedoLinks,
   getSubjectMaterial,
   getCourseGroupLink,
+  getFixedMarks,
 } from "./aux/fetchData";
 import { fetchHTMLData, prepareCrumbs } from "./aux/loadData";
 import collapse from "@alpinejs/collapse";
@@ -19,6 +20,7 @@ window.getSubjectMaterial = getSubjectMaterial;
 window.getCourseLink = getCourseGroupLink;
 window.fetchHTMLData = fetchHTMLData;
 window.prepareCrumbs = prepareCrumbs;
+window.getFixedMarks = getFixedMarks;
 
 export const round = (num: number, decimals: number) => {
   return Math.round(num * Math.pow(10, decimals)) / Math.pow(10, decimals);
@@ -30,7 +32,7 @@ const isOnCampus = () => {
 };
 
 const courseRegex = /NR\d[A-Z]/;
-const defaultStudent = { name: "Julian Ariel", surname: "Zylber" };
+const defaultStudent = { name: "Julián Ariel", surname: "Zylber" };
 
 interface AlpineSectionStore {
   currentSection: string;

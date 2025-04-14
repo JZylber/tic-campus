@@ -1,0 +1,68 @@
+---
+
+---
+
+<div class="w-full flex justify-center">
+  <div
+    x-data="{marks: undefined, loading: true}"
+    x-init="$watch('$store.student.id', async (id) => {marks = await window.getFixedMarks(id,dataSheetId); loading = false;})"
+    class="lg:w-4/5 md:w-full mt-2 flex flex-col items-center border-2 border-gray-400 rounded-2xl p-2"
+  >
+    <template x-if="loading">
+      <p class="text-[14px] md:text-[16px] text-gray-600 font-semibold">
+        Cargando notas históricas...
+      </p>
+    </template>
+    <template x-if="!loading && marks">
+      <div
+        class="w-full flex flex-col md:flex-row md:justify-between items-center"
+      >
+        <div class="p-2 flex gap-x-2 items-center w-50">
+          <div
+            class="border-2 border-sh-black rounded-full w-10 h-10 flex justify-center items-center shrink-0"
+            x-data="{mark: undefined, observation: undefined, suggestion: undefined}"
+            x-init="if(marks['1B']) {mark = marks['1B'].mark; observation = marks['1B'].observation; suggestion = marks['1B'].suggestion}"
+          >
+            <span
+              x-text="mark ?? 'more_horiz'"
+              class="!text-[24px] font-bold"
+              :class="{ 'material-symbols-outlined': ! mark }"></span>
+          </div>
+          <span class="text-[16px] md:text-[18px] font-bold text-center"
+            >1<sup>er</sup> Bimestre</span
+          >
+        </div>
+        <div class="p-2 flex gap-x-2 items-center w-50">
+          <div
+            class="border-2 border-sh-black rounded-full w-10 h-10 flex justify-center items-center shrink-0"
+            x-data="{mark: undefined}"
+            x-init="if(marks['1C']) {mark = marks['1C'].mark}"
+          >
+            <span
+              x-text="mark ?? 'more_horiz'"
+              class="!text-[24px] font-bold"
+              :class="{ 'material-symbols-outlined': ! mark }"></span>
+          </div>
+          <span class="text-[16px] md:text-[18px] font-bold text-center"
+            >1<sup>er</sup> Cuatrimestre</span
+          >
+        </div>
+        <div class="p-2 flex gap-x-2 items-center w-50">
+          <div
+            class="border-2 border-sh-black rounded-full w-10 h-10 flex justify-center items-center shrink-0"
+            x-data="{mark: undefined, observation: undefined, suggestion: undefined}"
+            x-init="if(marks['3B']) {mark = marks['3B'].mark; observation = marks['3B'].observation; suggestion = marks['3B'].suggestion}"
+          >
+            <span
+              x-text="mark ?? 'more_horiz'"
+              class="!text-[24px] font-bold"
+              :class="{ 'material-symbols-outlined': ! mark }"></span>
+          </div>
+          <span class="text-[16px] md:text-[18px] font-bold text-center"
+            >3<sup>er</sup> Bimestre</span
+          >
+        </div>
+      </div>
+    </template>
+  </div>
+</div>
