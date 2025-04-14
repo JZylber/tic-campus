@@ -1,0 +1,32 @@
+---
+
+---
+
+<div
+  x-data="{marks: undefined, loading: true}"
+  x-init="loading = true;marks = await window.getFixedMarks($store.student.id,dataSheetId); loading = false; console.log(marks);"
+  class="mt-2 w-full flex flex-col border-2 border-sh-gray rounded-2xl p-4 gap-y-4"
+>
+  <template x-if="loading">
+    <p class="text-[14px] md:text-[16px] text-gray-600 font-semibold">
+      Cargando notas fijas...
+    </p>
+  </template>
+  <template x-if="!loading && marks">
+    <div class="p-2 flex gap-x-2 items-center">
+      <div
+        class="border-2 border-sh-black rounded-full w-8 h-8 flex justify-center items-center"
+        x-data="{mark: undefined, observation: undefined, suggestion: undefined}"
+        x-init="if(marks['1B']) {mark = marks['1B'].mark; observation = marks['1B'].observation; suggestion = marks['1B'].suggestion}"
+      >
+        <span
+          x-text="mark ?? 'more_horiz'"
+          class="!text-[24px]"
+          :class="{ 'material-symbols-outlined': ! mark }"></span>
+      </div>
+      <span class="text-[14px] md:text-[16px] font-bold"
+        >1<sup>er</sup> Bimestre</span
+      >
+    </div>
+  </template>
+</div>

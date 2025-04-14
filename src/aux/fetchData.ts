@@ -2,8 +2,11 @@ import Fuse from "fuse.js";
 import type {
   Activity,
   Content,
+  FixedMark,
+  FixedMarks,
   MarkedActivity,
   Material,
+  Term,
   Unit,
 } from "./types";
 
@@ -363,19 +366,24 @@ export const getRedos = async (
   return redos;
 };
 
-export const getFixedMark = async (
-  studentId: number,
-  dataSheetId: string,
-  mark: string
-) => {
-  const marks = await getSheetData({
+export const getFixedMarks = async (studentId: number, dataSheetId: string) => {
+  const marks = (await getSheetData({
     sheetID: dataSheetId,
     sheetName: `Notas Fijas`,
-    query: `SELECT G WHERE B = ${studentId} AND F = '${mark}' AND H = TRUE`,
+    query: `SELECT F,G WHERE B = ${studentId} AND H = TRUE`,
+  })) as { Tipo: Term; Valor: string }[];
+  let termMarks = {} as FixedMarks;
+  marks.forEach((mark) => {
+    let newMark = {} as FixedMark;
+    let splitValue = mark["Valor"].split("-");
+    if (splitValue.length === 1) {
+      newMark.mark = splitValue[0];
+    } else if (splitValue.length === 3) {
+      newMark.mark = splitValue[0];
+      newMark.observation = splitValue[1];
+      newMark.suggestion = splitValue[2];
+    }
+    termMarks[mark["Tipo"]] = newMark;
   });
-  if (marks.length > 0) {
-    return marks[0].Valor as string;
-  } else {
-    return null;
-  }
+  return termMarks;
 };

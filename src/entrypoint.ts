@@ -7,7 +7,7 @@ import {
   getSubjectRedoLinks,
   getSubjectMaterial,
   getCourseGroupLink,
-  getFixedMark,
+  getFixedMarks,
 } from "./aux/fetchData";
 import { fetchHTMLData, prepareCrumbs } from "./aux/loadData";
 import collapse from "@alpinejs/collapse";
@@ -20,7 +20,7 @@ window.getSubjectMaterial = getSubjectMaterial;
 window.getCourseLink = getCourseGroupLink;
 window.fetchHTMLData = fetchHTMLData;
 window.prepareCrumbs = prepareCrumbs;
-window.getFixedMark = getFixedMark;
+window.getFixedMarks = getFixedMarks;
 
 export const round = (num: number, decimals: number) => {
   return Math.round(num * Math.pow(10, decimals)) / Math.pow(10, decimals);

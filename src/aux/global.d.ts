@@ -1,4 +1,4 @@
-import { Course, Material, UnitData } from "./types";
+import { Course, Material, UnitData, type FixedMarks } from "./types";
 import { Alpine as AlpineType } from "alpinejs";
 
 declare global {
@@ -30,9 +30,8 @@ declare global {
     crumbs: Array<{ text: string; link: string }>;
     menu: Array<string>;
   };
-  var getFixedMark: (
+  var getFixedMarks: (
     studentId: number,
-    dataSheetId: string,
-    mark: string
-  ) => Promise<string | null>;
+    dataSheetId: string
+  ) => Promise<FixedMarks>;
 }
