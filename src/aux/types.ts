@@ -57,3 +57,17 @@ export interface Material {
   description: string;
   type: string;
 }
+
+export enum Term {
+  "1B" = "1B",
+  "1C" = "1C",
+  "3B" = "3B",
+}
+
+export interface FixedMark {
+  mark: string;
+  observation?: string;
+  suggestion?: string;
+}
+
+export type FixedMarks = Record<Term, FixedMark | undefined>;
