@@ -177,283 +177,294 @@ const { position, subject } = Astro.props;
     });
   });
 </script>
-<SectionLayout
-  name="nota"
-  position={position}
-  xInit=`$watch('$store.student.id', (id) => {if(id !== -1){$store.marks.calculateMarks(dataSheetId, '${subject}', $store.student.course, {name:$store.student.name,surname:$store.student.surname,id:id})}})`
->
-  <h1 class="text-[36px] font-bold text-center p-4">Nota</h1>
-  <div class="flex flex-col md:flex-row gap-x-8 pt-4 md:pb-4 justify-center">
-    <div
-      class="flex flex-col gap-y-2 shrink-0 pb-2 border-b-2 border-gray-300 md:pb-0 md:border-b-0"
-    >
+<template x-if="$store.marks">
+  <SectionLayout
+    name="nota"
+    position={position}
+    xInit=`$watch('$store.student.id', (id) => {if(id !== -1){$store.marks.calculateMarks(dataSheetId, '${subject}', $store.student.course, {name:$store.student.name,surname:$store.student.surname,id:id})}})`
+  >
+    <h1 class="text-[36px] font-bold text-center p-4">Nota</h1>
+    <div class="flex flex-col md:flex-row gap-x-8 pt-4 md:pb-4 justify-center">
       <div
-        class="rounded-2xl text-white grow flex flex-col gap-y-1 p-2 justify-center items-center"
-        x-bind:class="{
+        class="flex flex-col gap-y-2 shrink-0 pb-2 border-b-2 border-gray-300 md:pb-0 md:border-b-0"
+      >
+        <div
+          class="rounded-2xl text-white grow flex flex-col gap-y-1 p-2 justify-center items-center"
+          x-bind:class="{
           'bg-sh-green': $store.marks.markData.finalMark >= 6,
           'bg-sh-red': $store.marks.markData.finalMark < 6
         }"
-      >
-        <span
-          class="text-[48px] font-bold"
-          x-text="$store.marks.markData.finalMark"></span>
-        <span
-          class="text-[24px] font-semibold"
-          x-text="$store.marks.markData.finalMark >= 6 ? 'Aprobado' : 'En Proceso'"
-        ></span>
-      </div>
-      <div class="flex items-center gap-x-2 md:gap-x-4">
-        <span
-          class="material-symbols-outlined"
-          x-text="$store.marks.markData.averageMark >= 6 ? 'check_circle' : 'cancel'"
-          x-bind:class="{
+        >
+          <span
+            class="text-[48px] font-bold"
+            x-text="$store.marks.markData.finalMark"></span>
+          <span
+            class="text-[24px] font-semibold"
+            x-text="$store.marks.markData.finalMark >= 6 ? 'Aprobado' : 'En Proceso'"
+          ></span>
+        </div>
+        <div class="flex items-center gap-x-2 md:gap-x-4">
+          <span
+            class="material-symbols-outlined"
+            x-text="$store.marks.markData.averageMark >= 6 ? 'check_circle' : 'cancel'"
+            x-bind:class="{
           'text-sh-green': $store.marks.markData.averageMark >= 6,
           'text-sh-red': $store.marks.markData.averageMark < 6
             }"
-        ></span>
-        <span class="text-[14px] md:text-[18px] text-gray-600 shrink-0"
-          >Promedio mayor o igual a 6</span
-        >
-      </div>
-      <div class="flex items-center gap-x-2 md:gap-x-4">
-        <span
-          class="material-symbols-outlined"
-          x-text="$store.marks.allMarkedActivitiesPassed() ? 'check_circle' : 'cancel'"
-          x-bind:class="{
+          ></span>
+          <span class="text-[14px] md:text-[18px] text-gray-600 shrink-0"
+            >Promedio mayor o igual a 6</span
+          >
+        </div>
+        <div class="flex items-center gap-x-2 md:gap-x-4">
+          <span
+            class="material-symbols-outlined"
+            x-text="$store.marks.allMarkedActivitiesPassed() ? 'check_circle' : 'cancel'"
+            x-bind:class="{
           'text-sh-green': $store.marks.allMarkedActivitiesPassed(),
           'text-sh-red': !$store.marks.allMarkedActivitiesPassed()
             }"
-        ></span>
-        <span class="text-[14px] md:text-[18px] text-gray-600 shrink-0"
-          >Actividades con nota aprobadas</span
-        >
-      </div>
-      <div class="flex items-center gap-x-2 md:gap-x-4">
-        <span
-          class="material-symbols-outlined"
-          x-text="$store.marks.allSpecialActivitiesDone()? 'check_circle' : 'cancel'"
-          x-bind:class="{
+          ></span>
+          <span class="text-[14px] md:text-[18px] text-gray-600 shrink-0"
+            >Actividades con nota aprobadas</span
+          >
+        </div>
+        <div class="flex items-center gap-x-2 md:gap-x-4">
+          <span
+            class="material-symbols-outlined"
+            x-text="$store.marks.allSpecialActivitiesDone()? 'check_circle' : 'cancel'"
+            x-bind:class="{
           'text-sh-green': $store.marks.allSpecialActivitiesDone(),
           'text-sh-red': !$store.marks.allSpecialActivitiesDone()
             }"
-        ></span>
-        <span class="text-[14px] md:text-[18px] text-gray-600 shrink-0"
-          >Actividades obligatorias hechas</span
-        >
-      </div>
-    </div>
-    <div class="py-2 flex flex-col justify-around">
-      <div
-        class="flex gap-x-2 justify-between items-center"
-        x-data="{ progress: 1 }"
-        x-effect="progress = $store.marks.markData.activities.total > 0 ? $store.marks.markData.activities.done/$store.marks.markData.activities.total : 1"
-      >
-        <p class="text-[14px] md:text-[18px] text-gray-600">
-          <span
-            class="text-sh-black"
-            x-text="$store.marks.markData.activities.done"></span>
-          de
-          <span
-            class="text-sh-black"
-            x-text="$store.marks.markData.activities.total"></span>
-          actividades de clase hechas
-        </p>
-        <Progress fraction="progress" />
-      </div>
-      <div
-        class="flex gap-x-2 justify-between items-center"
-        x-data="{ progress: 1 }"
-        x-effect="progress = $store.marks.markData.markedActivities.total > 0 ? $store.marks.markData.markedActivities.passed/$store.marks.markData.markedActivities.total : 1"
-      >
-        <p class="text-[14px] md:text-[18px] text-gray-600">
-          <span
-            class="text-sh-black"
-            x-text="$store.marks.markData.markedActivities.passed"></span>
-          de
-          <span
-            class="text-sh-black"
-            x-text="$store.marks.markData.markedActivities.total"></span>
-          actividades con nota aprobadas
-        </p>
-        <Progress fraction="progress" />
-      </div>
-      <div
-        class="flex gap-x-2 justify-between items-center"
-        x-data="{progress: 1}"
-        x-effect="progress = ($store.marks.specialActivities()).length > 0 ? ($store.marks.specialActivities()).filter(spAct => spAct.done).length / ($store.marks.specialActivities()).length: 1"
-      >
-        <p class="text-[14px] md:text-[18px] text-gray-600">
-          <span
-            class="text-sh-black"
-            x-text="$store.marks.specialActivities().filter(spAct => spAct.done).length"
           ></span>
-          de
-          <span
-            class="text-sh-black"
-            x-text="$store.marks.specialActivities().length"></span>
-          actividades obligatorias hechas
-        </p>
-        <Progress fraction="progress" />
+          <span class="text-[14px] md:text-[18px] text-gray-600 shrink-0"
+            >Actividades obligatorias hechas</span
+          >
+        </div>
+      </div>
+      <div class="py-2 flex flex-col justify-around">
+        <div
+          class="flex gap-x-2 justify-between items-center"
+          x-data="{ progress: 1 }"
+          x-effect="progress = $store.marks.markData.activities.total > 0 ? $store.marks.markData.activities.done/$store.marks.markData.activities.total : 1"
+        >
+          <p class="text-[14px] md:text-[18px] text-gray-600">
+            <span
+              class="text-sh-black"
+              x-text="$store.marks.markData.activities.done"></span>
+            de
+            <span
+              class="text-sh-black"
+              x-text="$store.marks.markData.activities.total"></span>
+            actividades de clase hechas
+          </p>
+          <Progress fraction="progress" />
+        </div>
+        <div
+          class="flex gap-x-2 justify-between items-center"
+          x-data="{ progress: 1 }"
+          x-effect="progress = $store.marks.markData.markedActivities.total > 0 ? $store.marks.markData.markedActivities.passed/$store.marks.markData.markedActivities.total : 1"
+        >
+          <p class="text-[14px] md:text-[18px] text-gray-600">
+            <span
+              class="text-sh-black"
+              x-text="$store.marks.markData.markedActivities.passed"></span>
+            de
+            <span
+              class="text-sh-black"
+              x-text="$store.marks.markData.markedActivities.total"></span>
+            actividades con nota aprobadas
+          </p>
+          <Progress fraction="progress" />
+        </div>
+        <div
+          class="flex gap-x-2 justify-between items-center"
+          x-data="{progress: 1}"
+          x-effect="progress = ($store.marks.specialActivities()).length > 0 ? ($store.marks.specialActivities()).filter(spAct => spAct.done).length / ($store.marks.specialActivities()).length: 1"
+        >
+          <p class="text-[14px] md:text-[18px] text-gray-600">
+            <span
+              class="text-sh-black"
+              x-text="$store.marks.specialActivities().filter(spAct => spAct.done).length"
+            ></span>
+            de
+            <span
+              class="text-sh-black"
+              x-text="$store.marks.specialActivities().length"></span>
+            actividades obligatorias hechas
+          </p>
+          <Progress fraction="progress" />
+        </div>
       </div>
     </div>
-  </div>
-  <div class="flex flex-col gap-y-2 py-4 border-t-2 border-gray-300">
-    <h2 class="text-[20px] md:text-[24px] font-semibold">Nota promedio</h2>
-    <p class="text-gray-600">
-      La nota promedio se compone en un
-      <span x-text="$store.marks.markData.proportion*100"></span>% promediando
-      las actividades con nota y en un
-      <span x-text="Math.round((1 - $store.marks.markData.proportion)*100)"
-      ></span>% por la proporción de actividades hechas en clase.
-    </p>
-    <div class="w-full flex justify-center">
-      <div class="flex flex-col items-center py-4 max-w-2xl w-4/5">
-        <svg
-          class="max-sm:hidden w-full"
-          xmlns="http://www.w3.org/2000/svg"
-          version="1.1"
-          viewBox="0 0 440 100"
-        >
-          <line x1="20" y1="0" x2="20" y2="60" class="stroke-gray-400"></line>
-          <text x="15" y="80" class="fill-gray-400">0</text>
-          <line x1="60" y1="0" x2="60" y2="60" class="stroke-gray-400"></line>
-          <text x="55" y="80" class="fill-gray-400">1</text>
-          <line x1="100" y1="0" x2="100" y2="60" class="stroke-gray-400"></line>
-          <text x="95" y="80" class="fill-gray-400">2</text>
-          <line x1="140" y1="0" x2="140" y2="60" class="stroke-gray-400"></line>
-          <text x="135" y="80" class="fill-gray-400">3</text>
-          <line x1="180" y1="0" x2="180" y2="60" class="stroke-gray-400"></line>
-          <text x="175" y="80" class="fill-gray-400">4</text>
-          <line x1="220" y1="0" x2="220" y2="60" class="stroke-gray-400"></line>
-          <text x="215" y="80" class="fill-gray-400">5</text>
-          <line x1="260" y1="0" x2="260" y2="60" class="stroke-gray-400"></line>
-          <text x="255" y="80" class="fill-gray-400">6</text>
-          <line x1="300" y1="0" x2="300" y2="60" class="stroke-gray-400"></line>
-          <text x="295" y="80" class="fill-gray-400">7</text>
-          <line x1="340" y1="0" x2="340" y2="60" class="stroke-gray-400"></line>
-          <text x="335" y="80" class="fill-gray-400">8</text>
-          <line x1="380" y1="0" x2="380" y2="60" class="stroke-gray-400"></line>
-          <text x="375" y="80" class="fill-gray-400">9</text>
-          <line x1="420" y1="0" x2="420" y2="60" class="stroke-gray-400"></line>
-          <text x="410" y="80" class="fill-gray-400">10</text>
-          <line
-            x-show="$store.marks.markData.markedActivities.markContribution >= 0.5"
-            x1="30"
-            y1="30"
-            y2="30"
-            x-bind:x2="40*$store.marks.markData.markedActivities.markContribution + 10"
-            stroke-linecap="round"
-            class="stroke-sh-purple stroke-[20]"></line>
-          <line
-            x-show="$store.marks.markData.activities.markContribution >= 0.5"
-            y1="30"
-            y2="30"
-            x-bind:x1="40*$store.marks.markData.markedActivities.markContribution + 30"
-            x-bind:x2="40*($store.marks.markData.activities.markContribution + $store.marks.markData.markedActivities.markContribution) + 10"
-            stroke-linecap="round"
-            class="stroke-sh-blue stroke-[20]"></line>
-        </svg>
-        <div
-          class="flex flex-col md:grid grid-cols-[2fr_30px_2fr_30px_1fr] grid-rows-2"
-        >
-          <div class="flex justify-center gap-x-2 text-[16px] items-center">
-            <div
-              class="max-md:hidden rounded-full h-[16px] w-[16px] bg-sh-purple"
-            >
+    <div class="flex flex-col gap-y-2 py-4 border-t-2 border-gray-300">
+      <h2 class="text-[20px] md:text-[24px] font-semibold">Nota promedio</h2>
+      <p class="text-gray-600">
+        La nota promedio se compone en un
+        <span x-text="$store.marks.markData.proportion*100"></span>% promediando
+        las actividades con nota y en un
+        <span x-text="Math.round((1 - $store.marks.markData.proportion)*100)"
+        ></span>% por la proporción de actividades hechas en clase.
+      </p>
+      <div class="w-full flex justify-center">
+        <div class="flex flex-col items-center py-4 max-w-2xl w-4/5">
+          <svg
+            class="max-sm:hidden w-full"
+            xmlns="http://www.w3.org/2000/svg"
+            version="1.1"
+            viewBox="0 0 440 100"
+          >
+            <line x1="20" y1="0" x2="20" y2="60" class="stroke-gray-400"></line>
+            <text x="15" y="80" class="fill-gray-400">0</text>
+            <line x1="60" y1="0" x2="60" y2="60" class="stroke-gray-400"></line>
+            <text x="55" y="80" class="fill-gray-400">1</text>
+            <line x1="100" y1="0" x2="100" y2="60" class="stroke-gray-400"
+            ></line>
+            <text x="95" y="80" class="fill-gray-400">2</text>
+            <line x1="140" y1="0" x2="140" y2="60" class="stroke-gray-400"
+            ></line>
+            <text x="135" y="80" class="fill-gray-400">3</text>
+            <line x1="180" y1="0" x2="180" y2="60" class="stroke-gray-400"
+            ></line>
+            <text x="175" y="80" class="fill-gray-400">4</text>
+            <line x1="220" y1="0" x2="220" y2="60" class="stroke-gray-400"
+            ></line>
+            <text x="215" y="80" class="fill-gray-400">5</text>
+            <line x1="260" y1="0" x2="260" y2="60" class="stroke-gray-400"
+            ></line>
+            <text x="255" y="80" class="fill-gray-400">6</text>
+            <line x1="300" y1="0" x2="300" y2="60" class="stroke-gray-400"
+            ></line>
+            <text x="295" y="80" class="fill-gray-400">7</text>
+            <line x1="340" y1="0" x2="340" y2="60" class="stroke-gray-400"
+            ></line>
+            <text x="335" y="80" class="fill-gray-400">8</text>
+            <line x1="380" y1="0" x2="380" y2="60" class="stroke-gray-400"
+            ></line>
+            <text x="375" y="80" class="fill-gray-400">9</text>
+            <line x1="420" y1="0" x2="420" y2="60" class="stroke-gray-400"
+            ></line>
+            <text x="410" y="80" class="fill-gray-400">10</text>
+            <line
+              x-show="$store.marks.markData.markedActivities.markContribution >= 0.5"
+              x1="30"
+              y1="30"
+              y2="30"
+              x-bind:x2="40*$store.marks.markData.markedActivities.markContribution + 10"
+              stroke-linecap="round"
+              class="stroke-sh-purple stroke-[20]"></line>
+            <line
+              x-show="$store.marks.markData.activities.markContribution >= 0.5"
+              y1="30"
+              y2="30"
+              x-bind:x1="40*$store.marks.markData.markedActivities.markContribution + 30"
+              x-bind:x2="40*($store.marks.markData.activities.markContribution + $store.marks.markData.markedActivities.markContribution) + 10"
+              stroke-linecap="round"
+              class="stroke-sh-blue stroke-[20]"></line>
+          </svg>
+          <div
+            class="flex flex-col md:grid grid-cols-[2fr_30px_2fr_30px_1fr] grid-rows-2"
+          >
+            <div class="flex justify-center gap-x-2 text-[16px] items-center">
+              <div
+                class="max-md:hidden rounded-full h-[16px] w-[16px] bg-sh-purple"
+              >
+              </div>
+              <span>Actividades con nota</span>
             </div>
-            <span>Actividades con nota</span>
-          </div>
-          <div
-            class="max-md:order-4 col-start-3 flex justify-center gap-x-2 text-[16px] items-center"
-          >
             <div
-              class="max-md:hidden rounded-full h-[16px] w-[16px] bg-sh-blue"
+              class="max-md:order-4 col-start-3 flex justify-center gap-x-2 text-[16px] items-center"
             >
+              <div
+                class="max-md:hidden rounded-full h-[16px] w-[16px] bg-sh-blue"
+              >
+              </div>
+              <span>Actividades de clase</span>
             </div>
-            <span>Actividades de clase</span>
-          </div>
-          <div
-            class="max-md:order-7 col-start-5 flex justify-center gap-x-2 text-[16px] items-center"
-          >
-            <span>Promedio</span>
-          </div>
-          <div
-            class="max-md:order-2 row-start-2 flex justify-center gap-x-2 text-[20px] items-center text-sh-purple"
-          >
-            <span
-              x-text="$store.marks.markData.markedActivities.markContribution"
-            ></span>
-          </div>
-          <div
-            class="max-md:order-3 row-start-2 flex justify-center gap-x-2 text-[20px] items-center"
-          >
-            <span>+</span>
-          </div>
-          <div
-            class="max-md:order-5 row-start-2 flex justify-center gap-x-2 text-[20px] items-center text-sh-blue"
-          >
-            <span x-text="$store.marks.markData.activities.markContribution"
-            ></span>
-          </div>
-          <div
-            class="border-t border-sh-black md:border-t-0 max-md:order-6 row-start-2 flex justify-center gap-x-2 text-[20px] items-center"
-          >
-            <span class="max-md:hidden"> = </span>
-          </div>
-          <div
-            class="max-md:order-8 row-start-2 flex justify-center gap-x-2 text-[20px] items-center"
-          >
-            <span x-text="$store.marks.markData.averageMark"></span>
+            <div
+              class="max-md:order-7 col-start-5 flex justify-center gap-x-2 text-[16px] items-center"
+            >
+              <span>Promedio</span>
+            </div>
+            <div
+              class="max-md:order-2 row-start-2 flex justify-center gap-x-2 text-[20px] items-center text-sh-purple"
+            >
+              <span
+                x-text="$store.marks.markData.markedActivities.markContribution"
+              ></span>
+            </div>
+            <div
+              class="max-md:order-3 row-start-2 flex justify-center gap-x-2 text-[20px] items-center"
+            >
+              <span>+</span>
+            </div>
+            <div
+              class="max-md:order-5 row-start-2 flex justify-center gap-x-2 text-[20px] items-center text-sh-blue"
+            >
+              <span x-text="$store.marks.markData.activities.markContribution"
+              ></span>
+            </div>
+            <div
+              class="border-t border-sh-black md:border-t-0 max-md:order-6 row-start-2 flex justify-center gap-x-2 text-[20px] items-center"
+            >
+              <span class="max-md:hidden"> = </span>
+            </div>
+            <div
+              class="max-md:order-8 row-start-2 flex justify-center gap-x-2 text-[20px] items-center"
+            >
+              <span x-text="$store.marks.markData.averageMark"></span>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  <div class="flex flex-col gap-y-2 py-4 border-t-2 border-gray-300">
-    <h2 class="text-[20px] md:text-[24px] font-semibold">
-      Actividades obligatorias
-    </h2>
-    <p class="text-[14px] md:text-[16px] text-gray-600">
-      Todas las actividades que es necesario tener completas para poder aprobar.
-    </p>
-    <div class="flex justify-center">
-      <div
-        class="border-gray-400 border-2 w-full max-w-full md:w-4/5 md:min-w-80 md:max-w-4xl rounded-xl overflow-hidden"
-        x-show="$store.marks.specialActivities().length > 0"
-      >
-        <table class="border-collapse w-full">
-          <thead class="bg-gray-300 text-gray-600">
-            <tr>
-              <th class="text-[14px] md:text-[16px] p-2">Actividad</th>
-              <th class="text-[14px] md:text-[16px] p-2">Estado</th>
-            </tr>
-          </thead>
-          <tbody>
-            <template x-for="activity in $store.marks.specialActivities()">
-              <tr
-                class="border-t border-gray-400"
-                x-data="{redo: activity.inRevision}"
-              >
-                <td class="text-[14px] md:text-[16px] p-2">
-                  <span x-text="activity.name"></span>
-                </td>
-                <td class="p-2">
-                  <div class="w-full flex justify-center items-center">
-                    <div
-                      class="rounded-full flex justify-center items-center px-2 py-1 gap-x-2"
-                      x-bind:class="{
+    <div class="flex flex-col gap-y-2 py-4 border-t-2 border-gray-300">
+      <h2 class="text-[20px] md:text-[24px] font-semibold">
+        Actividades obligatorias
+      </h2>
+      <p class="text-[14px] md:text-[16px] text-gray-600">
+        Todas las actividades que es necesario tener completas para poder
+        aprobar.
+      </p>
+      <div class="flex justify-center">
+        <div
+          class="border-gray-400 border-2 w-full max-w-full md:w-4/5 md:min-w-80 md:max-w-4xl rounded-xl overflow-hidden"
+          x-show="$store.marks.specialActivities().length > 0"
+        >
+          <table class="border-collapse w-full">
+            <thead class="bg-gray-300 text-gray-600">
+              <tr>
+                <th class="text-[14px] md:text-[16px] p-2">Actividad</th>
+                <th class="text-[14px] md:text-[16px] p-2">Estado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <template x-for="activity in $store.marks.specialActivities()">
+                <tr
+                  class="border-t border-gray-400"
+                  x-data="{redo: activity.inRevision}"
+                >
+                  <td class="text-[14px] md:text-[16px] p-2">
+                    <span x-text="activity.name"></span>
+                  </td>
+                  <td class="p-2">
+                    <div class="w-full flex justify-center items-center">
+                      <div
+                        class="rounded-full flex justify-center items-center px-2 py-1 gap-x-2"
+                        x-bind:class="{
                           'bg-sh-light-yellow text-sh-yellow': redo,
                       'bg-sh-light-green text-sh-green': activity.done && !redo,
                       'bg-sh-light-red text-sh-red': !activity.done && !redo
                     }"
-                    >
-                      <span
-                        class="material-symbols-outlined text-[16px]! md:text-[20px]!"
-                        x-text="redo ? 'more_horiz' : (activity.done ? 'check' : 'close')"
-                      ></span>
-                      <span
-                        class="text-[14px] md:text-[16px]"
-                        x-text="(()=>{
+                      >
+                        <span
+                          class="material-symbols-outlined text-[16px]! md:text-[20px]!"
+                          x-text="redo ? 'more_horiz' : (activity.done ? 'check' : 'close')"
+                        ></span>
+                        <span
+                          class="text-[14px] md:text-[16px]"
+                          x-text="(()=>{
                           if(redo){
                             return 'En Revisión'
                           }
@@ -465,68 +476,68 @@ const { position, subject } = Astro.props;
                             return 'Pendiente'
                           }
                         })()"
-                      >
-                      </span>
+                        >
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                </td>
-              </tr>
-            </template>
-          </tbody>
-        </table>
+                  </td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="flex flex-col gap-y-2 py-4 border-t-2 border-gray-300">
-    <h2 class="text-[20px] md:text-[24px] font-semibold">
-      Actividades con nota
-    </h2>
-    <p class="text-[14px] md:text-[16px] text-gray-600">
-      Todos las actividades/trabajos prácticos que reciben una nota numérica. Se
-      aprueban con una nota mayor o igual a 6.
-    </p>
-    <div class="flex justify-center">
-      <div
-        class="border-gray-400 border-2 w-full max-w-full md:w-4/5 md:min-w-80 md:max-w-4xl rounded-xl overflow-hidden"
-        x-show="$store.marks.marks.length > 0"
-      >
-        <table class="border-collapse w-full">
-          <thead class="bg-gray-300 text-gray-600">
-            <tr>
-              <th class="text-[14px] md:text-[16px] p-2">Trabajo Práctico</th>
-              <th class="text-[14px] md:text-[16px] p-2">Estado</th>
-            </tr>
-          </thead>
-          <tbody>
-            <template x-for="activity in $store.marks.marks">
-              <tr
-                class="border-t border-gray-400"
-                x-data="{redo: activity.inRevision}"
-              >
-                <td class="text-[14px] md:text-[16px] p-2">
-                  <span x-text="activity.name"></span>
-                </td>
-                <td class="p-2">
-                  <div class="w-full flex justify-center items-center">
-                    <div
-                      class="rounded-full flex justify-center items-center px-2 py-1 gap-x-2 text-[16px]"
-                      x-bind:class="{
+    <div class="flex flex-col gap-y-2 py-4 border-t-2 border-gray-300">
+      <h2 class="text-[20px] md:text-[24px] font-semibold">
+        Actividades con nota
+      </h2>
+      <p class="text-[14px] md:text-[16px] text-gray-600">
+        Todos las actividades/trabajos prácticos que reciben una nota numérica.
+        Se aprueban con una nota mayor o igual a 6.
+      </p>
+      <div class="flex justify-center">
+        <div
+          class="border-gray-400 border-2 w-full max-w-full md:w-4/5 md:min-w-80 md:max-w-4xl rounded-xl overflow-hidden"
+          x-show="$store.marks.marks.length > 0"
+        >
+          <table class="border-collapse w-full">
+            <thead class="bg-gray-300 text-gray-600">
+              <tr>
+                <th class="text-[14px] md:text-[16px] p-2">Trabajo Práctico</th>
+                <th class="text-[14px] md:text-[16px] p-2">Estado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <template x-for="activity in $store.marks.marks">
+                <tr
+                  class="border-t border-gray-400"
+                  x-data="{redo: activity.inRevision}"
+                >
+                  <td class="text-[14px] md:text-[16px] p-2">
+                    <span x-text="activity.name"></span>
+                  </td>
+                  <td class="p-2">
+                    <div class="w-full flex justify-center items-center">
+                      <div
+                        class="rounded-full flex justify-center items-center px-2 py-1 gap-x-2 text-[16px]"
+                        x-bind:class="{
                       'bg-sh-light-yellow text-sh-yellow': redo,
                       'bg-sh-light-green text-sh-green': activity.mark >= 6 && !redo,
                       'bg-sh-light-red text-sh-red': activity.mark < 6 && !redo
                     }"
-                    >
-                      <span
-                        class="text-[14px] md:text-[16px]"
-                        x-text="activity.mark"
-                        x-show="!redo"></span>
-                      <span
-                        class="material-symbols-outlined text-[16px]! md:text-[20px]!"
-                        x-text="'more_horiz'"
-                        x-show="redo"></span>
-                      <span
-                        class="text-[14px] md:text-[16px] text-center md:text-left"
-                        x-text="(()=>{
+                      >
+                        <span
+                          class="text-[14px] md:text-[16px]"
+                          x-text="activity.mark"
+                          x-show="!redo"></span>
+                        <span
+                          class="material-symbols-outlined text-[16px]! md:text-[20px]!"
+                          x-text="'more_horiz'"
+                          x-show="redo"></span>
+                        <span
+                          class="text-[14px] md:text-[16px] text-center md:text-left"
+                          x-text="(()=>{
                           if(redo){
                             return 'En Revisión'
                           }
@@ -538,67 +549,67 @@ const { position, subject } = Astro.props;
                             return 'En Proceso'
                           }
                         })()"
-                      >
-                      </span>
+                        >
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                </td>
-              </tr>
-            </template>
-          </tbody>
-        </table>
+                  </td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="flex flex-col gap-y-2 py-4 border-t-2 border-gray-300">
-    <h2 class="text-[20px] md:text-[24px] font-semibold">
-      Actividades de clase
-    </h2>
-    <p class="text-[14px] md:text-[16px] text-gray-600">
-      Todos las actividades/trabajos prácticos que se hacen a modo de práctica
-      en clase. No reciben una calificación numérica, pero se consideran hechas
-      si cumplen con lo mínimo esperado para dicha clase.
-    </p>
-    <div class="flex justify-center">
-      <div
-        class="border-gray-400 border-2 w-full max-w-full md:w-4/5 md:min-w-80 md:max-w-4xl rounded-xl overflow-hidden"
-        x-show="$store.marks.activities.length > 0"
-      >
-        <table class="border-collapse w-full">
-          <thead class="bg-gray-300 text-gray-600">
-            <tr>
-              <th class="text-[14px] md:text-[16px] p-2">Actividad</th>
-              <th class="text-[14px] md:text-[16px] p-2">Estado</th>
-            </tr>
-          </thead>
-          <tbody>
-            <template
-              x-for="activity in $store.marks.activities.filter(act => !act.special)"
-            >
-              <tr
-                class="border-t border-gray-400"
-                x-data="{redo: activity.inRevision}"
+    <div class="flex flex-col gap-y-2 py-4 border-t-2 border-gray-300">
+      <h2 class="text-[20px] md:text-[24px] font-semibold">
+        Actividades de clase
+      </h2>
+      <p class="text-[14px] md:text-[16px] text-gray-600">
+        Todos las actividades/trabajos prácticos que se hacen a modo de práctica
+        en clase. No reciben una calificación numérica, pero se consideran
+        hechas si cumplen con lo mínimo esperado para dicha clase.
+      </p>
+      <div class="flex justify-center">
+        <div
+          class="border-gray-400 border-2 w-full max-w-full md:w-4/5 md:min-w-80 md:max-w-4xl rounded-xl overflow-hidden"
+          x-show="$store.marks.activities.length > 0"
+        >
+          <table class="border-collapse w-full">
+            <thead class="bg-gray-300 text-gray-600">
+              <tr>
+                <th class="text-[14px] md:text-[16px] p-2">Actividad</th>
+                <th class="text-[14px] md:text-[16px] p-2">Estado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <template
+                x-for="activity in $store.marks.activities.filter(act => !act.special)"
               >
-                <td class="text-[14px] md:text-[16px] p-2">
-                  <span x-text="activity.name"></span>
-                </td>
-                <td class="p-2">
-                  <div class="w-full flex justify-center items-center">
-                    <div
-                      class="rounded-full flex justify-center items-center px-2 py-1 gap-x-2"
-                      x-bind:class="{
+                <tr
+                  class="border-t border-gray-400"
+                  x-data="{redo: activity.inRevision}"
+                >
+                  <td class="text-[14px] md:text-[16px] p-2">
+                    <span x-text="activity.name"></span>
+                  </td>
+                  <td class="p-2">
+                    <div class="w-full flex justify-center items-center">
+                      <div
+                        class="rounded-full flex justify-center items-center px-2 py-1 gap-x-2"
+                        x-bind:class="{
                       'bg-sh-light-yellow text-sh-yellow': redo,
                       'bg-sh-light-green text-sh-green': activity.done && !redo,
                       'bg-sh-light-red text-sh-red': !activity.done && !redo
                     }"
-                    >
-                      <span
-                        class="material-symbols-outlined text-[16px]! md:text-[20px]!"
-                        x-text="redo ? 'more_horiz' : (activity.done ? 'check' : 'close')"
-                      ></span>
-                      <span
-                        class="text-[14px] md:text-[16px] text-center md:text-left"
-                        x-text="(()=>{
+                      >
+                        <span
+                          class="material-symbols-outlined text-[16px]! md:text-[20px]!"
+                          x-text="redo ? 'more_horiz' : (activity.done ? 'check' : 'close')"
+                        ></span>
+                        <span
+                          class="text-[14px] md:text-[16px] text-center md:text-left"
+                          x-text="(()=>{
                           if(redo){
                             return 'En Revisión'
                           }
@@ -610,25 +621,26 @@ const { position, subject } = Astro.props;
                             return 'Pendiente'
                           }
                         })()"
-                      >
-                      </span>
+                        >
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                </td>
-              </tr>
-            </template>
-          </tbody>
-        </table>
+                  </td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="flex flex-col gap-y-2 py-4 border-t-2 border-gray-300">
-    <h2 class="text-[20px] md:text-[24px] font-semibold">Notas históricas</h2>
-    <p class="text-[14px] md:text-[16px] text-gray-600">
-      La siguientes notas reflejan el estado de la materia durante el período en
-      cuestión. Obviamente, se pueden hacer reentregas y recuperatorios para
-      mejorar dicha nota.
-    </p>
-    <FixedMarks />
-  </div>
-</SectionLayout>
+    <div class="flex flex-col gap-y-2 py-4 border-t-2 border-gray-300">
+      <h2 class="text-[20px] md:text-[24px] font-semibold">Notas históricas</h2>
+      <p class="text-[14px] md:text-[16px] text-gray-600">
+        La siguientes notas reflejan el estado de la materia durante el período
+        en cuestión. Obviamente, se pueden hacer reentregas y recuperatorios
+        para mejorar dicha nota.
+      </p>
+      <FixedMarks />
+    </div>
+  </SectionLayout>
+</template>
