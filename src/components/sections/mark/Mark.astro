@@ -191,16 +191,22 @@ const { position, subject } = Astro.props;
         <div
           class="rounded-2xl text-white grow flex flex-col gap-y-1 p-2 justify-center items-center"
           x-bind:class="{
-          'bg-sh-green': $store.marks.markData.finalMark >= 6,
-          'bg-sh-red': $store.marks.markData.finalMark < 6
+          'bg-sh-black': !$store.marks.markData.finalMark,
+          'bg-sh-green': $store.marks.markData.finalMark && $store.marks.markData.finalMark >= 6,
+          'bg-sh-red': $store.marks.markData.finalMark && $store.marks.markData.finalMark < 6
         }"
         >
           <span
             class="text-[48px] font-bold"
+            x-show="$store.marks.markData.finalMark"
             x-text="$store.marks.markData.finalMark"></span>
           <span
+            class="!text-[72px] material-symbols-outlined"
+            x-show="!$store.marks.markData.finalMark">more_horiz</span
+          >
+          <span
             class="text-[24px] font-semibold"
-            x-text="$store.marks.markData.finalMark >= 6 ? 'Aprobado' : 'En Proceso'"
+            x-text="$store.marks.markData.finalMark ? ($store.marks.markData.finalMark >= 6 ? 'Aprobado' : 'En Proceso'):'Sin Calificar'"
           ></span>
         </div>
         <div class="flex items-center gap-x-2 md:gap-x-4">

@@ -8,22 +8,26 @@ interface Props {
 const { course, minimized, open } = Astro.props;
 ---
 
-<template
-  x-if={`$store.student.course === '${course}' && $store.marks.markData.finalMark`}
->
+<template x-if={`$store.student.course === '${course}' && $store.marks`}>
   <div
     class="grow flex flex-col justify-end"
     x-data="{ minimized: false, passed: false }"
-    x-init="passed = $store.marks.markData.finalMark >= 6"
-    x-effect={`minimized = ${minimized}`}
+    x-effect={`passed = $store.marks.markData.finalMark >= 6;minimized = ${minimized}`}
   >
-    <div x-show="minimized" x-transition.opacity>
+    <div x-show="minimized" x-transition.opacity class="cursor-pointer">
       <div
+        ]
         class="w-[calc(24px+var(--spacing)*4)] aspect-square text-[20px] font-bold border-4 bg-white rounded-full flex justify-center items-center"
-        x-bind:class="{ 'border-sh-green text-sh-green': passed, 'border-sh-red text-sh-red': !passed }"
+        x-bind:class="{ 'border-white text-sh-dark-gray': !$store.marks.markData.finalMark || passed, 'border-sh-red text-sh-red': $store.marks.markData.finalMark && !passed }"
         @click={`$store.section.changeSection('nota',5); ${open} = false`}
       >
-        <span x-text="$store.marks.markData.finalMark"></span>
+        <span
+          x-show="$store.marks.markData.finalMark"
+          x-text="$store.marks.markData.finalMark"></span>
+        <span
+          x-show="!$store.marks.markData.finalMark"
+          class="!text-[20px] material-symbols-outlined">more_horiz</span
+        >
       </div>
     </div>
     <div
@@ -33,13 +37,19 @@ const { course, minimized, open } = Astro.props;
       <span class="text-[20px] font-semibold">Nota Parcial</span>
       <div class="flex flex-col items-center gap-y-1">
         <div
-          class="text-[30px] font-bold border-4 bg-sh-light-purple rounded-full aspect-square flex justify-center items-center"
-          x-bind:class="{ 'border-sh-dark-gray text-sh-dark-gray': passed, 'border-sh-red text-sh-red': !passed }"
+          class="text-[30px] font-bold border-4 bg-sh-light-purple rounded-full w-[calc(40px+var(--spacing)*4)] aspect-square flex justify-center items-center"
+          x-bind:class="{ 'border-sh-dark-gray text-sh-dark-gray': !$store.marks.markData.finalMark || passed, 'border-sh-red text-sh-red': $store.marks.markData.finalMark && !passed }"
         >
-          <span x-text="$store.marks.markData.finalMark"></span>
+          <span
+            x-show="$store.marks.markData.finalMark"
+            x-text="$store.marks.markData.finalMark"></span>
+          <span
+            x-show="!$store.marks.markData.finalMark"
+            class="!text-[40px] material-symbols-outlined">more_horiz</span
+          >
         </div>
         <span
-          x-text="passed ? 'Aprobado' : 'En Proceso'"
+          x-text="$store.marks.markData.finalMark ? (passed ? 'Aprobado' : 'En Proceso'): 'Sin Calificar'"
           class="text-[16px] font-semibold"></span>
       </div>
       <p
