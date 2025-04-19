@@ -107,8 +107,8 @@ let edad = 15;`}
     <InlineCodeBlock lang="javascript" code="prompt(...)" />
     <p>
       Sirve para <strong>pedirle algo al usuario</strong>, como si fuera una
-      pregunta. En el navegador se ve como un <em>popup</em> que para la ejecución
-      hasta que el usuario responda.
+      pregunta. En el navegador se ve como una ventana emergente (popup) que
+      para la ejecución hasta que el usuario responda.
     </p>
   </li>
   <CodeBlock
@@ -116,90 +116,7 @@ let edad = 15;`}
     code={`let nombre = prompt("¿Cómo te llamás?");
 console.log("Hola " + nombre);`}
   />
+  <li><InlineCodeBlock lang="javascript" code="alert(...)" /></li>
+  <p>Sirve para mostrar un mensaje en una ventana emergente (popup):</p>
+  <CodeBlock lang="javascript" code={`alert("Bienvenido al sitio");`} />
 </ol>
-<h2>Tipos de datos</h2>
-<h3>¿Qué es un tipo de dato?</h3>
-<p>
-  Un tipo de dato define qué tipo de información contiene una variable y qué se
-  puede hacer con ella. Cambia también como se guarda en la computadora, pero
-  eso es problema para la materia de Hardware.
-</p>
-<p>Por ejemplo:</p>
-<ul>
-  <li>Con un texto podemos concatenar ("Hola" + " mundo").</li>
-  <li>Con números podemos sumar, restar, multiplicar, dividir, etc.</li>
-</ul>
-<h3>Tipos de datos en JavaScript</h3>
-<p>Por ahora en esta materia vamos a usar dos tipos de datos:</p>
-<table>
-  <thead>
-    <tr>
-      <th>Tipo</th>
-      <th>Descripción</th>
-      <th>Ejemplo</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><em>string</em></td>
-      <td>Texto (entre comillas dobles o simples)</td>
-      <td>"Hola"</td>
-    </tr>
-    <tr>
-      <td><em>number</em></td>
-      <td>Números (enteros o decimales)</td>
-      <td>42, 3.14</td>
-    </tr>
-  </tbody>
-</table>
-<h3>Conversión de tipos</h3>
-<p>
-  A veces necesitamos <strong>cambiar el tipo de un dato</strong> para hacer distintas
-  cosas.
-</p>
-<ol>
-  <li>
-    Convertir texto a número: <InlineCodeBlock
-      lang="javascript"
-      code="parseInt(...)"
-    />
-  </li>
-  <CodeBlock
-    lang="javascript"
-    code={`let edadTexto = prompt("¿Qué edad tenés?");
-let edad = parseInt(edadTexto); // ahora edad es un número`}
-  />
-  <li>
-    Convertir número a texto: <InlineCodeBlock
-      lang="javascript"
-      code="toString()"
-    />
-  </li>
-  <CodeBlock
-    lang="javascript"
-    code={`let numero = 10;
-let texto = numero.toString(); // ahora texto es "10"`}
-  />
-</ol>
-<h3>Ejemplo de conversión con tipos</h3>
-<p>
-  El siguiente ejemplo muestra un caso de conversión de tipos y porque es útil.
-  Pueden correrlo ustedes para ver como funciona.
-</p>
-<CodeBlock
-  lang="javascript"
-  code={`let numero1Texto = prompt("Ingresá el primer número:");
-let numero2Texto = prompt("Ingresá el segundo número:");
-
-// Si no convertimos, se concatenan como texto
-let resultadoTexto = numero1Texto + numero2Texto;
-
-console.log("Sin conversión (texto): " + resultadoTexto);
-
-// Convertimos a números
-let numero1 = parseInt(numero1Texto);
-let numero2 = parseInt(numero2Texto);
-let resultadoNumerico = numero1 + numero2;
-
-console.log("Conversión a número (suma): " + resultadoNumerico);`}
-/>

@@ -1,0 +1,149 @@
+---
+import CodeBlock from "../../../../../components/articles/code-block/CodeBlock.astro";
+import InlineCodeBlock from "../../../../../components/articles/code-block/InlineCodeBlock.astro";
+
+export const partial = true;
+---
+
+<h2>Valores Booleanos</h2>
+<p>
+  Un <strong>booleano</strong> es un tipo de dato que solo puede tener dos valores:
+</p>
+<ul>
+  <li><InlineCodeBlock lang="javascript" code="true" /> (verdadero)</li>
+  <li><InlineCodeBlock lang="javascript" code="false" /> (falso)</li>
+</ul>
+<p>
+  Se usan para responder preguntas que tienen solo 2 posibles respuestas, si o
+  no. Por ejemplo:
+</p>
+<CodeBlock
+  lang="javascript"
+  code={`let esMayorDeEdad = false;
+console.log(esMayorDeEdad); // false`}
+/>
+<p>En general, se usan desde otras expresiones como las comparaciones:</p>
+<CodeBlock
+  lang="javascript"
+  code={`let edad = 18;
+console.log(edad >= 18); // Muestra: true`}
+/>
+<h2>El if</h2>
+<p>
+  La instrucción if ejecuta un bloque de código solo si una condición es
+  verdadera (true).
+</p>
+<CodeBlock
+  lang="javascript"
+  code={`if (condición) {
+// Código que se ejecuta si la condición es verdadera
+}`}
+/>
+<p>
+  Donde <em>condición</em> tiene que ser una expresión que evalúa a un valor booleano
+  (true/false)
+</p>
+<p>Por ejemplo:</p>
+<CodeBlock
+  lang="javascript"
+  code={`let nota = 9;
+
+if (nota >= 6) {
+  console.log("¡Aprobaste!");
+}`}
+/>
+<p>
+  Si <InlineCodeBlock lang="javascript" code="nota" /> es mayor que 6, se mostrará
+  el mensaje. Si no, no pasa nada.
+</p>
+<h2>Else y Else If</h2>
+<p>
+  A veces queremos ejecutar una acción diferente si la condición no se cumple.
+  Para eso usamos else:
+</p>
+<CodeBlock
+  lang="javascript"
+  code={`if (condición) {
+  // Código si la condición es verdadera
+} else {
+  // Código si la condición es falsa
+}`}
+/>
+<p>Por ejemplo:</p>
+<CodeBlock
+  lang="javascript"
+  code={`let temperatura = 10;
+
+if (temperatura > 20) {
+  console.log("Hace calor");
+} else {
+  console.log("Hace frío");
+}`}
+/>
+<p>Y si tenemos más de una posibilidad, podemos usar else if:</p>
+<CodeBlock
+  lang="javascript"
+  code={`if (condición1) {
+  // Código si condición1 es verdadera
+} else if (condición2) {
+  // Código si condición1 es falsa y condición2 es verdadera
+} else if (condición3) {
+  // Código si condición1 y condición2 son falsas y condición3 es verdadera
+}
+... //Tantos else if como necesitemos
+else {
+  // Código si ninguna condición es verdadera
+}`}
+/>
+<p>Por ejemplo:</p>
+<CodeBlock
+  lang="javascript"
+  code={`let nota = 7;
+
+if (nota >= 9) {
+  console.log("Sobresaliente");
+} else if (nota >= 6) {
+  console.log("Aprobado");
+} else {
+  console.log("Desaprobado");
+}
+`}
+/>
+<h2>if anidados</h2>
+<p>
+  Un if puede ir dentro de otro if. Esto se llama <strong
+    >condicional anidado</strong
+  > y se usa cuando queremos comprobar múltiples condiciones, y surgen caminos distintos
+  en base a las condiciones.
+</p>
+<CodeBlock
+  lang="javascript"
+  code={`let usuario = prompt("Ingresá tu usuario:");
+let clave = prompt("Ingresá tu clave:");
+
+if (usuario === "admin") {
+  if (clave === "1234") {
+    console.log("Acceso concedido al panel de administración");
+  } else {
+    console.log("Contraseña incorrecta para admin");
+  }
+} else if (usuario === "invitado") {
+  if (clave === "invitado") {
+    console.log("Acceso limitado como invitado");
+  } else {
+    console.log("Contraseña incorrecta para invitado");
+  }
+} else {
+  console.log("Usuario no reconocido");
+}
+`}
+/>
+<p>Este código tiene <strong>cinco posibles caminos:</strong></p>
+<ol>
+  <li>Usuario = "admin", clave = "1234" → Acceso completo.</li>
+  <li>Usuario = "admin", clave incorrecta → Error de clave.</li>
+  <li>Usuario = "invitado", clave = "invitado" → Acceso limitado.</li>
+  <li>Usuario = "invitado", clave incorrecta → Error de clave.</li>
+  <li>Usuario no reconocido → Error de usuario.</li>
+</ol>
+<p>Pueden probar este programa para ver mejor como funciona</p>
