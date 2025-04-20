@@ -1,0 +1,112 @@
+---
+import { Code } from "astro:components";
+import CodeBlock from "../../../../../components/articles/code-block/CodeBlock.astro";
+import InlineCodeBlock from "../../../../../components/articles/code-block/InlineCodeBlock.astro";
+
+export const partial = true;
+---
+
+<h2>&& — AND (Y lógico)</h2>
+<p>Devuelve true solo <strong>si ambas condiciones son verdaderas</strong>.</p>
+<CodeBlock
+  lang="javascript"
+  code={`true && true     // true
+true && false    // false
+false && true    // false
+false && false   // false
+`}
+/>
+<p>
+  Por ejemplo, si tengo una linea de código que necesita de dos condiciones para
+  ejecutarse, puedo usar ifs anidados.
+</p>
+<CodeBlock
+  lang="javascript"
+  code={`let edad = 18;
+let tieneLicencia = true;
+if (edad >= 18) {
+  if (tieneLicencia) {
+    console.log("Puede manejar");
+  } 
+}`}
+/>
+<p>Puedo simplificar y clarificar el código usando AND</p>
+<CodeBlock
+  lang="javascript"
+  code={`let edad = 18;
+let tieneLicencia = true;
+if (edad >= 18 && tieneLicencia) {
+  console.log("Puede manejar");
+}`}
+/>
+<p>
+  Un detalle importante para más adelante, es que la segunda condición ni
+  ejecuta cuando la primera ya es falsa. Esto es útil en situaciones donde la
+  segunda parte crashea si la primera es falsa. Osea, solo se ejecuta si la
+  primera es verdadera, evitando que se rompa el programa.
+</p>
+<h2>|| — OR (O lógico)</h2>
+<p>
+  Devuelve true <strong>si al menos una de las condiciones es verdadera</strong
+  >.
+</p>
+<CodeBlock
+  lang="javascript"
+  code={`true || true     // true
+true || false    // true
+false || true    // true
+false || false   // false
+`}
+/>
+<p>
+  Por ejemplo, si tengo una línea de código que tiene que ejecutar cuando ocurre
+  alguna de 2 condiciones, puedo usar 2 ifs.
+</p>
+<CodeBlock
+  lang="javascript"
+  code={`let tieneEntrada = false;
+let esInvitado = true;
+if (tieneEntrada) {
+  console.log("Puede entrar");
+}
+if (esInvitado) {
+  console.log("Puede entrar");
+}`}
+/>
+<p>Puedo simplificar y clarificar el código usando OR</p>
+<CodeBlock
+  lang="javascript"
+  code={`let tieneEntrada = false;
+let esInvitado = true;
+if (tieneEntrada || esInvitado) {
+  console.log("Puede entrar");
+}`}
+/>
+<h2>! — NOT (NO lógico)</h2>
+<p>Invierte el valor: true pasa a false, y false pasa a true.</p>
+<CodeBlock
+  lang="javascript"
+  code={`!true     // false
+!false    // true
+`}
+/>
+<p>
+  Por ejemplo, si quiero ejecutar una línea de código cuando la condición es
+  falsa, puedo comparar la condicion con false.
+</p>
+<CodeBlock
+  lang="javascript"
+  code={`let estaLloviendo = false;
+if (estaLloviendo === false) {
+  console.log("Podemos salir.");
+}
+`}
+/>
+<p>Puedo simplificar y clarificar el código usando NOT</p>
+<CodeBlock
+  lang="javascript"
+  code={`let estaLloviendo = false;
+if (!estaLloviendo) {
+    console.log("Podemos salir.");
+}`}
+/>
