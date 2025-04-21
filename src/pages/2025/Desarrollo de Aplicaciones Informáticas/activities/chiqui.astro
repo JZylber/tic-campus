@@ -1,6 +1,7 @@
 ---
 import ImportantBox from "../../../../components/articles/alertbox/ImportantBox.astro";
 import CodeBlock from "../../../../components/articles/code-block/CodeBlock.astro";
+import InlineCodeBlock from "../../../../components/articles/code-block/InlineCodeBlock.astro";
 
 export const partial = true;
 ---
@@ -26,8 +27,7 @@ export const partial = true;
   Para correr el tp, necesitamos una librería de estadística para simular los
   partidos. Se instala con:
 </p>
-<pre><code class="language-bash">pip install --user scipy
-</code></pre>
+<CodeBlock lang="bash" code="pip install --user scipy" />
 <h2>Objetivo</h2>
 <p>
   El Chiqui nos pidio analizar distintos sistemas de competencia en el fútbol.
@@ -42,35 +42,38 @@ export const partial = true;
   representar su ataque y defensa respectivamente. A mayor número, mejor el
   ataque o defensa. Los equipos entonces van a ser tuplas o listas con 3
   elementos: el nombre, la probabilidad de ataque y la probabilidad de defensa.
-  Por ejemplo
+  Por ejemplo,
 </p>
-<pre><code class="language-python">(&quot;Deportivo Riestra&quot;,0.6,0.4)
-</code></pre>
-<h2 id="partidos">Partidos</h2>
+<CodeBlock lang="python" code={'("Deportivo Riestra",0.6,0.4)'} />
+<h2>Partidos</h2>
 <p>
   Para simular los partidos, yo les voy a proveer dos funciones que son
   probabilísticas.
 </p>
 <ul>
   <li>
-    <code>simular_partido</code>: Toma 2 equipos y devuelve el resultado en
-    goles (basado en los ataques y defensas)
+    <InlineCodeBlock lang="python" code="simular_partido(equipoA, equipoB)" />:
+    Toma 2 equipos y devuelve el resultado en goles (basado en los ataques y
+    defensas)
   </li>
   <li>
-    <code>penales</code>: Toma 2 equipos y devuelve el resultado en goles
-    (basado en los ataques y defensas) de patear 5 penales por equipo.
-    Opcionalmente, se le puede pasar un tercer parámetro, <code>cantidad</code>,
-    que es la cantidad de penales por equipo.
+    <InlineCodeBlock
+      lang="python"
+      code="penales(equipoA, equipoB, cantidad = 5)"
+    />
+    : Toma 2 equipos y devuelve el resultado en goles (basado en los ataques y defensas)
+    de patear 5 penales por equipo. Opcionalmente, se le puede pasar un tercer parámetro,
+    cantidad, que es la cantidad de penales por equipo.
   </li>
 </ul>
-<h2 id="liga">Liga</h2>
+<h2>Liga</h2>
 <p>
   En una liga, todos los equipos juegan con todos los otros 1 sola vez (sin
-  vuelta). Los partidos se juegan con la función <code>simular_partido</code>.
-  Suman 3 puntos si ganan, 1 si empatan y 0 si pierden. El campeón es quien al
-  final de todos los partidos, tiene más puntos. Si hay dos con igual cantidad
-  de puntos, gana el que mayor diferencia de goles (<code
-    >golesMetidos - golesRecibidos</code
+  vuelta). Los partidos se juegan con la función <em>simular_partido</em>. Suman
+  3 puntos si ganan, 1 si empatan y 0 si pierden. El campeón es quien al final
+  de todos los partidos, tiene más puntos. Si hay dos con igual cantidad de
+  puntos, gana el que mayor diferencia de goles (<em
+    >golesMetidos - golesRecibidos</em
   >) y si perisiste el empate, quien tiene más. Hay una función auxiliar que les
   puede ayudar a determinar el campeón de un torneo. Las tablas de un torneo
   tienen la forma:
@@ -114,9 +117,9 @@ export const partial = true;
 <p>
   Que en python lo vamos a representar como lista de listas. Pueden usar otras
   estructuras, pero al momento de llamar la función
-  <code>ordenar_tabla</code> debe ser una lista de listas.
+  <em>ordenar_tabla</em> debe ser una lista de listas.
 </p>
-<h2 id="llaves">Llaves</h2>
+<h2>Llaves</h2>
 <p>
   Asumiendo que la cantidad de equipos es una potencia de 2 (4,8,16,32,etc), se
   realizan partidos de a pares de equipos, en donde se determina un ganador que
@@ -125,32 +128,32 @@ export const partial = true;
   siguiente manera:
 </p>
 <ol>
-  <li>Se simulan el partido con <code>simular_partido</code>.</li>
+  <li>Se simulan el partido con <em>simular_partido</em>.</li>
   <li>
     Si no hay un ganador, se juegan una ronda de penales. Una ronda son 5
-    penales por equipo usando la función <code>penales</code>.
+    penales por equipo usando la función <em>penales</em>.
   </li>
   <li>
     Si sigue sin haber un ganador, se va un penal por eliminación, es decir, 1
     penal por equipo hasta que se defina un ganador. Se puede usar la función
-    <code>penales</code> con <code>cantidad = 1</code>.
+    <em>penales</em> con <em>cantidad = 1</em>.
   </li>
 </ol>
-<h2 id="consigna">Consigna</h2>
-<h3 id="parte-a-por-el-6">Parte A: Por el 6</h3>
+<h2>Consigna</h2>
+<h3>Parte A: Por el 6</h3>
 <p>
   Realizar una función que, dado un conjunto de equipos, simule un campeonato de
   liga siguiendo las indicaciones descritas anteriormente, y devuelva la tabla
   de resultados <strong>ordenada por puntaje</strong>. Hay funciones para
   ordenar una tabla de posiciones. Probar que funcione.
 </p>
-<h3 id="parte-b-por-el-8">Parte B: Por el 8</h3>
+<h3>Parte B: Por el 8</h3>
 <p>
   Realizar una función que, dado un conjunto de equipos, simule un campeonato de
   llaves siguiendo las indicaciones descritas anteriormente, y devuelva
   <strong>el equipo ganador</strong>. Probar que funcione.
 </p>
-<h3 id="parte-c-por-el-9">Parte C: Por el 9</h3>
+<h3>Parte C: Por el 9</h3>
 <p>
   Ahora, hagamos la copa de liga argentina, que es una mezcla de los dos
   sistemas. Funciona de la siguiente forma:
