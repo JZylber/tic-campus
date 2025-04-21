@@ -5,4 +5,133 @@ import InlineCodeBlock from "../../../../../components/articles/code-block/Inlin
 export const partial = true;
 ---
 
-<p>Proximamente...</p>
+<h2>¿Por qué aprender objetos?</h2>
+<p>
+  Cuando trabajamos con JavaScript en el navegador, muchas veces necesitamos
+  <strong>organizar datos relacionados</strong>. Por ejemplo, si estamos creando
+  una app de Pokédex (registro de Pokémon), necesitamos representar cada Pokémon
+  con su información.
+</p>
+<p>Imaginá esto:</p>
+<CodeBlock
+  lang="javascript"
+  code={`let nombre = "Pikachu";
+let tipo = "Eléctrico";
+let nivel = 12;`}
+/>
+<p>
+  Esto sirve... pero si queremos tener muchos Pokémon, ¡necesitamos una
+  estructura más ordenada!<strong>
+    Los objetos nos ayudan a agrupar todo eso en un solo lugar
+  </strong>.
+</p>
+<h2>¿Qué es un objeto?</h2>
+<p>
+  Un <strong>objeto</strong> es una colección de datos relacionados, llamados <strong
+    >atributos</strong
+  >
+  (o propiedades), escritos en forma de <strong>clave: valor</strong>.
+</p>
+<CodeBlock
+  lang="javascript"
+  code={`let pikachu = {
+    nombre: "Pikachu",
+    tipo: "Eléctrico",
+    nivel: 12
+};`}
+/>
+<p>
+  Este objeto representa a Pikachu con tres atributos: nombre, tipo y nivel.
+</p>
+<h2>Acceder a los valores</h2>
+<p>Podemos obtener los datos de un objeto de dos formas:</p>
+<h3>Con punto (.)</h3>
+<CodeBlock
+  lang="javascript"
+  code={`console.log(pikachu.nombre); // "Pikachu"
+console.log(pikachu.nivel);  // 12
+`}
+/>
+<h3>Con corchetes ([])</h3>
+<CodeBlock
+  lang="javascript"
+  code={`console.log(pikachu["nombre"]); // "Pikachu"
+console.log(pikachu["nivel"]);  // 12
+`}
+/>
+<p>
+  Esta última forma es util si el nombre del atributo proviene de una variable o
+  tiene caracteres especiales. Por ejemplo,
+</p>
+<CodeBlock
+  lang="javascript"
+  code={`let atributo = "nivel";
+console.log(pikachu[atributo]); // 12`}
+/>
+<h2>Modificar valores</h2>
+<p>Podés actualizar cualquier valor del objeto:</p>
+<CodeBlock
+  lang="javascript"
+  code={`pikachu.nivel = 13; // Pikachu subió de nivel
+pikachu["tipo"] = "Eléctrico/Normal"; // Le agregamos un subtipo`}
+/>
+<h2>Agregar nuevos atributos</h2>
+<p>Los objetos en JS son dinámicos: se pueden expandir.</p>
+<CodeBlock
+  lang="javascript"
+  code={`pikachu.ataque = "Impactrueno"; // Agregamos un ataque
+pikachu["habilidad"] = "Electricidad estática"; // Agregamos una habilidad`}
+/>
+<p>Ahora el objeto pikachu tiene más info:</p>
+<CodeBlock
+  lang="javascript"
+  code={`let pikachu = {
+    nombre: "Pikachu",
+    tipo: "Eléctrico/Normal",
+    nivel: 13,
+    ataque: "Impactrueno",
+    habilidad: "Electricidad estática"
+};`}
+/>
+<h2>Resumen</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Acción</th>
+      <th>Ejemplo</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Crear un objeto</td>
+      <td
+        ><InlineCodeBlock
+          lang="javascript"
+          code="let pokemon = {nombre: 'Bulbasaur', nivel: 1};"
+        /></td
+      >
+    </tr>
+    <tr>
+      <td>Acceder a un atributo</td>
+      <td
+        ><InlineCodeBlock lang="javascript" code="pokemon.nombre;" /> o <InlineCodeBlock
+          lang="javascript"
+          code="pokemon['nombre'];"
+        /></td
+      >
+    </tr>
+    <tr>
+      <td>Cambiar valor</td>
+      <td><InlineCodeBlock lang="javascript" code="pokemon.nivel = 10;" /></td>
+    </tr>
+    <tr>
+      <td>Agregar nuevo atributo</td>
+      <td
+        ><InlineCodeBlock
+          lang="javascript"
+          code="pokemon.habilidad = 'Espesura';"
+        /></td
+      >
+    </tr>
+  </tbody>
+</table>
