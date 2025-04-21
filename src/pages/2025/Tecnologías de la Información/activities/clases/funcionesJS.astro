@@ -5,4 +5,160 @@ import InlineCodeBlock from "../../../../../components/articles/code-block/Inlin
 export const partial = true;
 ---
 
-<p>Proximamente...</p>
+<h2>¿Qué es una función?</h2>
+<p>
+  Una <strong>función</strong> es como una <strong
+    >máquina ensambladora en una fábrica</strong
+  >. Le entregás algunas piezas (datos de entrada), la máquina hace su trabajo
+  (una serie de instrucciones), y te entrega un producto (resultado).
+</p>
+<p>
+  Imaginá una fábrica de robots. Tenés una máquina que recibe una cabeza, un
+  cuerpo, y dos brazos. La máquina sigue un conjunto de pasos para armar el
+  robot y, al final, te devuelve el robot completo.
+</p>
+<p>En programación, una función hace lo mismo:</p>
+<ul>
+  <li>Recibe insumos (llamadas <strong>parámetros</strong>).</li>
+  <li>
+    Ejecuta pasos definidos (las instrucciones dentro de la función, o <strong
+      >cuerpo de la función</strong
+    >).
+  </li>
+  <li>Te entrega un resultado (el valor de <strong>retorno</strong>).</li>
+</ul>
+<h2>¿Por qué usamos funciones?</h2>
+<ul>
+  <li>
+    <strong>Organización:</strong> Ayudan a dividir tu código en partes más pequeñas,
+    fáciles de entender.
+  </li>
+  <li>
+    <strong>Reutilización:</strong> Podés usar la misma función muchas veces sin
+    copiar y pegar.
+  </li>
+  <li>
+    <strong>Legibilidad:</strong> Tu código queda más limpio y fácil de leer.
+  </li>
+</ul>
+<h2>¿Cómo se declara una función?</h2>
+<CodeBlock
+  lang="javascript"
+  code={`function ensamblarRobot() {
+  console.log("Robot ensamblado");
+}`}
+/>
+<p>
+  Esto es como definir una máquina en tu fábrica. Le das un nombre
+  (ensamblarRobot) y le indicás qué debe hacer. Esto se llama <strong
+    >declaración de función</strong
+  >.
+</p>
+<h2>¿Cómo se llama (ejecuta) una función?</h2>
+<CodeBlock
+  lang="javascript"
+  code={`ensamblarRobot(); // Muestra "Robot ensamblado"`}
+/>
+<p>
+  Es como apretar el botón de "encendido" de tu máquina ensambladora. Se llama a
+  una función escribiendo su nombre seguido de paréntesis ().
+</p>
+<h2>¿Qué son los parámetros?</h2>
+<p>
+  Son las piezas que la función necesita para trabajar. Podés darle diferentes
+  piezas para obtener diferentes resultados.
+</p>
+<CodeBlock
+  lang="javascript"
+  code={`function ensamblarRobot(cabeza, cuerpo) {
+  console.log("Robot con " + cabeza + " y " + cuerpo + " ensamblado");
+}
+
+ensamblarRobot("cabeza láser", "cuerpo blindado");
+// Muestra: "Robot con cabeza láser y cuerpo blindado ensamblado"
+ensamblarRobot("cabeza de peluche", "cuerpo de cartón");
+// Muestra: "Robot con cabeza de peluche y cuerpo de cartón ensamblado"`}
+/>
+<p>En este caso, cabeza y cuerpo son los parámetros que la función utiliza.</p>
+<h2>¿Qué es el valor de retorno?</h2>
+<p>
+  Las funciones no solo hacen cosas, sino que también devuelven un resultado que
+  podés usar. Esto se llama <strong>valor de retorno</strong>.
+</p>
+<CodeBlock
+  lang="javascript"
+  code={`function construirRobot(nombre) {
+  return "🤖 Robot modelo: " + nombre;
+}
+
+let robot1 = construirRobot("RX-99");
+console.log(robot1); // Muestra: "🤖 Robot modelo: RX-99"`}
+/>
+<p>
+  return es como la cinta transportadora que entrega el producto final de la
+  máquina. Ese resultado se puede guardar o usar en otra parte del programa.
+</p>
+<h2>Resumen</h2>
+<p>
+  Para declarar una función, usás la palabra clave <InlineCodeBlock
+    lang="javascript"
+    code="function"
+  /> seguida del nombre de la función, los parámetros entre paréntesis, y el cuerpo
+  entre llaves:
+</p>
+<CodeBlock
+  lang="javascript"
+  code={`function nombreDeLaFuncion(parametro1, parametro2,..., parametroN) {
+    // Código que se ejecuta cuando llamás a la función
+    // Puede usar los parámetros para hacer algo
+    // y devolver un resultado
+    return resultado;
+}`}
+/>
+<p>
+  Para llamar a la función, usás su nombre seguido de paréntesis y los
+  argumentos que querés pasarle:
+</p>
+<CodeBlock
+  lang="javascript"
+  code={`nombreDeLaFuncion(argumento1, argumento2,..., argumentoN);`}
+/>
+<table>
+  <thead>
+    <tr>
+      <th>Concepto</th>
+      <th>Explicación breve</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Función</td>
+      <td>Parte del código que realiza una tarea</td>
+    </tr>
+    <tr>
+      <td>Declaración</td>
+      <td
+        >Escribir la función con la palabra reservada function, su nombre y su
+        código</td
+      >
+    </tr>
+    <tr>
+      <td>Llamado</td>
+      <td
+        >Ejecutar la función usando su nombre y (), y en el paréntesis los
+        parámetros (si es que la función los necesita)</td
+      >
+    </tr>
+    <tr>
+      <td>Parámetros</td>
+      <td
+        >Valores que recibe la función para trabajar, especificados en los
+        paréntesis de la declaración de la función</td
+      >
+    </tr>
+    <tr>
+      <td>Retorno</td>
+      <td>Valor que la función devuelve con return</td>
+    </tr>
+  </tbody>
+</table>
