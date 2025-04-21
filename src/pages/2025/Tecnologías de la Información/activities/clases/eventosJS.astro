@@ -5,4 +5,110 @@ import InlineCodeBlock from "../../../../../components/articles/code-block/Inlin
 export const partial = true;
 ---
 
-<p>Proximamente...</p>
+<h2>¿Qué son los eventos?</h2>
+<p>
+  Los <strong>eventos</strong> son acciones que ocurren en el navegador. Pueden ser
+  generados por el <strong>usuario</strong> (como hacer clic, mover el mouse, escribir
+  en un campo) o por el
+  <strong>navegador</strong> (como cargar una página o cambiar de tamaño la ventana).
+</p>
+<p>
+  Podemos <strong>capturar eventos</strong> para que nuestro código JS responda cuando
+  ocurren. Por ejemplo, hacer que un botón muestre un mensaje cuando se hace clic.
+</p>
+<h2>¿Cómo capturamos eventos?</h2>
+<p>
+  Usamos el método addEventListener para decirle al navegador "Cuando pase X
+  cosa en este elemento, ejecutá esta función".
+</p>
+<CodeBlock
+  lang="javascript"
+  code={`elemento.addEventListener("tipoDeEvento", funcionQueSeEjecuta);`}
+/>
+<ul>
+  <li>
+    tipoDeEvento: es un string que indica el tipo de evento (por ejemplo
+    "click", "input", "mouseover", etc.).
+  </li>
+  <li>
+    funcionQueSeEjecuta: es la función que queremos que se ejecute cuando ocurra
+    ese evento.
+  </li>
+</ul>
+<h2>Identificar elementos del HTML con id</h2>
+<p>
+  Para asignar un addEventListener, primero necesitamos <strong>
+    acceder al elemento del HTML
+  </strong>. Una forma muy común es darle un id en HTML y usar
+  document.getElementById.
+</p>
+<p><strong>HTML</strong></p>
+<CodeBlock lang="html" code={`<button id="miBoton">¡Haz clic aquí!</button>`} />
+<p><strong>JavaScript</strong></p>
+<CodeBlock
+  lang="javascript"
+  code={`let boton = document.getElementById("miBoton");`}
+/>
+<h2>Escuchar eventos con funciones declaradas</h2>
+<p>
+  Vamos a declarar la función que responde al evento por fuera del
+  addEventListener.
+</p>
+<p><strong>HTML</strong></p>
+<CodeBlock lang="html" code={`<button id="miBoton">¡Haz clic aquí!</button>`} />
+<p><strong>JavaScript</strong></p>
+<CodeBlock
+  lang="javascript"
+  code={`// Paso 1: Identificar el elemento
+let boton = document.getElementById("miBoton");
+
+// Paso 2: Declarar la función que queremos ejecutar
+function mostrarMensaje() {
+  alert("¡Hiciste clic en el botón!");
+}
+
+// Paso 3: Escuchar el evento click
+boton.addEventListener("click", mostrarMensaje);
+`}
+/>
+<ul>
+  <li>
+    La función <strong>no se ejecuta al asignarla</strong> (por eso no lleva paréntesis:
+    mostrarMensaje no es mostrarMensaje()).
+  </li>
+  <li>
+    Podemos declarar varias funciones para distintos eventos en un mismo
+    elemento.
+  </li>
+</ul>
+<h2>Tipos comunes de eventos</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Evento</th>
+      <th>Ocurre cuando...</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>click</td>
+      <td>el usuario hace clic</td>
+    </tr>
+    <tr>
+      <td>input</td>
+      <td>el usuario escribe en un campo</td>
+    </tr>
+    <tr>
+      <td>mouseover</td>
+      <td>el mouse pasa por encima del elemento</td>
+    </tr>
+    <tr>
+      <td>keydown</td>
+      <td>el usuario presiona una tecla</td>
+    </tr>
+    <tr>
+      <td>submit</td>
+      <td>se envía un formulario</td>
+    </tr>
+  </tbody>
+</table>
