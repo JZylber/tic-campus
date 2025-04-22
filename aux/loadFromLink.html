@@ -1,7 +1,7 @@
 <script type="module" id="campus-insertion">
-  const subject = "Desarrollo de Aplicaciones Informáticas";
-  const course = "NR5A";
-  const year = 2025;
+  const subject = "Materia de Prueba";
+  const course = "NR5Z";
+  const year = 0;
   let campusLink = encodeURI(
     `https://jzylber.github.io/tic-campus/${year}/${subject}/${course}`
   );
@@ -80,24 +80,28 @@
   });
   //Set parents innerHTML to template + doc body innerHtml
   shadow.innerHTML += doc.body.innerHTML;
-  scripts.forEach((el, index) => {
-    const newScript = document.createElement("script");
-    // If last script tag, trigger DOMContentLoaded
-    if (index === scripts.length - 1) {
-      newScript.addEventListener("load", triggerDOMContentLoaded);
-    }
-    // Copy all atributtes from the original script tag
-    for (let i = 0; i < el.attributes.length; i++) {
-      newScript.setAttribute(el.attributes[i].name, el.attributes[i].value);
-    }
-    // If the script tag has a src attribute, fetch the content and set it as innerText
-    if (el.src) {
-      // If the source is a relative path, add the base URL at the front
-      if (el.src.startsWith("https://campus.ort.edu.ar/tic-campus")) {
-        newScript.src = el.src.replace("https://campus.ort.edu.ar/", baseURL);
+  const loadScripts = scripts.map((el, index) => {
+    return new Promise((resolve, reject) => {
+      const newScript = document.createElement("script");
+      // Copy all atributtes from the original script tag
+      for (let i = 0; i < el.attributes.length; i++) {
+        newScript.setAttribute(el.attributes[i].name, el.attributes[i].value);
       }
-    }
-    newScript.innerText = el.innerText;
-    shadow.appendChild(newScript);
+      // If the script tag has a src attribute, fetch the content and set it as innerText
+      if (el.src) {
+        // If the source is a relative path, add the base URL at the front
+        if (el.src.startsWith("https://campus.ort.edu.ar/tic-campus")) {
+          newScript.src = el.src.replace("https://campus.ort.edu.ar/", baseURL);
+        }
+      }
+      newScript.innerText = el.innerText;
+      // onload resolve the promise
+      newScript.onload = () => {
+        resolve();
+      };
+      shadow.appendChild(newScript);
+    });
   });
+  await Promise.all(loadScripts);
+  triggerDOMContentLoaded();
 </script>
