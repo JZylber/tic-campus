@@ -5,4 +5,192 @@ import InlineCodeBlock from "../../../../../components/articles/code-block/Inlin
 export const partial = true;
 ---
 
-<p>Proximamente...</p>
+<h2>¿Qué es el DOM?</h2>
+<p>
+  El <strong>DOM</strong> (Document Object Model) es una representación estructurada
+  del contenido de una página web. Cuando el navegador carga una página HTML, traduce
+  todo ese HTML a un <strong>conjunto de objetos en memoria</strong>, que
+  representan cada uno de los elementos visibles (y no visibles) de la página.
+</p>
+<p>
+  Podés imaginarte el DOM como un árbol de objetos, donde cada nodo representa
+  una etiqueta HTML (&lt;div&gt;, &lt;p&gt;, &lt;input&gt;, etc.).
+</p>
+
+<h2>¿Por qué existe el DOM?</h2>
+<p>
+  JavaScript fue creado para <strong>interactuar con páginas web</strong>. Sin
+  el DOM, JavaScript no tendría forma de "ver" lo que hay en el HTML ni de
+  modificarlo. Cada elemento HTML del navegador es representado por un objeto
+  JavaScript. Por ejemplo, un botón <InlineCodeBlock
+    lang="html"
+    code="<button>"
+  /> en la página se convierte en un objeto con propiedades y métodos. Gracias a
+  esto, podemos usar JavaScript para:
+</p>
+<ul>
+  <li>Leer información que está en la página.</li>
+  <li>Cambiar el contenido que se muestra.</li>
+  <li>Cambiar el color, tamaño, o estilo de un elemento.</li>
+  <li>Agregar, eliminar u ocultar elementos.</li>
+  <li>
+    Responder a eventos como clics, escritura en inputs, movimientos del mouse,
+    etc.
+  </li>
+</ul>
+<h2>¿Cómo se refleja en el navegador?</h2>
+<p>
+  Cuando usamos JavaScript para modificar un objeto del DOM, <strong>
+    el cambio se refleja automáticamente en la pantalla
+  </strong>. No necesitamos recargar la página ni hacer nada extra: el navegador
+  actualiza la vista en base a los cambios que hacemos en el DOM.
+</p>
+<h2>Métodos (funciones) y propiedades clave del DOM</h2>
+<p>
+  Cuando trabajamos con el DOM en JavaScript, hay algunas herramientas que
+  usamos todo el tiempo para seleccionar elementos, escuchar eventos y modificar
+  el contenido. Veamos algunas de las que vamos a usar en esta materia:
+</p>
+<h3>getElementById</h3>
+<p>
+  Este método permite seleccionar un elemento del HTML usando su atributo id. Se
+  pasa el id como string.
+</p>
+<CodeBlock
+  lang="javascript"
+  code={`let elemento = document.getElementById("miElemento");`}
+/>
+<p>
+  Devuelve un objeto que representa el elemento. Si no hay ningún elemento con
+  ese id, devuelve null.
+</p>
+<h3>addEventListener</h3>
+<p>
+  Permite "escuchar" un evento en un elemento, como un clic, una tecla, el
+  movimiento del mouse, etc.
+</p>
+<CodeBlock
+  lang="javascript"
+  code={`function miFuncion() {
+  console.log("¡Hiciste clic en el botón!");
+}
+boton.addEventListener("click",miFuncion);`}
+/>
+<ul>
+  <li>
+    El primer parámetro es el nombre del evento en forma de string (como
+    "click", "keydown", "mouseover", etc.).
+  </li>
+  <li>
+    El segundo parámetro es una función que se ejecuta cuando ocurre ese evento.
+  </li>
+</ul>
+<h3>createElement</h3>
+<p>
+  Este método se usa para crear un <strong>nuevo element</strong>o HTML desde
+  JavaScript, que <strong>todavía no existe en la página</strong>.
+</p>
+<CodeBlock
+  lang="javascript"
+  code={`let nuevoDiv = document.createElement("div");`}
+/>
+<p>
+  El parámetro es una etiqueta HTML en forma de string ("p", "div", "li", etc.).
+  Devuelve un <strong>objeto</strong> que representa el nuevo elemento, al que luego
+  podés agregar contenido o modificar atributos.
+</p>
+<h3>appendChild</h3>
+<p>Este método agrega un nuevo nodo (elemento) dentro de otro elemento.</p>
+<CodeBlock
+  lang="javascript"
+  code={`let nuevoParrafo = document.createElement("p");
+nuevoParrafo.textContent = "Soy nuevo en la página";
+
+document.body.appendChild(nuevoParrafo);`}
+/>
+<p>
+  Toma como parámetro al elemento a agregar. El nuevo elemento se coloca al
+  final del elemento padre. Es útil cuando querés construir elementos nuevos con
+  código.
+</p>
+<h3>textContent</h3>
+<p>
+  Es un atributo que permite leer o cambiar el texto de un elemento (como un
+  párrafo, un título, etc.).
+</p>
+<CodeBlock lang="javascript" code={`parrafo.textContent = "Hola mundo";`} />
+<p>
+  Reemplaza completamente el contenido de texto del elemento. Es ideal para
+  mostrar resultados o mensajes generados por el usuario. A diferencia del
+  atributo a continuación, solo toma texto, no HTML.
+</p>
+<h3>innerHTML</h3>
+<p>Permite leer o escribir contenido HTML dentro de un elemento.</p>
+<CodeBlock
+  lang="javascript"
+  code={`div.innerHTML = "<strong>Hola en negrita</strong>";`}
+/>
+<p>
+  A diferencia de textContent, interpreta etiquetas HTML. Reemplaza
+  completamente el contenido html dentro del elemento. Si se asigna el string
+  vacío, borra el contenido, y es útil para borrar elementos de la página.
+</p>
+<h3>value (en &lt;input&gt;, &lt;textarea&gt;, &lt;select&gt;…)</h3>
+<p>
+  La propiedad .value se usa para leer o modificar el valor que el usuario
+  escribe o selecciona en elementos de formulario como:
+</p>
+<ul>
+  <li>
+    <InlineCodeBlock lang="html" code="<input>" /> (texto, número, etc.)
+  </li>
+  <li>
+    <InlineCodeBlock lang="html" code="<textarea>" />
+  </li>
+  <li>
+    <InlineCodeBlock lang="html" code="<select>" />
+  </li>
+</ul>
+<CodeBlock
+  lang="javascript"
+  code={`let nombre = document.getElementById("miInput").value;`}
+/>
+<ul>
+  <li>Si es un &lt;input&gt; de texto, devuelve lo que escribió el usuario.</li>
+  <li>Si es un &lt;select&gt;, devuelve el valor de la opción elegida.</li>
+</ul>
+<h2>Ejemplo</h2>
+<p>Supongamos que queremos que una página tenga:</p>
+<ul>
+  <li>Un campo de texto (<InlineCodeBlock lang="html" code="<input>" />).</li>
+  <li>Un botón (<InlineCodeBlock lang="html" code="<button>" />).</li>
+  <li>
+    Un párrafo (<InlineCodeBlock lang="html" code="<p>" />) que va a mostrar lo
+    que escribimos en el input, al hacer clic en el botón.
+  </li>
+</ul>
+<h3>HTML</h3>
+<CodeBlock
+  lang="html"
+  code={`<input id="miInput" type="text" placeholder="Escribí algo...">
+<button id="miBoton">Mostrar texto</button>
+<p id="resultado"></p>`}
+/>
+<h3>JavaScript</h3>
+<CodeBlock
+  lang="javascript"
+  code={`// Obtenemos los elementos del DOM
+let input = document.getElementById("miInput");
+let boton = document.getElementById("miBoton");
+let resultado = document.getElementById("resultado");
+
+function mostrarTexto() {
+  // Tomamos el valor del input
+  let texto = input.value;
+  // Lo mostramos en el párrafo
+  resultado.textContent = texto;
+}
+
+// Agregamos un evento al botón
+boton.addEventListener("click", mostrarTexto);`}
+/>
