@@ -113,10 +113,80 @@ let edad = 15;`}
   </li>
   <CodeBlock
     lang="javascript"
-    code={`let nombre = prompt("¿Cómo te llamás?");
-console.log("Hola " + nombre);`}
+    code={`let nombre = prompt("¿Cómo te llamás?");`}
   />
   <li><InlineCodeBlock lang="javascript" code="alert(...)" /></li>
   <p>Sirve para mostrar un mensaje en una ventana emergente (popup):</p>
   <CodeBlock lang="javascript" code={`alert("Bienvenido al sitio");`} />
 </ol>
+<h2>Operaciones aritméticas básicas</h2>
+<p>
+  En JavaScript podés hacer cálculos matemáticos usando los siguientes símbolos:
+</p>
+<table>
+  <thead>
+    <tr>
+      <th>Operación</th>
+      <th>Símbolo</th>
+      <th>Ejemplo</th>
+      <th>Resultado</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Suma</td>
+      <td>+</td>
+      <td>5 + 3</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <td>Resta</td>
+      <td>-</td>
+      <td>10 - 4</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <td>Multiplicación</td>
+      <td>*</td>
+      <td>6 * 2</td>
+      <td>12</td>
+    </tr>
+    <tr>
+      <td>División</td>
+      <td>/</td>
+      <td>20 / 4</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <td>Potencia</td>
+      <td>**</td>
+      <td>2 ** 3</td>
+      <td>8</td>
+    </tr>
+  </tbody>
+</table>
+<p>Podés usar estas operaciones con variables también:</p>
+<CodeBlock
+  lang="javascript"
+  code={`let a = 10;
+let b = 2;
+
+let suma = a + b;
+let resta = a - b;
+let producto = a * b;
+let division = a / b;
+let potencia = a ** b;
+
+console.log("Suma: " + suma); // 12
+console.log("Resta: " + resta); // 8
+console.log("Multiplicación: " + producto); // 20
+console.log("División: " + division); // 5
+console.log("Potencia: " + potencia); // 100`}
+/>
+<p>
+  Si los datos vienen de prompt, primero hay que convertirlos a número con <InlineCodeBlock
+    lang="javascript"
+    code="parseInt()"
+  /> o <InlineCodeBlock lang="javascript" code="parseFloat()" /> (lean el apunte
+  de tipo de datos para entender esto último).
+</p>
