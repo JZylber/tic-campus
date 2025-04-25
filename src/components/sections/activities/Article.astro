@@ -110,13 +110,13 @@ const { open, articleURL, content, course } = Astro.props;
         <template
           x-if={`${content} && $store.student.course === '${course}' &&
               ((${content}.type === 'Actividad' &&
-                $store.student.activities.find(
+                $store.marks.activities.find(
                   (activity) => activity.id === ${content}.id
                 )) ||
                 (${content}.type === 'Trabajo Práctico' &&
-                  ($store.student.marks.find(
+                  ($store.marks.marks.find(
                     (activity) => activity.id === ${content}.id
-                  )) || $store.student.activities.find(
+                  )) || $store.marks.activities.find(
                     (activity) => activity.id === ${content}.id
                   )))`}
         >
@@ -125,15 +125,15 @@ const { open, articleURL, content, course } = Astro.props;
             x-data="{ passing: false, mark: -1, comment: '', redo: false }"
             x-effect={`
                   if(${content}.type === 'Actividad') {
-                    const activity = $store.student.activities.find(activity => activity.id === ${content}.id);
+                    const activity = $store.marks.activities.find(activity => activity.id === ${content}.id);
                     mark = -1;
                     passing = activity.done;
                     comment = activity.comment;
                     redo = activity.inRevision;
                   }
                   else if(${content}.type === 'Trabajo Práctico') {
-                    const activityMark = $store.student.marks.find(mark => mark.id === ${content}.id);
-                    const specialActivity = $store.student.activities.find(activity => activity.id === ${content}.id);
+                    const activityMark = $store.marks.marks.find(mark => mark.id === ${content}.id);
+                    const specialActivity = $store.marks.activities.find(activity => activity.id === ${content}.id);
                     if (activityMark) {
                       mark = activityMark.mark;
                       passing = mark >= 6;
