@@ -1,0 +1,11 @@
+---
+import GNavbar from "../components/github/GNavbar.astro";
+import Layout from "./Layout.astro";
+---
+
+<Layout>
+  <div class="flex flex-col w-full max-h-full">
+    <GNavbar />
+    <slot />
+  </div>
+</Layout>
