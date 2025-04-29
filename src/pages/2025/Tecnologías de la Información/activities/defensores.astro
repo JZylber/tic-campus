@@ -119,9 +119,28 @@ export const partial = true;
   Pero... ¿Cómo partimos el intervalo? ¡Proporcionalmente! Supongamos que la
   potencia del equipo local es a, y la del visitante b. Para partir el intervalo
   proporcionalmente, tomamos el total de potencia a + b, y calculamos la
-  proporcion para el local haciendo a/total. Para visitante es b/total, pero al
-  ser solo 2, siempre la del visitante es 1 - proporcion del local. Esto,
-  entonces, nos da los intervalos. Si el resultado de <InlineCodeBlock
+  proporcion para el local haciendo a/total <math
+    ><mrow
+      ><mo>(</mo><mfrac
+        ><mrow><mi>a</mi></mrow><mrow><mi>a</mi><mo>+</mo><mi>b</mi></mrow
+        ></mfrac
+      ><mo>)</mo></mrow
+    ></math
+  > . Para visitante es b/total <math
+    ><mrow
+      ><mo>(</mo><mfrac
+        ><mrow><mi>b</mi></mrow><mrow><mi>a</mi><mo>+</mo><mi>b</mi></mrow
+        ></mfrac
+      ><mo>)</mo></mrow
+    ></math
+  >, pero al ser solo 2, siempre la del visitante es 1 - proporcion del local <math
+    ><mrow
+      ><mo>(</mo><mn>1</mn><mo>-</mo><mfrac
+        ><mrow><mi>a</mi></mrow><mrow><mi>a</mi><mo>+</mo><mi>b</mi></mrow
+        ></mfrac
+      ><mo>)</mo></mrow
+    ></math
+  >. Esto, entonces, nos da los intervalos. Si el resultado de <InlineCodeBlock
     lang="javascript"
     code="Math.random()"
   /> es menor a la proporcion del local (a/total), gana el local, sino, el visitante.
@@ -129,9 +148,12 @@ export const partial = true;
 <p>
   Veamos un ejemplo para ser mas claros. Supongamos dos equipos: Ferrocarril
   Oeste, de potencia 75, y Flandria, de 25. Para calcular el intervalo,
-  calculamos el total, 75 + 25 = 100, y calculamos la proporción del local,
-  75/100 = 0,75. Entonces, el partido se define de la siguiente forma: Si el
-  resultado del random es menor a 0,75, gana Ferro, sino Flandria.
+  calculamos el total, <math
+    ><mrow><mn>75</mn><mo>+</mo><mn>25</mn><mo>=</mo><mn>100</mn></mrow></math
+  >, y calculamos la proporción del local, <math
+    ><mrow><mn>75</mn><mo>/</mo><mn>100</mn><mo>=</mo><mn>0,75</mn></mrow></math
+  >. Entonces, el partido se define de la siguiente forma: Si el resultado del
+  random es menor a 0,75, gana Ferro, sino Flandria.
 </p>
 <p>
   Si a alguien le interesa la matemática detrás de todo esto, toda esta sección
