@@ -1,5 +1,182 @@
 ---
+import CodeBlock from "../../../../components/articles/code-block/CodeBlock.astro";
+import InlineCodeBlock from "../../../../components/articles/code-block/InlineCodeBlock.astro";
+
 export const partial = true;
 ---
 
-<p>Proximamente...</p>
+<p>
+  La idea es crear un programa que se encargue de la venta de entradas para el
+  club <strong>Defensores de Belgrano</strong>. Hay distintos tipos de entradas
+  y se pueden ingresar códigos de descuento. Como en otros ejercicios, la moneda
+  es en <em>p</em> (Patacones).
+</p>
+<h2>Consigna Base</h2>
+<p>
+  Hacer un programa que tome 3 entradas del usuario mediante <InlineCodeBlock
+    lang="javascript"
+    code="prompt()"
+  />, que van a representar:
+</p>
+<ol>
+  <li>
+    El tipo de entrada a comprar. Esta puede ser:
+    <ul>
+      <li>popular: 25.000p</li>
+      <li>platea: 35.000p</li>
+      <li>palco: 60.000p</li>
+    </ul>
+    El prompt debe tomar el tipo de entrada ("popular","platea" y "palco").
+  </li>
+  <li>
+    La cantidad de entradas a comprar (pueden asumir que son todas del mismo
+    tipo).
+  </li>
+  <li>
+    Codigo de descuento si lo tuviese. Los códigos de descuento son:
+    <ul>
+      <li>"DESCUENTO10": Hace un 10% de descuento.</li>
+      <li>"CHAUIVA": Hace un 21% de descuento.</li>
+      <li>"CHIQUIAMIGO": Hace un 40% de descuento.</li>
+    </ul>
+  </li>
+</ol>
+<p>
+  Imprimir por consola las entradas compradas y su tipo, con el total de la
+  compra, de la siguiente forma:
+</p>
+<CodeBlock
+  lang="javascript"
+  code="'Se compraron <cantidad_entradas> del tipo <tipo_entradas> por un total de <total>p'"
+/>
+<p>
+  En donde <em>cantidad_entradas</em> es la cantidad de entradas compradas, <em
+    >tipo_entradas</em
+  > es el tipo de entradas compradas y <em>total</em> es el total a pagar, incluído
+  el descuento.
+</p>
+<h2>Consigna Manija I</h2>
+<p>
+  Modificar el programa para también pregunte si es socio o no (<InlineCodeBlock
+    lang="javascript"
+    code="prompt()"
+  /> o <InlineCodeBlock lang="javascript" code="confirm()" />), cambiando la
+  tabla de precios. Se sigue preguntando el tipo de entrada <strong
+    >por separado</strong
+  >, no unifiquen los prompts.
+</p>
+<ul>
+  <li>popular socios: 10.000p</li>
+  <li>popular no socios: 25.000p</li>
+  <li>platea socios: 15.000p</li>
+  <li>platea no socios: 35.000p</li>
+  <li>palco socios: 30.000p</li>
+  <li>palco no socios: 60.000p</li>
+</ul>
+<h2>Consigna Manija II: más manija que nunca</h2>
+<p>
+  <strong
+    >ESTE EJERCICIO ES BASTANTE COMPLICADO CONCEPTUALMENTE: ENTER AT YOUR OWN
+    RISK</strong
+  >
+</p>
+<p>
+  ¿Y si simulamos un partido? Apa. Para esto, necesitamos un factor de azar. En
+  javascript existe una única función de azar, <InlineCodeBlock
+    lang="javascript"
+    code="Math.random()"
+  />. ¡Googleen que es lo que hace!
+</p>
+<p>
+  Ahora que masomenos tienen una idea como generar números al azar, podemos
+  seguir con lo que veníamos a hacer. Pero nos encontramos con 2 obstáculos:
+</p>
+<ul>
+  <li>
+    ¿Cómo pasamos de números aleatorios entre 0 y 1 a un resultado binario
+    (ganar o perder)?
+  </li>
+  <li>
+    ¿Cómo hacemos que se refleje de alguna forma que tan buenos o malos son los
+    equipos?
+  </li>
+</ul>
+<p>
+  Para la primera pregunta, propongo la siguiente idea. Suponiendo equipos igual
+  de buenos, partimos el intervalo 0-1 en 2 mitades. Si el número es menor a
+  0,5, gana un equipo. Si es mayor o igual, el otro. ¡Voilá! Tenemos un
+  programa, que, dado un número al azar entre 0 y 1, devuelve quien gana/quien
+  pierde, y con igual probabilidad. Como las partes asignadas a cada equipo
+  tienen igual tamaño (0,5) la probabilidad de que caiga en una u otra es igual.
+</p>
+<p>
+  Pero esto es si son igual de buenos. ¿Cómo hacemos para que haya equipos
+  mejores que otros? Bueno, podemos partir el intervalo 0-1 desbalanceado,
+  dandole un cacho mas grande al equipo bueno, y otro más chico al equipo malo.
+  De esta forma, podemos darle más chances al equipo bueno.
+</p>
+<p>
+  Pero... ¿Cómo partimos el intervalo? ¡Proporcionalmente! Supongamos que la
+  potencia del equipo local es a, y la del visitante b. Para partir el intervalo
+  proporcionalmente, tomamos el total de potencia a + b, y calculamos la
+  proporcion para el local haciendo a/total <math
+    ><mrow
+      ><mo>(</mo><mfrac
+        ><mrow><mi>a</mi></mrow><mrow><mi>a</mi><mo>+</mo><mi>b</mi></mrow
+        ></mfrac
+      ><mo>)</mo></mrow
+    ></math
+  > . Para visitante es b/total <math
+    ><mrow
+      ><mo>(</mo><mfrac
+        ><mrow><mi>b</mi></mrow><mrow><mi>a</mi><mo>+</mo><mi>b</mi></mrow
+        ></mfrac
+      ><mo>)</mo></mrow
+    ></math
+  >, pero al ser solo 2, siempre la del visitante es 1 - proporcion del local <math
+    ><mrow
+      ><mo>(</mo><mn>1</mn><mo>-</mo><mfrac
+        ><mrow><mi>a</mi></mrow><mrow><mi>a</mi><mo>+</mo><mi>b</mi></mrow
+        ></mfrac
+      ><mo>)</mo></mrow
+    ></math
+  >. Esto, entonces, nos da los intervalos. Si el resultado de <InlineCodeBlock
+    lang="javascript"
+    code="Math.random()"
+  /> es menor a la proporcion del local (a/total), gana el local, sino, el visitante.
+</p>
+<p>
+  Veamos un ejemplo para ser mas claros. Supongamos dos equipos: Ferrocarril
+  Oeste, de potencia 75, y Flandria, de 25. Para calcular el intervalo,
+  calculamos el total, <math
+    ><mrow><mn>75</mn><mo>+</mo><mn>25</mn><mo>=</mo><mn>100</mn></mrow></math
+  >, y calculamos la proporción del local, <math
+    ><mrow><mn>75</mn><mo>/</mo><mn>100</mn><mo>=</mo><mn>0,75</mn></mrow></math
+  >. Entonces, el partido se define de la siguiente forma: Si el resultado del
+  random es menor a 0,75, gana Ferro, sino Flandria.
+</p>
+<p>
+  Si a alguien le interesa la matemática detrás de todo esto, toda esta sección
+  es súper interesante que la discutan con su profe copada/o de matemática.
+</p>
+<p>
+  Ahora después de esta larguísima intro, la consigna. Hacer un programa que
+  tome 4 inputs:
+</p>
+<ul>
+  <li>Nombre del equipo local</li>
+  <li>
+    Potencia (que tan bueno es) del equipo local. Es un número del 0 al 100
+  </li>
+  <li>Nombre del equipo visitante</li>
+  <li>
+    Potencia (que tan bueno es) del equipo visitante. Es un número del 0 al 100
+  </li>
+</ul>
+<p>
+  Hacer un partido siguiendo el sistema explicado anteriormente, y mostrar por
+  alert quien ganó el partido.
+</p>
+<p>
+  Prueben que ande corriendolo muchas veces, con equipos parejos y desparejos.
+</p>
