@@ -1,8 +1,106 @@
 ---
+import ImportantBox from "../../../../../components/articles/alertbox/ImportantBox.astro";
 import CodeBlock from "../../../../../components/articles/code-block/CodeBlock.astro";
 import InlineCodeBlock from "../../../../../components/articles/code-block/InlineCodeBlock.astro";
 
 export const partial = true;
 ---
 
-<p>Proximamente...</p>
+<h2>¿Qué es iterar?</h2>
+<p>
+  Iterar significa repetir una acción varias veces. En programación, usamos la
+  iteración para automatizar tareas que se repiten, como mostrar varios
+  elementos en pantalla, procesar conjuntos de datos, o esperar que un usuario
+  realice cierta acción (esperando activamente, es decir, chequeando repetidas
+  veces a ver si el usuario hizo o no dicha acción).
+</p>
+<p>
+  Imaginate que querés mostrar los números del 1 al 10 en la consola. Podés
+  escribir 10 veces console.log(1), console.log(2), etc., pero eso sería lento,
+  repetitivo y poco flexible. ¡Acá es donde entra la iteración!
+</p>
+<h2>El ciclo while</h2>
+<p>
+  Un ciclo (loop) es una estructura que repite un bloque de código varias veces.
+  Uno de los ciclos más básicos en programación es el while.
+</p>
+<h3>Sintaxis:</h3>
+<CodeBlock
+  lang="javascript"
+  code={`while (condición) {
+  // Código a ejecutar mientras la condición sea verdadera, o cuerpo del ciclo
+}`}
+/>
+<h3>¿Cómo funciona?</h3>
+<ol>
+  <li>Evalúa la condición.</li>
+  <li>Si la condición es verdadera, ejecuta el cuerpo del ciclo.</li>
+  <li>Vuelve al paso 1.</li>
+  <li>
+    Cuando la condición es falsa, el ciclo se detiene y el programa sigue.
+  </li>
+</ol>
+<h2>Ejemplo 1: Ciclo acotado (número fijo de repeticiones)</h2>
+<CodeBlock
+  lang="javascript"
+  code={`let contador = 1;
+
+while (contador <= 5) {
+  console.log("Repetición número:", contador);
+  contador = contador + 1; // Afecta la condición
+}`}
+/>
+<p>Este ciclo:</p>
+<ul>
+  <li>
+    Comienza con <InlineCodeBlock lang="javascript" code="contador = 1" />.
+  </li>
+  <li>
+    Se repite mientras <InlineCodeBlock
+      lang="javascript"
+      code="contador <= 5"
+    />.
+  </li>
+  <li>En cada repetición, muestra el número y luego suma 1.</li>
+  <li>
+    Cuando contador llega a 6, la condición ya no se cumple y el ciclo termina.
+  </li>
+</ul>
+<h2>Ejemplo 2: Ciclo no acotado (termina por una condición dinámica)</h2>
+<CodeBlock
+  lang="javascript"
+  code={`let respuesta = "";
+
+while (respuesta !== "ok") {
+  respuesta = prompt("Escribe 'ok' para continuar");
+}
+alert("¡Gracias!");`}
+/>
+<p>Este ciclo:</p>
+<ul>
+  <li>Se repite mientras el usuario no escriba exactamente "ok".</li>
+  <li>
+    Usa <InlineCodeBlock lang="javascript" code="prompt()" /> para pedir entrada
+    del usuario en cada vuelta del ciclo.
+  </li>
+  <li>
+    Termina solo si la condición se vuelve falsa (es decir, si el usuario
+    escribe "ok").
+  </li>
+</ul>
+<ImportantBox warning="Ciclos infinitos">
+  <p>
+    Un ciclo infinito es un ciclo que nunca termina, porque la condición siempre
+    es verdadera. En estos casos, la máquina "se cuelga".
+  </p>
+  <CodeBlock
+    lang="javascript"
+    code={`while (true) {
+  console.log("¡Nunca termina!");
+}`}
+  />
+  <p>
+    Asegurate siempre de que el cuerpo del ciclo cambie algo que pueda hacer que
+    la condición se vuelva falsa.
+  </p>
+</ImportantBox>
