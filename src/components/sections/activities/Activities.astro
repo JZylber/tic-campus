@@ -61,9 +61,10 @@ const { subject, course, year, position } = Astro.props;
                 >
                   <span class="max-md:hidden flex justify-between items-center">
                     <span
-                      x-show="content.type !== 'Actividad' && content.type !== 'Trabajo Práctico'"
+                      x-show="content.type !== 'Actividad'"
                       class="material-symbols-outlined text-[24px]"
                       x-text="(()=>{switch(content.type) {
+                          case 'Trabajo Práctico': return 'workspace_premium'
                           case 'Encuesta': return 'checklist';
                           case 'Recuperatorio': return 'redo';
                           default: return 'description';
@@ -71,9 +72,9 @@ const { subject, course, year, position } = Astro.props;
                     >
                     </span>
                     <img
-                      x-show="content.type === 'Actividad' || content.type === 'Trabajo Práctico'"
+                      x-show="content.type === 'Actividad'"
                       class="w-[24px] h-[24px]"
-                      :src="$store.baseURL.publicURL(`icons/${content.type === 'Trabajo Práctico'?'extra pala':'shovel'}.svg`)"
+                      :src="$store.baseURL.publicURL(`icons/${'shovel'}.svg`)"
                     />
                   </span>
                   <div
