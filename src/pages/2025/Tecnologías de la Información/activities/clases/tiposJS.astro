@@ -44,30 +44,38 @@ export const partial = true;
   A veces necesitamos <strong>cambiar el tipo de un dato</strong> para hacer distintas
   cosas.
 </p>
-<ol>
-  <li>
-    Convertir texto a número: <InlineCodeBlock
-      lang="javascript"
-      code="parseInt(...)"
-    />
-  </li>
-  <CodeBlock
+<p>
+  Para convertir texto a número <strong>entero</strong> (sin parte decimal): <InlineCodeBlock
     lang="javascript"
-    code={`let edadTexto = prompt("¿Qué edad tenés?");
+    code="parseInt(...)"
+  />
+</p>
+<CodeBlock
+  lang="javascript"
+  code={`let edadTexto = prompt("¿Qué edad tenés?");
 let edad = parseInt(edadTexto); // ahora edad es un número`}
-  />
-  <li>
-    Convertir número a texto: <InlineCodeBlock
-      lang="javascript"
-      code="toString()"
-    />
-  </li>
-  <CodeBlock
+/>
+<p>
+  Para convertir texto a número <strong>racional</strong> (puede tener parte decimal):
+  <InlineCodeBlock lang="javascript" code="parseFloat(...)" />
+</p>
+<CodeBlock
+  lang="javascript"
+  code={`let precioTexto = prompt("¿Cuánto cuesta?");
+let precio = parseFloat(precioTexto); // ahora precio es un número`}
+/>
+<p>
+  Para convertir número a texto: <InlineCodeBlock
     lang="javascript"
-    code={`let numero = 10;
-let texto = numero.toString(); // ahora texto es "10"`}
+    code="toString()"
   />
-</ol>
+</p>
+<CodeBlock
+  lang="javascript"
+  code={`let numero = 10;
+let texto = numero.toString(); // ahora texto es "10"`}
+/>
+
 <h2>Ejemplo de conversión con tipos</h2>
 <p>
   El siguiente ejemplo muestra un caso de conversión de tipos y por qué es útil.
