@@ -71,7 +71,7 @@ export const partial = true;
 </p>
 <CodeBlock
   code={`
-let valorBotín = Number(prompt("Ingresar el valor del botín"));
+let valorBotín = parseFloat(prompt("Ingresar el valor del botín"));
 let fueRobadoReciente = prompt("¿Fue robado recientemente? (si/no)");
 fueRobadoReciente = fueRobadoReciente === "si";//Podría ir directo al lado del prompt, pero para que no se mareen tanto
 if(!(valorBotín < 10000 || fueRobadoReciente)){
