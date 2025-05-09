@@ -1,4 +1,7 @@
 ---
+import CodeBlock from "../../../../components/articles/code-block/CodeBlock.astro";
+import InlineCodeBlock from "../../../../components/articles/code-block/InlineCodeBlock.astro";
+
 export const partial = true;
 ---
 
@@ -76,5 +79,81 @@ export const partial = true;
   </li>
 </ul>
 <p>La función debe retornar el precio total de la compra.</p>
-<h2>Consigna Manija</h2>
-<p>(Pendiente)</p>
+<h2>Consigna Manija: Lorem Ipsum</h2>
+<p>
+  <strong
+    >ESTE EJERCICIO ES BASTANTE COMPLICADO CONCEPTUALMENTE: ENTER AT YOUR OWN
+    RISK</strong
+  >
+</p>
+<p>
+  Lorem ipsum es el texto que se usa habitualmente en diseño gráfico en
+  demostraciones de tipografías o de borradores de diseño para probar el diseño
+  visual antes de insertar el texto. Es escencialmente un texto largo de prueba,
+  y lo podemos hacer tan largo como necesitemos. Vamos a hacer una función
+  generadora de lorem ipsum, pero para eso, tenemos que entender el concepto de <strong
+    >recursión</strong
+  >
+</p>
+<h3>Recursión</h3>
+<p>
+  La recursión es el acto de <strong>funciones que se llaman a sí mismas</strong
+  >. Es útil para hacer una misma operación muchas veces. Cada vez que la
+  función se llama a sí misma, lo hace con una versión más simple del problema,
+  y hay un punto en que deja de llamarse: eso se llama <strong>caso base</strong
+  >.
+</p>
+<p>
+  Veamos un ejemplo para que se entienda mejor: el factorial. El factorial de un
+  número n (escrito como n!) es el producto de todos los números enteros desde n
+  hasta 1. Por ejemplo: 5! = 5 × 4 × 3 × 2 × 1 = 120. Esto se puede escribir de
+  forma recursiva:
+</p>
+<CodeBlock
+  lang="javascript"
+  code={`function factorial(n) {
+  if (n === 1) {
+    return 1; // caso base
+  } else {
+    return n * factorial(n - 1); // llamada recursiva
+  }
+}`}
+/>
+<p>
+  ¿Por qué funciona? Supongamos que queremos hacer el factorial de 3, osea <InlineCodeBlock
+    lang="javascript"
+    code="factorial(3)"
+  />.
+</p>
+<img
+  class="w-full px-6 py-4"
+  :src="$store.baseURL.publicURL('/diagrams/factorial.svg')"
+  alt="factorial"
+/>
+<p>Veamos el paso a paso:</p>
+<ol>
+  <li>factorial(3) = 3 x factorial(2)</li>
+  <li>factorial(3) = 3 x 2 x factorial(1)</li>
+  <li>factorial(3) = 3 x 2 x 1</li>
+</ol>
+<p>
+  ¡Listo! Ejecutó 3 veces sin colgarse. Resumiendo, en recursión tenemos 2
+  etapas: el paso recursivo, que es el que llama de vuelta a la función, y el
+  caso base, que es el que corta, o el más chico posible.
+</p>
+<p>
+  Ahora si, lo que tiene que hacer: Usando recursión (no vale ni while, ni for,
+  ni forEach, ni map, ni reduce) hacer una función que genere un texto de lorem
+  haciendo "Lorem Ipsum" tantas veces como indique el parámetro. Es una función
+  que toma un número y devuelva un string con el texto "Lorem Ipsum" repetido
+  esa cantidad de veces, terminando con un punto. Por ejemplo:
+</p>
+<CodeBlock lang="javascript" code={`generarLorem(5)`} />
+<p>
+  Debería devolver 'Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem
+  Ipsum.'
+</p>
+<p>
+  No se olviden del punto final. <strong>Tip:</strong> tiene que ver con el caso
+  base.
+</p>
