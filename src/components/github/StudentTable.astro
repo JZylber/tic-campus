@@ -1,10 +1,24 @@
 ---
 import Loader from "../loader/Loader.astro";
+
+import Select from "../../components/misc/select/Select.astro";
 ---
 
 <div
   class="w-full flex justify-center py-4"
-  x-data="{loading:true, students: []}"
+  x-data="{loading:true, students: [], courses: [{value:'',label:'Todos'}],filter: {course: '', text: ''}, filteredStudents: []}"
+  x-effect="filteredStudents = students.filter(s => {
+    let courseFilter = true;
+    let textFilter = true;
+    let normalizedText = filter.text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    if (filter.text !== '') {
+      textFilter = s.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(normalizedText) || s.surname.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(normalizedText);
+    }
+    if (filter.course !== '') {
+      courseFilter = s.course === filter.course;
+    }
+    return textFilter && courseFilter;
+  })"
   x-init="
   const [testStudents, shuliStudents, leanStudents] = await Promise.all([
     window.getStudents('1ppAnySYCXVRyJtXem9A-d3uZzujJVYVSTun_lI6yZWo'),
@@ -18,29 +32,67 @@ import Loader from "../loader/Loader.astro";
     if (a.surname > b.surname) return 1;
     return 0;
   });
+  courses = courses.concat([...new Set(students.map(student => student.course))].map(course => {
+    return {
+      value: course,
+      label: course
+    };
+  }));
+  filter.course = courses[0].value;
+  filter.text = '';
   loading = false;
   "
 >
   <Loader show="loading" />
-  <table class="w-full" x-show="!loading">
-    <thead class="bg-sh-black text-gray-50 text-lg font-semibold">
-      <tr>
-        <th class="px-4 py-2">Nombre</th>
-        <th class="px-4 py-2">Apellido</th>
-        <th class="px-4 py-2">Curso</th>
-      </tr>
-    </thead>
-    <tbody>
-      <template x-for="student in students">
-        <tr
-          class="border-b-2 border-gray-300 hover:bg-gray-300 cursor-pointer"
-          @click="$store.student.setStudent(student.name, student.surname, student.course, student.DNI)"
+  <div class="w-full flex flex-col gap-y-4" x-show="!loading">
+    <div class="flex w-full gap-x-8">
+      <div class={`flex flex-col items-center md:items-start gap-2`}>
+        <label
+          class="text-center md:text-left text-sh-dark-gray text-[16px] font-semibold"
+          >Nombre y Apellido</label
         >
-          <td class="px-4 py-2" x-text="student.name"></td>
-          <td class="px-4 py-2" x-text="student.surname"></td>
-          <td class="px-4 py-2" x-text="student.course"></td>
+        <div
+          class="flex justify-between items-stretch w-full max-w-[200px] h-[44px] rounded-xl text-sh-dark-gray text-[16px] border-2 border-sh-gray"
+        >
+          <div class="flex items-center basis-0 grow px-2">
+            <input class="w-full focus:outline-0" x-model="filter.text" />
+          </div>
+          <div class="flex items-center">
+            <span
+              class="material-symbols-outlined text-[24px] text-sh-dark-gray px-2"
+            >
+              search
+            </span>
+          </div>
+        </div>
+      </div>
+      <Select
+        title="Curso"
+        xModel="filter.course"
+        options="courses"
+        className="grow"
+      />
+    </div>
+    <table class="w-full">
+      <thead class="bg-sh-black text-gray-50 text-lg font-semibold">
+        <tr>
+          <th class="px-4 py-2">Nombre</th>
+          <th class="px-4 py-2">Apellido</th>
+          <th class="px-4 py-2">Curso</th>
         </tr>
-      </template>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        <template x-for="student in filteredStudents">
+          <tr
+            class="border-b-2 border-gray-300 hover:bg-gray-300 cursor-pointer"
+            @click="$store.student.setStudent(student.name, student.surname, student.course, student.DNI)"
+          >
+            <td class="px-4 py-2" x-text="student.name"></td>
+            <td class="px-4 py-2" x-text="student.surname"></td>
+            <td class="px-4 py-2" x-text="student.course"></td>
+          </tr>
+        </template>
+      </tbody>
+    </table>
+  </div>
 </div>

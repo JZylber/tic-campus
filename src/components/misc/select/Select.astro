@@ -2,10 +2,12 @@
 interface Props {
   title: string;
   xModel: string;
-  options: Array<{
-    value: any;
-    label: string;
-  }>;
+  options:
+    | Array<{
+        value: any;
+        label: string;
+      }>
+    | string;
   className?: string;
 }
 
@@ -13,9 +15,9 @@ const { title, xModel, options, className } = Astro.props;
 ---
 
 <div
-  x-data={`{options: ${JSON.stringify(options)}}`}
+  x-data={`{options: []}`}
   class={`flex flex-col items-center md:items-start gap-2 ${className}`}
-  x-init={`if(options.length > 0)${xModel} = options[0].value`}
+  x-effect={`options=${typeof options === "string" ? options : JSON.stringify(options)};if(options.length > 0){${xModel} = options[0].value}`}
 >
   <label
     class="text-center md:text-left text-sh-dark-gray text-[16px] font-semibold"
