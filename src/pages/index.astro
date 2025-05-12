@@ -1,8 +1,8 @@
 ---
 import type { Course } from "../aux/types";
-import Layout from "../layouts/Layout.astro";
 import Select from "../components/misc/select/Select.astro";
 import Radio from "../components/misc/radio/Radio.astro";
+import GithubLayout from "../layouts/GithubLayout.astro";
 
 const availableCourses: Course[] = [
   {
@@ -150,10 +150,10 @@ filterableCourses.sort((a, b) => {
 });
 ---
 
-<Layout>
+<GithubLayout>
   <div
     x-data={`{ courses: ${JSON.stringify(availableCourses)}}`}
-    class="absolute h-full w-full bg-gray-50 z-50 flex flex-col items-center justify-center"
+    class="grow w-full bg-gray-50 z-50 flex flex-col items-center justify-center"
     x-transition:leave="transition ease-out duration-300"
     x-transition:leave-start="opacity-100"
     x-transition:leave-end="opacity-0"
@@ -221,4 +221,4 @@ filterableCourses.sort((a, b) => {
       </form>
     </div>
   </div>
-</Layout>
+</GithubLayout>

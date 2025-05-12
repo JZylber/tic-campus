@@ -1,7 +1,7 @@
 {
   "name": "tic-campus",
   "type": "module",
-  "version": "1.1.2",
+  "version": "1.2.0",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@alpinejs/collapse": "^3.14.9",
+    "@alpinejs/persist": "^3.14.9",
     "@astrojs/alpinejs": "^0.4.3",
     "@astrojs/prism": "^3.2.0",
     "@tailwindcss/vite": "^4.0.6",
@@ -21,6 +22,7 @@
     "tailwindcss": "^4.0.6"
   },
   "devDependencies": {
-    "@types/alpinejs__collapse": "^3.13.4"
+    "@types/alpinejs__collapse": "^3.13.4",
+    "@types/alpinejs__persist": "^3.13.4"
   }
 }

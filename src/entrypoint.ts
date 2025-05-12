@@ -8,9 +8,11 @@ import {
   getSubjectMaterial,
   getCourseGroupLink,
   getFixedMarks,
+  getStudents,
 } from "./aux/fetchData";
 import { fetchHTMLData, prepareCrumbs } from "./aux/loadData";
 import collapse from "@alpinejs/collapse";
+import persist from "@alpinejs/persist";
 
 window.getSubjectData = getSubjectData;
 window.getSubjectProgram = getSubjectProgram;
@@ -21,6 +23,7 @@ window.getCourseLink = getCourseGroupLink;
 window.fetchHTMLData = fetchHTMLData;
 window.prepareCrumbs = prepareCrumbs;
 window.getFixedMarks = getFixedMarks;
+window.getStudents = getStudents;
 
 export const round = (num: number, decimals: number) => {
   return Math.round(num * Math.pow(10, decimals)) / Math.pow(10, decimals);
@@ -32,7 +35,6 @@ const isOnCampus = () => {
 };
 
 const courseRegex = /NR\d[A-Z]/;
-const defaultStudent = { name: "Julián Ariel", surname: "Zylber" };
 
 interface AlpineSectionStore {
   currentSection: string;
@@ -42,6 +44,7 @@ interface AlpineSectionStore {
 
 export default (Alpine: Alpine) => {
   Alpine.plugin(collapse);
+  Alpine.plugin(persist);
   Alpine.directive(
     "tw",
     (
@@ -106,11 +109,11 @@ export default (Alpine: Alpine) => {
     publicURL: (url: string) => void;
   });
   Alpine.store("student", {
-    name: "",
-    surname: "",
-    course: "",
-    subject: "",
-    id: -1,
+    name: Alpine.$persist("").using(sessionStorage),
+    surname: Alpine.$persist("").using(sessionStorage),
+    course: Alpine.$persist("").using(sessionStorage),
+    subject: Alpine.$persist("").using(sessionStorage),
+    id: Alpine.$persist(-1).using(sessionStorage),
     activities: [],
     marks: [],
     markData: {
@@ -147,7 +150,7 @@ export default (Alpine: Alpine) => {
     async getStudentData(subject: string, course: string, dataSheetId: string) {
       this.setSubject(subject);
       this.setDataSheetId(dataSheetId);
-      let studentName = defaultStudent;
+      let studentName = null;
       if (isOnCampus()) {
         const data = await fetch(
           "https://campus.ort.edu.ar/ajaxactions/GetLoggedInData",
@@ -163,12 +166,15 @@ export default (Alpine: Alpine) => {
           surname: studentData[1],
         };
       }
-      let student = await getStudentData(
-        studentName.name,
-        studentName.surname,
-        course,
-        dataSheetId
-      );
+      let student = null;
+      if (studentName) {
+        student = await getStudentData(
+          studentName.name,
+          studentName.surname,
+          course,
+          dataSheetId
+        );
+      }
       if (student) {
         this.setStudent(
           student.name,
@@ -187,11 +193,11 @@ export default (Alpine: Alpine) => {
       }
     },
   } as {
-    name: string;
-    surname: string;
-    course: string;
-    subject: string;
-    id: number;
+    name: any;
+    surname: any;
+    course: any;
+    subject: any;
+    id: any;
     dataSheetId: string;
     setStudent: (
       name: string,
