@@ -109,11 +109,11 @@ export default (Alpine: Alpine) => {
     publicURL: (url: string) => void;
   });
   Alpine.store("student", {
-    name: Alpine.$persist(""),
-    surname: Alpine.$persist(""),
-    course: Alpine.$persist(""),
-    subject: Alpine.$persist(""),
-    id: Alpine.$persist(-1),
+    name: Alpine.$persist("").using(sessionStorage),
+    surname: Alpine.$persist("").using(sessionStorage),
+    course: Alpine.$persist("").using(sessionStorage),
+    subject: Alpine.$persist("").using(sessionStorage),
+    id: Alpine.$persist(-1).using(sessionStorage),
     activities: [],
     marks: [],
     markData: {
