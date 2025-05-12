@@ -1,4 +1,6 @@
 ---
+import InlineCodeBlock from "../../../../components/articles/code-block/InlineCodeBlock.astro";
+
 export const partial = true;
 ---
 
@@ -11,46 +13,46 @@ export const partial = true;
 </p>
 <p>
   Para esto, ya contamos con dos
-  <code class="language-html">&ltselect&gt</code> para elegir entre equipos, un botón
+  <InlineCodeBlock lang="html" code="<select>" /> para elegir entre equipos, un botón
   para programar la fecha y un
-  <code class="language-html">&ltdiv&gt</code> para poner las fechas. Los
-  <code class="language-html">id</code> de los
-  <code class="language-html">&ltselect&gt</code> son <em>"equipo1"</em> y
+  <InlineCodeBlock lang="html" code="<div>" /> para poner las fechas. Los
+  <em>id</em> de los
+  <InlineCodeBlock lang="html" code="<select>" /> son <em>"equipo1"</em> y
   <em>"equipo2"</em> respectivamente, el botón para programar la fecha tiene
-  <code class="language-html">id = "boton"</code> y el div donde poner las fechas
-  tiene <code class="language-html">id = "fechas"</code>.
+  <InlineCodeBlock lang="html" code='<div id="boton">' /> y el div donde poner las
+  fechas tiene <InlineCodeBlock lang="html" code='<div id="fechas">' /> .
 </p>
 <p>
   Crear un programa que al hacer click en "programar fecha" agregue una fecha
   entre los dos equipos seleccionados. Esta debe ser en forma de un
-  <code class="language-html">div</code>. Algunas ayudas:
+  <InlineCodeBlock lang="html" code="<div>" />. Algunas ayudas:
 </p>
 <ul>
   <li>
     Los equipos los pueden sacar del atributo
-    <code class="language-html">value</code> de los select, de ids
+    <em>value</em> de los select, de ids
     <em>"equipo1"</em> y <em>"equipo2"</em> respectivamente.
   </li>
   <li>
     Pueden crear un div nuevo con
-    <code class="language-javascript">document.createElement("div")</code>.
+    <InlineCodeBlock lang="javascript" code='document.createElement("div")' />.
   </li>
   <li>
     Para agregarle texto a un div, pueden modificar el atributo
-    <code class="language-javascript">textContent</code>.
+    <em>textContent</em>.
   </li>
   <li>
-    Para agregar el <code class="language-html">&ltdiv&gt</code> creado a las fechas
+    Para agregar el <InlineCodeBlock lang="html" code="<div>" /> creado a las fechas
     sin borrar las anteriores, pueden usar la función
-    <code class="language-javascript">appendChild</code> del div fechas. Se usa de
-    la forma
-    <code class="language-javascript"
-      >&ltdivFechas&gt.appendChild(&ltdivFechaNueva&gt)</code
-    >. Cuando uso &ltalgo&gt no es código Javascript, es una forma de decir
-    "como sea que esté ese elemento referenciado en su programa", ya sea en una
-    variable, objeto, etc. Pueden googlear
-    <code class="language-javascript">appendChild</code> si tienen dudas, es algo
-    estándar del lenguaje, no es algo mío.
+    <em>appendChild</em> del div fechas. Se usa de la forma
+    <InlineCodeBlock
+      lang="javascript"
+      code="<divFechas>.appendChild(<fechaNueva>)"
+    />. Cuando uso &ltalgo&gt no es código Javascript, no pueden copiar y pegar
+    y chau. Es una forma de decir "como sea que esté ese elemento referenciado
+    en su programa", ya sea en una variable, objeto, etc. Pueden googlear
+    <em>appendChild</em> si tienen dudas, es algo estándar del lenguaje, no es algo
+    mío.
   </li>
 </ul>
 <h2>Consigna Manija</h2>
@@ -61,11 +63,13 @@ export const partial = true;
 <ul>
   <li>
     Está la función
-    <code class="language-javascript">obtenerLogoEquipo</code> que dado el nombre
-    de un equipo, devuelve el path (donde está el archivo) del logo. Esto se puede
-    usar de forma directa como atributo
-    <code class="language-html">src</code> de un tag
-    <code class="language-html">&ltimg&gt</code>
+    <InlineCodeBlock
+      lang="javascript"
+      code="obtenerLogoEquipo(<nombre_equipo>)"
+    />que dado el nombre de un equipo, devuelve el path (donde está el archivo)
+    del logo. Esto se puede usar de forma directa como atributo
+    <em>src</em> de un tag
+    <InlineCodeBlock lang="html" code="<img>" />
   </li>
   <li>
     Para armar algo medianamente prolijo, les sugiero inspirarse en como hago
@@ -73,7 +77,7 @@ export const partial = true;
   </li>
   <li>
     Es probable que tengan que hacer varios elementos html, o aprovechar el
-    atributo <code class="language-javascript">innerHtml</code> (Googleen).
+    atributo <em>innerHTML</em> (Googleen).
   </li>
   <li>
     También es probable que tengan que agregar css apropiado. Lo más fácil es
