@@ -8,6 +8,7 @@ import {
   getSubjectMaterial,
   getCourseGroupLink,
   getFixedMarks,
+  getStudents,
 } from "./aux/fetchData";
 import { fetchHTMLData, prepareCrumbs } from "./aux/loadData";
 import collapse from "@alpinejs/collapse";
@@ -21,6 +22,7 @@ window.getCourseLink = getCourseGroupLink;
 window.fetchHTMLData = fetchHTMLData;
 window.prepareCrumbs = prepareCrumbs;
 window.getFixedMarks = getFixedMarks;
+window.getStudents = getStudents;
 
 export const round = (num: number, decimals: number) => {
   return Math.round(num * Math.pow(10, decimals)) / Math.pow(10, decimals);
@@ -32,7 +34,6 @@ const isOnCampus = () => {
 };
 
 const courseRegex = /NR\d[A-Z]/;
-const defaultStudent = { name: "Julián Ariel", surname: "Zylber" };
 
 interface AlpineSectionStore {
   currentSection: string;
@@ -147,7 +148,7 @@ export default (Alpine: Alpine) => {
     async getStudentData(subject: string, course: string, dataSheetId: string) {
       this.setSubject(subject);
       this.setDataSheetId(dataSheetId);
-      let studentName = defaultStudent;
+      let studentName = null;
       if (isOnCampus()) {
         const data = await fetch(
           "https://campus.ort.edu.ar/ajaxactions/GetLoggedInData",
@@ -163,12 +164,15 @@ export default (Alpine: Alpine) => {
           surname: studentData[1],
         };
       }
-      let student = await getStudentData(
-        studentName.name,
-        studentName.surname,
-        course,
-        dataSheetId
-      );
+      let student = null;
+      if (studentName) {
+        student = await getStudentData(
+          studentName.name,
+          studentName.surname,
+          course,
+          dataSheetId
+        );
+      }
       if (student) {
         this.setStudent(
           student.name,

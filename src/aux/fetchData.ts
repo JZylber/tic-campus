@@ -254,6 +254,24 @@ export const getCourseGroupLink = async (
   return groupLink[0]["Link Grupo"];
 };
 
+export const getStudents = async (dataSheetId: string) => {
+  const allStudents = (
+    await getSheetData({
+      sheetID: dataSheetId,
+      sheetName: "Estudiante",
+      query: `SELECT *`,
+    })
+  ).map((student) => {
+    return {
+      name: student["Nombre"] as string,
+      surname: student["Apellido"] as string,
+      course: student["Curso"] as string,
+      DNI: student["DNI"] as number,
+    };
+  });
+  return allStudents;
+};
+
 export const getStudentData = async (
   name: string,
   surname: string,
