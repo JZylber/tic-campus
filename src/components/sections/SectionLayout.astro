@@ -18,7 +18,7 @@ const { name, position, xInit } = Astro.props;
   [&::-webkit-scrollbar-thumb]:rounded-full
   [&::-webkit-scrollbar-thumb]:bg-sh-gray"
   :style="`transform: translateY(calc(100%*${offset}))`"
-  x-init=`$watch('$store.section.currentSectionIndex', (value) => {offset = ${position} - value;$el.scrollTop = 0});${xInit}`
+  x-init=`offset = ${position} - $store.section.currentSectionIndex;$watch('$store.section.currentSectionIndex', (value) => {offset = ${position} - value;$el.scrollTop = 0});${xInit}`
 >
   <BreadCrumbs />
   <slot />
