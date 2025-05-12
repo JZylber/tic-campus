@@ -1,0 +1,15 @@
+---
+import StudentTable from "../components/github/StudentTable.astro";
+import GithubLayout from "../layouts/GithubLayout.astro";
+---
+
+<GithubLayout>
+  <div class="w-full h-full flex flex-col items-center overflow-y-scroll">
+    <h1 class="text-[30px] md:text-[36px] font-bold pt-4 pb-2">¿Quién sos?</h1>
+    <h2 class="text-[16px] md:text-[20px] pb-4">
+      Esta página sirve para tener constenido personalizado para cada uno de
+      ustedes.
+    </h2>
+    <StudentTable />
+  </div>
+</GithubLayout>

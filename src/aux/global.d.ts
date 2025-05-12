@@ -34,4 +34,12 @@ declare global {
     studentId: number,
     dataSheetId: string
   ) => Promise<FixedMarks>;
+  var getStudents: (dataSheetId: string) => Promise<
+    Array<{
+      DNI: number;
+      name: string;
+      surname: string;
+      course: string;
+    }>
+  >;
 }
