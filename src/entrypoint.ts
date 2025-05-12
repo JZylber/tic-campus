@@ -12,6 +12,7 @@ import {
 } from "./aux/fetchData";
 import { fetchHTMLData, prepareCrumbs } from "./aux/loadData";
 import collapse from "@alpinejs/collapse";
+import persist from "@alpinejs/persist";
 
 window.getSubjectData = getSubjectData;
 window.getSubjectProgram = getSubjectProgram;
@@ -43,6 +44,7 @@ interface AlpineSectionStore {
 
 export default (Alpine: Alpine) => {
   Alpine.plugin(collapse);
+  Alpine.plugin(persist);
   Alpine.directive(
     "tw",
     (
@@ -107,11 +109,11 @@ export default (Alpine: Alpine) => {
     publicURL: (url: string) => void;
   });
   Alpine.store("student", {
-    name: "",
-    surname: "",
-    course: "",
-    subject: "",
-    id: -1,
+    name: Alpine.$persist(""),
+    surname: Alpine.$persist(""),
+    course: Alpine.$persist(""),
+    subject: Alpine.$persist(""),
+    id: Alpine.$persist(-1),
     activities: [],
     marks: [],
     markData: {
@@ -191,11 +193,11 @@ export default (Alpine: Alpine) => {
       }
     },
   } as {
-    name: string;
-    surname: string;
-    course: string;
-    subject: string;
-    id: number;
+    name: any;
+    surname: any;
+    course: any;
+    subject: any;
+    id: any;
     dataSheetId: string;
     setStudent: (
       name: string,
