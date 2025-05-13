@@ -5,4 +5,165 @@ import InlineCodeBlock from "../../../../../components/articles/code-block/Inlin
 export const partial = true;
 ---
 
-<p>Proximamente...</p>
+<h2>¿Qué es un array?</h2>
+<p>
+  Un <strong>array</strong> (o lista) es un tipo de dato que sirve para guardar <strong
+  >
+    un conjunto de cosas
+  </strong>. Por ejemplo, podés guardar una lista de nombres, una lista de
+  números, o incluso una lista de objetos. Un array (o lista) es un tipo de dato
+  que sirve para guardar un conjunto de cosas. Por ejemplo, podés guardar una
+  lista de nombres, una lista de números, o incluso una lista de objetos.
+</p>
+<CodeBlock
+  lang="javascript"
+  code={`let frutas = ["manzana", "banana", "naranja"];
+let edades = [15, 18, 20, 22];`}
+/>
+<p>
+  En estos ejemplos, frutas y edades son arrays que contienen varios valores.
+  Cada valor está guardado en un índice, que es un número que representa la
+  posición de ese elemento en la lista.
+</p>
+<h2>Índices: empezamos a contar desde cero</h2>
+<p>
+  Los arrays usan índices que arrancan en 0. ¿Qué? ¿Se volvieron locos? ¿Quién
+  cuenta <strong>desde 0</strong>? Tiene que ver con razones históricas, así que
+  no lloren. Eso quiere decir que:
+</p>
+<CodeBlock
+  lang="javascript"
+  code={`let frutas = ["manzana", "banana", "naranja"];
+
+console.log(frutas[0]); // "manzana"
+console.log(frutas[1]); // "banana"
+console.log(frutas[2]); // "naranja"`}
+/>
+<p>
+  <strong>OJO:</strong>
+  <InlineCodeBlock code="frutas[3]" lang="javascript" /> en este caso da undefined
+  porque no hay un cuarto elemento.
+</p>
+<p>También podés modificar un elemento directamente usando el índice:</p>
+<CodeBlock
+  lang="javascript"
+  code={`frutas[1] = "pera";
+console.log(frutas); // ["manzana", "pera", "naranja"]`}
+/>
+<h2>Métodos útiles: "push" y "pop"</h2>
+<ul>
+  <li>
+    <InlineCodeBlock code="array.push(elemento)" lang="javascript" />: agrega un
+    elemento al final de un array.
+  </li>
+  <li>
+    <InlineCodeBlock code="array.pop()" lang="javascript" />: elimina el último
+    elemento de un array, y lo devuelve.
+  </li>
+</ul>
+<CodeBlock
+  lang="javascript"
+  code={`let numeros = [1, 2, 3];
+
+numeros.push(4); 
+console.log(numeros); // [1, 2, 3, 4]
+
+let ultimo = numeros.pop(); 
+console.log(ultimo); // 4
+console.log(numeros); // [1, 2, 3]`}
+/>
+<h2>La propiedad "length"</h2>
+<p>
+  Cada array tiene una propiedad llamada .length, que indica cuántos elementos
+  tiene el array.
+</p>
+<CodeBlock
+  lang="javascript"
+  code={`let letras = ["a", "b", "c"];
+console.log(letras.length); // 3`}
+/>
+<p>Ojo: el último índice válido es length - 1.</p>
+<h2>Iterar un array con for</h2>
+<p>
+  Una forma muy común de trabajar con arrays es recorrerlos con un ciclo for.
+</p>
+<CodeBlock
+  lang="javascript"
+  code={`let frutas = ["manzana", "banana", "naranja"];
+
+for (let i = 0; i < frutas.length; i++) {
+  console.log("Fruta: ", frutas[i]);
+}`}
+/>
+<p>Esto recorre todos los elementos del array, usando el índice i.</p>
+<p>
+  En muchos casos, se itera sobre arrays para hacer operaciones sobre todos los
+  elementos. Por ejemplo, si quiero sumar todos los números de un array de
+  edades, puedo hacer:
+</p>
+<CodeBlock
+  lang="javascript"
+  code={`let edades = [15, 18, 20];
+let suma = 0;
+
+for (let i = 0; i < edades.length; i++) {
+  suma = suma + edades[i];
+}
+
+console.log("Suma de edades:", suma); // 53
+`}
+/>
+<h2>Resumen</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Acción</th>
+      <th>Código</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Crear un array</td>
+      <td
+        ><InlineCodeBlock lang="javascript" code="let lista = [1, 2, 3];" /> (usando
+        corchetes)</td
+      >
+    </tr>
+    <tr>
+      <td>Acceder a un elemento</td>
+      <td
+        ><InlineCodeBlock lang="javascript" code="lista[<indice>]" />, donde el
+        indice es un numero de 0 a longitud -1, que representa la posición.</td
+      >
+    </tr>
+    <tr>
+      <td>Modificar un elemento</td>
+      <td
+        ><InlineCodeBlock lang="javascript" code="lista[<indice>] = 99" />,
+        donde el indice es un numero de 0 a longitud -1, que representa la
+        posición.</td
+      >
+    </tr>
+    <tr>
+      <td>Agregar al final</td>
+      <td><InlineCodeBlock lang="javascript" code="lista.push(4)" />, </td>
+    </tr>
+    <tr>
+      <td>Sacar el último</td>
+      <td><InlineCodeBlock lang="javascript" code="lista.pop()" />, </td>
+    </tr>
+    <tr>
+      <td>Saber cuántos elementos hay</td>
+      <td><InlineCodeBlock lang="javascript" code="lista.length" />, </td>
+    </tr>
+    <tr>
+      <td>Recorrer con for</td>
+      <td
+        ><InlineCodeBlock
+          lang="javascript"
+          code="for (let i = 0; i < lista.length; i++){}"
+        />,
+      </td>
+    </tr>
+  </tbody>
+</table>
