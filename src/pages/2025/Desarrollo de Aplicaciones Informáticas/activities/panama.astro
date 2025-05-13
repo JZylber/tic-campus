@@ -1,5 +1,7 @@
 ---
+import ImportantBox from "../../../../components/articles/alertbox/ImportantBox.astro";
 import CodeBlock from "../../../../components/articles/code-block/CodeBlock.astro";
+import InlineCodeBlock from "../../../../components/articles/code-block/InlineCodeBlock.astro";
 
 export const partial = true;
 ---
@@ -25,15 +27,31 @@ export const partial = true;
   además de entrevistas a sus desarrolladores. Esta información es vital para
   construir el conjunto de tests, y está detallada a continuación.
 </p>
+<div
+  class="w-full hidden md:block"
+  style="position: relative; height: 0; padding-top: 56.2500%;
+ padding-bottom: 0; box-shadow: 0 2px 8px 0 rgba(63,69,81,0.16); margin-top: 1.6em; margin-bottom: 0.9em; overflow: hidden;
+ border-radius: 8px; will-change: transform;"
+>
+  <iframe
+    loading="lazy"
+    style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; border: none; padding: 0;margin: 0;"
+    src="https://www.canva.com/design/DAGHA21qrrI/C15tyNt7ZOUaLYwM9_fc3A/view?embed"
+    allowfullscreen="allowfullscreen"
+    allow="fullscreen"
+  >
+  </iframe>
+</div>
 <h2>Funcionamiento</h2>
 <p>
   Toda esta sección explica el funcionamiento del canal. Pueden probarlo con el
-  simulador, <code>canal_diagram.py</code>. A continuación un diagrama de las
+  simulador, <em>canal_diagram.py</em>. A continuación un diagrama de las
   esclusas que vamos a usar para explicar el software.
 </p>
 <p>
   <img
-    src="https://jzylber.github.io/campus-data/img/canal-diagram.png"
+    class="w-full px-6 py-4"
+    :src="$store.baseURL.publicURL('/diagrams/canalDiagram.svg')"
     alt="Diagrama del canal"
   />
 </p>
@@ -44,7 +62,7 @@ export const partial = true;
   determinado momento. El estado inicial del canal es el siguiente:
 </p>
 <CodeBlock
-  language="python"
+  lang="python"
   code={`{
     "locks": ["","",""],
     "locks_water_level": ["low","low","low"],
@@ -102,55 +120,55 @@ export const partial = true;
 <p>
   Antes, tenemos que entender que es el control, una de las partes principales
   del estado. El control es una lista de tuplas de la forma
-  <code>(&lt;tiempo&gt;, &lt;comando&gt;)</code>, que simulan acciones que
-  llevan tiempo, y el programa debe actualizar el estado del canal cuando dichas
-  acciones se completan. El <em>tiempo</em> es simplemente un entero que representa
-  la cuenta regresiva hasta necesitar ejecutar el comando. En la fase I, se ejecutan
-  comandos cuyo tiempo es 0. Al ejecutarlos se eliminan de la lista de control ¿Pero
-  que tipos de comandos hay?
+  <InlineCodeBlock lang="python" code="(<tiempo>, <comando>)" />, que simulan
+  acciones que llevan tiempo, y el programa debe actualizar el estado del canal
+  cuando dichas acciones se completan. El <em>tiempo</em> es simplemente un entero
+  que representa la cuenta regresiva hasta necesitar ejecutar el comando. En la fase
+  I, se ejecutan comandos cuyo tiempo es 0. Al ejecutarlos se eliminan de la lista
+  de control ¿Pero que tipos de comandos hay?
 </p>
 <ol>
   <li>
-    <p>
-      <strong>Comando move</strong>: Este tiene la forma de
-      <code>&quot;move &lt;origen&gt; &lt;destino&gt;&quot;</code>. Este comando
-      representa la finalización del movimiento de un barco, y al ejecutarse
-      mueve el nombre del barco de <code>&lt;origen&gt;</code> a
-      <code>&lt;destino&gt;</code> y cierra (<code>False</code>) la compuerta
-      entre origen y destino. Por ejemplo, el comando
-      <code>&quot;move qd 0&quot;</code> mueve el barco de la fila río abajo, es
-      decir saca el primer elemento de <em>queue_upstream</em> (recuerden que el
-      nombre está dado por la dirección a recorrer y no el lugar donde están) y lo
-      pone en la esclusa 0.Además, cierra la compuerta 0.
-    </p>
+    <strong>Comando move</strong>: Este tiene la forma de
+    <InlineCodeBlock lang="python" code="'move <origen> <destino>'" />. Este
+    comando representa la finalización del movimiento de un barco, y al
+    ejecutarse mueve el nombre del barco de &lt;origen&gt; a &lt;destino&gt; y
+    cierra (<InlineCodeBlock lang="python" code="False" />) la compuerta entre
+    origen y destino. Por ejemplo, el comando <InlineCodeBlock
+      lang="python"
+      code="'move qd 0'"
+    /> mueve el barco de la fila río abajo, es decir saca el primer elemento de <em
+      >queue_upstream</em
+    > (recuerden que el nombre está dado por la dirección a recorrer y no el lugar
+    donde están) y lo pone en la esclusa 0. Además, cierra la compuerta 0.
   </li>
   <li>
-    <p>
-      <strong>Comando level</strong>: Este tiene la forma de
-      <code>&quot;level &lt;esclusa&gt; &lt;nivel&gt;&quot;</code>. Este comando
-      representa la finalización de un cambio de nivel en una esclusa, y al
-      ejecutarse cambia el nivel de la esclusa referida al nivel deseado. Por
-      ejemplo, el comando <code>&quot;level 1 high&quot;</code> setea el nivel de
-      la esclusa 1 en <em>high</em>.
-    </p>
+    <strong>Comando level</strong>: Este tiene la forma de
+    <InlineCodeBlock lang="python" code="'level <esclusa> <nivel>'" />. Este
+    comando representa la finalización de un cambio de nivel en una esclusa, y
+    al ejecutarse cambia el nivel de la esclusa referida al nivel deseado. Por
+    ejemplo, el comando <InlineCodeBlock lang="python" code="'level 1 high'" /> setea
+    el nivel de la esclusa 1 en <em>high</em>.
   </li>
   <li>
-    <p>
-      <strong>Comando direction</strong>: Este tiene la forma de
-      <code>&quot;direction &lt;abrir&gt; &lt;dirección&gt;&quot;</code>. Este
-      comando representa el intento de cambio en la dirección del canal. Cuando
-      se ejecuta, primero se chequea si el canal está vacío. Si la respuesta es
-      no, se cierra el canal (<code
-        >&lt;canal-state&gt;[&quot;open&quot;] = False</code
-      >) a la espera de que los barcos restantes despejen el canal. En este
-      caso, se agrega un comando de 1 minuto para ejecución el próximo ciclo y
-      que vuelva a chequear si el canal está vacío, de la forma
-      <code>(1,&quot;direction &lt;abrir&gt; &lt;dirección&gt;&quot;)</code>. Si
-      en cambio el canal está vacío, se cambia la dirección a la deseada, y si
-      abrir es igual a &quot;open&quot;, se reabre el canal (<code
-        >&lt;canal-state&gt;[&quot;open&quot;] = True</code
-      >)
-    </p>
+    <strong>Comando direction</strong>: Este tiene la forma de
+    <InlineCodeBlock lang="python" code="'direction <abrir> <dirección>'" />.
+    Este comando representa el intento de cambio en la dirección del canal.
+    Cuando se ejecuta, primero se chequea si el canal está vacío. Si la
+    respuesta es no, se cierra el canal (<InlineCodeBlock
+      lang="python"
+      code="<canal-state>['open'] = False"
+    />) a la espera de que los barcos restantes despejen el canal. En este caso,
+    se agrega un comando de 1 minuto para ejecución el próximo ciclo y que
+    vuelva a chequear si el canal está vacío, de la forma
+    <InlineCodeBlock
+      lang="python"
+      code="(1,'direction <abrir> <dirección>')"
+    />. Si en cambio el canal está vacío, se cambia la dirección a la deseada, y
+    si abrir es igual a &quot;open&quot;, se reabre el canal (<InlineCodeBlock
+      lang="python"
+      code="<canal-state>['open'] = True"
+    />)
   </li>
 </ol>
 <h3>Fase II: Mover barcos a través de las esclusas</h3>
@@ -164,12 +182,17 @@ export const partial = true;
   con nivel bajo (<em>low</em>), se debe elevar el nivel del agua en la esclusa
   en la que está presente. Esto se hace cambiando el nivel de agua a
   <em>filling</em> y agregar el comando de elevar el nivel al control, que dura 10
-  minutos. El comando entonces sería
-  <code>(10, level &lt;esclusa&gt; high)</code>. Para dirección
+  minutos. El comando entonces sería <InlineCodeBlock
+    lang="python"
+    code="(10,'level <esclusa> high')"
+  />. Para dirección
   <em>downstream</em>, ocurre lo mismo cuando está en una esclusa de nivel alto
   (<em>high</em>). Se debe bajar el nivel del agua, y esto se hace cambiando el
   nivel a <em>draining</em> y agregar el comando de bajar el nivel al control, que
-  sería de la forma <code>(10, level &lt;esclusa&gt; low)</code>.
+  sería de la forma <InlineCodeBlock
+    lang="python"
+    code="(10,'level <esclusa> low')"
+  />.
 </p>
 <p>
   Cuando el barco está listo para pasar a la siguiente esclusa, es decir, en una
@@ -192,12 +215,18 @@ export const partial = true;
     <em>upstream</em>, debemos bajarlo para que el barco pueda cambiar de
     esclusa. Esto es setear el nivel de la siguiente esclusa en
     <em>draining</em> y agregar el comando correspondiente, es decir
-    <code>(10, level &lt;esclusa-a-moverse&gt; low)</code>. Si el nivel está
-    bajo (<em>low</em>) en el caso de que la dirección sea <em>downstream</em>,
-    debemos subrilo para que el barco pueda cambiar de esclusa. Esto es setear
-    el nivel de la siguiente esclusa en <em>filling</em> y agregar el comando correspondiente,
-    es decir
-    <code>(10, level &lt;esclusa-a-moverse&gt; high)</code>.
+    <InlineCodeBlock
+      lang="python"
+      code="(10,'level <esclusa_a_moverse> low')"
+    />. Si el nivel está bajo (<em>low</em>) en el caso de que la dirección sea <em
+      >downstream</em
+    >, debemos subrilo para que el barco pueda cambiar de esclusa. Esto es
+    setear el nivel de la siguiente esclusa en <em>filling</em> y agregar el comando
+    correspondiente, es decir
+    <InlineCodeBlock
+      lang="python"
+      code="(10,'level <esclusa_a_moverse> high')"
+    />.
   </li>
 </ol>
 <p>
@@ -209,13 +238,17 @@ export const partial = true;
 </p>
 <ol>
   <li>
-    Se abre la compuerta correspondiente (<code>True</code>) entre la esclusa
-    actual y la esclusa siguiente o salida del canal
+    Se abre la compuerta correspondiente (<InlineCodeBlock
+      lang="python"
+      code="True"
+    />) entre la esclusa actual y la esclusa siguiente o salida del canal
   </li>
   <li>
     Se agrega al control el comando para iniciar la salida de esclusa, que dura
-    2 minutos. Es decir, se agrega de la forma
-    <code>(2, &quot;move &lt;origen&gt; &lt;destino&gt;&quot;)</code>
+    2 minutos. Es decir, se agrega de la forma <InlineCodeBlock
+      lang="python"
+      code="(2,'move <origen> <destino>')"
+    />
   </li>
 </ol>
 <p>
@@ -224,10 +257,12 @@ export const partial = true;
   actual sea el correcto: <em>low</em> para salir del canal por su extremo río abajo
   y <em>high</em> para salir del canal por su extremo río arriba. Para salir, es
   simplemente un caso particular de la salida descrita anteriormente. Se abre la
-  compuerta correspondiente, y se agrega el comando de salida al control: <code
-    >(2, &quot;move 2 u&quot;)</code
-  > cuando la dirección es
-  <em>upstream</em>, <code>(2, &quot;move 0 d&quot;)</code> cuando la dirección es
+  compuerta correspondiente, y se agrega el comando de salida al control: <InlineCodeBlock
+    lang="python"
+    code="(2,'move 2 u')"
+  /> cuando la dirección es
+  <em>upstream</em>, <InlineCodeBlock lang="python" code="(2,'move 0 d')" /> cuando
+  la dirección es
   <em>downstream</em>.
 </p>
 <p>
@@ -254,8 +289,10 @@ export const partial = true;
   </li>
   <li>
     Si la esclusa está <em>low</em>, puedo entrar al canal. Esto se hace
-    abriendo la compuerta 0 y agregando el comando correspondiente,
-    <code>(2, &quot;move qd 0&quot;)</code>.
+    abriendo la compuerta 0 y agregando el comando correspondiente, <InlineCodeBlock
+      lang="python"
+      code="(2,'move qd 0')"
+    />.
   </li>
 </ul>
 <p>
@@ -270,12 +307,12 @@ export const partial = true;
   <li>
     Si la esclusa 2 está <em>low</em> debo subir su nivel a <em>high</em>. Esto
     se hace igual que con las esclusas, setear el nivel a <em>filling</em> y agregar
-    el comando <code>(10, level 2 high)</code>.
+    el comando <InlineCodeBlock lang="python" code="(2,'level 2 high')" />.
   </li>
   <li>
     Si la esclusa está <em>high</em>, puedo entrar al canal. Esto se hace
     abriendo la compuerta 3 y agregando el comando correspondiente,
-    <code>(2, &quot;move qu 2&quot;)</code>.
+    <InlineCodeBlock lang="python" code="(2,'move qu 2')" />.
   </li>
 </ul>
 <h2>Entrevista a empleados</h2>
@@ -321,38 +358,50 @@ export const partial = true;
 <h2>Librerías</h2>
 <p>
   Para hacer este tp, se necesitan esencialmente 2 librerías: pytest para los
-  tests, y pygame para los diagramas. Esto se hace con:
+  tests, y pygame para los diagramas. Pueden instalar todo de un saque usando el <em
+    >requirements.txt</em
+  >, haciendo:
 </p>
-<pre><code class="language-bash">pip install --user pytest
-pip install --user pygame
-</code></pre>
+<CodeBlock lang="bash" code="pip install -r requirements.txt" />
+<p>
+  También pueden instalar las librerías individualmente (¿Por qué harían eso?)
+</p>
 <h2>Simulador</h2>
 <p>
   Para correr el simulador y ver interactivamente como funciona el canal, deben
-  tener instalada la librería <code>pygame</code> y correr el archivo
-  <code>canal_diagram.py</code>. ¿Qué es interactivo en el diagrama?
+  tener instalada la librería <em>pygame</em> y correr el archivo
+  <em>canal_diagram.py</em>. ¿Qué es interactivo en el diagrama?
 </p>
 <ul>
   <li>El reloj, al hacer click avanza un minuto.</li>
-  <li>Los <code>+</code> suman un barco a la fila del lado en que están.</li>
+  <li>Los + suman un barco a la fila del lado en que están.</li>
   <li>Las flechas a ambos lados invierten la dirección del canal.</li>
   <li>
-    El botón <code>DEBUG</code> permite ver <strong>parcialmente</strong> el estado,
-    en particular los barcos en las esclusas, los niveles de agua, las compuertas,
-    y el control. Las filas, la dirección y si está abierto o no se ve claramente
-    en pantalla, así que no se incluyó en las características que se ven en el debug.
+    El botón <strong>DEBUG</strong> permite ver <strong>parcialmente</strong> el
+    estado, en particular los barcos en las esclusas, los niveles de agua, las compuertas,
+    y el control <strong>en las distintas fases</strong>. Las filas, la
+    dirección y si está abierto o no se ve claramente en pantalla, así que no se
+    incluyó en las características que se ven en el debug.
   </li>
 </ul>
+<ImportantBox>
+  <p class="text-left">
+    El simulador es fundamental para entender como funciona el canal. Ejecutenlo
+    probando como se comportan los barcos, en particular, usen el botón de
+    debug, que permite ver como actúa cada fase del programa.
+  </p>
+</ImportantBox>
 <h2>Consigna</h2>
 <p>
   Construir un conjunto de tests para la función
-  <code>move_through_locks</code> que se encarga de la
+  <em>move_through_locks</em> que se encarga de la
   <strong>fase II (SOLO FASE II NO ME CHILLEN TANTO)</strong> del programa de control.
-  La función <code>move_through_locks(canal_state)</code> toma el estado del canal
-  y ejecuta sobre todos los barcos presentes en el canal la fase II. La función no
-  retorna nada pero recuerden que al tomar un diccionario, este se pasa por <em
-    >referencia</em
-  >.
+  La función <InlineCodeBlock
+    lang="python"
+    code="move_through_locks(canal_state)"
+  /> toma el estado del canal y ejecuta sobre todos los barcos presentes en el canal
+  la fase II. La función no retorna nada pero recuerden que al tomar un diccionario,
+  este se pasa por <em>referencia</em>.
 </p>
 <p><strong>Los tests deben estar en un archivo aparte.</strong></p>
 <p>
@@ -363,7 +412,7 @@ pip install --user pygame
 <p>
   Además, otro miembro de nuestro equipo creó un copia del programa de control
   con algunos <em>bugs</em> intencionales, para probar nuestros tests. Este archivo
-  es <code>canal_buggeado.py</code>. Nuestro conjunto de tests debe ser capaz de
+  es <em>canal_buggeado.py</em>. Nuestro conjunto de tests debe ser capaz de
   detectar la falla.
 </p>
 <h2>Archivos</h2>
@@ -392,7 +441,6 @@ pip install --user pygame
       <th>Satisfactorio</th>
       <th>Mejorable</th>
       <th>Pendiente</th>
-      <th>Comentario</th>
     </tr>
   </thead>
   <tbody>
@@ -409,7 +457,6 @@ pip install --user pygame
       <td>
         No se tienen en cuenta los casos descritos en la fase II (0 puntos)
       </td>
-      <td></td>
     </tr>
     <tr>
       <td>Entrevista</td>
@@ -425,7 +472,6 @@ pip install --user pygame
         No hay tests que prueban las dificultades descritas por el ingeniero (0
         puntos)
       </td>
-      <td></td>
     </tr>
     <tr>
       <td>Debugging</td>
@@ -435,7 +481,6 @@ pip install --user pygame
         está el error (0,5 puntos)
       </td>
       <td>El programa buggeado pasa todos los tests (0 puntos)</td>
-      <td></td>
     </tr>
     <tr>
       <td>Relevancia</td>
@@ -449,7 +494,6 @@ pip install --user pygame
         Casi ningún test prueba la funcionalidad específica de la función (0
         puntos)
       </td>
-      <td></td>
     </tr>
     <tr>
       <td>Organización</td>
@@ -458,14 +502,12 @@ pip install --user pygame
       <td>
         Hay un único/unos pocos megatests que hacen todas las prueba (0 puntos)
       </td>
-      <td></td>
     </tr>
     <tr>
       <td>Cobertura</td>
       <td>Los tests comparan todo el estado del canal (1 punto)</td>
       <td>Los tests comparan solo parte del estado del canal (0,5 puntos)</td>
       <td>Los tests no comparan el estado del canal (0 puntos)</td>
-      <td></td>
     </tr>
     <tr>
       <td>Funcionalidad</td>
@@ -478,7 +520,6 @@ pip install --user pygame
         Los tests no andan, y fallan por problemas del test y no por la función
         (0 puntos)
       </td>
-      <td></td>
     </tr>
     <tr>
       <td>Nombres</td>
@@ -491,7 +532,6 @@ pip install --user pygame
         La mayoría de los tests tiene nombres no relevantes como una enumeración
         (0 puntos)
       </td>
-      <td></td>
     </tr>
     <tr>
       <td>Superposición</td>
@@ -507,7 +547,11 @@ pip install --user pygame
         La gran mayoría de los tests prueba cosas que exceden al caso a testear
         o es la misma prueba repetida muchas veces (0 puntos)
       </td>
-      <td></td>
     </tr>
   </tbody>
 </table>
+<p>
+  <strong
+    >La nota se va a ver reflejada en la copia de esta tabla en el README del
+    repositorio.</strong>
+</p>
