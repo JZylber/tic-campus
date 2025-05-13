@@ -1,8 +1,115 @@
 ---
+import ImportantBox from "../../../../../components/articles/alertbox/ImportantBox.astro";
 import CodeBlock from "../../../../../components/articles/code-block/CodeBlock.astro";
 import InlineCodeBlock from "../../../../../components/articles/code-block/InlineCodeBlock.astro";
 
 export const partial = true;
 ---
 
-<p>Proximamente...</p>
+<p>
+  Hasta ahora venimos usando while para repetir instrucciones mientras se cumple
+  una condición. El ciclo for es otra forma de lograr lo mismo, pero con una
+  sintaxis más <strong>compacta y ordenada</strong>, especialmente útil cuando
+  sabemos de antemano <strong>cuántas veces</strong> queremos repetir algo.
+</p>
+<h2>Repasemos el while:</h2>
+<CodeBlock
+  lang="javascript"
+  code={`let i = 0;
+while (i < 5) {
+  console.log("Hola número ", i);
+  i++;
+}`}
+/>
+<p>
+  Este código imprime los números del 0 al 4, precedidos por el texto <em
+    >'Hola Número'</em
+  >. Puedo notar tres partes:
+</p>
+<ol>
+  <li>
+    Inicialización: <InlineCodeBlock lang="javascript" code="let i = 0" />
+  </li>
+  <li>
+    Condición: <InlineCodeBlock lang="javascript" code="i < 5" />
+  </li>
+  <li>
+    Actualización: <InlineCodeBlock lang="javascript" code="i++" />
+  </li>
+</ol>
+<p>Estas tres partes se pueden escribir en una sola línea con un for.</p>
+<h2>Lo mismo, pero con for</h2>
+<CodeBlock
+  lang="javascript"
+  code={`for (let i = 0; i < 5; i++) {
+  console.log("Hola número ", i);
+}`}
+/>
+<p>
+  Más corto, más ordenado, y más fácil de leer cuando estás haciendo ciclos
+  acotados.
+</p>
+<h2>Estructura del for</h2>
+<CodeBlock
+  lang="javascript"
+  code={`for (inicialización; condición; actualización) {
+  // cuerpo del ciclo
+}`}
+/>
+<ul>
+  <li>
+    <strong>Inicialización:</strong> se ejecuta una sola vez, antes de que arranque
+    el ciclo.
+  </li>
+  <li>
+    <strong>Condición:</strong> se evalúa antes de cada vuelta. Si da true, se ejecuta
+    el cuerpo.
+  </li>
+  <li>
+    <strong>Actualización:</strong> se ejecuta al final de cada vuelta, justo antes
+    de volver a evaluar la condición.
+  </li>
+</ul>
+<ImportantBox warning="No todo while se puede convertir a for">
+  <div class="flex flex-col items-start">
+    <p>
+      Hay situaciones donde no conviene o no se puede usar for, especialmente
+      si:
+    </p>
+    <ul class="list-disc">
+      <li>
+        La condición no depende de una variable que se inicializa y actualiza de
+        forma clara.
+      </li>
+      <li>El ciclo depende de eventos externos o interacciones complejas.</li>
+    </ul>
+    <p>Por ejemplo:</p>
+    <CodeBlock
+      lang="javascript"
+      code={`let seguir = true;
+while (seguir) {
+  seguir = confirm("¿Querés seguir?");
+}`}
+    />
+    <p>
+      Este ciclo depende de una interacción con el usuario (confirm). No tiene
+      mucho sentido (y es difícil de armar) usar for acá, porque no hay ni una
+      inicialización, ni una condición basada en un contador, ni una
+      actualización clara.
+    </p>
+  </div></ImportantBox
+>
+<h2>Conclusión</h2>
+<ul>
+  <li>
+    El ciclo for es una forma compacta y clara de escribir repeticiones con
+    contador. Es mucho menos propensa a errores que un while.
+  </li>
+  <li>
+    Es ideal para contar o recorrer algo con una cantidad conocida de pasos.
+  </li>
+  <li>
+    No reemplaza todos los while. Tenés que elegir el tipo de ciclo según el
+    problema que estés resolviendo.
+  </li>
+</ul>
