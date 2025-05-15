@@ -1,4 +1,6 @@
 ---
+import InlineCodeBlock from "../../../../components/articles/code-block/InlineCodeBlock.astro";
+
 export const partial = true;
 ---
 
@@ -26,7 +28,7 @@ export const partial = true;
   para arrancar el descifrado y una lista vacía en donde colocar las 27 opciones
   (ids "mensaje", "descifrar" y "mensajesDescifrados" respectivamente). Esta
   última sugiero que sea una lista ordenada y cada elemento un
-  <code class="language-html">&ltli&gt</code>, pero lo pueden cambiar.
+  <InlineCodeBlock lang="html" code="<li>" />, pero lo pueden cambiar.
 </p>
 <p>
   Además, cuentan con una función en JS para descifrar mensajes en césar, que
@@ -37,9 +39,76 @@ export const partial = true;
   Para terminar, descifren el siguiente mensaje interceptado por los italianos,
   y determinen en que clave estaba cifrado:
 </p>
-<p class="old-message">
+<p
+  class="font-special-elite px-1 py-0.5 my-2 bg-[#f4f4e2] text-sh-black rounded-lg"
+>
   xwlziu lmzzwbizuwa mu inzpki, xmzw qitia xmztpbpzmtwa ycm xizbiu bissizpuma
   iubma lm omzdpzswa.
 </p>
 <h2>Consigna Manija</h2>
-<p>(Pendiente)</p>
+<p>
+  Un viajero en el tiempo les dio tecnología digital a los italianos, y
+  codifican los strings en ascii. No los codifican adicionalmente, y otro
+  viajero del futuro nos dio los equivalentes en ascii, así que es facil
+  descifrarlos.
+</p>
+<p>
+  ¿Pero que era ASCII? Lo vieron con Sofi/Darío, es la equivalencia entre letras
+  y códigos binarios. Son 8 bits por caracter.
+</p>
+<p>Supongamos que tengo el mensaje</p>
+<p>
+  0100001001101111011011010110001001100001011100100110010001101001011011100110111001101001001000000100011101110101011100110111001101101001011011100110111001101001
+</p>
+<p>Este se traduce a <em>"Bombardinni Gussinni"</em></p>
+<p>
+  Construir una función que traduzca binario a strings. Pueden asumir que los
+  códigos binarios son múltiplos de 8 (es decir, que no recortan 0 iniciales).
+  No se calienten mucho en el input, pueden clavar un console.log probando y
+  punto, pero si están extra manija haganse un input, un boton y un event
+  listener asociado para que se vea en el html. Algunos tips importantes:
+</p>
+<ul>
+  <li>
+    Los strings se pueden recorrer usando sus índices (posiciones). Empiezan de
+    0. Por ejemplo, si tengo el string "Shulian", <InlineCodeBlock
+      lang="javascript"
+      code="'Shulian'[0]"
+    /> (acceso al índice 0) devuelve "S". <InlineCodeBlock
+      lang="javascript"
+      code="'Shulian'[6] //'n'"
+    />.
+  </li>
+  <li>
+    La longitud de un string se puede obtener haciendo .length. Por ejemplo, <InlineCodeBlock
+      lang="javascript"
+      code="Shulian'.length // 7"
+    />
+  </li>
+  <li>
+    Pueden aprovechar el for para recorrer por saltos mayores. Como tienen que
+    analizar de 8 bits a la vez, vean de recorrer el string
+    <em>de a 8</em>
+  </li>
+  <li>
+    Javascript tiene formas de acceder a un pedazo de string. Googleen el método
+    substring
+  </li>
+  <li>
+    Para convertir el binario a string, no hace falta que se busquen la tabla de
+    ascii, javascript ya tiene conversores nativos. Hay varias formas de
+    hacerlo, pero yo les sugiero que investiguen que onda las siguientes
+    funciones
+    <ul>
+      <li>
+        <InlineCodeBlock lang="javascript" code="parseInt()" />: convierte cosas
+        a números enteros. ¡Hay formas de decirle que lo que l estoy pasando es
+        binario!
+      </li>
+      <li>
+        <InlineCodeBlock lang="javascript" code="String.fromCharCode()" />:
+        Bastante autoexplicativo el nombre, googleen.
+      </li>
+    </ul>
+  </li>
+</ul>

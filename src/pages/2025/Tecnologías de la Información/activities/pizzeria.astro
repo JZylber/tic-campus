@@ -1,26 +1,127 @@
 ---
+import InlineCodeBlock from "../../../../components/articles/code-block/InlineCodeBlock.astro";
+
 export const partial = true;
 ---
 
 <h2>Consigna Base</h2>
 <p>
   La pizzería bajo belgrano cuenta con muchos combos, y van variando mes a mes.
-  Como programadores de su página web, nos interesa no tener que escribir todas
-  las opciones de combo a mano, si no hacerlo de forma automática por JS.
+  Como programadores de su página web, no queremos tener que escribir todas las
+  opciones de combo a mano, si no hacerlo de forma automática por JS.
 </p>
 <p>
-  De los combos, no nos interesa nada más que su número. Para empezar, podemos
+  De los combos, nos interesa nada más que su número. Para empezar, podemos
   determinar que son 8 combos. Lo dejamos fijo, pero para cuando aprendamos a
   buscar información desde datos va a reemplazar este número.
 </p>
 <p>
-  Completar el programa para usando
-  <code class="language-javascript">while</code>, el
-  <code class="language-html">&ltselect id = "combos"&gt</code> se pueble con 8
-  <code class="language-html">&ltoption&gt</code>. Al hacer click en el botón de
-  <code class="language-html">id = "button"</code> se debe mostrar el combo elegido
-  en
-  <code class="language-html">&ltdiv id = "elegido"&gt</code>
+  Completar el programa usando
+  <InlineCodeBlock code="while" lang="javascript" />, el
+  <InlineCodeBlock code="<select id='combos'>" lang="html" /> y se pueble con 8
+  <InlineCodeBlock code="<option>" lang="html" /> . Al hacer click en el botón de
+  <InlineCodeBlock code="<div id='button'>" lang="html" /> se debe mostrar el combo
+  elegido en
+  <InlineCodeBlock code="<div id='elegido'>" lang="html" />
 </p>
-<h2>Consigna Manija</h2>
-<p>(Pendiente)</p>
+<p>
+  Los option deben tener el texto <em>Combo 1</em>,<em>Combo 2</em>,...,<em
+    >Combo 8</em
+  >
+</p>
+<h2>Consigna Manija: ISBN Check Digit</h2>
+<p>Según Wikipedia:</p>
+<p>
+  <em
+    >El ISBN (por las siglas en inglés de International Standard Book Number, en
+    español «código Internacional normalizado para libros») es un identificador
+    único para libros. Mediante este sistema, a cada libro se le asigna una
+    cadena numérica única internacional que sirve para identificar datos básicos
+    del objeto tales como título, editorial, tirada, extensión, materia, país,
+    traductor, lengua original, etc.</em
+  >
+</p>
+<p>
+  A nosotros nos va a interesar el de 10 dígitos. En particular, el último
+  dígito es un <strong>código de control</strong> o check digit. ¿Qué es esto? Según
+  Wikipedia:
+</p>
+<p>
+  <em
+    >El código de control es un mecanismo de detección de errores utilizado para
+    verificar la corrección de un dato, generalmente en soporte informático. Los
+    dígitos de control se usan principalmente para detectar errores de tipeo o
+    transmisión de los datos. Generalmente consisten en uno o más caracteres
+    numéricos o alfabéticos añadidos al dato original y calculados a partir de
+    este mediante un determinado algoritmo.</em
+  >
+</p>
+<p>
+  Osea, el último dígito del ISBN se agrega para chequear rápido que no te la
+  hayas mandado tipeando un ISBN inválido. Es decir, mediante una cuenta, le
+  podés avisar rápido al usuario "Che ese ISBN no existe" sin tener que buscar
+  en una base de datos de <em
+    >todos los libros escritos en la historia de la humanidad</em
+  >
+</p>
+<p>
+  La idea de esta consigna es que creen en un programa que, tomando un ISBN <strong
+    >en forma de string</strong
+  > devuelva si el ISBN es válido o no. ¿Por qué string? Porque por más que sean
+  dígitos, el ISBN en realidad no es un número puro, puede arrancar con 0 (aparte
+  los strings son más fáciles de loopear). La explicación de la cuenta es un toque
+  larga (Así es la vida real no lloren), y se las dejo en el siguiente link:
+</p>
+<p>
+  <a
+    class="text-sh-blue"
+    href="https://en.wikipedia.org/wiki/ISBN#ISBN-10_check_digits"
+    >https://en.wikipedia.org/wiki/ISBN#ISBN-10_check_digits</a
+  >
+</p>
+<p>
+  Está en inglés pero está hermosamente explicado, mejor que el castellano y
+  mejor que cualquier cosa que pueda escribir yo. Les dejo un resumen, también
+  de wikipedia:
+</p>
+<p>
+  <em
+    >El dígito de control de un ISBN de diez cifras funciona haciendo un cálculo
+    basado en el módulo 11: Se multiplica cada uno de los dígitos por la
+    posición que ocupan en la secuencia numérica, es decir, el primero por 1, el
+    segundo por dos y así sucesivamente hasta el décimo que se multiplica por
+    10. Luego se suman estas multiplicaciones y el resultado se divide entre 11.
+    Dicha división dejará un resto entre 0 y 10. Si el resto está entre 0 y 9,
+    este mismo valor es el del dígito de control. Pero si el resto es 10,
+    entonces se establece como dígito de control la letra X.</em
+  >
+</p>
+<p><strong>TIPS IMPORTANTES:</strong></p>
+<ul>
+  <li>
+    Los strings se pueden recorrer usando sus índices (posiciones). Empiezan de
+    0. Por ejemplo, si tengo el string "Shulian", <InlineCodeBlock
+      lang="javascript"
+      code="'Shulian'[0]"
+    /> (acceso al índice 0) devuelve "S". <InlineCodeBlock
+      lang="javascript"
+      code="'Shulian'[6] //'n'"
+    />.
+  </li>
+  <li>
+    La longitud de un string se puede obtener haciendo .length. Por ejemplo, <InlineCodeBlock
+      lang="javascript"
+      code="Shulian'.length // 7"
+    />
+  </li>
+  <li>
+    Para tomar el resto de la división, pueden usar el operador <strong
+      >Remainder</strong
+    > (resto) que es el %. Devuelce el resto de la división <strong
+      >entera</strong
+    > entre dos números. Por ejemplo, <InlineCodeBlock
+      lang="javascript"
+      code="5 % 2 // 1"
+    />.
+  </li>
+</ul>
