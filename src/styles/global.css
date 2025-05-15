@@ -8,6 +8,7 @@ html {
 
 @theme {
   --font-sans: "Lato", sans-serif;
+  --font-special-elite: "Special Elite", serif;
   --color-sh-black: rgb(27, 27, 27);
   --color-sh-dark-gray: #2a2a2a;
   --color-sh-gray: #3f3f3f;
