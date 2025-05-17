@@ -1,5 +1,137 @@
 ---
+import ImportantBox from "../../../../components/articles/alertbox/ImportantBox.astro";
+import InlineCodeBlock from "../../../../components/articles/code-block/InlineCodeBlock.astro";
+
 export const partial = true;
 ---
 
-<p>Proximamente...</p>
+<h2>Introducción</h2>
+<p>
+  ¡Nieve en Buenos Aires! Pero no es una nieve normal. Quienes la tocan, mueren
+  instantáneamente. Juan Salvo, sus amigos, familiares y otros sobrevivientes
+  que se unieron a la casa deben sobrevivir buscando suministros. Para esto,
+  deben hacer viajes al exterior usando trajes protectores, y así conseguir los
+  víveres necesarios para sobrevivir la tormenta.
+</p>
+<p>
+  Nos toca ayudar a los sobrevivientes haciendo un programa que haga un
+  seguimiento de quienes les corresponde hacer salidas, a donde y que suministro
+  están yendo a buscar.
+</p>
+<ImportantBox>
+  <p>
+    Este ejercicio se puede hacer modificando solamente el archivo javascript.
+    No necesitan ni pueden tocar el .html.
+  </p>
+</ImportantBox>
+<h2>Consigna Base: por el 6</h2>
+<p>
+  En el archivo javascript, tenemos una lista de personas y lugares. Queremos
+  poblar los <InlineCodeBlock lang="html" code="<select>" /> correspondientes con
+  optiones de cada uno de ellos. Para esto, deben recorrer la lista de personas y
+  lugares y crear un elemento <InlineCodeBlock lang="html" code="<option>" /> por
+  cada uno de ellos.
+</p>
+<p>
+  Los option deben tener seteado tanto el atributo textContent como el atributo
+  value al valor de la persona/lugar. Los ids de los select son "persona" y
+  "lugar" respectivamente.
+</p>
+<p>
+  Por si no quedó claro en el cartel enorme rojo que dice importante, <strong>
+    no se pude hacer poniéndolos a mano en el HTML
+  </strong>. Deben recorrer la lista de personas y lugares y crear un elemento
+  <code>option</code> por cada uno de ellos, y agregarlo al select correspondiente.
+</p>
+<h2>Extra I: por el 8</h2>
+<p>
+  Hacer que al hacer click en el botón "Asignar" (id = "asignar") se agreguen
+  los valores elegidos como una nueva fila en el cuerpo de la tabla (<InlineCodeBlock
+    lang="html"
+    code="<tbody>"
+  />). El cuerpo de la tabla tiene el id "tareas", y la forma de asignar una
+  nueva fila es la siguiente:
+</p>
+<ol>
+  <li>
+    Crear un elemento <InlineCodeBlock lang="html" code="<tr>" />(table row).
+  </li>
+  <li>
+    Crear un elemento <InlineCodeBlock lang="html" code="<td>" /> (table data) por
+    cada columna de la tabla. En este caso son 3 columnas.
+  </li>
+  <li>
+    Para asignar valores a cada td, alcanza con modificar el atributo
+    textContent de cada uno. El primer td debe tener el valor (atributo value)
+    del select de id "persona", el segundo el del select de id "lugar" y el
+    tercero el del input de id "producto".
+  </li>
+  <li>Hacer un <em>appendChild</em> de cada td en la fila (tr).</li>
+  <li>
+    Agregar la fila (tr) en la tabla (id="tareas") con un
+    <em>appendChild</em>.
+  </li>
+</ol>
+<p>Si tienen dudas, les recomiendo googlear como son las tablas en html</p>
+<h2>Extra II: por el 10</h2>
+<p>
+  Por último, nos interesa contar cuantas tareas hay asignadas a cada persona.
+  Para eso, tenemos que poblar el div de tareas por persona
+  (id="tareas-por-persona") con una foto de cada persona, su nombre, y la
+  cantidad de tareas que tiene asignadas (inicialmente 0). Para eso:
+</p>
+<ol>
+  <li>Recorrer nuevamente la lista de personas</li>
+  <li>
+    Por cada persona, crear un <InlineCodeBlock lang="html" code="<div>" />.
+  </li>
+  <li>
+    Crear un tag <InlineCodeBlock lang="html" code="<img>" /> cuyo src sea la imagen
+    de cada personaje. Estas se pueden encontrar en la carpeta img con el nombre
+    correspondiente. Agregar este tag img al div creado previamente (<em
+      >appendChild</em
+    >).
+  </li>
+  <li>
+    Crear un <InlineCodeBlock lang="html" code="<span>" /> con el nombre del personaje
+    como <em>textContent</em>
+    y asignarlo al div.
+  </li>
+  <li>
+    Crear un <InlineCodeBlock lang="html" code="<span>" /> con la cantidad de tareas
+    como <em>textContent</em>
+    asignadas y asignarlo al div.
+  </li>
+  <li>Agregar el div al contenedor cuyo id es "tareas-por-persona"</li>
+</ol>
+<p>
+  Finalmente, nos gustaría que cada vez que se asigna una nueva tarea, se
+  actualice el valor correspondiente. Ustedes están ya capacitados para hacer
+  esto de un montón de formas (una lista auxiliar, lista de objetos, aprovechar
+  el orden de los divs creados, etc.) pero fin de cuatri, soy buenita/o, y les
+  propongo hacerlo de la forma descrita a continuación. Si se les ocurre una
+  mejor idea de como hacerlo sean felices.
+</p>
+<ul>
+  <li>
+    Al crear los divs de tareas por persona, asignarle al <InlineCodeBlock
+      lang="html"
+      code="<span>"
+    /> que cuenta las tareas un id (se asigna como un atributo más) de forma inteligente
+    para poder levantarlo con
+    <em>getElementById</em> más adelante. Puede ser el nombre de la persona o el
+    índice.
+  </li>
+  <li>
+    Al asignar una nueva tarea, levantar el span correspondiente a la persona
+    (¡para eso hicimos los ids!) y modificar su textContent sumando 1.
+    <strong>Guarda con los tipos de datos</strong>. El tipo de
+    <em>textContent</em> es string, si suman a lo bestia les va a concatenar, no
+    sumar (ver ejercicio "La Canchita").
+  </li>
+</ul>
+<h2>Entrega</h2>
+<p>
+  La entrega se hace simplemente realizando un commit y un push al repo
+  otorgado.
+</p>
