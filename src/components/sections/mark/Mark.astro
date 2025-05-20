@@ -105,7 +105,7 @@ const { position, subject } = Astro.props;
                   10,
                 2
               )
-            : 10 * (1 - proportion);
+            : round(10 * (1 - proportion), 2);
         this.markData.markedActivities.markContribution =
           this.markData.markedActivities.total > 0
             ? round(
@@ -116,8 +116,11 @@ const { position, subject } = Astro.props;
                   proportion,
                 2
               )
-            : (this.markData.activities.markContribution / (1 - proportion)) *
-              proportion;
+            : round(
+                (this.markData.activities.markContribution / (1 - proportion)) *
+                  proportion,
+                2
+              );
         this.markData.averageMark = round(
           this.markData.activities.markContribution +
             this.markData.markedActivities.markContribution,
