@@ -87,7 +87,6 @@
       for (let i = 0; i < el.attributes.length; i++) {
         newScript.setAttribute(el.attributes[i].name, el.attributes[i].value);
       }
-      // If the script tag has a src attribute, fetch the content and set it as innerText
       if (el.src) {
         // If the source is a relative path, add the base URL at the front
         if (el.src.startsWith("https://campus.ort.edu.ar/tic-campus")) {

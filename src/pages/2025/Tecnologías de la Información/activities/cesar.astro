@@ -1,4 +1,6 @@
 ---
+import InlineCodeBlock from "../../../../components/articles/code-block/InlineCodeBlock.astro";
+
 export const partial = true;
 ---
 
@@ -6,7 +8,9 @@ export const partial = true;
 <p>
   El cifrado césar es una de las primeras técnicas de encriptación de mensajes.
   Pueden leer más acá:
-  <a href="https://es.wikipedia.org/wiki/Cifrado_C%C3%A9sar"
+  <a
+    class="text-sh-blue"
+    href="https://es.wikipedia.org/wiki/Cifrado_C%C3%A9sar"
     >https://es.wikipedia.org/wiki/Cifrado_C%C3%A9sar</a
   >.
 </p>
@@ -16,12 +20,13 @@ export const partial = true;
 </p>
 <ul>
   <li>
-    <code class="language-javascript">cifrar</code>: recibe una palabra (string)
-    y una clave (number), y devuelve la palabra cifrada.
+    <InlineCodeBlock lang="javascript" code="cifrar(palabra,clave)" />: recibe
+    una palabra (string) y una clave (number), y devuelve la palabra cifrada.
   </li>
   <li>
-    <code class="language-javascript">descifrar</code>: recibe una palabra
-    cifrada (string) y una clave (number), y devuelve la palabra descifrada.
+    <InlineCodeBlock lang="javascript" code="descifrar(palabra,clave)" />:
+    recibe una palabra cifrada (string) y una clave (number), y devuelve la
+    palabra descifrada.
   </li>
 </ul>
 <p>
@@ -30,7 +35,7 @@ export const partial = true;
 </p>
 <p>
   Hacer un programa que tome 3 inputs del usuario por
-  <code class="language-javascript">prompt</code>:
+  <InlineCodeBlock lang="javascript" code="prompt()" />:
 </p>
 <ol>
   <li>Una palabra</li>
@@ -74,14 +79,18 @@ export const partial = true;
 </p>
 <p>
   Para hacernos la vida un poco más sencilla, les propongo hacer una función,
-  <code class="language-javascript">obtenerPrefijo</code>, que, dado un número y
-  el tamaño del prefijo, nos devuelva el prefijo. Por ejemplo,
-  <code class="language-javascript">obtenerPrefijo(456789010075598, 2)</code>
+  <InlineCodeBlock
+    lang="javascript"
+    code="obtenerPrefijo(numero,tamañoPrefijo)"
+  />, que, dado un número y el tamaño del prefijo, nos devuelva el prefijo. Por
+  ejemplo,<InlineCodeBlock
+    lang="javascript"
+    code="obtenerPrefijo(456789010075598, 2)"
+  />
   devuelva 45.
 </p>
 <p>
-  Pero, ¿Cómo hacemos esto? Bueno, podemos aprovechar una técnica similar a la
-  que hicimos en la actividad de <em>Gran Hermano</em>. Dividir por una potencia
+  Pero, ¿Cómo hacemos esto? Podemos hacer lo siguiente: Dividir por una potencia
   de 10, pero quedarnos con el cociente entero. Por ejemplo, 678559 / 10^2 =
   6785, 678559 / 10^4 = 67
 </p>
@@ -89,30 +98,35 @@ export const partial = true;
 <ol>
   <li>
     Crear la función
-    <code class="language-javascript">obtenerPrefijo</code> que, dado un número y
-    el tamaño del prefijo, nos devuelva el prefijo.
+    <InlineCodeBlock
+      lang="javascript"
+      code="obtenerPrefijo(numero,tamañoPrefijo)"
+    /> que, dado un número y el tamaño del prefijo, nos devuelva el prefijo.
   </li>
   <li>
     Tomar un número de tarjeta de crédito por prompt (para simplificar asuman
     que son siempre de 16 dígitos)
   </li>
   <li>
-    Usando la función <code class="language-javascript">obtenerPrefijo</code>,
-    determinar la red de la tarjeta (AMEX, VISA o MASTERCARD)
+    Usando la función <em>obtenerPrefijo</em>, determinar la red de la tarjeta
+    (AMEX, VISA o MASTERCARD)
   </li>
   <li>Devolver el resultado por alert</li>
 </ol>
 <p><strong>TIPS IMPORTANTES</strong></p>
 <ul>
   <li>
-    En <code class="language-javascript">obtenerPrefijo</code>, la potencia de
-    10 por la cual hay que dividir es longitudNumero - longitudPrefijo. Como no
-    saben sacar la longitud de un número, simplifico el problema diciendo que
-    todas las tarjetas son de 16 dígitos, por lo tanto, longitudNumero = 16
+    En <em>obtenerPrefijo</em>, la potencia de 10 por la cual hay que dividir es
+    longitudNumero - longitudPrefijo. Como no saben sacar la longitud de un
+    número, simplifico el problema diciendo que todas las tarjetas son de 16
+    dígitos, por lo tanto, longitudNumero = 16
   </li>
   <li>
     Javascript no tiene división entera, pero pueden lograr el mismo efecto
     redondeando para abajo el resultado de la división normal. Esto se puede
-    hacer con la función <code class="language-javascript">Math.floor</code>
+    hacer con la función <InlineCodeBlock
+      lang="javascript"
+      code="Math.floor()"
+    />
   </li>
 </ul>
