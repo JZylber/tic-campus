@@ -28,6 +28,102 @@ console.log(esMayorDeEdad); // false`}
   code={`let edad = 18;
 console.log(edad >= 18); // Muestra: true`}
 />
+<h2>Operaciones de comparación</h2>
+<p>
+  Las operaciones de comparación se usan para hacer preguntas en el código,
+  como: "¿Es igual?", "¿Es mayor?", "¿Es diferente?".
+</p>
+<p>Estas operaciones devuelven siempre un valor booleano.</p>
+<ul>
+  <li>
+    <InlineCodeBlock code="true" lang="javascript" /> si la comparación se cumple.
+  </li>
+  <li>
+    <InlineCodeBlock code="false" lang="javascript" /> si la comparación se cumple.
+  </li>
+</ul>
+<h3>Comparadores comunes en JavaScript</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Operador</th>
+      <th>Significado</th>
+      <th>Ejemplo (que da true)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><InlineCodeBlock code="===" lang="javascript" /></td>
+      <td>Igual en <strong>valor y tipo</strong></td>
+      <td><InlineCodeBlock code="5 === 5" lang="javascript" /></td>
+    </tr>
+    <tr>
+      <td><InlineCodeBlock code="!==" lang="javascript" /></td>
+      <td>Distinto en <strong>valor o tipo</strong></td>
+      <td
+        ><InlineCodeBlock code="5 !== '5'" lang="javascript" /> o <InlineCodeBlock
+          code="5 !== 6"
+          lang="javascript"
+        /></td
+      >
+    </tr>
+    <tr>
+      <td><InlineCodeBlock code=">" lang="javascript" /></td>
+      <td>Mayor que</td>
+      <td><InlineCodeBlock code="5 > 4" lang="javascript" /></td>
+    </tr>
+    <tr>
+      <td><InlineCodeBlock code="<" lang="javascript" /></td>
+      <td>Menor que</td>
+      <td><InlineCodeBlock code="4 < 5" lang="javascript" /></td>
+    </tr>
+    <tr>
+      <td><InlineCodeBlock code="<=" lang="javascript" /></td>
+      <td>Menor o igual que</td>
+      <td
+        ><InlineCodeBlock code="4 <= 4" lang="javascript" /> o <InlineCodeBlock
+          code="2 <= 4"
+          lang="javascript"
+        /></td
+      >
+    </tr>
+    <tr>
+      <td><InlineCodeBlock code=">=" lang="javascript" /></td>
+      <td>Mayor o igual que</td>
+      <td
+        ><InlineCodeBlock code="5 >= 5" lang="javascript" /> 0 <InlineCodeBlock
+          code="5 >= 4"
+          lang="javascript"
+        /></td
+      >
+    </tr>
+  </tbody>
+</table>
+<h3>¡Importa el tipo de dato!</h3>
+<p>
+  JavaScript distingue entre números, strings y otros tipos. Por eso usamos ===
+  en lugar de ==. <strong
+    >Bajo ninguna circunstancia usen dos iguales (==)</strong
+  >. Tiende al caos. Usen siempre 3 iguales (===) para comparar 2 cosas. Lo
+  mismo con el distinto. Usen siempre !== en lugar de !=.
+</p>
+<CodeBlock
+  lang="javascript"
+  code={`5 === "5" // false (número ≠ texto)
+5 == "5"  // true  (convierte el tipo → no recomendado)`}
+/>
+<h3>Ejemplos</h3>
+<CodeBlock
+  lang="javascript"
+  code={`let edad = 18;
+
+console.log(edad >= 18);   // true
+console.log(edad === "18"); // false (número ≠ texto)
+console.log(edad !== 21);  // true`}
+/>
+<p>
+  Estas comparaciones son muy útiles para lo que viene a continuación: los ifs
+</p>
 <h2>El if</h2>
 <p>
   La instrucción if ejecuta un bloque de código solo si una condición es
