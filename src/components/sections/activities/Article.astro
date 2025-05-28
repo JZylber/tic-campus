@@ -58,6 +58,7 @@ const { open, articleURL, content, course } = Astro.props;
         <a
           class="bg-sh-purple border-2 border-sh-dark-gray p-1 sm:px-3 sm:py-2 max-sm:aspect-square rounded-xl cursor-pointer flex justify-center gap-x-3 sm:w-36 items-center hover:shadow-md"
           x-bind:href={`${content}.repositoryURL`}
+          target="_blank"
         >
           <span class="max-sm:hidden">Repositorio</span>
           <svg
@@ -76,6 +77,7 @@ const { open, articleURL, content, course } = Astro.props;
         <a
           class="bg-sh-purple border-2 border-sh-dark-gray p-1 sm:px-3 sm:py-2 max-sm:aspect-square rounded-xl cursor-pointer flex justify-center gap-x-3 sm:w-36 items-center hover:shadow-md"
           x-bind:href={`${content}.handInURL`}
+          target="_blank"
         >
           <span class="max-sm:hidden">Entrega</span>
           <span class="material-symbols-outlined text-[20px]! sm:text-[24px]!">
