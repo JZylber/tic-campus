@@ -1,4 +1,6 @@
 ---
+import InlineCodeBlock from "../../../../components/articles/code-block/InlineCodeBlock.astro";
+
 export const partial = true;
 ---
 
@@ -38,26 +40,33 @@ export const partial = true;
 <p>
   La idea es construir tests para esta función hipotética. Ponganle el nombre
   que quieran, pero como dije antes, toma 3 parámetros. Los votos por agrupación
-  van a ser <code>list[int]</code>, y las bancas y el padrón, enteros. La
-  función retorna una lista de bancas por agrupación (<code>list[int]</code>) en
-  el mismo orden para la lista de votos.
+  van a ser <InlineCodeBlock lang="python" code="list[int]" />, y las bancas y
+  el padrón, enteros. La función retorna una lista de bancas por agrupación (<InlineCodeBlock
+    lang="python"
+    code="list[int]"
+  />) en el mismo orden para la lista de votos.
 </p>
 <p>
   Por ejemplo, en 2023, San Juan renovaba 3 bancas de diputados. De un total de
   607413 electores, LA LIBERTAD AVANZA obtuvo 145782 votos, UNION POR LA PATRIA
   145188 votos y JUNTOS POR EL CAMBIO 107908 votos. Recibieron una banca cada
-  uno. Es decir, de nuestra función hipotética <em>f</em>, debería ocurrir que
-  <code>f([145782,145188,107908],3,607413)</code> debería devolver
-  <code>[1,1,1]</code>.
+  uno. Es decir, de nuestra función hipotética <em>bancas_por_agrupación</em>,
+  debería ocurrir que
+  <InlineCodeBlock
+    lang="python"
+    code="bancas_por_agrupación([145782,145188,107908],3,607413)"
+  /> debería devolver
+  <InlineCodeBlock lang="python" code="[1,1,1]" /><code></code>.
 </p>
 <p>
   Piensen un conjunto de tests para esta función, y escribanlos para
-  <code>pytest</code>. Pueden usar resultados de elecciones anteriores como
+  <em>pytest</em>. Pueden usar resultados de elecciones anteriores como
   referencia. Pueden ver datos de elecciones anteriores en:
-  <a href="https://resultados.mininterior.gob.ar/"
+  <a class="text-sh-blue" href="https://resultados.mininterior.gob.ar/"
     >https://resultados.mininterior.gob.ar/</a
   >. Para ver votos y bancas del 2023, pueden ver:
   <a
+    class="text-sh-blue"
     href="https://www.pagina12.com.ar/601412-resultados-elecciones-2023-mapas-interactivos-con-los-datos-"
     >https://www.pagina12.com.ar/601412-resultados-elecciones-2023-mapas-interactivos-con-los-datos-</a
   >.
@@ -70,18 +79,22 @@ export const partial = true;
 <ul>
   <li>
     <a
+      class="text-sh-blue"
       href="https://chequeado.com/el-explicador/como-funciona-el-sistema-dhondt-conoce-como-se-cuentan-los-votos-y-se-reparten-las-bancas-del-congreso-nacional/"
       >https://chequeado.com/el-explicador/como-funciona-el-sistema-dhondt-conoce-como-se-cuentan-los-votos-y-se-reparten-las-bancas-del-congreso-nacional/</a
     >
   </li>
   <li>
     <a
+      class="text-sh-blue"
       href="https://buenosaires.gob.ar/sites/default/files/media/document/2021/11/03/cf6fa751bd98e12d862873d24f0417820d5d6f5c.pdf"
       >https://buenosaires.gob.ar/sites/default/files/media/document/2021/11/03/cf6fa751bd98e12d862873d24f0417820d5d6f5c.pdf</a
     >
   </li>
   <li>
-    <a href="https://es.wikipedia.org/wiki/Sistema_D%27Hondt"
+    <a
+      class="text-sh-blue"
+      href="https://es.wikipedia.org/wiki/Sistema_D%27Hondt"
       >https://es.wikipedia.org/wiki/Sistema_D%27Hondt</a
     >
   </li>
