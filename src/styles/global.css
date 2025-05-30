@@ -24,6 +24,12 @@ html {
   --color-sh-light-green: rgba(233, 253, 242, 1);
 }
 
+@layer components {
+  .scrollbar {
+    @apply [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-200 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-sh-gray;
+  }
+}
+
 .loader {
   width: 40px;
   aspect-ratio: 1;
