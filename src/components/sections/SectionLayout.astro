@@ -18,10 +18,7 @@ const { name, position, xInit } = Astro.props;
 >
   <div
     x-ref="sectionContent"
-    class="w-full h-full flex flex-col py-4 px-4 md:px-8 gap-y-4 overflow-y-auto [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:rounded-full
-  [&::-webkit-scrollbar-track]:bg-gray-200
-  [&::-webkit-scrollbar-thumb]:rounded-full
-  [&::-webkit-scrollbar-thumb]:bg-sh-gray"
+    class="w-full h-full flex flex-col py-4 px-4 md:px-8 gap-y-4 overflow-y-auto scrollbar"
   >
     <BreadCrumbs />
     <slot />
