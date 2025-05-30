@@ -12,14 +12,18 @@ const { name, position, xInit } = Astro.props;
 
 <section
   x-data=`{offset: ${position}}`
-  class="absolute inset-0 w-full h-full bg-gray-50 overflow-y-auto overflow-x-hidden flex flex-col py-4 px-4 md:px-8 gap-y-4 transition-transform duration-300 [&::-webkit-scrollbar]:w-1.5
-  [&::-webkit-scrollbar-track]:rounded-full
+  class="absolute inset-0 w-full h-full bg-gray-50 overflow-y-hidden overflow-x-hidden transition-transform duration-300"
+  :style="`transform: translateY(calc(100%*${offset}))`"
+  x-init=`offset = ${position} - $store.section.currentSectionIndex;$watch('$store.section.currentSectionIndex', (value) => {offset = ${position} - value;$refs.sectionContent.scrollTop = 0});${xInit}`
+>
+  <div
+    x-ref="sectionContent"
+    class="w-full h-full flex flex-col py-4 px-4 md:px-8 gap-y-4 overflow-y-auto [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:rounded-full
   [&::-webkit-scrollbar-track]:bg-gray-200
   [&::-webkit-scrollbar-thumb]:rounded-full
   [&::-webkit-scrollbar-thumb]:bg-sh-gray"
-  :style="`transform: translateY(calc(100%*${offset}))`"
-  x-init=`offset = ${position} - $store.section.currentSectionIndex;$watch('$store.section.currentSectionIndex', (value) => {offset = ${position} - value;$el.scrollTop = 0});${xInit}`
->
-  <BreadCrumbs />
-  <slot />
+  >
+    <BreadCrumbs />
+    <slot />
+  </div>
 </section>
