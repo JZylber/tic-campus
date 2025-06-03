@@ -5,4 +5,63 @@ import InlineCodeBlock from "../../../../components/articles/code-block/InlineCo
 export const partial = true;
 ---
 
-<p>Proximamente...</p>
+<h2>Introducción</h2>
+<p>
+  ¿Cuánto sale viajar en transporte público? El estado nacional determina los
+  precios de todos los tipos de tranporte para todas las jurisdicciones en las
+  que tiene potestad. Para eso, genera un cuadro tarifario. A continuación, el
+  más reciente al momento de diseñar el TP:
+</p>
+<p>
+  <a
+    href="https://www.argentina.gob.ar/redsube/tarifas-de-transporte-publico-amba"
+    target="_blank"
+    class="text-sh-blue"
+    >https://www.argentina.gob.ar/redsube/tarifas-de-transporte-publico-amba</a
+  >
+</p>
+<h2>Consigna</h2>
+<p>
+  Tenemos una función, <InlineCodeBlock
+    lang="python"
+    code="precioViaje(viaje)"
+  />, que dado un viaje, calcula el precio que corresponde <strong
+    >siguiendo el cuadro tarifario</strong
+  >. ¿Pero que es un viaje? Es un diccionario especial con las siguientes
+  categoría:
+</p>
+<CodeBlock
+  lang="python"
+  code={`{
+    "Medio de Transporte": str, # Puede ser 'Colectivo','Tren','Subte' o 'Premetro'.
+    "SUBE": str, # Puede ser 'Registrada','No Registrada',';Social' o 'Efectivo'.
+    "Jurisdicción": str, # Puede ser 'CABA','Buenos Aires' u otros. Solo es necesario en colectivos.
+    "Distancia": float, # Número mayor a 0. Solo es necesaria en colectivos.
+    "Sección": int, # Puede ser 1, 2 o 3. Solo es necesaria en trenes.
+    "Cantidad de Viajes": int, # Número mayor o igual a 0. Solo es necesaria en subte y premetro.
+}`}
+/>
+
+<h3>Punto 1</h3>
+<p>
+  Hacer un conjunto de tests que logre 100% de cobertura de líneas sobre la
+  función <InlineCodeBlock lang="python" code="precioViaje(viaje)" />. <strong
+    >TIP:</strong
+  > Cuando se den cuenta masomenos lo que tienen que hacer, es bastante repetitivo
+  el trabajo. Siendo un grupo, se pueden dividir las tareas. Si están tryhards, googleen
+  parametrización de tests para que les duela menos la muñeca de hacer tests.
+</p>
+<h3>Punto 2</h3>
+<p>
+  Correr ahora coverage para que les de branch coverage en vez de line coverage.
+  ¿Qué resultados obtienen? ¿Por qué creen que es así?
+</p>
+<h2>Consigna Manija</h2>
+<p>
+  Modificar el programa para que tire un error del tipo <InlineCodeBlock
+    lang="python"
+    code="ValueError"
+  /> cuando el viaje no sigue las reglas estipuladas por el cuadro tarifario, como
+  por ejemplo, viajes en colectivo en CABA de más de 27km. Extender el conjunto de
+  tests para lograr un 100% de branch coverage.
+</p>
