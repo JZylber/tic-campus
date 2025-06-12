@@ -1,6 +1,5 @@
 ---
 import CodeBlock from "../../../../../components/articles/code-block/CodeBlock.astro";
-import InlineCodeBlock from "../../../../../components/articles/code-block/InlineCodeBlock.astro";
 
 export const partial = true;
 ---
@@ -27,3 +26,5 @@ def test_suma_0_N():
     esperado = 8
     assert obtenido == esperado`}
 />
+<p>Comando para correr tests</p>
+<CodeBlock lang="bash" code={`python -m pytest test_suma.py`} />
