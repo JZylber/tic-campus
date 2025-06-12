@@ -93,6 +93,56 @@ pikachu["habilidad"] = "Electricidad estática"; // Agregamos una habilidad`}
     habilidad: "Electricidad estática"
 };`}
 />
+<h2>Objetos HTML</h2>
+<p>
+  En JavaScript, <strong>
+    los elementos del HTML también se representan como objetos
+  </strong>. Cada etiqueta que aparece en la página se puede acceder y manipular
+  desde JS.
+</p>
+<p>
+  Por ejemplo, un elemento <InlineCodeBlock lang="html" code="<input>" /> tiene varios
+  atributos como value, type, placeholder, etc.
+</p>
+<h3>¿Cómo accedemos al valor de un elemento HTML desde JS?</h3>
+<p>Supongamos que tenemos este HTML en la página:</p>
+<CodeBlock
+  lang="html"
+  code={`<input id="entrada" type="text" placeholder="Escribí tu nombre" />`}
+/>
+<p>Como ya vimos, podemos acceder a ese input desde JavaScript usando su id:</p>
+<CodeBlock
+  lang="javascript"
+  code={`let input = document.getElementById("entrada");`}
+/>
+<p>
+  <em>input</em> ahora es un <strong>objeto</strong> que representa el input de HTML.
+  Podemos acceder a su valor actual con el atributo .value:
+</p>
+<CodeBlock
+  lang="javascript"
+  code={`console.log(input.value); // Obtiene el valor del input`}
+/>
+<h3>Ejemplo: Mostrar el valor del input en consola mientras escribo</h3>
+<p><strong>HTML</strong></p>
+<CodeBlock
+  lang="html"
+  code={`<input id="entrada" type="text" placeholder="Escribí tu nombre" />`}
+/>
+<p><strong>JavaScript</strong></p>
+<CodeBlock
+  lang="javascript"
+  code={`let input = document.getElementById("entrada");
+function mostrarValor() {
+    console.log(input.value); // Muestra el valor actual del input
+}
+input.addEventListener("change", mostrarValor); // Escucha cambios en el input`}
+/>
+<p>
+  En este ejemplo, cada vez que el usuario escribe en el input y luego hace foco
+  en otro elemento de la página, se muestra el nuevo valor en la consola. Usamos
+  un evento llamado <em>"change"</em> para detectar los cambios en el input.
+</p>
 <h2>Resumen</h2>
 <table>
   <thead>
