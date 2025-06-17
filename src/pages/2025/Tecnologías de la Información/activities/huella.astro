@@ -1,4 +1,6 @@
 ---
+import InlineCodeBlock from "../../../../components/articles/code-block/InlineCodeBlock.astro";
+
 export const partial = true;
 ---
 
@@ -11,9 +13,10 @@ export const partial = true;
 </p>
 <p>
   Debemos construir un programa que, dado un input numérico de los km
-  recorridos, un menú despleglable (<code class="language-html"
-    >&ltselect&gt</code
-  >) con los medios de transporte disponibles y un botón que al clickearlo
+  recorridos, un menú despleglable (<InlineCodeBlock
+    lang="html"
+    code="<select>"
+  />) con los medios de transporte disponibles y un botón que al clickearlo
   calcule las emisiones de carbono de dicho viaje y las muestre por pantalla.
 </p>
 <p>
@@ -70,9 +73,30 @@ export const partial = true;
 <h2>Por el 10</h2>
 <p>
   Para obtener el 10, deben pasar el diseño hecho en TIMI al programa (HTML +
-  CSS). Esto lo corregimos cara a cara durante PIA, donde ustedes me muestran su
-  diseño y como les quedó el programa. No se preoucupen por centrado ni
-  márgenes, eso lo vemos más adelante.
+  CSS). Esto lo corregimos <strong>presencialmente</strong>, donde ustedes me
+  muestran su diseño hecho en Figma y como les quedó el programa. Voy a tener
+  criterio para pedirles lo que sé que pueden hacer. En general (cada caso es
+  particular porque depende del diseño), voy a ver que los siguientes aspectos
+  coincidan HTML/CSS con Figma:
+</p>
+<ul>
+  <li>Que el HTMl tenga sentido, títulos, select, etc</li>
+  <li>Colores</li>
+  <li>Tipografía</li>
+  <li>Imágenes</li>
+  <li>Bordes</li>
+</ul>
+<p>
+  En general, hay algunos aspectos que no saben/les falta práctica. Estos <strong
+    >no</strong
+  > los voy a considerar, y son
+</p>
+<ul>
+  <li>Márgenes</li>
+  <li>Centrado/Alineación de componentes</li>
+</ul>
+<p>
+  Obvio que si los hacen mejor para ustedes del futuro (Investiguen flexbox)
 </p>
 <h2>Entrega</h2>
 <p>
