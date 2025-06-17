@@ -78,7 +78,7 @@ const { subject, course, year, position } = Astro.props;
                     />
                   </span>
                   <div
-                    class="flex flex-col grow md:flex-row gap-x-4 md:ml-4 items-center"
+                    class="flex flex-col grow md:flex-row gap-y-1 gap-x-4 md:ml-4 items-center"
                   >
                     <span
                       class="font-semibold text-center md:text-left text-[16px] md:text-[20px]"
@@ -86,6 +86,16 @@ const { subject, course, year, position } = Astro.props;
                     <span
                       class="italic text-center md:text-left text-[14px] md:text-[16px]"
                       x-text="content.topic"></span>
+                    <template x-if="content.optional">
+                      <div
+                        class="flex justify-center items-center rounded-full bg-sh-blue text-white px-1.5 md:py-0.5"
+                      >
+                        <span
+                          class="font-bold uppercase text-[12px] md:text-[14px]"
+                          >opcional</span
+                        >
+                      </div>
+                    </template>
                     <template x-if="content.latest">
                       <div
                         class="flex justify-center items-center rounded-full bg-sh-purple text-white px-1.5 md:py-0.5"

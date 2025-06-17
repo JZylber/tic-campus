@@ -17,6 +17,7 @@ export interface Content {
   handInURL: string;
   repositoryURL: string;
   latest: boolean;
+  optional: boolean;
 }
 
 export interface Unit {
