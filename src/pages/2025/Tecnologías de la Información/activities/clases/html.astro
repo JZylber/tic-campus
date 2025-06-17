@@ -5,4 +5,119 @@ import InlineCodeBlock from "../../../../../components/articles/code-block/Inlin
 export const partial = true;
 ---
 
-<p>Proximamente...</p>
+<h2>¿Qué es HTML?</h2>
+<p>
+  <strong>HTML</strong> significa <em>HyperText Markup Language</em>, o sea,
+  lenguaje de marcado de hipertexto. Es el lenguaje que usamos para estructurar
+  el contenido de una página web: qué es un título, qué es un párrafo, qué es
+  una imagen, etc.
+</p>
+<p>
+  No es un lenguaje de programación como JavaScript o Python. No tiene "lógica",
+  sino que marca qué hay en la página.
+</p>
+<h2>Tags HTML</h2>
+<p>
+  Los tags (o etiquetas) son bloques que usamos para definir los elementos de
+  una página. La mayoría de los tags tienen esta forma:
+</p>
+<CodeBlock lang="html" code=`<tag>Contenido</tag>` />
+<p>Por ejemplo:</p>
+<CodeBlock lang="html" code=`<p>Oh Hi Mark</p>` />
+<p>Algunos tags no tienen contenido y se cierran a sí mismos:</p>
+<CodeBlock lang="html" code=`<img src="imagen.jpg" alt="Una imagen">` />
+<h2>Estructura básica de un archivo HTML</h2>
+<p>
+  Todo archivo HTML arranca con una estructura base que le indica al navegador
+  qué tipo de archivo está leyendo y cómo interpretarlo. En VSCode, si apretan !
+  y después enter, les da este esqueleto.
+</p>
+<CodeBlock
+  lang="html"
+  code=`<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Mi primera página</title>
+  </head>
+  <body>
+    <h1>Hola Mundo</h1>
+    <p>Bienvenidos a mi sitio web</p>
+  </body>
+</html>`
+/>
+<p>Explicación de las partes:</p>
+<ul>
+  <li>
+    <InlineCodeBlock lang="html" code="<!DOCTYPE html>" />: Le dice al navegador
+    que es HTML5.
+  </li>
+  <li>
+    <InlineCodeBlock lang="html" code="<html>" />: Tag principal que envuelve
+    todo el documento.
+  </li>
+  <li>
+    <InlineCodeBlock lang="html" code="<head>" />: Información que no se ve
+    directamente (como el título de la pestaña o links a archivos externos). Se
+    dice que esta información son <em>metadatos</em>.
+  </li>
+  <li>
+    <InlineCodeBlock lang="html" code="<body>" />: Acá va el <strong
+      >contenido visible</strong
+    >
+    de la página.
+  </li>
+</ul>
+<h2>Tags básicos de HTML</h2>
+<p>A continuación, algunos tags comunes que vas a usar todo el tiempo.</p>
+<h3>Títulos (h1, h2, ..., h6)</h3>
+<CodeBlock
+  lang="html"
+  code=`<h1>Este es un título principal</h1>
+<h2>Este es un subtítulo</h2>`
+/>
+<p>
+  Cuanto más grande es el número, menor es la jerarquía del título (título
+  principal, subtítulo, etc.). h1 es el título principal.
+</p>
+<h3>Párrafos (p)</h3>
+<CodeBlock
+  lang="html"
+  code=`<p>Esto es un párrafo de texto. Podés escribir varias oraciones.</p>`
+/>
+<h3>Imágenes (img)</h3>
+<CodeBlock lang="html" code=`<img src="gatito.jpg" alt="Un gatito adorable">` />
+<ul>
+  <li><em>src</em>: la dirección de la imagen.</li>
+  <li>
+    <em>alt</em>: texto alternativo que aparece si la imagen no carga (y también
+    mejora la accesibilidad).
+  </li>
+</ul>
+<h3>Enlaces (a)</h3>
+<CodeBlock
+  lang="html"
+  code=`<a href="https://www.google.com">Ir a Google</a>`
+/>
+<ul><li><em>href</em>: es la URL a donde va el enlace.</li></ul>
+<h3>Listas</h3>
+<p>Lista no ordenada (ul) y elementos de lista (li)</p>
+<CodeBlock
+  lang="html"
+  code=`<ul>
+  <li>Pan</li>
+  <li>Queso</li>
+  <li>Jugo</li>
+</ul>`
+/>
+<p>Se ve con viñetas</p>
+<p>Lista ordenada (ol)</p>
+<CodeBlock
+  lang="html"
+  code=`<ol>
+  <li>Estudiar HTML</li>
+  <li>Practicar</li>
+  <li>Aprender CSS</li>
+</ol>`
+/>
+<p>Se ve con números</p>
