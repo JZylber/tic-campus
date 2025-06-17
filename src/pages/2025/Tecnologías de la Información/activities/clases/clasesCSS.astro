@@ -1,0 +1,107 @@
+---
+import CodeBlock from "../../../../../components/articles/code-block/CodeBlock.astro";
+import InlineCodeBlock from "../../../../../components/articles/code-block/InlineCodeBlock.astro";
+
+export const partial = true;
+---
+
+<h2>¿Por qué usar clases?</h2>
+<p>
+  Hasta ahora, veníamos usando <strong>selectores de etiqueta</strong> en CSS para
+  aplicar estilos. Por ejemplo:
+</p>
+<CodeBlock lang="css" code=`p {
+  color: red;
+}` />
+<p>
+  Este código pinta todos los párrafos (<InlineCodeBlock
+    lang="html"
+    code="<p>"
+  />) de rojo. Pero… ¿qué pasa si queremos que algunos párrafos sean rojos y
+  otros no? ¿O si queremos aplicar el mismo estilo a elementos distintos, como
+  un párrafo y un div?
+</p>
+<p>Ahí es donde entran en juego las clases.</p>
+<p>
+  Las clases nos permiten etiquetar elementos HTML de manera personalizada para
+  aplicarles estilos solo a ellos, sin importar qué etiqueta tengan. Además,
+  <strong>podemos reutilizar la misma clase en varios elementos</strong>.
+</p>
+<h2>Cómo se define una clase en HTML y CSS</h2>
+<h3>HTML</h3>
+<p>
+  Para asignarle una clase a un elemento usamos el atributo class. Por ejemplo:
+</p>
+<CodeBlock
+  lang="html"
+  code=`<p class="alerta">¡Cuidado!</p>
+<div class="alerta">Este es un mensaje importante.</div>`
+/>
+<h3>CSS</h3>
+<p>
+  Para escribir una regla CSS para esa clase usamos un punto (.) antes del
+  nombre:
+</p>
+<CodeBlock lang="css" code=`.alerta {
+  color: red;
+  font-weight: bold;
+}` />
+<p>
+  Este código aplica estilos a todos los elementos que tengan la clase alerta,
+  sin importar si son un <em>p</em>, un <em>div</em>, un <em>span</em>, etc.
+</p>
+<h2>Fuentes desde Google Fonts</h2>
+<p>
+  A veces queremos cambiar la <strong>tipografía</strong> (fuente) de nuestro sitio.
+</p>
+<p>
+  <a class="text-sh-blue" href="https://fonts.google.com/">Google Fonts</a> es una
+  plataforma gratuita donde podés elegir fuentes para usar en tu sitio.
+</p>
+<p>Para usar una fuente de google fonts:</p>
+<ol>
+  <li>
+    Entrá a <a class="text-sh-blue" href="https://fonts.google.com/"
+      >https://fonts.google.com</a
+    >.
+  </li>
+  <li>Elegí una fuente (por ejemplo, Roboto).</li>
+  <li>
+    Hacé clic en el botón "Get font" y luego seleccioná el método "Embed".
+  </li>
+  <li>
+    Copiá las etiquetas <em>link</em> que te da Google y pegalas en el <em
+      >head</em
+    > de tu HTML.
+    <CodeBlock
+      lang="html"
+      code=`<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">`
+    />
+  </li>
+  <li>
+    En tu CSS, podés usar la fuente con clases como sugiere google, o
+    directamente con el atributo <em>font-family</em> de css.
+  </li>
+</ol>
+<h2>Resumen</h2>
+<ul>
+  <li>
+    Las <strong>clases CSS</strong> nos permiten aplicar estilos personalizados a
+    uno o más elementos.
+  </li>
+  <li>
+    Se asignan con <em>class="nombre"</em> en HTML y se seleccionan con <em
+      >.nombre</em
+    > en CSS.
+  </li>
+  <li>
+    Son útiles para <strong>reutilizar estilos</strong> y no depender del tipo de
+    etiqueta.
+  </li>
+  <li>
+    Podemos mejorar la estética de nuestros sitios importando fuentes
+    personalizadas desde Google Fonts.
+  </li>
+</ul>
