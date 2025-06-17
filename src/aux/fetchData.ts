@@ -117,6 +117,9 @@ export const getSubjectData = async (
       handInURL: content["Entrega"],
       repositoryURL: content["Repositorio"],
       latest: content["En curso"].toString() === "true",
+      optional: content["Opcional"]
+        ? content["Opcional"].toString() === "true"
+        : false,
     } as Content;
   });
   let contentsByUnit = availableContents.reduce(
