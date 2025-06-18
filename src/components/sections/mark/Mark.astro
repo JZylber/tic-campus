@@ -215,10 +215,10 @@ const { position, subject } = Astro.props;
         <div class="flex items-center gap-x-2 md:gap-x-4">
           <span
             class="material-symbols-outlined"
-            x-text="$store.marks.markData.averageMark >= 6 ? 'check_circle' : 'cancel'"
+            x-text="Math.round($store.marks.markData.averageMark) >= 6 ? 'check_circle' : 'cancel'"
             x-bind:class="{
-          'text-sh-green': $store.marks.markData.averageMark >= 6,
-          'text-sh-red': $store.marks.markData.averageMark < 6
+          'text-sh-green': Math.round($store.marks.markData.averageMark) >= 6,
+          'text-sh-red': Math.round($store.marks.markData.averageMark) < 6
             }"
           ></span>
           <span class="text-[14px] md:text-[18px] text-gray-600 shrink-0"
