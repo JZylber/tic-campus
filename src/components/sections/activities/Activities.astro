@@ -129,8 +129,9 @@ const { subject, course, year, position } = Astro.props;
                     x-if={`['Actividad','Trabajo Práctico','Encuesta'].includes(content.type) && $store.student.course === '${course}'`}
                   >
                     <span
+                      x-show="!(optional && pending)"
                       class="material-symbols-outlined text-[24px] w-[24px] shrink-0 md:ml-auto"
-                      x-data="{ passed: false, pending: true, redo: false }"
+                      x-data="{ passed: false, pending: true, redo: false, optional: content.optional }"
                       x-text="(()=>{if(pending || redo) {return 'pending'} else if(passed) {return 'check_circle'} else {return 'cancel'}})()"
                       x-bind:class="(()=>{if(pending) {return 'text-gray-400'}else if(redo){return 'text-sh-yellow'} else if(passed) {return 'text-sh-green'} else {return 'text-sh-red'}})()"
                       x-effect="
