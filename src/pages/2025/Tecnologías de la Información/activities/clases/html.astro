@@ -121,3 +121,76 @@ export const partial = true;
 </ol>`
 />
 <p>Se ve con números</p>
+<h2>¿Qué es CSS?</h2>
+<p>
+  <strong>CSS</strong> significa <em>Cascading Style Sheets</em> (Hojas de estilo
+  en cascada). Es el lenguaje que usamos para darle estilo a nuestro HTML: colores,
+  tamaños, tipografías, márgenes, alineaciones, etc.
+</p>
+<p>HTML dice qué hay, CSS dice cómo se ve.</p>
+<h2>Cómo conectar un archivo CSS externo al HTML</h2>
+<p>
+  Supongamos que tenemos un archivo llamado <em>style.css</em>. En el <InlineCodeBlock
+    lang="html"
+    code="<head>"
+  />
+  de tu HTML, agregás este tag:
+</p>
+<CodeBlock lang="html" code=`<link rel="stylesheet" href="style.css">` />
+<p>
+  Esto le dice al navegador que use los estilos definidos en <em>style.css</em> para
+  dar formato al HTML.
+</p>
+<h2>CSS con selectores por tag</h2>
+<p>
+  Una forma muy simple (y común) de aplicar estilos es por tipo de tag. Por
+  ejemplo:
+</p>
+<CodeBlock
+  lang="css"
+  code=`h1 {
+  color: darkblue;
+  font-size: 36px;
+}
+
+p {
+  color: gray;
+  font-family: Arial, sans-serif;
+}`
+/>
+<p>Esto significa:</p>
+<ul>
+  <li>Todos los h1 van a ser azul oscuro y de tamaño 36px.</li>
+  <li>Todos los p van a tener color gris y la fuente Arial.</li>
+</ul>
+<h2>Resumen</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Concepto</th>
+      <th>¿Para qué sirve?</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>HTML</td>
+      <td>Estructurar el contenido</td>
+    </tr>
+    <tr>
+      <td>Tags</td>
+      <td>Marcar el tipo de contenido (título, imagen, etc.)</td>
+    </tr>
+    <tr>
+      <td>head / body</td>
+      <td>Separar metadatos del contenido visible</td>
+    </tr>
+    <tr>
+      <td>CSS</td>
+      <td>Definir cómo se ve cada parte</td>
+    </tr>
+    <tr>
+      <td>Selectores por tag</td>
+      <td>Aplicar estilo a todos los elementos de cierto tipo</td>
+    </tr>
+  </tbody>
+</table>
