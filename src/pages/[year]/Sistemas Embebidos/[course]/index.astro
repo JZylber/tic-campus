@@ -1,0 +1,21 @@
+---
+import Layout from "../../../../layouts/Layout.astro";
+
+export function getStaticPaths() {
+  return [
+    {
+      params: { year: 2025, course: "NR5B" },
+    },
+    {
+      params: { year: 2025, course: "NR5D" },
+    },
+  ];
+}
+
+const { course, year } = Astro.params;
+const subject = "Sistemas Embebidos";
+---
+
+<Layout>
+  <p>{subject} {course} {year}</p>
+</Layout>
