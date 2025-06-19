@@ -5,17 +5,20 @@ export function getStaticPaths() {
   return [
     {
       params: { year: 2025, course: "NR5B" },
+      props: { dataSheetId: "1J8PaK3mKThrYYAUnk-ubEYHx1VWHZy9hcp_B7Yi3dNU" },
     },
     {
       params: { year: 2025, course: "NR5D" },
+      props: { dataSheetId: "1J8PaK3mKThrYYAUnk-ubEYHx1VWHZy9hcp_B7Yi3dNU" },
     },
   ];
 }
 
 const { course, year } = Astro.params;
 const subject = "Sistemas Embebidos";
+const { dataSheetId } = Astro.props;
 ---
 
-<Layout>
+<Layout dataSheetId={dataSheetId}>
   <p>{subject} {course} {year}</p>
 </Layout>

@@ -95,13 +95,23 @@ export const getSubjectData = async (
   let contentsPerCourseQuery = getSheetData({
     sheetID,
     sheetName: "ContenidosXCurso",
-    query: `SELECT * WHERE D = "${course}" AND E = TRUE`,
+    query: `SELECT *`,
   });
-  const [units, contents, contentsPerCourse] = (await Promise.all([
+  const [units, contents, unfilteredContentsPerCourse] = (await Promise.all([
     unitsQuery,
     contentsQuery,
     contentsPerCourseQuery,
   ])) as Array<Array<Record<string, string>>>;
+  let contentsPerCourse = unfilteredContentsPerCourse.filter((content) => {
+    let isVisible = content["Visible"];
+    let isCourse = false;
+    if (content["CursoXMateria"]) {
+      isCourse = content["Curso"] === course && content["Materia"] === subject;
+    } else {
+      isCourse = content["Curso"] === course;
+    }
+    return isVisible && isCourse;
+  });
   let availableContents: Array<Content> = contentsPerCourse.map((content) => {
     let contentData = contents.find(
       (c) => c["Id"] === content["Id Contenido"]
@@ -245,16 +255,29 @@ export const getSubjectMaterial = async (
 
 export const getCourseGroupLink = async (
   group: string,
-  dataSheetId: string
+  dataSheetId: string,
+  subject: string | null = null
 ) => {
-  const sheetID = dataSheetId;
-  let groupLinkQuery = getSheetData({
-    sheetID,
-    sheetName: "Curso",
-    query: `SELECT C WHERE A = "${group}"`,
-  });
-  const groupLink = (await groupLinkQuery) as Array<Record<string, string>>;
-  return groupLink[0]["Link Grupo"];
+  if (subject) {
+    const sheetID = dataSheetId;
+    let groupLinkQuery = getSheetData({
+      sheetID,
+      sheetName: "MateriaXCurso",
+      query: `SELECT C WHERE B = "${group}" AND D = "${subject}"`,
+    });
+    const groupLink = (await groupLinkQuery) as Array<Record<string, string>>;
+    return groupLink[0]["Link Grupo"];
+  } else {
+    const sheetID = dataSheetId;
+    let groupLinkQuery = getSheetData({
+      sheetID,
+      sheetName: "Curso",
+      query: `SELECT C WHERE A = "${group}"`,
+    });
+
+    const groupLink = (await groupLinkQuery) as Array<Record<string, string>>;
+    return groupLink[0]["Link Grupo"];
+  }
 };
 
 export const getStudents = async (dataSheetId: string) => {
