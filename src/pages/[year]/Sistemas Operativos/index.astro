@@ -1,0 +1,17 @@
+---
+export function getStaticPaths() {
+  return [
+    {
+      params: { year: 2025, courses: "NR5B" },
+    },
+    {
+      params: { year: 2025, courses: "NR5E" },
+    },
+    {
+      params: { year: 2025, courses: "NR5F" },
+    },
+  ];
+}
+
+const subject = "Sistemas Operativos";
+---
