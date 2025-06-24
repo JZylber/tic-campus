@@ -71,3 +71,48 @@ def test_desaprobado():
   Ahora sí, se corren las 7 líneas de la función estado, y la cobertura es del
   100%.
 </p>
+<h2>CFG (Control Flow Graph)</h2>
+<p>
+  Un CFG es una forma de representar cómo fluye el control dentro de un
+  programa. Cada nodo representa una instrucción o bloque de código, y cada
+  flecha (arista) representa una posible transición entre instrucciones.
+</p>
+<p>Por ejemplo, en el siguiente programa:</p>
+<p>Pendiente...</p>
+<h2>Branch Coverage (Cobertura de Ramas)</h2>
+<p>Pendiente...</p>
+<h2>Coverage.py</h2>
+<p>
+  Para medir automáticamente <strong>line y branch coverage</strong>, podemos
+  usar la librería coverage.py.
+</p>
+<h3>Instalación</h3>
+<CodeBlock code={`pip install coverage`} lang="bash" />
+<h3>Uso con Pytest</h3>
+<p>1: Ejecutar los tests y recolectar información de cobertura:</p>
+<CodeBlock code={`coverage run -m pytest`} lang="bash" />
+<p>2: Obtener un resumen en consola</p>
+<CodeBlock code={`coverage `} lang="bash" />
+<p>3: Ver un reporte más detallado en HTML</p>
+<CodeBlock code={`coverage html`} lang="bash" />
+<p>
+  Por defecto, es line coverage. Si quieren hacer branch coverage, deben cambiar
+  como corren el reporte con la opción <em>--branch</em>
+</p>
+<CodeBlock code={`coverage run --branch -m pytest`} lang="bash" />
+<h2>Conclusión</h2>
+<ul>
+  <li>
+    Tener métricas para evaluar nuestros tests nos ayuda a construir mejores
+    tests
+  </li>
+  <li>
+    La métrica de line coverage mide las líneas tocadas por el conjunto de
+    tests.
+  </li>
+  <li>
+    La métrica de branch coverage mide las decisiones tomadas por el conjunto de
+    tests
+  </li>
+  <li>Usen coverage.py no sean bobas/bobos</li>
+</ul>
