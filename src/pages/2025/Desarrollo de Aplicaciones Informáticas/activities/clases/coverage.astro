@@ -5,4 +5,69 @@ import InlineCodeBlock from "../../../../../components/articles/code-block/Inlin
 export const partial = true;
 ---
 
-<p>Proximamente...</p>
+<h2>¿Por qué medir nuestros tests?</h2>
+<p>
+  Cuando escribimos tests, no alcanza con tener muchos o que "anden".
+  Necesitamos saber <strong>qué tan buenos o qué tan malos son</strong>. ¿Están
+  probando todas las partes del código? ¿Cubren todos los caminos posibles? ¿Qué
+  pasa si un error se esconde en una rama que nunca es ejecutada por nuestros
+  tests?
+</p>
+<p>
+  Para responder estas preguntas, existen las <strong
+    >métricas de cobertura (coverage)</strong
+  >. Estas métricas nos permiten cuantificar qué tan bien están cubiertos
+  nuestros programas por los tests, y nos ayudan a identificar zonas del código
+  que podrían estar mal testeadas o completamente sin testear.
+</p>
+<h2>Line Coverage (Cobertura de Líneas)</h2>
+<p>
+  Una de las métricas más simples es line coverage. Esta métrica calcula el
+  porcentaje de líneas de código que fueron ejecutadas al correr los tests.
+</p>
+<p>
+  Por ejemplo, si tenés un programa con 10 líneas de código y los tests ejecutan
+  8 de esas líneas, el line coverage es del 80%.
+</p>
+<h3>Ejemplo</h3>
+<p><em>nota.py</em></p>
+<CodeBlock
+  code={`def estado(nota: int) -> str:
+    if nota >= 6:
+        return "Aprobado"
+    elif nota >= 5:
+        return "Recuperatorio"
+    else:
+        return "Desaprobado"`}
+  lang="python"
+/>
+<p><em>test_nota.py</em></p>
+<CodeBlock
+  code={`from nota import estado
+
+def test_aprobado():
+    assert estado(6) == "Aprobado"
+def test_recuperatorio():
+    assert estado(5) == "Recuperatorio"`}
+  lang="python"
+/>
+<p>
+  Al correr los tests, se corren las primeras 5 líneas de la función estado, que
+  tiene 7 líneas. Como son 5/7, la cobertura es del 71%
+</p>
+<p>Si en cambio, el conjunto de tests fuese:</p>
+<CodeBlock
+  code={`from nota import estado
+
+def test_aprobado():
+    assert estado(6) == "Aprobado"
+def test_recuperatorio():
+    assert estado(5) == "Recuperatorio"
+def test_desaprobado():
+    assert estado(4) == "Desaprobado"`}
+  lang="python"
+/>
+<p>
+  Ahora sí, se corren las 7 líneas de la función estado, y la cobertura es del
+  100%.
+</p>
