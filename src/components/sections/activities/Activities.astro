@@ -142,7 +142,7 @@ const { subject, course, year, position } = Astro.props;
                               pending = false;
                               redo = results.inRevision;
                             }}
-                            else if(content.type === 'Trabajo Práctico') {
+                            else if(content.type === 'Trabajo Práctico' || content.type === 'Encuesta') {
                               const results = $store.marks.marks.find(mark => mark.id === content.id);
                               const specialActivity = $store.marks.activities.find(activity => activity.id === content.id);
                               if(results) {
