@@ -1,0 +1,176 @@
+---
+import CodeBlock from "../../../../../components/articles/code-block/CodeBlock.astro";
+
+export const partial = true;
+---
+
+<h2>Instalación</h2>
+<p>
+  Para correr el tp, necesitamos una librería de estadística para simular los
+  partidos, y pytest para los tests. Se instala con:
+</p>
+<CodeBlock
+  code={`pip install scipy
+pip install pytest`}
+  lang="bash"
+/>
+<h2>Objetivo</h2>
+<p>
+  El Chiqui Tapia nos pidio analizar el campeonato brasileño. Nos interesa armar
+  una función que simule dicho campeonato.
+</p>
+<h2>Equipos</h2>
+<p>
+  A los equipos los vamos a modelar con dos números entre 0 y 1, que van
+  representar su ataque y defensa respectivamente. A mayor número, mejor el
+  ataque o defensa. Los equipos entonces van a ser tuplas o listas con 3
+  elementos: el nombre, la probabilidad de ataque y la probabilidad de defensa.
+  Por ejemplo
+</p>
+<CodeBlock code="(Botafogo, 0.6, 0.4)" lang="python" />
+<h2>Partidos</h2>
+<p>
+  Para simular los partidos, yo les voy a dar una función que es <strong
+    >probabilística</strong
+  >, es decir, no siempre da igual.
+</p>
+<ul>
+  <li>
+    <em>simular_partido</em>: Toma 2 equipos y devuelve el resultado en goles
+    (basado en los ataques y defensas)
+  </li>
+</ul>
+<h2>Campeonato Brasileño</h2>
+<p>
+  En el brasileirao, todos los equipos juegan con todos los otros 2 veces (ida y
+  vuelta). Los partidos se juegan con la función <em>simular_partido</em>. Suman
+  3 puntos si ganan, 1 si empatan y 0 si pierden. El campeón es quien al final
+  de todos los partidos, tiene más puntos. Si hay dos con igual cantidad de
+  puntos, gana el que mayor diferencia de goles (<em>GF - GC</em>) y si persiste
+  el empate, quien tiene más goles a favor. <strong
+    >Hay una función auxiliar que les puede ayudar a determinar el campeón de un
+    torneo</strong
+  >. Las tablas de un torneo tienen la forma:
+</p>
+<table>
+  <thead>
+    <tr>
+      <th>Nombre</th>
+      <th>Partidos Jugados (PJ)</th>
+      <th>Partidos Ganados (G)</th>
+      <th>Partidos Empatados (E)</th>
+      <th>Partidos Perdidos (P)</th>
+      <th>Goles a Favor (GF)</th>
+      <th>Goles en Contra (GC)</th>
+      <th>Diferencia de Goles (DG)</th>
+      <th>Puntos (Pts)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Flamengo</td>
+      <td>18</td>
+      <td>12</td>
+      <td>3</td>
+      <td>3</td>
+      <td>36</td>
+      <td>15</td>
+      <td>21</td>
+      <td>39</td>
+    </tr>
+    <tr>
+      <td>Palmeiras</td>
+      <td>18</td>
+      <td>11</td>
+      <td>4</td>
+      <td>3</td>
+      <td>34</td>
+      <td>16</td>
+      <td>18</td>
+      <td>37</td>
+    </tr>
+    <tr>
+      <td>Atlético Mineiro</td>
+      <td>18</td>
+      <td>10</td>
+      <td>5</td>
+      <td>3</td>
+      <td>32</td>
+      <td>20</td>
+      <td>12</td>
+      <td>35</td>
+    </tr>
+    <tr>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+  </tbody>
+</table>
+<p>
+  Que en python lo vamos a representar como lista de tuplas, y de ese tipo es el
+  retorno de la función <em>brasileirao</em>. Sin embargo, internamente, pueden
+  resolverlo como quieren. Recomiendo la siguiente estructura, diccionario de
+  diccionarios, de la forma:
+</p>
+<CodeBlock
+  code={`{
+    "Flamengo": {
+        "PJ": 0,
+        "G": 0,
+        "E": 0,
+        "P": 0,
+        "GF": 0,
+        "GC": 0,
+        "DG": 0,
+        "Pts": 0
+    },
+    "Palmeiras": {
+        "PJ": 0,
+        "G": 0,
+        "E": 0,
+        "P": 0,
+        "GF": 0,
+        "GC": 0,
+        "DG": 0,
+        "Pts": 0
+    },
+    ...
+}`}
+  lang="python"
+/>
+<p>
+  Si usan esta estructura, pueden usar la función <em>tabla_dict_a_lista</em> para
+  convertirla a una lista de tuplas, que es lo que devuelve la función <em
+    >brasileirao</em
+  > y puede ser ordenada con la función <em>ordenar_tabla</em>. Si usan
+  cualquier otra cosa, queda a cargo de ustedes hacer la conversión de tipos y/o
+  ordenar la tabla.
+</p>
+<h2>Consigna</h2>
+<p>
+  Completar la función <em>brasileirao</em>, que recibe una lista de equipos y
+  devuelve la tabla del campeonato ordenada por los criterios mencionados.
+  Cuentan con un test, que chequea
+</p>
+<h2>Entrega</h2>
+<p>
+  La entrega se hace pusheando al repositorio creado por github classroom, y
+  enviando el hash del commit en una entrega del campus. Cuentan con un test que
+  chequea que la función <em>brasileirao</em> funcione correctamente. El test se
+  ejecuta con:
+</p>
+<CodeBlock code={`python -m pytest test_brasileirao.py`} lang="bash" />
+<p>Obviamente deben tener instalado pytest.</p>
+<h2>Evaluación</h2>
+<p>
+  Se tiene que pushear el repositorio y se tiene que hacer una <strong
+    >defensa del trabajo oral o escrita</strong
+  >.
+</p>
