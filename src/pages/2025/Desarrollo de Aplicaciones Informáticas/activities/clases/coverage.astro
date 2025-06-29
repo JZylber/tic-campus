@@ -1,4 +1,5 @@
 ---
+import ImportantBox from "../../../../../components/articles/alertbox/ImportantBox.astro";
 import CodeBlock from "../../../../../components/articles/code-block/CodeBlock.astro";
 import InlineCodeBlock from "../../../../../components/articles/code-block/InlineCodeBlock.astro";
 
@@ -78,9 +79,63 @@ def test_desaprobado():
   flecha (arista) representa una posible transición entre instrucciones.
 </p>
 <p>Por ejemplo, en el siguiente programa:</p>
-<p>Pendiente...</p>
+<CodeBlock
+  code={`def estado(nota: int) -> str:
+    if nota >= 6:
+        return "Aprobado"
+    elif nota >= 5:
+        return "Recuperatorio"
+    else:
+        return "Desaprobado"`}
+  lang="python"
+/>
+<p>Lo puedo representar como un CFG de la siguiente forma:</p>
+<img
+  class="max-w-[400px] my-2"
+  :src="$store.baseURL.publicURL('diagrams/CFG.svg')"
+  alt="CFG"
+/>
+<p>
+  Este tipo de representación es útil para ver <strong
+    >todas los posibles caminos</strong
+  > de ejecución del programa, lo cual es clave para la próxima métrica.
+</p>
 <h2>Branch Coverage (Cobertura de Ramas)</h2>
-<p>Pendiente...</p>
+<p>
+  Branch coverage es una métrica que analiza si nuestros tests ejecutaron todas
+  las decisiones posibles en el código (por ejemplo, tanto el if como el else).
+  Es más precisa que el line coverage, porque puede pasar que una línea se
+  ejecute, pero no todas sus ramas.
+</p>
+<p>
+  Usando el CFG y programa de la sección anterior, hay 4 caminos, marcados a
+  continuación
+</p>
+<img
+  class="max-w-[400px] my-2"
+  :src="$store.baseURL.publicURL('diagrams/caminos.svg')"
+  alt="Caminos en el CFG"
+/>
+<p>Si yo tuviese el siguiente conjunto de tests</p>
+<CodeBlock
+  code={`from nota import estado
+
+def test_aprobado():
+    assert estado(6) == "Aprobado"
+def test_recuperatorio():
+    assert estado(5) == "Recuperatorio"`}
+  lang="python"
+/>
+<p>
+  Los tests pasan por los caminos 1,2 y 3. Por lo tanto, se cubren 3/4 caminos,
+  que da un 75% de branch coverage
+</p>
+<p>
+  En un programa sin líneas inalcanzables (por ejemplo después de un return), <strong
+    >100% de branch coverage implica 100% de line coverage</strong
+  >. No vale al revés, 100% de line coverage puede resultar en un branch
+  coverage inferior.
+</p>
 <h2>Coverage.py</h2>
 <p>
   Para medir automáticamente <strong>line y branch coverage</strong>, podemos
@@ -116,3 +171,11 @@ def test_desaprobado():
   </li>
   <li>Usen coverage.py no sean bobas/bobos</li>
 </ul>
+<ImportantBox warning="No se confíen">
+  <p>
+    No se casen con las métricas. Nos dan una idea de qué nos puede faltar, pero
+    nos pueden seguir estar faltando casos importantes, por ejemplo, cuestiones
+    que salten con un determinado parámetro o con iteraciones específicas. Nunca
+    están excentos de <strong>PENSAR</strong>.
+  </p>
+</ImportantBox>
