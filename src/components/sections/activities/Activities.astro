@@ -17,7 +17,7 @@ const { subject, course, year, position } = Astro.props;
   <div
     class="w-full"
     x-data="{ unitsData: [], loading: true, currentContent: null, articleOpen: false, articleURL:''}"
-    x-init={`unitsData = (await getSubjectData('${course}', '${subject}', dataSheetId)).reverse(); loading = false;`}
+    x-init={`unitsData = (await getSubjectData('${course}', '${subject}', dataSheetId)).reverse();loading = false;`}
     @changedsection.window="articleOpen = false;"
   >
     <div class="w-full">
@@ -142,7 +142,7 @@ const { subject, course, year, position } = Astro.props;
                               pending = false;
                               redo = results.inRevision;
                             }}
-                            else if(content.type === 'Trabajo Práctico') {
+                            else if(content.type === 'Trabajo Práctico' || content.type === 'Encuesta') {
                               const results = $store.marks.marks.find(mark => mark.id === content.id);
                               const specialActivity = $store.marks.activities.find(activity => activity.id === content.id);
                               if(results) {
@@ -166,8 +166,8 @@ const { subject, course, year, position } = Astro.props;
             </div>
           </div>
         </template>
-        <Loader show="loading" />
       </div>
+      <Loader show="loading" />
     </div>
     <Article
       content="currentContent"

@@ -1,8 +1,181 @@
 ---
+import ImportantBox from "../../../../../components/articles/alertbox/ImportantBox.astro";
 import CodeBlock from "../../../../../components/articles/code-block/CodeBlock.astro";
 import InlineCodeBlock from "../../../../../components/articles/code-block/InlineCodeBlock.astro";
 
 export const partial = true;
 ---
 
-<p>Proximamente...</p>
+<h2>¿Por qué medir nuestros tests?</h2>
+<p>
+  Cuando escribimos tests, no alcanza con tener muchos o que "anden".
+  Necesitamos saber <strong>qué tan buenos o qué tan malos son</strong>. ¿Están
+  probando todas las partes del código? ¿Cubren todos los caminos posibles? ¿Qué
+  pasa si un error se esconde en una rama que nunca es ejecutada por nuestros
+  tests?
+</p>
+<p>
+  Para responder estas preguntas, existen las <strong
+    >métricas de cobertura (coverage)</strong
+  >. Estas métricas nos permiten cuantificar qué tan bien están cubiertos
+  nuestros programas por los tests, y nos ayudan a identificar zonas del código
+  que podrían estar mal testeadas o completamente sin testear.
+</p>
+<h2>Line Coverage (Cobertura de Líneas)</h2>
+<p>
+  Una de las métricas más simples es line coverage. Esta métrica calcula el
+  porcentaje de líneas de código que fueron ejecutadas al correr los tests.
+</p>
+<p>
+  Por ejemplo, si tenés un programa con 10 líneas de código y los tests ejecutan
+  8 de esas líneas, el line coverage es del 80%.
+</p>
+<h3>Ejemplo</h3>
+<p><em>nota.py</em></p>
+<CodeBlock
+  code={`def estado(nota: int) -> str:
+    if nota >= 6:
+        return "Aprobado"
+    elif nota >= 5:
+        return "Recuperatorio"
+    else:
+        return "Desaprobado"`}
+  lang="python"
+/>
+<p><em>test_nota.py</em></p>
+<CodeBlock
+  code={`from nota import estado
+
+def test_aprobado():
+    assert estado(6) == "Aprobado"
+def test_recuperatorio():
+    assert estado(5) == "Recuperatorio"`}
+  lang="python"
+/>
+<p>
+  Al correr los tests, se corren las primeras 5 líneas de la función estado, que
+  tiene 7 líneas. Como son 5/7, la cobertura es del 71%
+</p>
+<p>Si en cambio, el conjunto de tests fuese:</p>
+<CodeBlock
+  code={`from nota import estado
+
+def test_aprobado():
+    assert estado(6) == "Aprobado"
+def test_recuperatorio():
+    assert estado(5) == "Recuperatorio"
+def test_desaprobado():
+    assert estado(4) == "Desaprobado"`}
+  lang="python"
+/>
+<p>
+  Ahora sí, se corren las 7 líneas de la función estado, y la cobertura es del
+  100%.
+</p>
+<h2>CFG (Control Flow Graph)</h2>
+<p>
+  Un CFG es una forma de representar cómo fluye el control dentro de un
+  programa. Cada nodo representa una instrucción o bloque de código, y cada
+  flecha (arista) representa una posible transición entre instrucciones.
+</p>
+<p>Por ejemplo, en el siguiente programa:</p>
+<CodeBlock
+  code={`def estado(nota: int) -> str:
+    if nota >= 6:
+        return "Aprobado"
+    elif nota >= 5:
+        return "Recuperatorio"
+    else:
+        return "Desaprobado"`}
+  lang="python"
+/>
+<p>Lo puedo representar como un CFG de la siguiente forma:</p>
+<img
+  class="max-w-[400px] my-2"
+  :src="$store.baseURL.publicURL('diagrams/CFG.svg')"
+  alt="CFG"
+/>
+<p>
+  Este tipo de representación es útil para ver <strong
+    >todas los posibles caminos</strong
+  > de ejecución del programa, lo cual es clave para la próxima métrica.
+</p>
+<h2>Branch Coverage (Cobertura de Ramas)</h2>
+<p>
+  Branch coverage es una métrica que analiza si nuestros tests ejecutaron todas
+  las decisiones posibles en el código (por ejemplo, tanto el if como el else).
+  Es más precisa que el line coverage, porque puede pasar que una línea se
+  ejecute, pero no todas sus ramas.
+</p>
+<p>
+  Usando el CFG y programa de la sección anterior, hay 4 caminos, marcados a
+  continuación
+</p>
+<img
+  class="max-w-[400px] my-2"
+  :src="$store.baseURL.publicURL('diagrams/caminos.svg')"
+  alt="Caminos en el CFG"
+/>
+<p>Si yo tuviese el siguiente conjunto de tests</p>
+<CodeBlock
+  code={`from nota import estado
+
+def test_aprobado():
+    assert estado(6) == "Aprobado"
+def test_recuperatorio():
+    assert estado(5) == "Recuperatorio"`}
+  lang="python"
+/>
+<p>
+  Los tests pasan por los caminos 1,2 y 3. Por lo tanto, se cubren 3/4 caminos,
+  que da un 75% de branch coverage
+</p>
+<p>
+  En un programa sin líneas inalcanzables (por ejemplo después de un return), <strong
+    >100% de branch coverage implica 100% de line coverage</strong
+  >. No vale al revés, 100% de line coverage puede resultar en un branch
+  coverage inferior.
+</p>
+<h2>Coverage.py</h2>
+<p>
+  Para medir automáticamente <strong>line y branch coverage</strong>, podemos
+  usar la librería coverage.py.
+</p>
+<h3>Instalación</h3>
+<CodeBlock code={`pip install coverage`} lang="bash" />
+<h3>Uso con Pytest</h3>
+<p>1: Ejecutar los tests y recolectar información de cobertura:</p>
+<CodeBlock code={`coverage run -m pytest`} lang="bash" />
+<p>2: Obtener un resumen en consola</p>
+<CodeBlock code={`coverage `} lang="bash" />
+<p>3: Ver un reporte más detallado en HTML</p>
+<CodeBlock code={`coverage html`} lang="bash" />
+<p>
+  Por defecto, es line coverage. Si quieren hacer branch coverage, deben cambiar
+  como corren el reporte con la opción <em>--branch</em>
+</p>
+<CodeBlock code={`coverage run --branch -m pytest`} lang="bash" />
+<h2>Conclusión</h2>
+<ul>
+  <li>
+    Tener métricas para evaluar nuestros tests nos ayuda a construir mejores
+    tests
+  </li>
+  <li>
+    La métrica de line coverage mide las líneas tocadas por el conjunto de
+    tests.
+  </li>
+  <li>
+    La métrica de branch coverage mide las decisiones tomadas por el conjunto de
+    tests
+  </li>
+  <li>Usen coverage.py no sean bobas/bobos</li>
+</ul>
+<ImportantBox warning="No se confíen">
+  <p>
+    No se casen con las métricas. Nos dan una idea de qué nos puede faltar, pero
+    nos pueden seguir estar faltando casos importantes, por ejemplo, cuestiones
+    que salten con un determinado parámetro o con iteraciones específicas. Nunca
+    están excentos de <strong>PENSAR</strong>.
+  </p>
+</ImportantBox>
