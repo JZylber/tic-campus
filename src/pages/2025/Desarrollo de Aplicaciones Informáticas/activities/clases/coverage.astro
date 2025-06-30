@@ -145,11 +145,11 @@ def test_recuperatorio():
 <CodeBlock code={`pip install coverage`} lang="bash" />
 <h3>Uso con Pytest</h3>
 <p>1: Ejecutar los tests y recolectar información de cobertura:</p>
-<CodeBlock code={`coverage run -m pytest`} lang="bash" />
+<CodeBlock code={`python -m coverage run -m pytest`} lang="bash" />
 <p>2: Obtener un resumen en consola</p>
-<CodeBlock code={`coverage `} lang="bash" />
+<CodeBlock code={`python -m coverage `} lang="bash" />
 <p>3: Ver un reporte más detallado en HTML</p>
-<CodeBlock code={`coverage html`} lang="bash" />
+<CodeBlock code={`python -m coverage html`} lang="bash" />
 <p>
   Por defecto, es line coverage. Si quieren hacer branch coverage, deben cambiar
   como corren el reporte con la opción <em>--branch</em>
