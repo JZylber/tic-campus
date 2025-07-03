@@ -18,17 +18,131 @@ export const partial = true;
 <p>
   ¿Cuánto sale viajar en transporte público? El estado nacional determina los
   precios de todos los tipos de tranporte para todas las jurisdicciones en las
-  que tiene potestad. Para eso, genera un cuadro tarifario. A continuación, el
-  más reciente al momento de diseñar el TP:
+  que tiene potestad. Para eso, genera un cuadro tarifario. Como los precios
+  cambian <em>todo</em> el tiempo, les voy a dar los precios a Junio de 2025 como
+  para setear algunos valores.
 </p>
 <p>
-  <a
+  Les dejo el link actual <strong>DESACTUALIZADO</strong> por si les interesa: <a
     href="https://www.argentina.gob.ar/redsube/tarifas-de-transporte-publico-amba"
     target="_blank"
     class="text-sh-blue"
     >https://www.argentina.gob.ar/redsube/tarifas-de-transporte-publico-amba</a
   >
 </p>
+<p>A continuación, los precios que usa el programa:</p>
+<h2>Cuadro tarifario</h2>
+<h3>Colectivo - CABA</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Distancia (km)</th>
+      <th>SUBE Registrada</th>
+      <th>Tarifa Social</th>
+      <th>SUBE No Registrada</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>0 - 3</td><td>472.17</td><td>212.47</td><td>750.75</td></tr>
+    <tr><td>3 - 6</td><td>526.00</td><td>236.70</td><td>836.34</td></tr>
+    <tr><td>6 - 12</td><td>566.53</td><td>254.93</td><td>900.78</td></tr>
+    <tr><td>12 - 27</td><td>607.09</td><td>273.19</td><td>965.27</td></tr>
+  </tbody>
+</table>
+<h3>Colectivo - Buenos Aires</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Distancia (km)</th>
+      <th>SUBE Registrada</th>
+      <th>Tarifa Social</th>
+      <th>SUBE No Registrada</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>0 - 3</td><td>472.91</td><td>212.80</td><td>751.93</td></tr>
+    <tr><td>3 - 6</td><td>526.83</td><td>237.07</td><td>837.66</td></tr>
+    <tr><td>6 - 12</td><td>567.41</td><td>255.33</td><td>902.18</td></tr>
+    <tr><td>12 - 27</td><td>608.03</td><td>273.61</td><td>966.77</td></tr>
+    <tr><td>más de 27</td><td>648.38</td><td>291.77</td><td>1030.92</td></tr>
+  </tbody>
+</table>
+<h3>Colectivo - Otras Jurisdicciones</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Distancia (km)</th>
+      <th>SUBE Registrada</th>
+      <th>Tarifa Social</th>
+      <th>SUBE No Registrada</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>0 - 3</td><td>397.11</td><td>178.69</td><td>631.40</td></tr>
+    <tr><td>3 - 6</td><td>442.38</td><td>199.07</td><td>703.38</td></tr>
+    <tr><td>6 - 12</td><td>476.46</td><td>214.40</td><td>757.57</td></tr>
+    <tr><td>12 - 27</td><td>510.57</td><td>229.75</td><td>811.81</td></tr>
+    <tr><td>más de 27</td><td>544.45</td><td>245.00</td><td>865.68</td></tr>
+  </tbody>
+</table>
+<h3>Tren</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Sección</th>
+      <th>SUBE Registrada</th>
+      <th>Tarifa Social</th>
+      <th>SUBE No Registrada</th>
+      <th>Efectivo</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr
+      ><td>1</td><td>280.00</td><td>126.00</td><td>560.00</td><td>900.00</td
+      ></tr
+    >
+    <tr
+      ><td>2</td><td>360.00</td><td>162.00</td><td>720.00</td><td>900.00</td
+      ></tr
+    >
+    <tr
+      ><td>3</td><td>450.00</td><td>202.50</td><td>900.00</td><td>900.00</td
+      ></tr
+    >
+  </tbody>
+</table>
+<h3>Subte</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Cantidad de Viajes</th>
+      <th>SUBE Registrada</th>
+      <th>SUBE No Registrada</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>0 - 20</td><td>963.00</td><td>1531.17</td></tr>
+    <tr><td>21 - 30</td><td>770.40</td><td>1224.94</td></tr>
+    <tr><td>31 - 40</td><td>674.10</td><td>1071.82</td></tr>
+    <tr><td>41 o más</td><td>577.80</td><td>918.70</td></tr>
+  </tbody>
+</table>
+<h3>Premetro</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Cantidad de Viajes</th>
+      <th>SUBE Registrada</th>
+      <th>SUBE No Registrada</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>0 - 20</td><td>337.05</td><td>535.91</td></tr>
+    <tr><td>21 - 30</td><td>337.05</td><td>535.91</td></tr>
+    <tr><td>31 - 40</td><td>337.05</td><td>535.91</td></tr>
+    <tr><td>41 o más</td><td>337.05</td><td>535.91</td></tr>
+  </tbody>
+</table>
 <h2>Consigna</h2>
 <p>
   Tenemos una función, <InlineCodeBlock
