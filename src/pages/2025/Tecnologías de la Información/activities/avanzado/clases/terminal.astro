@@ -1,4 +1,8 @@
 ---
+import ImportantBox from "../../../../../../components/articles/alertbox/ImportantBox.astro";
+import CodeBlock from "../../../../../../components/articles/code-block/CodeBlock.astro";
+import InlineCodeBlock from "../../../../../../components/articles/code-block/InlineCodeBlock.astro";
+
 export const partial = true;
 ---
 
@@ -52,9 +56,10 @@ export const partial = true;
 <p>
   Ahora si, pueden dejar de usar la terminal. Abrir el archivo
   <em>"terminal.html"</em> desde visual studio code y armar el esqueleto básico de
-  un archivo html. Ponerle un título (<code class="language-javascript"
-    >&lth1&gt</code
-  >). Verificar que anda abriendo ese archivo en un browser (Chrome, Firefox,
+  un archivo html. Ponerle un título (<InlineCodeBlock
+    code="<h1>"
+    lang="html"
+  />). Verificar que anda abriendo ese archivo en un browser (Chrome, Firefox,
   etc).
 </p>
 <h2>Consigna Manija</h2>
@@ -80,22 +85,40 @@ export const partial = true;
 <ol>
   <li>Abrir una shell y moverse a Documentos del disco C.</li>
   <li>
-    Clonar el repositorio usando <code class="language-bash">git clone</code>.
+    Clonar el repositorio usando <InlineCodeBlock
+      lang="bash"
+      code="git clone"
+    />.
   </li>
   <li>Modificar/Agregar algún archivo dentro del repositorio.</li>
   <li>
     Agregar dichos cambios a un futuro commit usando
-    <code class="language-bash">git add</code>. <strong>TIP:</strong> Si les tira
-    que no es un repositorio, revisen bien en que carpeta está situada la shell.
+    <InlineCodeBlock lang="bash" code="git add" />. <strong>TIP:</strong> Si les
+    tira que no es un repositorio, revisen bien en que carpeta está situada la shell.
   </li>
   <li>
-    Completar un commit usando <code class="language-bash">git commit</code>.
+    Completar un commit usando <InlineCodeBlock
+      lang="bash"
+      code="git commit"
+    />.
     <strong>TIP:</strong> ¡No se olviden del mensaje! Es obligatorio, y no podemos
     realizar commits sin mensajes.
   </li>
   <li>
-    Pushear el commit usando <code class="language-bash">git push</code>. Entren
-    a github en el browser y vean que esto se haya hecho correctamente. Deberían
-    ver los cambios hechos.
+    Pushear el commit usando <InlineCodeBlock lang="bash" code="git push" />.
+    Entren a github en el browser y vean que esto se haya hecho correctamente.
+    Deberían ver los cambios hechos.
   </li>
 </ol>
+<ImportantBox warning="Lu/Shulian, ¡No puedo commitear!">
+  <p>
+    ¿Se acuerdan el error que les tira cada tanto que no los deja commitear? Eso
+    es porque hay que setear un usuario y mail en git. Para eso, pueden correr
+    los siguientes comandos:
+  </p>
+  <CodeBlock
+    lang="bash"
+    code={`git config --global user.name "Su Nombre"
+git config --global user.email "Mail de Github"`}
+  />
+</ImportantBox>
