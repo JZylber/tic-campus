@@ -2,4 +2,67 @@
 export const partial = true;
 ---
 
-<p>Proximamente...</p>
+<p>
+  Antes de empezar, este trabajo usa una librería para tomar input del usuario
+  desde la consola, <em>readline-sync</em>. Como en el package.json que les doy
+  ya está configurado, solo deben correr el comando
+  <code class="language-bash">npm install</code> para instalarlo.
+</p>
+<p>
+  <strong>IMPORTANTE: </strong>node_modules es pesadísimo, y no se pushea. Total
+  no hace falta, con <code class="language-bash">npm install</code> se puede reconstruir.
+  Para evitar pushearlo, tienen dos opciones:
+</p>
+<ol>
+  <li>
+    Evitar en cada commit que se haga agregarlo. Esto es 100% de psicópata y las
+    chances de que no le pifien en algún commit son 0
+  </li>
+  <li>
+    Hacer un <code class="language-bash">.gitignore</code> y agregar
+    <code class="language-bash">node_modules/</code> para que no se suba.
+  </li>
+</ol>
+<p>
+  Este TP fui buenito <strong>y ya les di yo el .gitignore</strong>. A futuro lo
+  van a tener que crear y armar ustedes.
+</p>
+<h2>Consigna Base</h2>
+<p>
+  Los pelados (dueños de la heladería) quieren construir un sistema automático
+  para hacer pedidos de helado, ya que su empleado no para de comerse el helado
+  y el negocio no está rindiendo.
+</p>
+<p>
+  Vamos a hacer un primer boceto que solo usa la consola. Contamos ya armado un
+  sistema que pide input del usuario con todos los datos necesarios, pero no
+  está hecha la parte de tomar los datos y de guardado de pedidos.
+</p>
+<ol>
+  <li>
+    Cargar sabores.json en la variable
+    <code class="language-javascript">sabores</code>.
+  </li>
+  <li>
+    Cargar productos.json en la variable
+    <code class="language-javascript">productos</code>.
+  </li>
+  <li>
+    Guardar los datos del pedido que se encuentran en las variables
+    <code class="language-javascript">cliente</code>,<code
+      class="language-javascript">producto</code
+    >
+    y <code class="language-javascript">saboresElegidos</code>. Guardar el
+    cliente, el nombre del producto y los sabores elegidos en un objeto, que se
+    <strong>agregue</strong>
+    al array de pedidos que se encuentran en el archivo
+    <code class="language-javascript">pedidos.json</code>.
+  </li>
+</ol>
+<h2>Consigna Manija</h2>
+<p>
+  Modificar el programa para que permita ingresar más de un producto por
+  cliente. Guardar también el precio total del pedido. Les recomiendo leer y
+  entender la parte de código mío para modificarlo y tomar ideas.
+  <strong>TIP: </strong> Chat GPT lo explica bastante bien cuando lo probé, recomiendo.
+</p>
