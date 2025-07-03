@@ -2,4 +2,58 @@
 export const partial = true;
 ---
 
-<p>Proximamente...</p>
+<h2>Consigna Base</h2>
+<p>
+  Rayuela es la famosa novela de Julio Cortázar, que tiene 2 formas de leerse:
+  linealmente, o saltando capítulos de una forma explicitada por el autor. En
+  este caso no vamos a usar rayuela, pero un cuento de cortázar:
+  <em>"La autopista del sur"</em>.
+</p>
+<p>
+  El cuento no se lee en desorden, pero tenemos un problema. ¡Está todo
+  mezclado! Tenemos todos los párrafos en archivos distintos, y no están
+  numerados convenientemente. Tenemos una carpeta de partes, y conocemos el
+  orden de los párrafos:
+</p>
+<pre>
+        <code class="language-javascript">[71, 1, 2, 116, 3, 84, 4, 5, 81, 74, 6, 7, 8, 93, 68, 9, 104, 10, 65, 11, 136]</code></pre>
+<p>
+  Crear un programa en Javascript, usando Node JS, que tome las partes de cada
+  uno de los archivos, en el orden provisto anteriormente, y reconstruya el
+  cuento. Guardarlo en "La autopista del sur.txt". Algunos tips:
+</p>
+<ul>
+  <li>
+    Les recomiendo tener al orden en forma de lista, y recorrerla para ir
+    tomando las partes
+  </li>
+  <li>
+    Para ir acumulando, pueden hacer una variable que vaya acumulando el cuento
+  </li>
+  <li>
+    Para que se mantengan los párrafos como párrafos, y no sea un choclo
+    espantoso enorme, pueden agregar al final de cada párrafo que recupera un
+    salto de línea, que se representa con "\n". Esto provoca los mismo que un
+    "enter" en un texto.
+  </li>
+</ul>
+<p>
+  Ahora pueden, si quieren, leer el cuento. Les recomiendo leerlo y también les
+  recomiendo buscarlo en google, porque leer un .txt les va a destruir los ojos.
+</p>
+<h2>Consigna Manija</h2>
+<p>
+  Supongamos que no tienen la lista del orden para copiar y pegar, sino que
+  tienen un archivo, orden.txt. Este tiene el orden de las partes, una por
+  línea.
+</p>
+<ol>
+  <li>
+    Creen el archivo orden.txt con el contenido de la lista, uno por línea.
+  </li>
+  <li>
+    Modifiquen el programa para que obtenga el orden de las partes de este
+    archivo. <strong>TIP:</strong> recuerden que el caracter que representa un salto
+    de línea es "\n"
+  </li>
+</ol>

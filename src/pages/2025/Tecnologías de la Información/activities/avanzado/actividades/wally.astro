@@ -1,5 +1,64 @@
 ---
+import InlineCodeBlock from "../../../../../../components/articles/code-block/InlineCodeBlock.astro";
+
 export const partial = true;
 ---
 
-<p>Proximamente...</p>
+<p>
+  Wally siempre es difícil de encontrar. Esta vuelta, en vez de escondarse en
+  dibujos, se está escondiendo en listas de nombres.
+</p>
+<h2>Consigna Base</h2>
+<p>
+  La lista de nombres en la que Wally se esconde se genera al azar usando los
+  archivos provistos. Ya que estamos, quiero que practiquen importar funciones
+  de otros archivos. Para eso, sigan los siguientes pasos:
+</p>
+<ol>
+  <li>
+    Inicializar la carpeta como proyecto de <em>Node JS</em> haciendo <InlineCodeBlock
+      code="npm init"
+      lang="bash"
+    />.
+  </li>
+  <li>Crear un archivo <em>index.js</em></li>
+  <li>
+    Importar la función
+    <code class="language-javascript">generarEspacio</code> del archivo
+    <em>busqueda.js</em> usando
+    <InlineCodeBlock code={`import {generarEspacio} from "./busqueda.js";`} />.
+  </li>
+  <li>
+    La función generarEspacio toma un parámetro, <em>n</em>, que es el número
+    total de nombres en donde Wally va a esconderse, y devuelve una lista de
+    nombres en donde exactamente uno es "Wally". Usando esta función, generen
+    una lista de 100 nombres y muestrenla por consola.
+    <strong>IMPORTANTE:</strong> la primera vez que corran les va a tirar un error
+    de
+    <code class="language-bash"
+      >SyntaxError: Cannot use import statement outside a module</code
+    >. ¿Cómo se soluciona? No se los voy a decir. Googleen.
+  </li>
+  <li>
+    Finalmente, escriban código en <em>index.js</em> que dada la lista de 100 nombres,
+    encuentre donde está Wally, es decir, en que posición de la lista se encuentra.<strong
+      >No pueden usar <code class="language-javascript">indexOf</code></strong
+    >, quiero que practiquen ciclos. Muestren este resultado por consola.
+  </li>
+</ol>
+<h2>Consigna Manija</h2>
+<p>
+  Ahora, no solo nos interesa encontrar a Wally, sino a todos los parecidos.
+  Hacer que el programa muestre por consola todos los nombres de la lista que
+  comiencen con "W" (Todos los nombres comienzan con mayúscula).
+  <strong>TIP:</strong> los strings funcionan parecidos a las listas. Para acceder
+  a la primera letra, alcanza con tomar el índice 0 del string.
+</p>
+<h2>Consigna Manija II</h2>
+<p>
+  No alcanzó con buscar los iniciados con "W", ahora queremos mostrar por
+  consola todos los nombres que contienen "ll" (doble ele) en cualquier parte
+  del nombre.
+  <strong>TIP:</strong> busquen si javascript no cuenta con funciones que nos faciliten
+  ver si un string contiene a otro.
+</p>
