@@ -1,5 +1,78 @@
 ---
+import CodeBlock from "../../../../../../components/articles/code-block/CodeBlock.astro";
+
 export const partial = true;
 ---
 
-<p>Proximamente...</p>
+<h2>Introducción</h2>
+<p>
+  Estamos en proyecto. Y proyecto es una locura de commits, estrés, entregas a
+  último momento, repositorios que se rompen, etc. Este trabajo está dedicado a
+  uno de esos proyectos, que relatan su historia a través de su historial de
+  commits.
+</p>
+<p>
+  <strong>DISCLAIMER: </strong> Los nombres y los commits son reales. Las personas
+  involucradas no sólo dieron su consentimiento para ser una actividad, sino que
+  pidieron explícitamente que aparezcan sus nombres tal cual aparecen en los commits.
+</p>
+<h2>Consigna Base</h2>
+<p>
+  Dentro de data tienen un JSON con la lista de commits, donde cada commit es
+  representado por un objeto de la siguiente forma:
+</p>
+<CodeBlock
+  lang="json"
+  code=`{
+    "hash": "eff483ac5dfcdb2624e775ef4b0936f535044bf6",
+    "authorName": "WEBER JULIETA",
+    "authorEmail": "bw0007@est.ort.edu.ar",
+    "date": "2024-11-29 09:19:03-03:00",
+    "message": "BASTA DE PROYECTO"
+  }`
+/>
+<p>
+  Construir un programa en Node JS usando soquetic que responda al evento
+  "buscarCommits" que recibe un objeto con el atributo hash, que corresponde al
+  hash del commit a buscar. Los hash son únicos, y por lo tanto se debe retornar
+  un único con commit. Si el atributo de hash está vacío, devolver todos los
+  commits.
+  <strong>El commit debe devolverse dentro de una lista</strong> (por más que sea
+  un único elemento).
+</p>
+<p>Les dejo algunos hash divertidos para probar:</p>
+<ul>
+  <li>354f723316cb6b599c3bdedd8adbf669f6fee956</li>
+  <li>6f58c3ee1fe8c7cbdc31728b18d3bdf22cd463bc</li>
+  <li>7764054991e0e0d123d611243deb9f662d8216c8</li>
+  <li>4a100b2e2391996d877f59f9e2e1fcdbc82521ed</li>
+</ul>
+<h2>Consigna Manija I</h2>
+<p>
+  Para el mismo evento del ejercicio base, se agrega ahora que el frontend envía
+  en el atributo "autores" una lista de autores. Devolver los commits cuyo <em
+    >authorName</em
+  > se encuentre en la lista de autores.
+  <strong
+    >Se debe seguir cumpliendo la funcionalidad de los puntos anteriores.</strong
+  >
+</p>
+<p><strong>PISTA:</strong> ¿Y si buscan a Wally?</p>
+<h2>Consigna Manija II</h2>
+<p>
+  Al mismo evento de siempre, se debe ahora tener la capacidad de filtrar por
+  fechas. Llegan dos atributos nuevos, <em>fechaInicio</em> y
+  <em>fechaFin</em>, que, en caso de no estar vacíos deben marcar límites a las
+  fechas de los commits retornados. Si <em>fechaInicio</em> no es vacío, los commits
+  deben pertencer a fechas iguales o posteriores. Si fecha fin no es vacío, los commits
+  deben pertenecer a fechas iguales o anteriores. Si ambos atributos no están vacíos,
+  se debe devolver todo lo que esté entre las dos fechas, inclusive.
+  <strong
+    >Se debe seguir cumpliendo la funcionalidad de los puntos anteriores.</strong
+  >
+</p>
+<p>
+  <strong>TIP:</strong> comparar los strings es feo. Conviertan todo a tipo <em
+    >Date</em
+  > y usen las funciones de comparación de fechas. ¡Googleen!
+</p>
