@@ -383,7 +383,6 @@ export const getActivitiesAndMarks = async (
     marksPromise,
     redosPromise,
   ]);
-  console.log(redos);
   return {
     activities: activities as Array<Activity>,
     marks: marks as Array<MarkedActivity>,
