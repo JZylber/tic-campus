@@ -48,20 +48,26 @@ const { position, subject } = Astro.props;
       specialActivities() {
         return this.activities.filter((activity) => activity.special);
       },
+      redoCoveredActivities() {
+        return this.redos.reduce((acc, redo) => acc.concat(redo.ids), []);
+      },
       markedActivities() {
         return this.marks.filter((activity) => !activity.inRevision);
       },
       allMarkedActivitiesPassed() {
-        return this.markedActivities().every((activity) => activity.mark >= 6);
+        let redoCoveredActivities = this.redoCoveredActivities();
+        return this.markedActivities()
+          .filter((activitiy) => !redoCoveredActivities.includes(activitiy.id))
+          .every((activity) => activity.mark >= 6);
       },
       allSpecialActivitiesDone() {
-        return this.specialActivities().every((activity) => activity.done);
+        let redoCoveredActivities = this.redoCoveredActivities();
+        return this.specialActivities()
+          .filter((activity) => !redoCoveredActivities.includes(activity.id))
+          .every((activity) => activity.done);
       },
       activitiesMarkContribution() {
-        let redoCoveredActivities = this.redos.reduce(
-          (acc, redo) => acc.concat(redo.ids),
-          []
-        );
+        let redoCoveredActivities = this.redoCoveredActivities();
         let consideredActivities = this.activities.filter(
           (activity) => !activity.inRevision && !activity.special
         );
@@ -72,7 +78,6 @@ const { position, subject } = Astro.props;
         let doneValidActivities = validActivities.filter(
           (activity) => activity.done
         ).length;
-        console.log(this.redos);
         // Contribuciones de los recuperatorios
         let activitiesContribution = this.redos.map((redo) => {
           let total = redo.ids.filter((id: number) =>
@@ -98,7 +103,34 @@ const { position, subject } = Astro.props;
         return round(markContribution * (1 - this.markData.proportion), 2);
       },
       markedActivitiesMarkContribution() {
-        return 0;
+        let redoCoveredMarks = this.redoCoveredActivities();
+        let consideredMarks = this.marks.filter(
+          (activity) => !activity.inRevision && !activity.special
+        );
+        let validMarks = consideredMarks
+          .filter((activity) => {
+            return !redoCoveredMarks.includes(activity.id);
+          })
+          .map((m) => m.mark);
+        // Contribuciones de los recuperatorios
+        let marksContribution = this.redos.reduce((acc, redo) => {
+          let coveredMarkedActivities = redo.ids.filter((id: number) =>
+            this.marks.find((activity) => activity.id === id)
+          ).length;
+          return acc.concat(Array(coveredMarkedActivities).fill(redo.mark));
+        }, []);
+        marksContribution = marksContribution.concat(validMarks);
+        let markContribution =
+          this.markData.activities.markContribution /
+          (1 - this.markData.proportion);
+        if (marksContribution.length > 0) {
+          markContribution =
+            marksContribution.reduce(
+              (acc: number, mark: number) => acc + mark,
+              0
+            ) / marksContribution.length;
+        }
+        return round(markContribution * this.markData.proportion, 2);
       },
       async calculateMarks(
         dataSheetId: string,
@@ -147,20 +179,7 @@ const { position, subject } = Astro.props;
         this.markData.activities.markContribution =
           this.activitiesMarkContribution();
         this.markData.markedActivities.markContribution =
-          this.markData.markedActivities.total > 0
-            ? round(
-                (this.marks
-                  .filter((activity) => !redos.includes(activity.id))
-                  .reduce((acc, m) => acc + m.mark, 0) /
-                  this.markData.markedActivities.total) *
-                  proportion,
-                2
-              )
-            : round(
-                (this.markData.activities.markContribution / (1 - proportion)) *
-                  proportion,
-                2
-              );
+          this.markedActivitiesMarkContribution();
         this.markData.averageMark = round(
           this.markData.activities.markContribution +
             this.markData.markedActivities.markContribution,
@@ -205,6 +224,7 @@ const { position, subject } = Astro.props;
       };
       regularActivities: () => Array<Activity>;
       specialActivities: () => Array<Activity>;
+      redoCoveredActivities: () => Array<number>;
       markedActivities: () => Array<MarkedActivity>;
       allSpecialActivitiesDone: () => boolean;
       allMarkedActivitiesPassed: () => boolean;
@@ -526,14 +546,14 @@ const { position, subject } = Astro.props;
                         <span
                           class="text-[14px] md:text-[16px]"
                           x-text="(()=>{
-                          let activity = $store.marks.activities.find(activity => activity.id === id).name
-                          let markedActivity = $store.marks.marks.find(markedActivity => markedActivity.id === id);
+                          let activity = $store.marks.activities.find(activity => activity.id === id) ? $store.marks.activities.find(activity => activity.id === id).name : null;
+                          let markedActivity = $store.marks.marks.find(markedActivity => markedActivity.id === id) ? $store.marks.marks.find(markedActivity => markedActivity.id === id) : null;
                           if(activity){
                             return activity + ', ' ;
                           } else if(markedActivity) {
-                            return markedActivity.name + + ', ';
+                            return markedActivity.name + ', ';
                           } else {
-                            return ' Actividad no encontrada';
+                            return '(No disponible), ';
                       }})()"
                         ></span>
                       </template>
@@ -545,52 +565,53 @@ const { position, subject } = Astro.props;
           </div>
         </div>
       </div>
-      <div class="flex flex-col gap-y-2 py-4 border-t-2 border-gray-300">
-        <h2 class="text-[20px] md:text-[24px] font-semibold">
-          Actividades obligatorias
-        </h2>
-        <p class="text-[14px] md:text-[16px] text-gray-600">
-          Todas las actividades que es necesario tener completas para poder
-          aprobar.
-        </p>
-        <div class="flex justify-center">
-          <div
-            class="border-gray-400 border-2 w-full max-w-full md:w-4/5 md:min-w-80 md:max-w-4xl rounded-xl overflow-hidden"
-            x-show="$store.marks.specialActivities().length > 0"
-          >
-            <table class="border-collapse w-full">
-              <thead class="bg-gray-300 text-gray-600">
-                <tr>
-                  <th class="text-[14px] md:text-[16px] p-2">Actividad</th>
-                  <th class="text-[14px] md:text-[16px] p-2">Estado</th>
-                </tr>
-              </thead>
-              <tbody>
-                <template x-for="activity in $store.marks.specialActivities()">
-                  <tr
-                    class="border-t border-gray-400"
-                    x-data="{redo: activity.inRevision}"
-                  >
-                    <td class="text-[14px] md:text-[16px] p-2">
-                      <span x-text="activity.name"></span>
-                    </td>
-                    <td class="p-2">
-                      <div class="w-full flex justify-center items-center">
-                        <div
-                          class="rounded-full flex justify-center items-center px-2 py-1 gap-x-2"
-                          x-bind:class="{
+    </template>
+    <div class="flex flex-col gap-y-2 py-4 border-t-2 border-gray-300">
+      <h2 class="text-[20px] md:text-[24px] font-semibold">
+        Actividades obligatorias
+      </h2>
+      <p class="text-[14px] md:text-[16px] text-gray-600">
+        Todas las actividades que es necesario tener completas para poder
+        aprobar.
+      </p>
+      <div class="flex justify-center">
+        <div
+          class="border-gray-400 border-2 w-full max-w-full md:w-4/5 md:min-w-80 md:max-w-4xl rounded-xl overflow-hidden"
+          x-show="$store.marks.specialActivities().length > 0"
+        >
+          <table class="border-collapse w-full">
+            <thead class="bg-gray-300 text-gray-600">
+              <tr>
+                <th class="text-[14px] md:text-[16px] p-2">Actividad</th>
+                <th class="text-[14px] md:text-[16px] p-2">Estado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <template x-for="activity in $store.marks.specialActivities()">
+                <tr
+                  class="border-t border-gray-400"
+                  x-data="{redo: activity.inRevision}"
+                >
+                  <td class="text-[14px] md:text-[16px] p-2">
+                    <span x-text="activity.name"></span>
+                  </td>
+                  <td class="p-2">
+                    <div class="w-full flex justify-center items-center">
+                      <div
+                        class="rounded-full flex justify-center items-center px-2 py-1 gap-x-2"
+                        x-bind:class="{
                           'bg-sh-light-yellow text-sh-yellow': redo,
                       'bg-sh-light-green text-sh-green': activity.done && !redo,
                       'bg-sh-light-red text-sh-red': !activity.done && !redo
                     }"
-                        >
-                          <span
-                            class="material-symbols-outlined text-[16px]! md:text-[20px]!"
-                            x-text="redo ? 'more_horiz' : (activity.done ? 'check' : 'close')"
-                          ></span>
-                          <span
-                            class="text-[14px] md:text-[16px]"
-                            x-text="(()=>{
+                      >
+                        <span
+                          class="material-symbols-outlined text-[16px]! md:text-[20px]!"
+                          x-text="redo ? 'more_horiz' : (activity.done ? 'check' : 'close')"
+                        ></span>
+                        <span
+                          class="text-[14px] md:text-[16px]"
+                          x-text="(()=>{
                           if(redo){
                             return 'En Revisión'
                           }
@@ -602,70 +623,68 @@ const { position, subject } = Astro.props;
                             return 'Pendiente'
                           }
                         })()"
-                          >
-                          </span>
-                        </div>
+                        >
+                        </span>
                       </div>
-                    </td>
-                  </tr>
-                </template>
-              </tbody>
-            </table>
-          </div>
+                    </div>
+                  </td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
         </div>
       </div>
-      <div class="flex flex-col gap-y-2 py-4 border-t-2 border-gray-300">
-        <h2 class="text-[20px] md:text-[24px] font-semibold">
-          Actividades con nota
-        </h2>
-        <p class="text-[14px] md:text-[16px] text-gray-600">
-          Todos las actividades/trabajos prácticos que reciben una nota
-          numérica. Se aprueban con una nota mayor o igual a 6.
-        </p>
-        <div class="flex justify-center">
-          <div
-            class="border-gray-400 border-2 w-full max-w-full md:w-4/5 md:min-w-80 md:max-w-4xl rounded-xl overflow-hidden"
-            x-show="$store.marks.marks.length > 0"
-          >
-            <table class="border-collapse w-full">
-              <thead class="bg-gray-300 text-gray-600">
-                <tr>
-                  <th class="text-[14px] md:text-[16px] p-2"
-                    >Trabajo Práctico</th
-                  >
-                  <th class="text-[14px] md:text-[16px] p-2">Estado</th>
-                </tr>
-              </thead>
-              <tbody>
-                <template x-for="activity in $store.marks.marks">
-                  <tr
-                    class="border-t border-gray-400"
-                    x-data="{redo: activity.inRevision}"
-                  >
-                    <td class="text-[14px] md:text-[16px] p-2">
-                      <span x-text="activity.name"></span>
-                    </td>
-                    <td class="p-2">
-                      <div class="w-full flex justify-center items-center">
-                        <div
-                          class="rounded-full flex justify-center items-center px-2 py-1 gap-x-2 text-[16px]"
-                          x-bind:class="{
+    </div>
+    <div class="flex flex-col gap-y-2 py-4 border-t-2 border-gray-300">
+      <h2 class="text-[20px] md:text-[24px] font-semibold">
+        Actividades con nota
+      </h2>
+      <p class="text-[14px] md:text-[16px] text-gray-600">
+        Todos las actividades/trabajos prácticos que reciben una nota numérica.
+        Se aprueban con una nota mayor o igual a 6.
+      </p>
+      <div class="flex justify-center">
+        <div
+          class="border-gray-400 border-2 w-full max-w-full md:w-4/5 md:min-w-80 md:max-w-4xl rounded-xl overflow-hidden"
+          x-show="$store.marks.marks.length > 0"
+        >
+          <table class="border-collapse w-full">
+            <thead class="bg-gray-300 text-gray-600">
+              <tr>
+                <th class="text-[14px] md:text-[16px] p-2">Trabajo Práctico</th>
+                <th class="text-[14px] md:text-[16px] p-2">Estado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <template x-for="activity in $store.marks.marks">
+                <tr
+                  class="border-t border-gray-400"
+                  x-data="{redo: activity.inRevision}"
+                >
+                  <td class="text-[14px] md:text-[16px] p-2">
+                    <span x-text="activity.name"></span>
+                  </td>
+                  <td class="p-2">
+                    <div class="w-full flex justify-center items-center">
+                      <div
+                        class="rounded-full flex justify-center items-center px-2 py-1 gap-x-2 text-[16px]"
+                        x-bind:class="{
                       'bg-sh-light-yellow text-sh-yellow': redo,
                       'bg-sh-light-green text-sh-green': activity.mark >= 6 && !redo,
                       'bg-sh-light-red text-sh-red': activity.mark < 6 && !redo
                     }"
-                        >
-                          <span
-                            class="text-[14px] md:text-[16px]"
-                            x-text="activity.mark"
-                            x-show="!redo"></span>
-                          <span
-                            class="material-symbols-outlined text-[16px]! md:text-[20px]!"
-                            x-text="'more_horiz'"
-                            x-show="redo"></span>
-                          <span
-                            class="text-[14px] md:text-[16px] text-center md:text-left"
-                            x-text="(()=>{
+                      >
+                        <span
+                          class="text-[14px] md:text-[16px]"
+                          x-text="activity.mark"
+                          x-show="!redo"></span>
+                        <span
+                          class="material-symbols-outlined text-[16px]! md:text-[20px]!"
+                          x-text="'more_horiz'"
+                          x-show="redo"></span>
+                        <span
+                          class="text-[14px] md:text-[16px] text-center md:text-left"
+                          x-text="(()=>{
                           if(redo){
                             return 'En Revisión'
                           }
@@ -677,67 +696,67 @@ const { position, subject } = Astro.props;
                             return 'En Proceso'
                           }
                         })()"
-                          >
-                          </span>
-                        </div>
+                        >
+                        </span>
                       </div>
-                    </td>
-                  </tr>
-                </template>
-              </tbody>
-            </table>
-          </div>
+                    </div>
+                  </td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
         </div>
       </div>
-      <div class="flex flex-col gap-y-2 py-4 border-t-2 border-gray-300">
-        <h2 class="text-[20px] md:text-[24px] font-semibold">
-          Actividades de clase
-        </h2>
-        <p class="text-[14px] md:text-[16px] text-gray-600">
-          Todos las actividades/trabajos prácticos que se hacen a modo de
-          práctica en clase. No reciben una calificación numérica, pero se
-          consideran hechas si cumplen con lo mínimo esperado para dicha clase.
-        </p>
-        <div class="flex justify-center">
-          <div
-            class="border-gray-400 border-2 w-full max-w-full md:w-4/5 md:min-w-80 md:max-w-4xl rounded-xl overflow-hidden"
-            x-show="$store.marks.activities.length > 0"
-          >
-            <table class="border-collapse w-full">
-              <thead class="bg-gray-300 text-gray-600">
-                <tr>
-                  <th class="text-[14px] md:text-[16px] p-2">Actividad</th>
-                  <th class="text-[14px] md:text-[16px] p-2">Estado</th>
-                </tr>
-              </thead>
-              <tbody>
-                <template
-                  x-for="activity in $store.marks.activities.filter(act => !act.special)"
+    </div>
+    <div class="flex flex-col gap-y-2 py-4 border-t-2 border-gray-300">
+      <h2 class="text-[20px] md:text-[24px] font-semibold">
+        Actividades de clase
+      </h2>
+      <p class="text-[14px] md:text-[16px] text-gray-600">
+        Todos las actividades/trabajos prácticos que se hacen a modo de práctica
+        en clase. No reciben una calificación numérica, pero se consideran
+        hechas si cumplen con lo mínimo esperado para dicha clase.
+      </p>
+      <div class="flex justify-center">
+        <div
+          class="border-gray-400 border-2 w-full max-w-full md:w-4/5 md:min-w-80 md:max-w-4xl rounded-xl overflow-hidden"
+          x-show="$store.marks.activities.length > 0"
+        >
+          <table class="border-collapse w-full">
+            <thead class="bg-gray-300 text-gray-600">
+              <tr>
+                <th class="text-[14px] md:text-[16px] p-2">Actividad</th>
+                <th class="text-[14px] md:text-[16px] p-2">Estado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <template
+                x-for="activity in $store.marks.activities.filter(act => !act.special)"
+              >
+                <tr
+                  class="border-t border-gray-400"
+                  x-data="{redo: activity.inRevision}"
                 >
-                  <tr
-                    class="border-t border-gray-400"
-                    x-data="{redo: activity.inRevision}"
-                  >
-                    <td class="text-[14px] md:text-[16px] p-2">
-                      <span x-text="activity.name"></span>
-                    </td>
-                    <td class="p-2">
-                      <div class="w-full flex justify-center items-center">
-                        <div
-                          class="rounded-full flex justify-center items-center px-2 py-1 gap-x-2"
-                          x-bind:class="{
+                  <td class="text-[14px] md:text-[16px] p-2">
+                    <span x-text="activity.name"></span>
+                  </td>
+                  <td class="p-2">
+                    <div class="w-full flex justify-center items-center">
+                      <div
+                        class="rounded-full flex justify-center items-center px-2 py-1 gap-x-2"
+                        x-bind:class="{
                       'bg-sh-light-yellow text-sh-yellow': redo,
                       'bg-sh-light-green text-sh-green': activity.done && !redo,
                       'bg-sh-light-red text-sh-red': !activity.done && !redo
                     }"
-                        >
-                          <span
-                            class="material-symbols-outlined text-[16px]! md:text-[20px]!"
-                            x-text="redo ? 'more_horiz' : (activity.done ? 'check' : 'close')"
-                          ></span>
-                          <span
-                            class="text-[14px] md:text-[16px] text-center md:text-left"
-                            x-text="(()=>{
+                      >
+                        <span
+                          class="material-symbols-outlined text-[16px]! md:text-[20px]!"
+                          x-text="redo ? 'more_horiz' : (activity.done ? 'check' : 'close')"
+                        ></span>
+                        <span
+                          class="text-[14px] md:text-[16px] text-center md:text-left"
+                          x-text="(()=>{
                           if(redo){
                             return 'En Revisión'
                           }
@@ -749,29 +768,26 @@ const { position, subject } = Astro.props;
                             return 'Pendiente'
                           }
                         })()"
-                          >
-                          </span>
-                        </div>
+                        >
+                        </span>
                       </div>
-                    </td>
-                  </tr>
-                </template>
-              </tbody>
-            </table>
-          </div>
+                    </div>
+                  </td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
         </div>
       </div>
-      <div class="flex flex-col gap-y-2 py-4 border-t-2 border-gray-300">
-        <h2 class="text-[20px] md:text-[24px] font-semibold">
-          Notas históricas
-        </h2>
-        <p class="text-[14px] md:text-[16px] text-gray-600">
-          La siguientes notas reflejan el estado de la materia durante el
-          período en cuestión. Obviamente, se pueden hacer reentregas y
-          recuperatorios para mejorar dicha nota.
-        </p>
-        <FixedMarks />
-      </div>
-    </template>
+    </div>
+    <div class="flex flex-col gap-y-2 py-4 border-t-2 border-gray-300">
+      <h2 class="text-[20px] md:text-[24px] font-semibold">Notas históricas</h2>
+      <p class="text-[14px] md:text-[16px] text-gray-600">
+        La siguientes notas reflejan el estado de la materia durante el período
+        en cuestión. Obviamente, se pueden hacer reentregas y recuperatorios
+        para mejorar dicha nota.
+      </p>
+      <FixedMarks />
+    </div>
   </SectionLayout>
 </template>
