@@ -43,6 +43,13 @@ export interface MarkedActivity {
   comment: string;
 }
 
+export interface Redo {
+  ids: Array<number>;
+  name: string;
+  mark: number;
+  comment: string;
+}
+
 export interface Course {
   name: string;
   subject: string;

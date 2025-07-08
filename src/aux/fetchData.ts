@@ -6,6 +6,7 @@ import type {
   FixedMarks,
   MarkedActivity,
   Material,
+  Redo,
   Term,
   Unit,
 } from "./types";
@@ -356,19 +357,37 @@ const getStudentMarks = async (studentId: number, dataSheetId: string) => {
   }));
 };
 
+const getStudentRedos = async (studentId: number, dataSheetId: string) => {
+  const allRedos = await getSheetData({
+    sheetID: dataSheetId,
+    sheetName: "Recuperatorio",
+    query: `SELECT * WHERE B = ${studentId} AND J = TRUE`,
+  });
+  return allRedos.map((redo) => ({
+    ids: (redo["Id Actividad"] as string).split(",").map((id) => parseInt(id)),
+    name: redo["Nombre Recuperatorio"] as string,
+    mark: parseInt(redo["Nota"] as string),
+    comment: redo["Aclaración"] as string,
+  }));
+};
+
 export const getActivitiesAndMarks = async (
   studentId: number,
   dataSheetId: string
 ) => {
   const activitiesPromise = getStudentActivities(studentId, dataSheetId);
   const marksPromise = getStudentMarks(studentId, dataSheetId);
-  const [activities, marks] = await Promise.all([
+  const redosPromise = getStudentRedos(studentId, dataSheetId);
+  const [activities, marks, redos] = await Promise.all([
     activitiesPromise,
     marksPromise,
+    redosPromise,
   ]);
+  console.log(redos);
   return {
     activities: activities as Array<Activity>,
     marks: marks as Array<MarkedActivity>,
+    studentRedos: redos as Array<Redo>,
   };
 };
 

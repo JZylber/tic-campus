@@ -24,6 +24,7 @@ const { position, subject } = Astro.props;
     Alpine.store("marks", {
       activities: [],
       marks: [],
+      redos: [],
       markData: {
         finalMark: null,
         averageMark: 0,
@@ -56,6 +57,49 @@ const { position, subject } = Astro.props;
       allSpecialActivitiesDone() {
         return this.specialActivities().every((activity) => activity.done);
       },
+      activitiesMarkContribution() {
+        let redoCoveredActivities = this.redos.reduce(
+          (acc, redo) => acc.concat(redo.ids),
+          []
+        );
+        let consideredActivities = this.activities.filter(
+          (activity) => !activity.inRevision && !activity.special
+        );
+        let validActivities = consideredActivities.filter((activity) => {
+          return !redoCoveredActivities.includes(activity.id);
+        });
+        let totalValidActivities = validActivities.length;
+        let doneValidActivities = validActivities.filter(
+          (activity) => activity.done
+        ).length;
+        console.log(this.redos);
+        // Contribuciones de los recuperatorios
+        let activitiesContribution = this.redos.map((redo) => {
+          let total = redo.ids.filter((id: number) =>
+            this.activities.find(
+              (activity) => activity.id === id && !activity.special
+            )
+          ).length;
+          return {
+            mark: redo.mark,
+            weight: total / consideredActivities.length,
+          };
+        });
+        if (totalValidActivities > 0) {
+          activitiesContribution.push({
+            mark: (doneValidActivities / totalValidActivities) * 10,
+            weight: totalValidActivities / consideredActivities.length,
+          });
+        }
+        let markContribution = activitiesContribution.reduce(
+          (acc, activity) => acc + activity.mark * activity.weight,
+          0
+        );
+        return round(markContribution * (1 - this.markData.proportion), 2);
+      },
+      markedActivitiesMarkContribution() {
+        return 0;
+      },
       async calculateMarks(
         dataSheetId: string,
         subject: string,
@@ -66,17 +110,20 @@ const { position, subject } = Astro.props;
           id: number;
         }
       ) {
-        let [{ activities, marks }, { proportion, specialActivities }, redos] =
-          await Promise.all([
-            getActivitiesAndMarks(student.id, dataSheetId),
-            getSubjectMarkingCriteria(subject, dataSheetId),
-            getRedos(
-              parseInt(course.slice(2)),
-              student.name,
-              student.surname,
-              dataSheetId
-            ),
-          ]);
+        let [
+          { activities, marks, studentRedos },
+          { proportion, specialActivities },
+          redos,
+        ] = await Promise.all([
+          getActivitiesAndMarks(student.id, dataSheetId),
+          getSubjectMarkingCriteria(subject, dataSheetId),
+          getRedos(
+            parseInt(course.slice(2)),
+            student.name,
+            student.surname,
+            dataSheetId
+          ),
+        ]);
         this.activities = activities.map((activity) => ({
           ...activity,
           inRevision: redos.includes(activity.id),
@@ -86,6 +133,7 @@ const { position, subject } = Astro.props;
           ...mark,
           inRevision: redos.includes(mark.id),
         }));
+        this.redos = studentRedos;
         this.markData.proportion = proportion;
         // Esta cuenta no tiene en cuenta que un estudiante pueda estar en múltiples materias
         this.markData.activities.total = this.regularActivities().length;
@@ -97,15 +145,7 @@ const { position, subject } = Astro.props;
           (activity) => activity.mark >= 6
         ).length;
         this.markData.activities.markContribution =
-          this.markData.activities.total > 0
-            ? round(
-                (this.markData.activities.done /
-                  this.markData.activities.total) *
-                  (1 - proportion) *
-                  10,
-                2
-              )
-            : round(10 * (1 - proportion), 2);
+          this.activitiesMarkContribution();
         this.markData.markedActivities.markContribution =
           this.markData.markedActivities.total > 0
             ? round(
@@ -147,6 +187,7 @@ const { position, subject } = Astro.props;
     } as {
       activities: any[];
       marks: any[];
+      redos: any[];
       markData: {
         finalMark: number | null;
         averageMark: number;
@@ -177,6 +218,8 @@ const { position, subject } = Astro.props;
           id: number;
         }
       ) => Promise<void>;
+      activitiesMarkContribution: () => number;
+      markedActivitiesMarkContribution: () => number;
     });
   });
 </script>
