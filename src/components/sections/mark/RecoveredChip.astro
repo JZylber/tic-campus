@@ -1,0 +1,22 @@
+---
+interface Props {
+  id: string;
+}
+
+const { id } = Astro.props;
+---
+
+<div
+  x-data="{ recovered: false }"
+  x-init=`recovered = $store.marks.redos.filter(redo => redo.mark >= 6).some((redo) => redo.ids.includes(${id}))`
+  class="flex flex-col md:flex-row w-full items-center justify-center gap-2"
+>
+  <slot />
+  <template x-if="recovered">
+    <div
+      class="rounded-full flex justify-center items-center px-2 py-1 h-[29px] md:h-[32px] aspect-square bg-sh-light-yellow text-sh-yellow"
+    >
+      <span class="text-[14px] md:text-[16px]">Recuperado</span>
+    </div></template
+  >
+</div>

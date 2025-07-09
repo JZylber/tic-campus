@@ -2,6 +2,7 @@
 import SectionLayout from "../SectionLayout.astro";
 import FixedMarks from "./FixedMarks.astro";
 import Progress from "./Progress.astro";
+import RecoveredChip from "./RecoveredChip.astro";
 
 interface Props {
   subject: string;
@@ -614,7 +615,7 @@ const { position, subject } = Astro.props;
                     <span x-text="activity.name"></span>
                   </td>
                   <td class="p-2">
-                    <div class="w-full flex justify-center items-center">
+                    <RecoveredChip id="activity.id">
                       <div
                         class="rounded-full flex justify-center items-center px-2 py-1 gap-x-2"
                         x-bind:class="{
@@ -644,7 +645,7 @@ const { position, subject } = Astro.props;
                         >
                         </span>
                       </div>
-                    </div>
+                    </RecoveredChip>
                   </td>
                 </tr>
               </template>
@@ -683,7 +684,7 @@ const { position, subject } = Astro.props;
                     <span x-text="activity.name"></span>
                   </td>
                   <td class="p-2">
-                    <div class="w-full flex justify-center items-center">
+                    <RecoveredChip id="activity.id">
                       <div
                         class="rounded-full flex justify-center items-center px-2 py-1 gap-x-2 text-[16px]"
                         x-bind:class="{
@@ -717,7 +718,7 @@ const { position, subject } = Astro.props;
                         >
                         </span>
                       </div>
-                    </div>
+                    </RecoveredChip>
                   </td>
                 </tr>
               </template>
@@ -759,7 +760,7 @@ const { position, subject } = Astro.props;
                     <span x-text="activity.name"></span>
                   </td>
                   <td class="p-2">
-                    <div class="w-full flex justify-center items-center">
+                    <RecoveredChip id="activity.id">
                       <div
                         class="rounded-full flex justify-center items-center px-2 py-1 gap-x-2"
                         x-bind:class="{
@@ -789,7 +790,7 @@ const { position, subject } = Astro.props;
                         >
                         </span>
                       </div>
-                    </div>
+                    </RecoveredChip>
                   </td>
                 </tr>
               </template>
