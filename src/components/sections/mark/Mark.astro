@@ -49,7 +49,9 @@ const { position, subject } = Astro.props;
         return this.activities.filter((activity) => activity.special);
       },
       redoCoveredActivities() {
-        return this.redos.reduce((acc, redo) => acc.concat(redo.ids), []);
+        return this.redos
+          .filter((redo) => redo.mark >= 6)
+          .reduce((acc, redo) => acc.concat(redo.ids), []);
       },
       markedActivities() {
         return this.marks.filter((activity) => !activity.inRevision);
@@ -79,17 +81,19 @@ const { position, subject } = Astro.props;
           (activity) => activity.done
         ).length;
         // Contribuciones de los recuperatorios
-        let activitiesContribution = this.redos.map((redo) => {
-          let total = redo.ids.filter((id: number) =>
-            this.activities.find(
-              (activity) => activity.id === id && !activity.special
-            )
-          ).length;
-          return {
-            mark: redo.mark,
-            weight: total / consideredActivities.length,
-          };
-        });
+        let activitiesContribution = this.redos
+          .filter((redo) => redo.mark >= 6)
+          .map((redo) => {
+            let total = redo.ids.filter((id: number) =>
+              this.activities.find(
+                (activity) => activity.id === id && !activity.special
+              )
+            ).length;
+            return {
+              mark: redo.mark,
+              weight: total / consideredActivities.length,
+            };
+          });
         if (totalValidActivities > 0) {
           activitiesContribution.push({
             mark: (doneValidActivities / totalValidActivities) * 10,
@@ -113,12 +117,14 @@ const { position, subject } = Astro.props;
           })
           .map((m) => m.mark);
         // Contribuciones de los recuperatorios
-        let marksContribution = this.redos.reduce((acc, redo) => {
-          let coveredMarkedActivities = redo.ids.filter((id: number) =>
-            this.marks.find((activity) => activity.id === id)
-          ).length;
-          return acc.concat(Array(coveredMarkedActivities).fill(redo.mark));
-        }, []);
+        let marksContribution = this.redos
+          .filter((redo) => redo.mark >= 6)
+          .reduce((acc, redo) => {
+            let coveredMarkedActivities = redo.ids.filter((id: number) =>
+              this.marks.find((activity) => activity.id === id)
+            ).length;
+            return acc.concat(Array(coveredMarkedActivities).fill(redo.mark));
+          }, []);
         marksContribution = marksContribution.concat(validMarks);
         let markContribution =
           this.markData.activities.markContribution /
@@ -523,7 +529,10 @@ const { position, subject } = Astro.props;
                     <td class="p-2">
                       <div class="w-full flex justify-center items-center">
                         <div
-                          class="rounded-full flex justify-center items-center px-2 py-1 gap-x-2 bg-sh-light-yellow text-sh-yellow"
+                          class="rounded-full flex justify-center items-center px-2 py-1 gap-x-2"
+                          x-bind:class="{
+                          'bg-sh-light-red text-sh-red': redo.mark < 6,
+                          'bg-sh-light-yellow text-sh-yellow': redo.mark >= 6}"
                         >
                           <span
                             class="text-[14px] md:text-[16px]"
@@ -533,9 +542,11 @@ const { position, subject } = Astro.props;
                             x-text="(()=>{
                           if(redo.comment) {
                             return activity.comment;
-                          } else {
+                          } else if (redo.mark >= 6) {
                             return 'Recuperado'
-                          } 
+                          } else {
+                            return 'Pendiente'
+                          }
                         })()"
                           >
                           </span>
