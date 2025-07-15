@@ -541,7 +541,7 @@ const { position, subject } = Astro.props;
                             class="text-[14px] md:text-[16px]"
                             x-text="(()=>{
                           if(redo.comment) {
-                            return activity.comment;
+                            return redo.comment;
                           } else if (redo.mark >= 6) {
                             return 'Recuperado'
                           } else {
@@ -634,7 +634,7 @@ const { position, subject } = Astro.props;
                             return 'En Revisión'
                           }
                           if(activity.comment) {
-                          return activity.comment;
+                            return activity.comment;
                           } else if(activity.done){
                             return 'Completa'
                           } else {
