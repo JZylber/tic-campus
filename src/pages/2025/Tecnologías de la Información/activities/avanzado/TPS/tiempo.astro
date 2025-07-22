@@ -1,0 +1,143 @@
+---
+import CodeBlock from "../../../../../../components/articles/code-block/CodeBlock.astro";
+
+export const partial = true;
+---
+
+<p>
+  <strong
+    >¡NO SE OLVIDEN DE ARMAR EL .gitignore para excluir todo lo que no quieren
+    commitear!</strong
+  >
+  Veo un node_modules pusheado y se llevan la materia automáticamente.
+</p>
+<p>
+  Este TP, obviamente, usa SoqueTIC. Para instalarlo, pueden hacerlo igual que
+  cualquier otra librería usando npm:
+</p>
+<CodeBlock lang="bash" code="npm i soquetic" />
+<p>
+  Además, usa una librería para el pronóstico del tiempo, pero eso queda para
+  los extras.
+</p>
+<h2>Introducción</h2>
+<p>
+  ¡Tenemos que ayudar a las <em>Weather Girls</em>! Ellas no solo pronostican
+  lluvia de hombres, sino como su nombre indica, hacen pronóstico del tiempo en
+  general.
+</p>
+<p>
+  Para eso, vamos a hacer una aplicación que da el pronóstico del tiempo a 7
+  días para las capitales provinciales de Argentina.
+</p>
+<h2>Consigna Base</h2>
+<h3>Punto 1</h3>
+<p>
+  Para armar el mapa, se necesitan los límites provinciales y nacionales. Se
+  utiliza <em>GEOJSON</em>, una variedad de JSON especializada para geografía.
+  Además, necesitamos los datos de las ciudades. Para lograr esto, armar un
+  aplicación en NodeJS utilizando SoqueTIC que responda a los siguientes
+  eventos:
+</p>
+<ul>
+  <li>
+    <em>"ciudades"</em>: Evento de tipo <strong>GET</strong>. Devuelve un objeto
+    con parte del contenido del archivo <em>ciudades.json</em>.
+  </li>
+  <li>
+    <em>"limites"</em>: Evento de tipo <strong>GET</strong>. Devuelve un objeto
+    con 2 atributos, <em>nacional</em> que tiene el contenido del archivo <em
+      >limiteNacional.json</em
+    > y <em>provincial</em> que tiene el contenido del archivo <em
+      >limiteProvincial.json</em
+    >.
+  </li>
+</ul>
+<h3>Punto 2</h3>
+<p>
+  Queremos también tener todo un sistema de favoritos, para tener un acceso
+  rápido a las ciudades más elegidas. En particular, queremos mostrar todos los
+  favoritos y agregar favoritos nuevos. Para eso, escribir el código necesario
+  para soportar los siguientes mensajes:
+</p>
+<ul>
+  <li>
+    <em>"favoritos"</em>: Evento de tipo <strong>GET</strong>. Devuelve una
+    lista de favoritos, donde cada favorito es un objeto con los atributos <em
+      >city</em
+    >, <em>lat</em>, <em>lng</em>
+  </li>
+  <li>
+    <em>"agregarFavorito"</em>: Evento de tipo <strong>POST</strong>. Envía en
+    data la ciudad a ser agregada como favorito, que tiene la forma de un objeto
+    con los atributos <em>city</em>, <em>lat</em>,
+    <em>lng</em>.
+  </li>
+</ul>
+<p>
+  <strong>TIP:</strong> para que persista la información de favoritos, tal vez tengan
+  que tener un archivo aparte, ¿no?
+</p>
+<p>Con estos dos puntos hechos, llegan al 7. ¿Van por el 10?</p>
+<h2>Extras</h2>
+<p><strong>Los siguientes extras valen 1 punto cada uno.</strong></p>
+<h3>Ciudades</h3>
+<p>¡Hay una banda de ciudades! Mejor achicar un poco, ¿no?</p>
+<p>
+  Modificar el evento <em>"ciudades"</em> para que solo devuelva capitales provinciales
+  y nacionales. Estas son aquellas ciudades cuyo atributo
+  <em>capital</em> es "admin" o "primary".
+</p>
+<h3>Favoritos</h3>
+<p>
+  ¿Y si quiero eliminar un favorito? Responder al evento
+  <em>"eliminarFavorito"</em>: Evento de tipo <strong>POST</strong>. Envía en
+  data la ciudad a ser eliminada como favorito, que tiene la forma de un objeto
+  con los atributos <em>city</em>, <em>lat</em>, <em>lng</em>.
+</p>
+<p>
+  ¡Ojo que lo tienen que sacar del archivo de favoritos sin sacar los otros
+  favoritos!
+</p>
+<h3>Pronóstico</h3>
+<p>
+  Al final mucho biri biri pero poco pronóstico. ¡Hagámoslo! Para eso, vamos a
+  usar una librería externa, <em>openmeteo</em>. Se instala con npm, de la
+  siguiente forma:
+</p>
+<CodeBlock lang="bash" code="npm i openmeteo" />
+<p>
+  Ahora estamos listos para buscar el pronóstico del tiempo. Para eso, responder
+  al evento <em>"pronostico"</em>. Este evento es de tipo
+  <strong>POST</strong> y recibe de parámetro un lugar, que es un objeto con los
+  atributos latitud y longitud. Es decir, si quiero el pronóstico de buenos aires,
+  me llegaría el siguiente objeto:
+</p>
+<CodeBlock lang="javascript" code=`{latitud: -34.6033, longitud: -58.3817}` />
+<p>
+  Con eso, buscar el pronóstico del tiempo. Para eso, tienen la función
+  <em>fetchWeatherData</em> en el archivo auxiliares.js. Importenla (no copien y
+  peguen no sean lauchas). La función toma 2 parámetros: latitud y longitud, y devuelva
+  la información del tiempo en esas coordenadas, en un formato que el frontend entiende.
+  Respondan al evento con esa información.
+</p>
+<p>
+  <strong>IMPORTANTÍSIMO:</strong> Como esta función implica uso de internet, se
+  ejecuta de forma <em>asincrónica</em>. No me quiero meter mucho en el tema
+  ahora, tan solo decirles las aclaraciones necesarias para usarla.
+</p>
+<ol>
+  <li>
+    La declaración de la función que responde al evento "pronostico" debe estar
+    precedida por la palabra clave <strong>async</strong>.
+  </li>
+  <li>
+    El llamado a la función <em>fetchWeatherData</em> debe estar precedido por la
+    palabra clave <strong>await</strong>.
+  </li>
+</ol>
+<p>
+  Por último, como es ORT, es muy probable que la red les bloquee las peticiones
+  (Si tira error de SSL, es la red). Para evitar esto, pueden usar la red
+  cableada o la red de IoT.
+</p>
