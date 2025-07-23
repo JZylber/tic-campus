@@ -1,4 +1,6 @@
 ---
+import InlineCodeBlock from "../../../../components/articles/code-block/InlineCodeBlock.astro";
+
 export const partial = true;
 ---
 
@@ -9,21 +11,18 @@ export const partial = true;
 <p>Hacer un programa que:</p>
 <ul>
   <li>
-    Al hacer click en <em>Agregar Jugador</em> (<code class="language-html"
-      >id = "agregar"</code
-    >) se agregue el jugador a la lista de convocados (sin mostrar nada).
+    Al hacer click en <em>Agregar Jugador</em> (<em>id = "agregar"</em>) se
+    agregue el jugador a la lista de convocados (sin mostrar nada).
   </li>
   <li>
-    Al hacer click en <em>Limpiar Lista</em> (<code class="language-html"
-      >id = "limpiar"</code
-    >) se vacíe la lista de convocados.
+    Al hacer click en <em>Limpiar Lista</em> (<em>id = "limpiar"</em>) se vacíe
+    la lista de convocados.
   </li>
   <li>
-    Al hacer click en <em>Finalizar Lista</em> (<code class="language-html"
-      >id = "finalizar"</code
-    >) debería mostrar la lista final de convocados como
-    <code class="language-html">&ltli&gt</code> en
-    <code class="language-html">&ltul id="convocados"&gt</code>.
+    Al hacer click en <em>Finalizar Lista</em> (<em>id = "finalizar"</em>)
+    debería mostrar la lista final de convocados como
+    <em>li</em> en
+    <InlineCodeBlock lang="html" code='<ul id="convocados">' />
   </li>
 </ul>
 <p>Algunos tips:</p>
@@ -34,9 +33,8 @@ export const partial = true;
   </li>
   <li>
     Para agregar un elemento a la lista uno puede hacer
-    <code class="language-javascript"
-      >&ltlista&gt.push(&ltelemento a agregar&gt)</code
-    >.
+
+    <InlineCodeBlock lang="javascript" code="lista.push(elemento a agregar)" />.
   </li>
   <li>Para vaciar la lista se puede igualar a una lista vacía.</li>
   <li>
@@ -46,20 +44,20 @@ export const partial = true;
 </ul>
 <h2>Consigna Manija I</h2>
 <p>
-  Agregar un <code class="language-html">&ltselect&gt</code> para ingresar
-  también su posición (arquero, defensor, volante, delantero) y al mostrar la
-  lista final, sean listas separadas por posición. Hay varias formas de hacer
-  esto: una puede ser tener listas separadas, otra puede ser que al agregar
-  jugador, no se agregue solo el nombre como
-  <code class="language-javascript">string</code>, si no alguna estructura de
-  datos más compleja. ¿Un objeto? ¿Otra lista?
+  Agregar un <InlineCodeBlock lang="html" code="<select>" /> para ingresar también
+  su posición (arquero, defensor, volante, delantero) y al mostrar la lista final,
+  sean listas separadas por posición. Hay varias formas de hacer esto: una puede
+  ser tener listas separadas, otra puede ser que al agregar jugador, no se agregue
+  solo el nombre como
+  <em>string</em>, si no alguna estructura de datos más compleja. ¿Un objeto?
+  ¿Otra lista?
 </p>
 <h2>Consigna Manija II</h2>
 <p>
   Agregar un input para incluir también el número del jugador, no solo el nombre
-  . <strong>TIP:</strong> tal vez en la lista no tengan que guardar solo el
-  nombre como <code class="language-javascript">string</code>, si no alguna
-  estructura de datos más compleja. ¿Un objeto? ¿Otra lista?
+  . <strong>TIP:</strong> tal vez en la lista no tengan que guardar solo el nombre
+  como <em>string</em>, si no alguna estructura de datos más compleja. ¿Un
+  objeto? ¿Otra lista?
 </p>
 <h2>Consigna Manija III</h2>
 <p>
@@ -68,9 +66,9 @@ export const partial = true;
   haga nada, y debería haber una diferencia gráfica en que esté
   habilitado/inhabilitado. Googleen como hacer esto, pero les adelanto que
   seteando la propiedad de css
-  <code class="language-css">pointer-events: "none"</code> anulan los clicks. Al
-  limpiar la lista o mostrar convocados, se debería volver a habilitar (<code
-    class="language-css"
-    >pointer-events: "cursor"</code
-  >).
+  <InlineCodeBlock lang="css" code="pointer-events: none" /> anulan los clicks. Al
+  limpiar la lista o mostrar convocados, se debería volver a habilitar (<InlineCodeBlock
+    lang="css"
+    code="pointer-events: cursor"
+  />).
 </p>
