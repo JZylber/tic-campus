@@ -1,5 +1,335 @@
 ---
+import CodeBlock from "../../../../../../components/articles/code-block/CodeBlock.astro";
+import InlineCodeBlock from "../../../../../../components/articles/code-block/InlineCodeBlock.astro";
+
 export const partial = true;
 ---
 
-<p>Proximamente...</p>
+<p>(Actualizado para SoqueTIC v1.4.1 <em>Taguató</em>)</p>
+<h2 id="índice">Índice</h2>
+<ul class="[&_a]:hover:underline">
+  <li><a href="#%C3%ADndice">Índice</a></li>
+  <li><a href="#qu%C3%A9-es">¿Qué es?</a></li>
+  <li><a href="#inspiraci%C3%B3n-e-idea">Inspiración e Idea</a></li>
+  <li>
+    <a href="#eventos">Eventos</a><ul>
+      <li><a href="#nombres-de-los-eventos">Nombres de los eventos</a></li>
+      <li><a href="#query-params">Query params</a></li>
+    </ul>
+  </li>
+  <li>
+    <a href="#en-frontend">En Frontend</a><ul>
+      <li><a href="#instalaci%C3%B3n">Instalación</a></li>
+      <li>
+        <a href="#uso">Uso</a><ul>
+          <li><a href="#getevent">getEvent</a></li>
+          <li><a href="#postevent">postEvent</a></li>
+          <li><a href="#subscriberealtimeevent">subscribeRealTimeEvent</a></li>
+          <li><a href="#connect2server">connect2Server</a></li>
+          <li><a href="#buenas-pr%C3%A1cticas">Buenas prácticas</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <a href="#en-backend">En Backend</a><ul>
+      <li><a href="#instalaci%C3%B3n-1">Instalación</a></li>
+      <li>
+        <a href="#uso-1">Uso</a><ul>
+          <li><a href="#subscribegetevent">subscribeGETEvent</a></li>
+          <li><a href="#subscribepostevent">subscribePOSTEvent</a></li>
+          <li><a href="#realtimeevent">realTimeEvent</a></li>
+          <li><a href="#startserver">startServer</a></li>
+          <li><a href="#buenas-pr%C3%A1cticas-1">Buenas prácticas</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#demos">DEMOS</a></li>
+  <li>
+    <a href="#usos-comunes-con-ejemplos">Usos comunes con ejemplos</a><ul>
+      <li>
+        <a href="#comunicaci%C3%B3n-iniciada-por-el-frontend"
+          >Comunicación iniciada por el frontend</a
+        >
+      </li>
+      <li>
+        <a href="#comunicaci%C3%B3n-iniciada-por-el-backend"
+          >Comunicación iniciada por el backend</a
+        >
+      </li>
+    </ul>
+  </li>
+</ul>
+<h2 id="qué-es">¿Qué es?</h2>
+<p>
+  ¡Hola soquete! SoqueTIC es una herramienta desarrollada por el equipo de ORT
+  TIC Belgrano para facilitar la comunicación frontend &lt;=&gt; backend en
+  proyectos desarrollados con HTML, CSS, JS y Node JS.
+</p>
+<p>
+  La idea es simplificar los proyectos y la enseñanza de programación en el
+  primer año de la orientación, ocultando conceptos de comunicación por internet
+  que no son tan relevantes para estos primeros pasos en el mundo de software y
+  corresponden a enseñanzas posteriores. Sin embargo, por las herramientas que
+  se utilizan ese año, no se puede dejar afuera este tipo de comunicación si se
+  quiere habilitar proyectos medianamente ambiciosos. Por eso
+  &quot;disfrazamos&quot; la comunicación por internet con esta herramienta.
+</p>
+<p>
+  SoqueTIC entonces no es más que un envoltorio de la librería <a
+    href="https://socket.io/">SocketIO</a
+  >, adaptándola a una sintaxis más funcional, similar a conceptos vistos en
+  clase. Se pierde un poco del potencial de SocketIO, pero se dejo lo mínimo
+  indispensable para desarrollar proyecto de 3ero.
+</p>
+<h2 id="inspiración-e-idea">Inspiración e Idea</h2>
+<p>
+  Para aprender a programar, se usa HTML, CSS y JS ejecutados en el browser, lo
+  cual nos permite rápidamente crear buenas interfaces de usuario. Sin embargo,
+  este entorno está pensado para páginas web, es decir, que estos archivos
+  vendrían por internet para ser ejecutados por nuestro browser. Por eso, el
+  browser los ejecuta <em>&quot;sandboxeados&quot;</em>, es decir, con un acceso
+  limitadísimo a los archivos de nuestra computadora. ¡Imaginen los virus que
+  habría si eso fuese posible!
+</p>
+<p>
+  Por eso, a pesar qué los proyectos en 3ero sean puramente locales, necesitamos
+  obligatoriamente la división backend/frontend para saltar esta limitación. El
+  backend sí tiene acceso total a los recursos de la computadora, entonces
+  necesitamos tenerlo para hacer cosas tan básicas como leer y escribir
+  archivos. Pero la interfaz de usuario se sigue haciendo en el browser.
+</p>
+<p>
+  ¿Y entonces cómo comunicamos frontend y backend? Más si no sabemos
+  comunicación a través de internet. <em>Enter SoqueTIC</em>. SoqueTIC es quien
+  va a realizar la comunicación entre ambos programas, tal como muestra el
+  siguiente diagrama:
+</p>
+<div style="display:flex;justify-content:center">
+  <img
+    :src="$store.baseURL.publicURL('img/soquetic/diagrama.png')"
+    alt="Diagrama SoqueTIC"
+  />
+</div>
+<p>Algunos puntos importantes:</p>
+<ul>
+  <li>
+    El usuario interactúa con el frontend, que es el que tiene los elementos
+    gráficos e interactivos. <strong
+      >El browser no puede ni leer ni escribir archivos. Tampoco leer el puerto
+      serial para usar arduino, o cambiar características del sistema operativo.</strong
+    > Si la interacción del usuario requiere estas cosas, se debe enviar un mensaje
+    al backend para que las haga usando SoqueTIC.
+  </li>
+  <li>
+    El backend tiene acceso a todo salvo a la interfaz gráfica. Es decir,
+    responde pedidos del frontend (que recibe input del usuario) e interactúa
+    con archivos, periféricos y sistema operativo. Si el backend necesita
+    actualizar algo en la interfaz gráfica para informar al usuario,
+    necesariamente debe usar soqueTIC para realizarlo. <strong
+      >El DOM (document) solo existe en el frontend porque modela la página web</strong
+    >, no puede haber un llamado a <em>document</em> en el backend.
+  </li>
+</ul>
+<h2 id="eventos">Eventos</h2>
+<p>
+  SoqueTIC utiliza un sistema de eventos para comunicar acciones entre el
+  frontend y el backend. Los eventos son mensajes que se envían a través de la
+  conexión de SocketIO y permiten que ambos lados reaccionen a acciones del
+  usuario o cambios en el estado de la aplicación. En particular, SoqueTIC
+  utiliza 3 tipos de eventos:
+</p>
+<ul>
+  <li>
+    <strong>GET</strong>: Eventos iniciados desde el frontend que no requieren
+    enviar información al backend o requieren enviar poca información. Se
+    utilizan para solicitar datos o realizar acciones que no necesitan
+    parámetros adicionales.
+  </li>
+  <li>
+    <strong>POST</strong>: Eventos iniciados desde el frontend que requieren
+    enviar información al backend. Se utilizan para enviar datos o realizar
+    acciones que necesitan parámetros adicionales.
+  </li>
+  <li>
+    <strong>REALTIME</strong>: Eventos iniciados desde el backend. Se utilizan
+    para enviar datos desde el backend al frontend sin que este los haya
+    solicitado explícitamente. Son útiles para actualizaciones en tiempo real,
+    como notificaciones o cambios de estado.
+  </li>
+</ul>
+<h3 id="nombres-de-los-eventos">Nombres de los eventos</h3>
+<p>
+  Los eventos se identifican por un nombre único, que es un string. Este nombre
+  debe ser el mismo tanto en el frontend como en el backend para que la
+  comunicación funcione correctamente. Por ejemplo, si el frontend envía un
+  evento llamado &quot;mensaje&quot;, el backend debe tener una función que
+  escuche ese evento con el mismo nombre.
+</p>
+<p>
+  Los nombres son independientes de los tipos de eventos, es decir, se pueden
+  usar los mismos nombres para eventos GET, POST y REALTIME. Sin embargo,
+  recomendamos usar nombres descriptivos y específicos para cada tipo de evento
+  para evitar confusiones.
+</p>
+<p>
+  Los único no permitido en los nombres de eventos es el caracter <em>?</em> ya que
+  se utiliza para los query params, explicados a continuación. El resto de los caracteres
+  son válidos, incluyendo espacios, guiones y guiones bajos. Sin embargo, recomendamos
+  evitar espacios y usar <a
+    href="https://keepcoding.io/blog/camelcase-que-es-como-funciona-y-beneficios/"
+    >camelCase</a
+  >.
+</p>
+<h3 id="query-params">Query params</h3>
+<p>
+  SoqueTIC permite enviar información adicional a los eventos GET y POST
+  mediante query params, de la misma forma que se hace con <a
+    href="https://medium.com/@a.herrerapuertas/query-params-path-params-614e878957ce"
+    >URLs</a
+  >. Estos son parámetros adicionales que se envían junto con el evento y se
+  pueden utilizar para proporcionar información adicional al backend. Los query
+  params se extraen del nombre del evento, y se separan del nombre con un <em
+    >?</em
+  >. Por ejemplo, si el evento es &quot;mensaje?user=Juan&amp;color=rojo&quot;,
+  el backend recibirá el evento &quot;mensaje&quot; con los query params <em
+    >user</em
+  > y <em>color</em>.
+</p>
+<h2 id="en-frontend">En Frontend</h2>
+<p>
+  SoqueTIC comunica frontend y backend. Esta sección se dedica a mostrar esta
+  herramienta desde el lado de un frontend hecho con HTML, CSS y JS para ser
+  corrido por algún browser (Chrome, Firefox, etc.)
+</p>
+<h3 id="instalación">Instalación</h3>
+<p>Para usar a SoqueTIC en un archivo HTML, se debe hacer lo siguiente:</p>
+<ol>
+  <li>
+    Importar el script de SocketIO y el de SoqueTIC Esto se puede hacer con los
+    siguientes tags:
+  </li>
+</ol>
+<CodeBlock
+  lang="html"
+  code={`<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.8.1/socket.io.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/JZylber/SoqueTIC-Client@v1.4.1/soquetic-client.js"></script>`}
+/>
+<p>
+  <ol start="2">
+    <li>
+      Linkear el archivo en el que van a usar SoqueTIC debajo de estos dos <InlineCodeBlock
+        lang="html"
+        code="<script>"
+      />.
+    </li>
+  </ol>
+  <p>
+    <strong>IMPORTANTE:</strong> Para poder ejecutar SoqueTIC no alcanza con abrir
+    el HTML en el browser: hay que armar un live server. La forma más común de hacer
+    esto es usando la <a
+      href="https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer"
+      >extensión de VS Code</a
+    >.
+  </p>
+  <h3 id="uso">Uso</h3>
+  <p>
+    Para comunicarse con el backend, se pueden usar las funciones descritas a
+    continuación. Obviamente, si el backend no está encendido y ejecutándose,
+    nada va a andar.
+  </p>
+  <h4 id="getevent">getEvent</h4>
+  <p>
+    Esta función está pensada para hacer pedidos al backend donde no es
+    necesario mandarle nada para que pueda responder al pedido, o se debe
+    enviarle muy poquita información. Esta recibe 2 parámeteros:
+  </p>
+  <ul>
+    <li>
+      <em>type</em> con el que se pueden distinguir distintos eventos. Debe coincidir
+      con algún evento del backend. Se le pueden adicionar <a
+        href="#query-params">query params</a
+      > para enviar información adicional al backend.
+    </li>
+    <li>
+      <em>callback</em>
+      <strong>función</strong> a ser llamada cuando el servidor responda con la información
+      deseada. Esta debe tomar un único parámetro, <em>data</em>, que sería la
+      información a recibir. Lo que recibe es lo que sea que la función a la que
+      respondió a este evento en el backend haya retornado.
+    </li>
+  </ul>
+  <h4 id="postevent">postEvent</h4>
+  <p>
+    Esta función esta pensada para mandarle información al backend o para
+    hacerle pedidos que impliquen mandarle información. Esta recibe 3
+    parámeteros (1 opcional):
+  </p>
+  <ul>
+    <li>
+      <em>type</em> con el que se pueden distinguir distintos eventos. Debe coincidir
+      con alguna función del backend. Se le pueden adicionar <a
+        href="#query-params">query params</a
+      > para enviar información adicional al backend, aunque no tiene mucho sentido
+      si ya van a enviar el parámetro <em>data</em>.
+    </li>
+    <li>
+      <em>data</em> es la información a ser enviada al servidor. Es un único parámetro,
+      si se quiere mandar un conjunto de datos usar una estructura de datos que modele
+      conjuntos, como listas u objetos.
+    </li>
+    <li>
+      <em>callback</em> (opcional, puede quedar vacío) <strong>función</strong> a
+      ser llamada cuando el servidor responda con la información deseada. Esta debe
+      tomar un único parámetro, <em>data</em>, que sería la información que
+      recibe del servidor. Lo que recibe es lo que sea que la función a la que
+      respondió a este evento en el backend haya retornado.
+    </li>
+  </ul>
+  <h4 id="subscriberealtimeevent">subscribeRealTimeEvent</h4>
+  <p>
+    <strong>Reservada para eventos en tiempo real</strong>, es decir, para
+    cuando el proyecto cuenta con actualizaciones periódicas del backend. Esta
+    función está para procesar eventos iniciados desde el backend, y toma dos
+    parámetros:
+  </p>
+  <ul>
+    <li>
+      <em>type</em> con el que se pueden distinguir distintos eventos. Debe coincidir
+      con alguna función del backend.
+    </li>
+    <li>
+      <em>callback</em>
+      <strong>función</strong> a ser llamada cuando el servidor envía dicho evento
+      al frontend. Esta debe tomar un único parámetro, <em>data</em>, que sería
+      la información a recibir. Lo que recibe es lo que sea que la función que
+      emitió el evento en el backend haya enviado.
+    </li>
+  </ul>
+  <h4 id="connect2server">connect2Server</h4>
+  <p>
+    Función necesaria para iniciar la conexión al servidor. Solo puede
+    conectarse a servidores locales. Toma un parámetro <strong>opcional</strong>
+    <em>PORT</em>, que en caso de no especificarse toma el valor 3000. Pasarle
+    el puerto si es que el servidor está corriendo en un puerto distinto a 3000.
+  </p>
+  <p>
+    <strong>IMPORTANTE:</strong> Se debe llamar a <em>connect2Server</em> en cada
+    archivo que utilice SoqueTIC para comunicarse con el backend.
+  </p>
+  <h4 id="buenas-prácticas">Buenas prácticas</h4>
+  <p>
+    En general, cuando se tiene que buscar información al backend, se usa la
+    función <a href="#getevent"><em>getEvent</em></a> y si se necesita hacer alguna
+    especificación adicional se pueden usar los <a href="#query-params"
+      >query params</a
+    >. Si se necesita enviar un volumen mayor de información al backend, ya sea
+    para una búsqueda compleja o para escribir archivos, se usa la función <a
+      href="#postevent"><em>postEvent</em></a
+    >. Si se quiere recibir información del backend sin que este lo haya pedido,
+    se usa la función <a href="#subscriberealtimeevent"
+      ><em>subscribeRealTimeEvent</em></a
+    >.
+  </p>
+</p>
