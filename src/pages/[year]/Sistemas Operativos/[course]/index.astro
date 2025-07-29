@@ -1,55 +1,143 @@
 ---
 import Navbar from "../../../../components/navbar/Navbar.astro";
 import Activities from "../../../../components/sections/activities/Activities.astro";
-import Home from "../../../../components/sections/home/Home.astro";
 import Material from "../../../../components/sections/material/Material.astro";
 import Program from "../../../../components/sections/program/Program.astro";
+import SectionLayout from "../../../../components/sections/SectionLayout.astro";
 import Layout from "../../../../layouts/Layout.astro";
 
 export function getStaticPaths() {
-  return [
-    {
-      params: { year: 2025, course: "NR5B" },
-      props: { dataSheetId: "1J8PaK3mKThrYYAUnk-ubEYHx1VWHZy9hcp_B7Yi3dNU" },
-    },
-    {
-      params: { year: 2025, course: "NR5E" },
-      props: { dataSheetId: "1J8PaK3mKThrYYAUnk-ubEYHx1VWHZy9hcp_B7Yi3dNU" },
-    },
-    {
-      params: { year: 2025, course: "NR5F" },
-      props: { dataSheetId: "1J8PaK3mKThrYYAUnk-ubEYHx1VWHZy9hcp_B7Yi3dNU" },
-    },
-  ];
+	return [
+		{
+			params: { year: 2025, course: "NR5B" },
+			props: { dataSheetId: "1J8PaK3mKThrYYAUnk-ubEYHx1VWHZy9hcp_B7Yi3dNU" },
+		},
+		{
+			params: { year: 2025, course: "NR5E" },
+			props: { dataSheetId: "1J8PaK3mKThrYYAUnk-ubEYHx1VWHZy9hcp_B7Yi3dNU" },
+		},
+		{
+			params: { year: 2025, course: "NR5F" },
+			props: { dataSheetId: "1J8PaK3mKThrYYAUnk-ubEYHx1VWHZy9hcp_B7Yi3dNU" },
+		},
+	];
 }
 
 const { dataSheetId } = Astro.props;
 const { course, year } = Astro.params;
 const subject = "Sistemas Operativos";
+const color = "bg-sh-blue";
 
 const items = [
-  { name: "home", icon: "home", title: subject },
-  { name: "actividades", icon: "school", title: "Actividades" },
-  { name: "programa", icon: "event_note", title: "Programa" },
-  { name: "material", icon: "construction", title: "Material" },
+	{ name: "home", icon: "home", title: subject },
+	{ name: "actividades", icon: "school", title: "Actividades" },
+	{ name: "programa", icon: "event_note", title: "Programa" },
+	{ name: "material", icon: "construction", title: "Material" },
 ];
 ---
 
 <Layout dataSheetId={dataSheetId}>
-  <Navbar course={course} subject={subject} items={items} />
-  <main
-    class="relative grow bg-gray-50 border-y sm:border-r lg:border-l border-gray-300 sm:rounded-r-xl lg:rounded-l-xl overflow-hidden"
-    x-init={`$store.student.getStudentData('${subject}','${course}','${dataSheetId}')`}
-  >
-    <Home
-      subject={subject}
-      course={course}
-      position={0}
-      presentation={false}
-      multiCourse
-    />
-    <Activities subject={subject} course={course} year={year} position={1} />
-    <Program subject={subject} year={year} position={2} />
-    <Material subject={subject} position={3} />
-  </main>
+	<Navbar course={course} subject={subject} items={items} />
+	<main
+		class="relative grow bg-gray-50 border-y sm:border-r lg:border-l border-gray-300 sm:rounded-r-xl lg:rounded-l-xl overflow-hidden"
+		x-init={`$store.student.getStudentData('${subject}','${course}','${dataSheetId}')`}
+	>
+		<!-- --- home --- -->
+		<SectionLayout name="home" position={0}>
+			<header class="flex justify-end">
+				<a
+					class="w-full max-w-[200px] md:max-w-[250px] rounded-xl bg-sh-blue p-2 flex justify-center items-center gap-x-4 hover:shadow-lg cursor-pointer"
+					x-bind:href={`await getCourseLink('${course}', dataSheetId, '${subject}')`}
+				>
+					<span class="max-md:hidden flex items-center justify-center"
+						><span class="material-symbols-outlined text-[28px]">groups</span
+						></span
+					>
+					<span class="text-[20px]">Grupo</span>
+				</a>
+			</header>
+
+			<svg width="100%" height="376" viewBox="0 0 1077 376" fill="none">
+				<rect x="2" y="23" width="1075" height="330" fill="#14182B"></rect>
+				<line
+					x1="2"
+					y1="251.5"
+					x2="1077"
+					y2="251.5"
+					stroke="#0097B2"
+					stroke-width="3"></line>
+				<line y1="121.5" x2="1075" y2="121.5" stroke="#0097B2" stroke-width="3"
+				></line>
+				<rect x="3" y="264" width="103" height="10" fill="#80BAC4"></rect>
+				<rect x="3" y="308" width="103" height="10" fill="#80BAC4"></rect>
+				<rect x="3" y="286" width="103" height="10" fill="#0097B2"></rect>
+				<rect x="3" y="330" width="103" height="10" fill="#0097B2"></rect>
+				<path d="M107 264L165.024 348H48.9763L107 264Z" fill="#14182B"></path>
+				<rect x="972" y="34" width="103" height="10" fill="#0097B2"></rect>
+				<rect x="972" y="78" width="103" height="10" fill="#0097B2"></rect>
+				<rect x="972" y="56" width="103" height="10" fill="#80BAC4"></rect>
+				<rect x="972" y="100" width="103" height="10" fill="#80BAC4"></rect>
+				<path
+					d="M972.226 112.135L914.033 28.2519L1030.08 28.018L972.226 112.135Z"
+					fill="#14182B"></path>
+				<circle cx="284" cy="177" r="137" fill="#828282" fill-opacity="0.4"
+				></circle>
+				<circle cx="88" cy="92" r="34.5" stroke="#A1A1A1"></circle>
+				<circle cx="88.5" cy="91.5" r="27" stroke="#A1A1A1"></circle>
+				<circle cx="88.5" cy="91.5" r="12" stroke="#A1A1A1"></circle>
+				<circle cx="88" cy="92" r="19.5" stroke="#A1A1A1"></circle>
+				<circle cx="88" cy="92" r="34.5" stroke="#A1A1A1"></circle>
+				<circle cx="88.5" cy="91.5" r="27" stroke="#A1A1A1"></circle>
+				<circle cx="88.5" cy="91.5" r="12" stroke="#A1A1A1"></circle>
+				<circle cx="88" cy="92" r="19.5" stroke="#A1A1A1"></circle>
+				<circle cx="880.391" cy="264.391" r="44.8911" stroke="#A1A1A1"></circle>
+				<circle cx="881.039" cy="263.743" r="35.1644" stroke="#A1A1A1"></circle>
+				<circle cx="881.039" cy="263.743" r="15.7111" stroke="#A1A1A1"></circle>
+				<circle cx="880.391" cy="264.391" r="25.4377" stroke="#A1A1A1"></circle>
+				<circle
+					cx="284.5"
+					cy="176.5"
+					r="114"
+					stroke="#A1A1A1"
+					stroke-opacity="0.7"></circle>
+				<rect
+					x="287"
+					y="123"
+					width="505"
+					height="130"
+					fill="url(#paint0_linear_0_1)"></rect>
+				<path
+					d="M367.35 190.25V183.75L396.1 183.8C397.567 183.8 398.683 183.467 399.45 182.8C400.25 182.1 400.65 180.983 400.65 179.45C400.65 177.917 400.25 176.817 399.45 176.15C398.683 175.45 397.567 175.1 396.1 175.1H378.2C374.5 175.1 371.617 174.217 369.55 172.45C367.517 170.65 366.5 168.017 366.5 164.55C366.5 161.083 367.517 158.467 369.55 156.7C371.617 154.9 374.5 154 378.2 154H406.3V160.5L379.05 160.45C377.617 160.45 376.5 160.783 375.7 161.45C374.9 162.083 374.5 163.117 374.5 164.55C374.5 165.983 374.9 167.033 375.7 167.7C376.5 168.333 377.617 168.65 379.05 168.65H396.95C400.65 168.65 403.517 169.567 405.55 171.4C407.617 173.2 408.65 175.883 408.65 179.45C408.65 182.983 407.617 185.667 405.55 187.5C403.517 189.333 400.65 190.25 396.95 190.25H367.35ZM413.666 190V154.25H421.666V190H413.666ZM427.506 190.25V183.75L456.256 183.8C457.723 183.8 458.84 183.467 459.606 182.8C460.406 182.1 460.806 180.983 460.806 179.45C460.806 177.917 460.406 176.817 459.606 176.15C458.84 175.45 457.723 175.1 456.256 175.1H438.356C434.656 175.1 431.773 174.217 429.706 172.45C427.673 170.65 426.656 168.017 426.656 164.55C426.656 161.083 427.673 158.467 429.706 156.7C431.773 154.9 434.656 154 438.356 154H466.456V160.5L439.206 160.45C437.773 160.45 436.656 160.783 435.856 161.45C435.056 162.083 434.656 163.117 434.656 164.55C434.656 165.983 435.056 167.033 435.856 167.7C436.656 168.333 437.773 168.65 439.206 168.65H457.106C460.806 168.65 463.673 169.567 465.706 171.4C467.773 173.2 468.806 175.883 468.806 179.45C468.806 182.983 467.773 185.667 465.706 187.5C463.673 189.333 460.806 190.25 457.106 190.25H427.506ZM472.572 172.35V154.25H516.572V172.35H508.472V160.75H497.572V190H489.572V160.75H480.672V172.35H472.572ZM522.309 190V154.25H561.509V160.75H530.309V168.65H558.609V175.15H530.309V183.5H561.509V190H522.309ZM566.986 190V154.25H573.686L590.236 165.85H590.486L607.036 154.25H613.736V190H605.736V164.25L594.386 171.85V190H586.386V171.85L574.986 164.25V190H566.986ZM617.746 190L633.846 154.25H646.196L662.296 190H653.596L650.196 182.45H629.846L626.446 190H617.746ZM632.746 175.95H647.296L640.346 160.5H639.696L632.746 175.95ZM665.153 190.25V183.75L693.903 183.8C695.369 183.8 696.486 183.467 697.253 182.8C698.053 182.1 698.453 180.983 698.453 179.45C698.453 177.917 698.053 176.817 697.253 176.15C696.486 175.45 695.369 175.1 693.903 175.1H676.003C672.303 175.1 669.419 174.217 667.353 172.45C665.319 170.65 664.303 168.017 664.303 164.55C664.303 161.083 665.319 158.467 667.353 156.7C669.419 154.9 672.303 154 676.003 154H704.103V160.5L676.853 160.45C675.419 160.45 674.303 160.783 673.503 161.45C672.703 162.083 672.303 163.117 672.303 164.55C672.303 165.983 672.703 167.033 673.503 167.7C674.303 168.333 675.419 168.65 676.853 168.65H694.753C698.453 168.65 701.319 169.567 703.353 171.4C705.419 173.2 706.453 175.883 706.453 179.45C706.453 182.983 705.419 185.667 703.353 187.5C701.319 189.333 698.453 190.25 694.753 190.25H665.153Z"
+					fill="#E7EAEB"></path>
+				<path
+					d="M411.76 219.2C408.187 219.2 405.4 218.32 403.4 216.56C401.4 214.773 400.4 212.16 400.4 208.72C400.4 205.253 401.4 202.64 403.4 200.88C405.4 199.093 408.187 198.2 411.76 198.2H419.16C422.733 198.2 425.52 199.093 427.52 200.88C429.52 202.64 430.52 205.253 430.52 208.72C430.52 212.16 429.52 214.773 427.52 216.56C425.52 218.32 422.733 219.2 419.16 219.2H411.76ZM411.76 214.6H419.16C420.893 214.6 422.213 214.12 423.12 213.16C424.053 212.2 424.52 210.72 424.52 208.72C424.52 206.693 424.053 205.2 423.12 204.24C422.213 203.28 420.893 202.8 419.16 202.8H411.76C410.027 202.8 408.693 203.28 407.76 204.24C406.853 205.2 406.4 206.693 406.4 208.72C406.4 210.72 406.853 212.2 407.76 213.16C408.693 214.12 410.027 214.6 411.76 214.6ZM434.13 228V198.4H448.93C452.503 198.4 455.29 199.28 457.29 201.04C459.29 202.8 460.29 205.347 460.29 208.68C460.29 212.04 459.29 214.6 457.29 216.36C455.29 218.12 452.503 219 448.93 219H439.93V228H434.13ZM448.93 203H439.93V214.4H448.93C450.663 214.4 451.983 213.933 452.89 213C453.823 212.04 454.29 210.6 454.29 208.68C454.29 206.787 453.823 205.373 452.89 204.44C451.983 203.48 450.663 203 448.93 203ZM474.455 219.2C470.882 219.2 468.095 218.32 466.095 216.56C464.095 214.773 463.095 212.16 463.095 208.72C463.095 205.253 464.095 202.64 466.095 200.88C468.095 199.093 470.882 198.2 474.455 198.2H484.455C486.802 198.2 488.589 198.76 489.815 199.88C491.069 200.973 491.695 202.547 491.695 204.6C491.695 208.787 489.282 210.88 484.455 210.88H469.335C469.895 213.36 471.602 214.6 474.455 214.6H490.655V219.2H474.455ZM474.455 202.8C471.709 202.8 470.015 203.96 469.375 206.28H484.175C484.709 206.28 485.122 206.12 485.415 205.8C485.735 205.48 485.895 205.04 485.895 204.48C485.895 203.36 485.322 202.8 484.175 202.8H474.455ZM495.302 219V198.4H511.062C513.382 198.4 515.088 198.987 516.182 200.16C517.275 201.307 517.822 202.827 517.822 204.72V209H511.942V205.44C511.942 203.84 511.142 203.04 509.542 203.04H501.182V219H495.302ZM526.485 219C524.325 219 522.671 218.453 521.525 217.36C520.378 216.267 519.805 214.707 519.805 212.68C519.805 210.68 520.378 209.133 521.525 208.04C522.671 206.947 524.325 206.4 526.485 206.4H541.845V205.44C541.845 203.813 541.045 203 539.445 203H522.485V198.4H540.965C543.391 198.4 545.111 198.96 546.125 200.08C547.138 201.173 547.645 202.72 547.645 204.72V219H526.485ZM527.525 214.4H541.845V211H527.525C527.018 211 526.618 211.16 526.325 211.48C526.058 211.773 525.925 212.173 525.925 212.68C525.925 213.187 526.058 213.6 526.325 213.92C526.618 214.24 527.018 214.4 527.525 214.4ZM562.779 219C560.459 219 558.753 218.427 557.659 217.28C556.566 216.107 556.019 214.573 556.019 212.68V203H550.059V198.4H556.019V192.08H561.819V198.4H570.379V203H561.819V211.96C561.819 213.587 562.619 214.4 564.219 214.4H571.499V219H562.779ZM574.481 219V198.4H580.281V219H574.481ZM574.441 195V190.48H580.321V195H574.441ZM591.557 219L582.877 198.4H588.957L595.677 214.36H597.677L604.397 198.4H610.477L601.797 219H591.557ZM623.244 219.2C619.671 219.2 616.884 218.32 614.884 216.56C612.884 214.773 611.884 212.16 611.884 208.72C611.884 205.253 612.884 202.64 614.884 200.88C616.884 199.093 619.671 198.2 623.244 198.2H630.644C634.218 198.2 637.004 199.093 639.004 200.88C641.004 202.64 642.004 205.253 642.004 208.72C642.004 212.16 641.004 214.773 639.004 216.56C637.004 218.32 634.218 219.2 630.644 219.2H623.244ZM623.244 214.6H630.644C632.378 214.6 633.698 214.12 634.604 213.16C635.538 212.2 636.004 210.72 636.004 208.72C636.004 206.693 635.538 205.2 634.604 204.24C633.698 203.28 632.378 202.8 630.644 202.8H623.244C621.511 202.8 620.178 203.28 619.244 204.24C618.338 205.2 617.884 206.693 617.884 208.72C617.884 210.72 618.338 212.2 619.244 213.16C620.178 214.12 621.511 214.6 623.244 214.6ZM644.934 219.2V214.6H664.534C665.654 214.6 666.214 213.973 666.214 212.72C666.214 211.493 665.654 210.88 664.534 210.88H651.854C649.481 210.88 647.681 210.347 646.454 209.28C645.227 208.187 644.614 206.627 644.614 204.6C644.614 202.547 645.227 200.973 646.454 199.88C647.707 198.76 649.507 198.2 651.854 198.2H670.094V202.8H652.134C650.987 202.8 650.414 203.36 650.414 204.48C650.414 205.04 650.574 205.48 650.894 205.8C651.214 206.12 651.627 206.28 652.134 206.28H665.574C667.654 206.28 669.241 206.827 670.334 207.92C671.454 208.987 672.014 210.547 672.014 212.6C672.014 214.68 671.454 216.307 670.334 217.48C669.214 218.627 667.627 219.2 665.574 219.2H644.934Z"
+					fill="#8CC9D4"></path>
+				<defs>
+					<linearGradient
+						id="paint0_linear_0_1"
+						x1="287"
+						y1="188"
+						x2="792"
+						y2="188"
+						gradientUnits="userSpaceOnUse"
+					>
+						<stop stop-color="#D9D9D9" stop-opacity="0"></stop>
+						<stop offset="0.5" stop-color="#A6A6A6" stop-opacity="0.5"></stop>
+						<stop offset="1" stop-color="#737373" stop-opacity="0"></stop>
+					</linearGradient>
+				</defs>
+			</svg>
+
+			<p class="text-gray-600 indent-8 text-[16px] md:text-[20px] text-justify">
+				¡Bienvenidos! Este es el campus de la materia. Acá vas a encontrar todas
+				las actividades, las clases dadas y más material. Además, si sos un
+				estudiante de este curso, podés ver tus notas y tu progreso en la
+				materia. ¡Explorá el menú del costado para ver más!
+			</p>
+		</SectionLayout>
+
+		<Activities subject={subject} course={course} year={year} position={1} />
+		<Program subject={subject} year={year} position={2} />
+		<Material subject={subject} position={3} />
+	</main>
 </Layout>
