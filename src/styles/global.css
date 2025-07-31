@@ -35,12 +35,12 @@ html {
   aspect-ratio: 1;
   color: theme("colors.sh.purple");
   position: relative;
-  background: conic-gradient(from 134deg at top, currentColor 92deg, #0000 0)
-      top,
+  background: conic-gradient(from 134deg at top, currentColor 92deg, #0000 0) top,
     conic-gradient(from -46deg at bottom, currentColor 92deg, #0000 0) bottom;
   background-size: 100% 50%;
   background-repeat: no-repeat;
 }
+
 .loader:before {
   content: "";
   position: absolute;
@@ -60,12 +60,31 @@ html {
     inset: -10px;
     transform: rotate(0deg);
   }
+
   66% {
     inset: -10px;
     transform: rotate(90deg);
   }
+
   100% {
     inset: 0;
     transform: rotate(90deg);
   }
+}
+
+.custom-table {
+  border: 2px solid white;
+
+  th,
+  td {
+    border: 1px solid var(--color-gray-700);
+    padding: 8px
+  }
+}
+
+blockquote {
+  color: var(--color-gray-600);
+  margin: 1rem;
+  padding-left: 1rem;
+  border-left: 4px solid var(--color-gray-700);
 }

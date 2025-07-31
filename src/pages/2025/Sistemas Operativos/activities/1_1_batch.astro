@@ -1,0 +1,303 @@
+---
+import CodeBlock from "../../../../components/articles/code-block/CodeBlock.astro";
+import InlineCodeBlock from "../../../../components/articles/code-block/InlineCodeBlock.astro";
+---
+
+<h1>Introducción a los archivos Batch (Windows)</h1>
+
+<p>
+	Los <strong>scripts por lotes</strong> (o archivos <em>batch</em>) son
+	secuencias de comandos que se ejecutan en el Símbolo del sistema (CMD) de
+	Windows. Aunque hoy no están "de moda" como otros lenguajes, siguen siendo muy
+	útiles para automatizar tareas del sistema operativo y conocerlo a fondo.
+</p>
+
+<h2>¿Qué es un archivo Batch?</h2>
+
+<p>
+	Un archivo <em>batch</em> es simplemente un archivo de texto plano con extensión
+	<code>.bat</code>. Dentro tiene
+	<strong>comandos de dos</strong> que se ejecutan
+	<strong>en orden, uno tras otro</strong>.
+</p>
+
+<p><em>Ejemplos de nombre para el archivo:</em></p>
+
+<ul>
+	<li><code>inicio.bat</code></li>
+	<li><code>miscript.bat</code></li>
+</ul>
+
+<blockquote>⚠️ Ojo que la extensión es<strong> .bat</strong></blockquote>
+
+<h2>¿Cómo crear un archivo Batch?</h2>
+
+<ol>
+	<li>Abrí un editor de texto (como el bloc de notas).</li>
+	<li>Escribí los comandos que quieras.</li>
+	<li>Guardá el archivo con extensión <code>.bat</code></li>
+</ol>
+
+<h2>▶️ ¿Cómo se ejecuta un script Batch?</h2>
+
+<ul>
+	<li>Escribiendo directamente los comandos en el cmd.</li>
+	<li>
+		Guardando los comandos en un <code>.bat</code> y ejecutándolo desde el explorador
+		o desde el cmd.
+	</li>
+</ul>
+
+<h2>Comandos básicos</h2>
+
+<table class="custom-table">
+	<thead>
+		<tr>
+			<th>Comando</th>
+			<th>Función</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><code>pause</code></td>
+			<td> Espera que se presione una tecla para continuar </td>
+		</tr>
+		<tr>
+			<td><code>exit</code></td>
+			<td> Cierra la ventana de cmd </td>
+		</tr>
+		<tr>
+			<td><code>cls</code></td>
+			<td> Limpia la pantalla (pero no borra el historial) </td>
+		</tr>
+		<tr>
+			<td><code>echo</code></td>
+			<td> Muestra texto en pantalla </td>
+		</tr>
+		<tr>
+			<td><code>echo.</code></td>
+			<td> Muestra una línea en blanco </td>
+		</tr>
+		<tr>
+			<td>
+				<code>@echo off</code>
+			</td>
+			<td> Oculta los comandos mientras se ejecutan </td>
+		</tr>
+		<tr>
+			<td>
+				<code>@echo on</code>
+			</td>
+			<td> Vuelve a mostrar los comandos </td>
+		</tr>
+	</tbody>
+</table>
+
+<p><strong>Ejemplo básico:</strong></p>
+
+<CodeBlock
+	lang="batch"
+	code={`:: Ejemplo de hola mundo
+@echo off
+echo.
+echo hola mundo
+echo.
+echo ¿cómo estás?
+pause
+exit`}
+/>
+
+<blockquote>
+	💡 Lo que está luego de :: son comentarios (no se ejecutan).
+</blockquote>
+
+<hr />
+<h2>Variables</h2>
+
+<h3>¿Qué son?</h3>
+
+<p>
+	Son espacios en memoria donde se guarda un valor. En batch se definen con
+	<code>set</code>.
+</p>
+
+<CodeBlock
+	lang="batch"
+	code={`set nombre=Pepe
+echo %nombre%`}
+/>
+
+<blockquote>
+	⚠️ NO se debe dejar espacios entre el <strong>=</strong>. Es decir, esto no
+	vale:
+</blockquote>
+
+<CodeBlock
+	lang="batch"
+	code={`set nombre = Pepe
+echo %nombre%`}
+/>
+
+<p>
+	En este caso, el <strong>= </strong>tiene espacios a ambos lados. Pueden poner
+	un espacio a la derecha, pero nunca a la izquierda de la asignación. Lo que
+	nos saldrá por consola es un mensaje
+	<em>ECHO está desactivado</em>, porque está tratando de leer una variable que
+	no existe al no haberla definido correctamente.
+</p>
+
+<h3>Definición de variables</h3>
+
+<table style="border: 2px solid black; border-collapse: collapse">
+	<tbody>
+		<tr style="background-color: #eaeaea">
+			<th>Comando</th>
+			<th>Descripción</th>
+		</tr>
+		<tr>
+			<td><code>set</code></td>
+			<td>
+				Asigna una variable con texto o números (sin procesar operaciones)
+			</td>
+		</tr>
+		<tr>
+			<td><code>set /p</code></td>
+			<td>
+				Pide un valor al usuario (como <code><strong>input()</strong></code> en Python)
+			</td>
+		</tr>
+		<tr>
+			<td><code>set /a</code></td>
+			<td>
+				Asigna valores numéricos o hace cálculos (interpreta operaciones)
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<h4>⚠️ Importante:</h4>
+
+<blockquote>
+	Si usás <strong><code>set</code> </strong>(sin
+	<strong><code>/a</code></strong><code>)</code>, el valor se guarda como texto.
+	Por ejemplo:
+
+	<CodeBlock
+		lang="batch"
+		code={`set edad=15
+set edadprox=%edad%+1
+echo %edadprox%`}
+	/>
+
+	Mostrará, textualmente, <code>15+1</code><br />
+	En cambio, con <strong><code>set /a</code></strong> se hace la suma correctamente:
+
+	<CodeBlock
+		lang="batch"
+		code={`set edad=15
+set /a edadprox=%edad%+1
+echo %edadprox%`}
+	/>
+</blockquote>
+
+<h4><strong>Ejemplos:</strong></h4>
+
+<CodeBlock
+	lang="batch"
+	code={`:: input de texto
+set /p nombre=ingresá tu nombre:
+echo hola %nombre%
+
+:: operaciones aritméticas
+set /a suma=3+7
+echo resultado: %suma%`}
+/>
+
+<hr />
+<h2>➕ Operadores aritméticos</h2>
+
+<p><u>Suma</u></p>
+
+<CodeBlock
+	lang="batch"
+	code={`set /a suma=5+3
+echo %suma%`}
+/>
+
+<p><u>Multiplicación</u></p>
+
+<CodeBlock
+	lang="batch"
+	code={`set /a multi=4*2
+echo %multi%`}
+/>
+
+<p><u>División entera (el resultado es sin coma)</u></p>
+
+<CodeBlock
+	lang="batch"
+	code={`set /a div=10/2
+echo %div%`}
+/>
+
+<p><u>Resto de una división</u></p>
+
+<CodeBlock
+	lang="batch"
+	code={`set /a resto=10%3
+echo %resto%`}
+/>
+
+<p><u>Autosuma</u></p>
+
+<CodeBlock
+	lang="batch"
+	code={`set /a contador=10
+set /a contador+=5
+echo %contador%`}
+/>
+
+<hr />
+<h2>🤩 Cosas útiles</h2>
+
+<ul>
+	<li>
+		Flechita &uarr; del teclado en el CMD muestra los comandos anteriores.
+	</li>
+	<li>
+		<InlineCodeBlock lang="batch" code="pause > NUL" /> hace pausa sin mostrar el
+		mensaje
+		<em>Presione una tecla para continuar . . .</em>
+	</li>
+	<li>
+		El batch no es muy amigable con los símbolos del alfabeto español (á, é, í,
+		ó, ú, ñ). Por más que adores la buena ortografía, evitá ponerlos, porque el
+		CMD está en inglés...
+	</li>
+	<li>
+		Con <InlineCodeBlock lang="text" code="Ctrl + C" /> podés cancelar la ejecución
+		de un proceso.
+	</li>
+</ul>
+
+<hr />
+<h2>Actividad</h2>
+
+<p>
+	Ya estamos preparados para realizar scripts (creo). Se pide un
+	<em>.bat</em> que:
+</p>
+
+<ol>
+	<li>Le pida al usuario que ingrese su edad.</li>
+	<li>Calcule la edad dentro de 5 años.</li>
+	<li>Muestre en pantalla: "Dentro de 5 años vas a tener X".</li>
+</ol>
+
+<p><strong>Ejemplo de salida esperada:</strong></p>
+
+<CodeBlock
+	lang="batch"
+	code={`Ingresa tu edad: 17
+Dentro de 5 anios vas a tener 22`}
+/>
