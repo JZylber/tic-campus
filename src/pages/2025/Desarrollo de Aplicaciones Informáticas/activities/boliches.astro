@@ -6,24 +6,24 @@ export const partial = true;
   Para estar <em>All the Night</em>, no alcanza con ir a un boliche. Hay que
   pasar por todos. Para eso, <em>el Gigoló</em> va a aprovechar los datos público
   del gobierno de la ciudad. En particular, los datos sobre todos los
-  <em>&quot;locales bailables&quot;</em> (boliches).
+  <em>"locales bailables"</em> (boliches).
 </p>
 <h2>Archivos Base</h2>
 <p>El tp cuenta con 3 archivos:</p>
 <ul>
   <li>
-    <code>getData.js</code>: Tiene la función necesaria (<code>getData</code>)
-    para cargar el archivo de datos de la web. Esta toma un único parámetero,
+    <em>getData.js</em>: Tiene la función necesaria (<em>getData</em>) para
+    cargar el archivo de datos de la web. Esta toma un único parámetero,
     <em>callback</em>, que es la función a ser llamada cuando se logren
     conseguir los datos. Esta debe tener un único parámtero que es la data
     recibida.
   </li>
   <li>
-    <code>main.js</code>: Archivo principal linkeado desde el html. Ya cuenta
-    con el import a <code>getData.js</code> y un ejemplo de uso de la función
-    <code>getData</code>. Pueden hacer el tp modificando el ejemplo.
+    <em>main.js</em>: Archivo principal linkeado desde el html. Ya cuenta con el
+    import a <em>getData.js</em> y un ejemplo de uso de la función
+    <em>getData</em>. Pueden hacer el tp modificando el ejemplo.
   </li>
-  <li><code>index.html</code>: Archivo HTML principal.</li>
+  <li><em>index.html</em>: Archivo HTML principal.</li>
 </ul>
 <p>
   <strong>IMPORTANTE:</strong> como hay un llamado a buscar información desde internet,
@@ -45,26 +45,27 @@ export const partial = true;
   Imprimir por consola los <strong>nombres</strong> de los boliches con capacidad
   de más de 1000 personas. <strong>IMPORTANTE:</strong> Los datos del gobierno de
   la ciudad son feos, y en vez de darnos un número, nos da un string que tiene la
-  palabra &quot;personas&quot; al final. Por ejemplo, la capacidad de un boliche
-  puede decir &quot;428 personas&quot;. Deberían obtener el número de ahí para poder
-  hacer la comparación. Pueden aprovechar que son strings &quot;&lt;número&gt; personas&quot;
-  para sacar el dato.
-</p>
-<h3>Punto 2</h3>
-<p>
-  Agregarles a todos los objetos un atributo &quot;Habilitado&quot;, que se
-  <code>true</code> si está habilitado, <code>false</code> si no. Están habilitados
-  aquellos que su atributo Estado incluye la palabra &quot;RENOVADO&quot;.
-</p>
-<h3>Punto 3</h3>
-<p>Utilizando la función <code>prompt</code>, pedirle al usuario:</p>
-<ul>
-  <li>un mínimo de capacidad</li>
-  <li>un máximo de capacidad</li>
-  <li>si desea filtrar los habilitados</li>
-</ul>
-<p>
-  Con esta información, devolver por consola el nombre, dirección (domicilio y
-  número) y capacidad de los boliches que cumplan las características pedidas
-  por el usuario.
+  palabra "personas" al final. Por ejemplo, la capacidad de un boliche puede decir
+  "428 personas". Deberían obtener el número de ahí para poder hacer la comparación.
+  Pueden aprovechar que son strings "<número>
+    personas" para sacar el dato.
+  </número>
+  <h3>Punto 2</h3>
+  <p>
+    Agregarles a todos los objetos un atributo "Habilitado", que se
+    <em>true</em> si está habilitado, <em>false</em> si no. Están habilitados aquellos
+    que su atributo Estado incluye la palabra "RENOVADO".
+  </p>
+  <h3>Punto 3</h3>
+  <p>Utilizando la función <em>prompt</em>, pedirle al usuario:</p>
+  <ul>
+    <li>un mínimo de capacidad</li>
+    <li>un máximo de capacidad</li>
+    <li>si desea filtrar los habilitados</li>
+  </ul>
+  <p>
+    Con esta información, devolver por consola el nombre, dirección (domicilio y
+    número) y capacidad de los boliches que cumplan las características pedidas
+    por el usuario.
+  </p>
 </p>
