@@ -449,3 +449,59 @@ export const getFixedMarks = async (studentId: number, dataSheetId: string) => {
   });
   return termMarks;
 };
+
+export const getTimetable = async (dataSheetId: string) => {
+  const cleanTimetable = await getSheetData({
+    sheetID: dataSheetId,
+    sheetName: `Horario`,
+    query: `SELECT *`,
+  });
+  let timetable = {} as {
+    [key: string]: Array<{
+      day: string;
+      block: number;
+      room: string;
+      teacher: string;
+    }>;
+  };
+  // La rotación es la key solo mayúsculas
+  const rotation = Object.keys(cleanTimetable[0]).find(
+    (key) => key === key.toUpperCase()
+  );
+  if (rotation) {
+    try {
+      let currentBlock = 0;
+      cleanTimetable.forEach((row) => {
+        currentBlock = row[rotation]
+          ? parseInt(row[rotation] as string)
+          : currentBlock;
+        for (const [day, assignedBlock] of Object.entries(row)) {
+          if (
+            assignedBlock !== null &&
+            assignedBlock !== "" &&
+            day !== rotation
+          ) {
+            const [subject, teacher, room] = (assignedBlock as string).split(
+              "\n"
+            );
+            if (timetable.hasOwnProperty(subject)) {
+              timetable[subject].push({
+                day,
+                teacher,
+                room,
+                block: currentBlock,
+              });
+            } else {
+              timetable[subject] = [
+                { day, teacher, room, block: currentBlock },
+              ];
+            }
+          }
+        }
+      });
+    } catch (error) {
+      console.error("Error fetching timetable:", error);
+    }
+  }
+  return timetable;
+};

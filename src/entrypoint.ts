@@ -9,6 +9,7 @@ import {
   getCourseGroupLink,
   getFixedMarks,
   getStudents,
+  getTimetable,
 } from "./aux/fetchData";
 import { fetchHTMLData, prepareCrumbs } from "./aux/loadData";
 import collapse from "@alpinejs/collapse";
@@ -132,6 +133,8 @@ export default (Alpine: Alpine) => {
       },
     },
     dataSheetId: "",
+    timetable: {},
+    seminars: [],
     setStudent(name: string, surname: string, course: string, id: number) {
       if (!courseRegex.test(course)) {
         throw new Error(`Invalid course name: ${course}`);
@@ -147,9 +150,13 @@ export default (Alpine: Alpine) => {
     setDataSheetId(dataSheetId: string) {
       this.dataSheetId = dataSheetId;
     },
+    async setTimetable(dataSheetId: string) {
+      this.timetable = await getTimetable(dataSheetId);
+    },
     async getStudentData(subject: string, course: string, dataSheetId: string) {
       this.setSubject(subject);
       this.setDataSheetId(dataSheetId);
+      this.setTimetable(dataSheetId);
       let studentName = null;
       if (isOnCampus()) {
         const data = await fetch(
@@ -199,6 +206,15 @@ export default (Alpine: Alpine) => {
     subject: any;
     id: any;
     dataSheetId: string;
+    timetable: {
+      [key: string]: Array<{
+        day: string;
+        block: number;
+        room: string;
+        teacher: string;
+      }>;
+    };
+    seminars: Array<string>;
     setStudent: (
       name: string,
       surname: string,
@@ -207,6 +223,7 @@ export default (Alpine: Alpine) => {
     ) => void;
     setSubject: (subject: string) => void;
     setDataSheetId: (dataSheetId: string) => void;
+    setTimetable: (dataSheetId: string) => void;
     getStudentData: (
       subject: string,
       course: string,
