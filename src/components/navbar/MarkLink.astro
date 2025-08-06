@@ -19,7 +19,7 @@ const { course, minimized, open } = Astro.props;
         ]
         class="w-[calc(24px+var(--spacing)*4)] aspect-square text-[20px] font-bold border-4 bg-white rounded-full flex justify-center items-center"
         x-bind:class="{ 'border-white text-sh-dark-gray': !$store.marks.markData.finalMark || passed, 'border-sh-red text-sh-red': $store.marks.markData.finalMark && !passed }"
-        @click={`$store.section.changeSection('nota',5); ${open} = false`}
+        @click={`$store.section.changeSection('nota',6); ${open} = false`}
       >
         <span
           x-show="$store.marks.markData.finalMark"
