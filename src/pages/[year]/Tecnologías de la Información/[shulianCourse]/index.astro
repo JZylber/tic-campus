@@ -1,0 +1,63 @@
+---
+import Home from "../../../../components/sections/home/Home.astro";
+import Activities from "../../../../components/sections/activities/Activities.astro";
+import Layout from "../../../../layouts/Layout.astro";
+import Redos from "../../../../components/sections/redo/Redos.astro";
+import Program from "../../../../components/sections/program/Program.astro";
+import Material from "../../../../components/sections/material/Material.astro";
+import Navbar from "../../../../components/navbar/Navbar.astro";
+import Mark from "../../../../components/sections/mark/Mark.astro";
+import Timetable from "../../../../components/sections/timetable/Timetable.astro";
+
+export function getStaticPaths() {
+  return [
+    {
+      params: { year: 2025, shulianCourse: "NR3A" },
+      props: { dataSheetId: "1VZ_KPk4aZJFPlAgx188y0wW8p3psbbtZgix1L8a-5kE" },
+    },
+    {
+      params: { year: 2025, shulianCourse: "NR3B" },
+      props: { dataSheetId: "1VZ_KPk4aZJFPlAgx188y0wW8p3psbbtZgix1L8a-5kE" },
+    },
+  ];
+}
+
+const { shulianCourse, year } = Astro.params;
+const { dataSheetId } = Astro.props;
+const subject = "Tecnologías de la Información";
+
+const items = [
+  { name: "home", icon: "home", title: subject },
+  { name: "actividades", icon: "school", title: "Actividades" },
+  { name: "reentregas", icon: "replay", title: "Reentregas" },
+  { name: "programa", icon: "event_note", title: "Programa" },
+  { name: "material", icon: "construction", title: "Material" },
+  { name: "horarios", icon: "calendar_month", title: "Horarios" },
+];
+---
+
+<Layout dataSheetId={dataSheetId}>
+  <Navbar course={shulianCourse} subject={subject} items={items} />
+  <main
+    class="relative grow bg-gray-50 border-y sm:border-r lg:border-l border-gray-300 sm:rounded-r-xl lg:rounded-l-xl overflow-hidden"
+    x-init={`$store.student.getStudentData('${subject}','${shulianCourse}','${dataSheetId}')`}
+  >
+    <Home
+      subject={subject}
+      course={shulianCourse}
+      position={0}
+      presentation={true}
+    />
+    <Activities
+      subject={subject}
+      course={shulianCourse}
+      year={year}
+      position={1}
+    />
+    <Redos subject={subject} position={2} />
+    <Program subject={subject} year={year} position={3} />
+    <Material subject={subject} position={4} />
+    <Timetable subject={subject} position={5} />
+    <Mark subject={subject} position={6} />
+  </main>
+</Layout>

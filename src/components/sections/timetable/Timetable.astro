@@ -1,0 +1,17 @@
+---
+import SectionLayout from "../SectionLayout.astro";
+
+interface Props {
+  subject: string;
+  position: number;
+}
+
+const { position, subject } = Astro.props;
+---
+
+<script></script>
+<SectionLayout name="horarios" position={position}>
+  <h1 class="text-[36px] font-bold text-center p-4">
+    Horarios 2do Cuatrimestre
+  </h1>
+</SectionLayout>
