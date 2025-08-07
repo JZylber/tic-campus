@@ -14,10 +14,10 @@ const { position, subject } = Astro.props;
   <h1 class="text-[36px] font-bold text-center p-4">
     Horarios 2do Cuatrimestre
   </h1>
-  <template x-if="Object.keys($store.student.timetable).length === 0">
+  <template x-if="Object.keys($store.timetable.timetable).length === 0">
     <p>Proximamente...</p>
   </template>
-  <template x-if="Object.keys($store.student.timetable).length > 0">
+  <template x-if="Object.keys($store.timetable.timetable).length > 0">
     <div>
       <div
         class="hidden md:grid grid-cols-[40px_repeat(5,minmax(0,1fr))] grid-rows-[32px_repeat(3,minmax(0,1fr))_12px_repeat(3,minmax(0,1fr))] items-stretch border-gray-400 border-2 w-full max-w-full rounded-xl overflow-hidden gap-[1px] bg-gray-400"
@@ -67,7 +67,7 @@ const { position, subject } = Astro.props;
             <div
               class="bg-gray-50 flex flex-col"
               x-data="{ slotData: []}"
-              x-effect={`slotData = $store.student.getTimetableByGridPos(row, col)`}
+              x-effect={`slotData = $store.timetable.getTimetableByGridPos(row, col)`}
               :style="{ gridcolumnstart: col, gridrowstart: row }"
             >
               <template x-for="{subject,room,teacher} in slotData">

@@ -46,6 +46,28 @@ interface AlpineSectionStore {
   changeSection: (section: string, index: number) => void;
 }
 
+interface AlpineTimetableStore {
+  timetable: {
+    [key: string]: Array<{
+      day: string;
+      block: number;
+      room: string;
+      teacher: string;
+    }>;
+  };
+  seminars: Array<string>;
+  setTimetable: (dataSheetId: string) => void;
+  setSeminars: (dataSheetId: string, studentId: number) => Promise<void>;
+  getTimetableByGridPos: (
+    row: number,
+    col: number
+  ) => Array<{
+    subject: string;
+    room: string;
+    teacher: string;
+  }>;
+}
+
 export default (Alpine: Alpine) => {
   Alpine.plugin(collapse);
   Alpine.plugin(persist);
@@ -112,47 +134,9 @@ export default (Alpine: Alpine) => {
     changeURL: (url: string) => void;
     publicURL: (url: string) => void;
   });
-  Alpine.store("student", {
-    name: Alpine.$persist("").using(sessionStorage),
-    surname: Alpine.$persist("").using(sessionStorage),
-    course: Alpine.$persist("").using(sessionStorage),
-    subject: Alpine.$persist("").using(sessionStorage),
-    id: Alpine.$persist(-1).using(sessionStorage),
-    activities: [],
-    marks: [],
-    markData: {
-      finalMark: null,
-      averageMark: 0,
-      proportion: 1,
-      activities: {
-        markContribution: 0,
-        total: 0,
-        done: 0,
-      },
-      markedActivities: {
-        markContribution: 0,
-        total: 0,
-        passed: 0,
-      },
-    },
-    dataSheetId: "",
+  Alpine.store("timetable", {
     timetable: {},
     seminars: [],
-    setStudent(name: string, surname: string, course: string, id: number) {
-      if (!courseRegex.test(course)) {
-        throw new Error(`Invalid course name: ${course}`);
-      }
-      this.name = name;
-      this.surname = surname;
-      this.course = course;
-      this.id = id;
-    },
-    setSubject(subject: string) {
-      this.subject = subject;
-    },
-    setDataSheetId(dataSheetId: string) {
-      this.dataSheetId = dataSheetId;
-    },
     async setTimetable(dataSheetId: string) {
       this.timetable = await getTimetable(dataSheetId);
     },
@@ -188,10 +172,52 @@ export default (Alpine: Alpine) => {
           return 0;
         });
     },
+  } as AlpineTimetableStore);
+  Alpine.store("student", {
+    name: Alpine.$persist("").using(sessionStorage),
+    surname: Alpine.$persist("").using(sessionStorage),
+    course: Alpine.$persist("").using(sessionStorage),
+    subject: Alpine.$persist("").using(sessionStorage),
+    id: Alpine.$persist(-1).using(sessionStorage),
+    activities: [],
+    marks: [],
+    markData: {
+      finalMark: null,
+      averageMark: 0,
+      proportion: 1,
+      activities: {
+        markContribution: 0,
+        total: 0,
+        done: 0,
+      },
+      markedActivities: {
+        markContribution: 0,
+        total: 0,
+        passed: 0,
+      },
+    },
+    dataSheetId: "",
+    setStudent(name: string, surname: string, course: string, id: number) {
+      if (!courseRegex.test(course)) {
+        throw new Error(`Invalid course name: ${course}`);
+      }
+      this.name = name;
+      this.surname = surname;
+      this.course = course;
+      this.id = id;
+    },
+    setSubject(subject: string) {
+      this.subject = subject;
+    },
+    setDataSheetId(dataSheetId: string) {
+      this.dataSheetId = dataSheetId;
+    },
     async getStudentData(subject: string, course: string, dataSheetId: string) {
       this.setSubject(subject);
       this.setDataSheetId(dataSheetId);
-      this.setTimetable(dataSheetId);
+      (Alpine.store("timetable") as AlpineTimetableStore).setTimetable(
+        dataSheetId
+      );
       let studentName = null;
       if (isOnCampus()) {
         const data = await fetch(
@@ -230,7 +256,10 @@ export default (Alpine: Alpine) => {
           "actividades",
           1
         );
-        this.setSeminars(dataSheetId, this.id);
+        (Alpine.store("timetable") as AlpineTimetableStore).setSeminars(
+          dataSheetId,
+          this.id
+        );
       }
     },
   } as {
@@ -240,15 +269,6 @@ export default (Alpine: Alpine) => {
     subject: any;
     id: any;
     dataSheetId: string;
-    timetable: {
-      [key: string]: Array<{
-        day: string;
-        block: number;
-        room: string;
-        teacher: string;
-      }>;
-    };
-    seminars: Array<string>;
     setStudent: (
       name: string,
       surname: string,
@@ -257,16 +277,6 @@ export default (Alpine: Alpine) => {
     ) => void;
     setSubject: (subject: string) => void;
     setDataSheetId: (dataSheetId: string) => void;
-    setTimetable: (dataSheetId: string) => void;
-    setSeminars: (dataSheetId: string, studentId: number) => Promise<void>;
-    getTimetableByGridPos: (
-      row: number,
-      col: number
-    ) => Array<{
-      subject: string;
-      room: string;
-      teacher: string;
-    }>;
     getStudentData: (
       subject: string,
       course: string,
