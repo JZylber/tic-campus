@@ -10,6 +10,7 @@ import {
   getFixedMarks,
   getStudents,
   getTimetable,
+  getStudentSeminars,
 } from "./aux/fetchData";
 import { fetchHTMLData, prepareCrumbs } from "./aux/loadData";
 import collapse from "@alpinejs/collapse";
@@ -155,6 +156,9 @@ export default (Alpine: Alpine) => {
     async setTimetable(dataSheetId: string) {
       this.timetable = await getTimetable(dataSheetId);
     },
+    async setSeminars(dataSheetId: string, studentId: number) {
+      this.seminars = await getStudentSeminars(studentId, dataSheetId);
+    },
     getTimetableByGridPos(row: number, col: number) {
       const slots = [];
       for (const [subject, blocks] of Object.entries(this.timetable)) {
@@ -221,13 +225,12 @@ export default (Alpine: Alpine) => {
           student.DNI
         );
       }
-      if (subject !== "" && this.id !== -1) {
-        if (course === this.course) {
-          (Alpine.store("section") as AlpineSectionStore).changeSection(
-            "actividades",
-            1
-          );
-        }
+      if (subject !== "" && this.id !== -1 && course === this.course) {
+        (Alpine.store("section") as AlpineSectionStore).changeSection(
+          "actividades",
+          1
+        );
+        this.setSeminars(dataSheetId, this.id);
       }
     },
   } as {
@@ -255,6 +258,7 @@ export default (Alpine: Alpine) => {
     setSubject: (subject: string) => void;
     setDataSheetId: (dataSheetId: string) => void;
     setTimetable: (dataSheetId: string) => void;
+    setSeminars: (dataSheetId: string, studentId: number) => Promise<void>;
     getTimetableByGridPos: (
       row: number,
       col: number

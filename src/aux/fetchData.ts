@@ -505,3 +505,21 @@ export const getTimetable = async (dataSheetId: string) => {
   }
   return timetable;
 };
+
+export const getStudentSeminars = async (
+  studentId: number,
+  dataSheetId: string
+) => {
+  try {
+    const seminars = await getSheetData({
+      sheetID: dataSheetId,
+      sheetName: `Seminarios por Estudiante`,
+      query: `SELECT F,G WHERE A = ${studentId}`,
+    });
+    return seminars.map(
+      (seminar) => Object.values(seminar) as Array<string>
+    )[0];
+  } catch (error) {
+    return [];
+  }
+};
