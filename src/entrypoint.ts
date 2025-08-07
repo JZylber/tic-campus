@@ -1,4 +1,4 @@
-import type { Alpine } from "alpinejs";
+import { type Alpine } from "alpinejs";
 import {
   getStudentData,
   getSubjectData,
@@ -36,6 +36,8 @@ const isOnCampus = () => {
 };
 
 const courseRegex = /NR\d[A-Z]/;
+
+const daysOfWeek = ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes"];
 
 interface AlpineSectionStore {
   currentSection: string;
@@ -153,6 +155,35 @@ export default (Alpine: Alpine) => {
     async setTimetable(dataSheetId: string) {
       this.timetable = await getTimetable(dataSheetId);
     },
+    getTimetableByGridPos(row: number, col: number) {
+      const slots = [];
+      for (const [subject, blocks] of Object.entries(this.timetable)) {
+        for (const block of blocks) {
+          slots.push({
+            coordinates: [
+              block.block + (block.block > 3 ? 1 : 0), // Adjust for the 4th block being a different row
+              daysOfWeek.indexOf(block.day) + 1,
+            ],
+            data: {
+              subject,
+              room: block.room,
+              teacher: block.teacher,
+            },
+          });
+        }
+      }
+      // Sort by "Proyecto" last
+      return slots
+        .filter((slot) => {
+          return slot.coordinates[0] === row && slot.coordinates[1] === col;
+        })
+        .map((slot) => slot.data)
+        .sort((a, b) => {
+          if (a.subject === "Proyecto") return 1;
+          if (b.subject === "Proyecto") return -1;
+          return 0;
+        });
+    },
     async getStudentData(subject: string, course: string, dataSheetId: string) {
       this.setSubject(subject);
       this.setDataSheetId(dataSheetId);
@@ -224,6 +255,14 @@ export default (Alpine: Alpine) => {
     setSubject: (subject: string) => void;
     setDataSheetId: (dataSheetId: string) => void;
     setTimetable: (dataSheetId: string) => void;
+    getTimetableByGridPos: (
+      row: number,
+      col: number
+    ) => Array<{
+      subject: string;
+      room: string;
+      teacher: string;
+    }>;
     getStudentData: (
       subject: string,
       course: string,
