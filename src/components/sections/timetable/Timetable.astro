@@ -1,0 +1,226 @@
+---
+import Loader from "../../loader/Loader.astro";
+import SectionLayout from "../SectionLayout.astro";
+
+interface Props {
+  subject: string;
+  position: number;
+}
+
+const { position, subject } = Astro.props;
+---
+
+<script></script>
+<SectionLayout name="horarios" position={position}>
+  <h1 class="text-[36px] font-bold text-center p-4">
+    Horarios 2do Cuatrimestre
+  </h1>
+  <Loader show="$store.timetable.timetable === null" />
+  <template
+    x-if="$store.timetable.timetable && Object.keys($store.timetable.timetable).length === 0"
+  >
+    <div
+      class="flex-grow flex justify-center items-center text-[20px] md:text-[24px]"
+    >
+      Proximamente...
+    </div>
+  </template>
+  <template
+    x-if="$store.timetable.seminars && $store.timetable.seminars.length > 0"
+  >
+    <div class="flex flex-col gap-y-2 pt-2 pb-4 border-y-2 border-gray-400">
+      <h2 class="text-center text-[20px] md:text-[24px] font-bold">
+        Seminarios Avanzados
+      </h2>
+      <div
+        class="flex flex-col gap-2 items-center md:flex-row md:justify-center md:gap-x-8"
+      >
+        <template x-for="seminar in $store.timetable.seminars">
+          <div
+            class="flex text-sh-black text-[16px] md:text-[18px] rounded-lg w-full max-w-56 md:w-48 h-8 md:h-10 justify-center items-center"
+            :class="{'bg-sh-medium-red': seminar === 'Hardware', 'bg-sh-medium-blue' : seminar === 'Frontend', 'bg-sh-medium-green' : seminar === 'Backend', 'bg-sh-medium-yellow': seminar === 'TIMI', 'bg-gray-200': seminar === 'Proyecto'}"
+          >
+            <span x-text="seminar"></span>
+          </div>
+        </template>
+      </div>
+    </div>
+  </template>
+  <template
+    x-if="$store.timetable.timetable && Object.keys($store.timetable.timetable).length > 0"
+  >
+    <div class="flex">
+      <div
+        class="hidden md:grid grid-cols-[40px_repeat(5,minmax(0,1fr))] grid-rows-[32px_repeat(3,minmax(0,1fr))_12px_repeat(3,minmax(0,1fr))] items-stretch border-gray-400 border-2 w-full max-w-full rounded-xl overflow-hidden gap-[1px] bg-gray-400"
+      >
+        <div
+          class="grid grid-cols-subgrid grid-rows-1 col-span-full bg-gray-300 text-gray-600 text-[16px] font-bold items-stretch"
+        >
+          <div class="col-start-2 flex items-center justify-center">Lunes</div>
+          <div class="col-start-3 flex items-center justify-center">Martes</div>
+          <div class="col-start-4 flex items-center justify-center">
+            Miércoles
+          </div>
+          <div class="col-start-5 flex items-center justify-center">Jueves</div>
+          <div class="col-start-6 flex items-center justify-center">
+            Viernes
+          </div>
+        </div>
+        <div
+          class="grid grid-rows-subgrid grid-cols-subgrid col-start-1 row-start-2 -row-end-1 bg-gray-50"
+        >
+          <div class="col-start-1 row-start-1 flex justify-center items-center">
+            1
+          </div>
+          <div class="col-start-1 row-start-2 flex justify-center items-center">
+            2
+          </div>
+          <div class="col-start-1 row-start-3 flex justify-center items-center">
+            3
+          </div>
+          <div class="col-start-1 row-start-5 flex justify-center items-center">
+            4
+          </div>
+          <div class="col-start-1 row-start-6 flex justify-center items-center">
+            5
+          </div>
+          <div class="col-start-1 row-start-7 flex justify-center items-center">
+            6
+          </div>
+        </div>
+        <div
+          class="grid grid-cols-subgrid grid-rows-subgrid row-start-2 -row-end-1 col-start-2 -col-end-1"
+        >
+          <div class="row-start-4 bg-gray-300 col-span-full"></div>
+          <template
+            x-for="[row,col] in [[1,1],[1,2],[1,3],[1,4],[1,5],[2,1],[2,2],[2,3],[2,4],[2,5],[3,1],[3,2],[3,3],[3,4],[3,5],[5,1],[5,2],[5,3],[5,4],[5,5],[6,1],[6,2],[6,3],[6,4],[6,5],[7,1],[7,2],[7,3],[7,4],[7,5]]"
+          >
+            <div
+              class="bg-gray-50 flex flex-col"
+              x-data="{ slotData: []}"
+              x-effect={`slotData = $store.timetable.getTimetableByGridPos(row, col)`}
+              :style="{ gridcolumnstart: col, gridrowstart: row }"
+            >
+              <template x-for="{subject,room,teacher} in slotData">
+                <div
+                  class="flex flex-col items-center h-full gap-y-0.5 py-1"
+                  :class="{'bg-sh-medium-red': subject === 'Hardware', 'bg-sh-medium-blue' : subject === 'Frontend', 'bg-sh-medium-green' : subject === 'Backend', 'bg-sh-medium-yellow': subject === 'TIMI', 'bg-gray-200': subject === 'Proyecto'}"
+                >
+                  <span
+                    class="text-sh-black text-[14px] md:text-[16px] font-semibold"
+                    x-text="subject"></span>
+                  <span
+                    class="text-gray-600 text-[12px] md:text-[14px]"
+                    x-text="room"></span>
+                  <span
+                    class="text-gray-600 text-[12px] md:text-[14px]"
+                    x-text="teacher"></span>
+                </div>
+              </template>
+            </div>
+          </template>
+        </div>
+      </div>
+      <div
+        class="flex flex-col md:hidden border-gray-400 border-2 w-full rounded-xl overflow-hidden bg-gray-300 text-gray-600 text-[14px] md:text-[16px] font-bold"
+        x-data="{day: 0, days: ['Lunes','Martes','Miércoles','Jueves','Viernes']}"
+        x-init="day = new Date().getDay() - 1; if (day < 0 || day >= 5) day = 0"
+      >
+        <div
+          class="flex py-2 w-full divide-x divide-gray-400 border-b-2 border-gray-400 bg-gr"
+        >
+          <div
+            class="w-10 flex items-center justify-center"
+            @click="day = Math.max(day - 1,0)"
+          >
+            <span
+              class="material-symbols-outlined"
+              :class="{'text-gray-400': day === 0}">chevron_left</span
+            >
+          </div>
+          <div class="grow flex justify-center items-center">
+            <span x-text="days[day]"></span>
+          </div>
+          <div
+            class="w-10 flex items-center justify-center"
+            @click="day = Math.min(day + 1, 4)"
+          >
+            <span
+              class="material-symbols-outlined"
+              :class="{'text-gray-400': day === 4}">chevron_right</span
+            >
+          </div>
+        </div>
+        <div
+          class="w-full grid grid-cols-[40px_1fr] grid-rows-[repeat(3,1fr)_12px_repeat(3,1fr)] bg-gray-400 gap-0.5 items-stretch"
+        >
+          <div
+            class="bg-gray-50 row-start-1 col-start-1 flex justify-center items-center text-[20px] font-bold"
+          >
+            1
+          </div>
+          <div
+            class="bg-gray-50 row-start-2 col-start-1 flex justify-center items-center text-[20px] font-bold"
+          >
+            2
+          </div>
+          <div
+            class="bg-gray-50 row-start-3 col-start-1 flex justify-center items-center text-[20px] font-bold"
+          >
+            3
+          </div>
+          <div class="bg-gray-400 row-start-4 col-span-full"></div>
+          <div
+            class="bg-gray-50 row-start-5 col-start-1 flex justify-center items-center text-[20px] font-bold"
+          >
+            4
+          </div>
+          <div
+            class="bg-gray-50 row-start-6 col-start-1 flex justify-center items-center text-[20px] font-bold"
+          >
+            5
+          </div>
+          <div
+            class="bg-gray-50 row-start-7 col-start-1 flex justify-center items-center text-[20px] font-bold"
+          >
+            6
+          </div>
+          <template x-for="row in [1,2,3,5,6,7]">
+            <div class="bg-gray-50 w-full overflow-hidden">
+              <div
+                class="w-[500%] flex transition-transform"
+                :style="{gridrowstart: row,transform: `translateX(${(day) * -20}%)`}"
+              >
+                <template x-for="index in [0,1,2,3,4]">
+                  <div
+                    class="flex flex-col grid-col-start-2 w-1/5 overflow-hidden"
+                    x-data="{ slotData: []}"
+                    x-effect={`slotData = $store.timetable.getTimetableByGridPos(row, index + 1)`}
+                  >
+                    <template x-for="{subject,room,teacher} in slotData">
+                      <div
+                        class="flex flex-col items-center h-full gap-y-0.5 py-1"
+                        :class="{'bg-sh-medium-red': subject === 'Hardware', 'bg-sh-medium-blue' : subject === 'Frontend', 'bg-sh-medium-green' : subject === 'Backend', 'bg-sh-medium-yellow': subject === 'TIMI', 'bg-gray-200': subject === 'Proyecto'}"
+                      >
+                        <span class="text-[14px]">
+                          <span
+                            class="text-sh-black font-semibold"
+                            x-text="subject"></span>
+                          <span class="text-gray-600" x-text="' - ' + teacher"
+                          ></span>
+                        </span>
+                        <span
+                          class="text-gray-600 text-[12px] md:text-[14px]"
+                          x-text="room"></span>
+                      </div>
+                    </template>
+                  </div>
+                </template>
+              </div>
+            </div>
+          </template>
+        </div>
+      </div>
+    </div>
+  </template>
+</SectionLayout>

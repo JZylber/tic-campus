@@ -1,4 +1,4 @@
-import type { Alpine } from "alpinejs";
+import { type Alpine } from "alpinejs";
 import {
   getStudentData,
   getSubjectData,
@@ -9,6 +9,8 @@ import {
   getCourseGroupLink,
   getFixedMarks,
   getStudents,
+  getTimetable,
+  getStudentSeminars,
 } from "./aux/fetchData";
 import { fetchHTMLData, prepareCrumbs } from "./aux/loadData";
 import collapse from "@alpinejs/collapse";
@@ -36,10 +38,34 @@ const isOnCampus = () => {
 
 const courseRegex = /NR\d[A-Z]/;
 
+const daysOfWeek = ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes"];
+
 interface AlpineSectionStore {
   currentSection: string;
   currentSectionIndex: number;
   changeSection: (section: string, index: number) => void;
+}
+
+interface AlpineTimetableStore {
+  timetable: {
+    [key: string]: Array<{
+      day: string;
+      block: number;
+      room: string;
+      teacher: string;
+    }>;
+  } | null;
+  seminars: Array<string> | null;
+  setTimetable: (dataSheetId: string) => void;
+  setSeminars: (dataSheetId: string, studentId: number) => Promise<void>;
+  getTimetableByGridPos: (
+    row: number,
+    col: number
+  ) => Array<{
+    subject: string;
+    room: string;
+    teacher: string;
+  }>;
 }
 
 export default (Alpine: Alpine) => {
@@ -108,6 +134,47 @@ export default (Alpine: Alpine) => {
     changeURL: (url: string) => void;
     publicURL: (url: string) => void;
   });
+  Alpine.store("timetable", {
+    timetable: null,
+    seminars: null,
+    async setTimetable(dataSheetId: string) {
+      this.timetable = await getTimetable(dataSheetId);
+    },
+    async setSeminars(dataSheetId: string, studentId: number) {
+      this.seminars = await getStudentSeminars(studentId, dataSheetId);
+    },
+    getTimetableByGridPos(row: number, col: number) {
+      const slots = [];
+      if (this.timetable !== null) {
+        for (const [subject, blocks] of Object.entries(this.timetable)) {
+          for (const block of blocks) {
+            slots.push({
+              coordinates: [
+                block.block + (block.block > 3 ? 1 : 0), // Adjust for the 4th block being a different row
+                daysOfWeek.indexOf(block.day) + 1,
+              ],
+              data: {
+                subject,
+                room: block.room,
+                teacher: block.teacher,
+              },
+            });
+          }
+        }
+      }
+      // Sort by "Proyecto" last
+      return slots
+        .filter((slot) => {
+          return slot.coordinates[0] === row && slot.coordinates[1] === col;
+        })
+        .map((slot) => slot.data)
+        .sort((a, b) => {
+          if (a.subject === "Proyecto") return 1;
+          if (b.subject === "Proyecto") return -1;
+          return 0;
+        });
+    },
+  } as AlpineTimetableStore);
   Alpine.store("student", {
     name: Alpine.$persist("").using(sessionStorage),
     surname: Alpine.$persist("").using(sessionStorage),
@@ -150,6 +217,9 @@ export default (Alpine: Alpine) => {
     async getStudentData(subject: string, course: string, dataSheetId: string) {
       this.setSubject(subject);
       this.setDataSheetId(dataSheetId);
+      (Alpine.store("timetable") as AlpineTimetableStore).setTimetable(
+        dataSheetId
+      );
       let studentName = null;
       if (isOnCampus()) {
         const data = await fetch(
@@ -183,13 +253,15 @@ export default (Alpine: Alpine) => {
           student.DNI
         );
       }
-      if (subject !== "" && this.id !== -1) {
-        if (course === this.course) {
-          (Alpine.store("section") as AlpineSectionStore).changeSection(
-            "actividades",
-            1
-          );
-        }
+      if (subject !== "" && this.id !== -1 && course === this.course) {
+        (Alpine.store("section") as AlpineSectionStore).changeSection(
+          "actividades",
+          1
+        );
+        (Alpine.store("timetable") as AlpineTimetableStore).setSeminars(
+          dataSheetId,
+          this.id
+        );
       }
     },
   } as {
