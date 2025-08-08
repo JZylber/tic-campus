@@ -186,28 +186,37 @@ const { position, subject } = Astro.props;
             6
           </div>
           <template x-for="row in [1,2,3,5,6,7]">
-            <div
-              class="bg-gray-50 flex flex-col grid-col-start-2"
-              x-data="{ slotData: []}"
-              x-effect={`slotData = $store.timetable.getTimetableByGridPos(row, day + 1)`}
-              :style="{gridrowstart: row }"
-            >
-              <template x-for="{subject,room,teacher} in slotData">
-                <div
-                  class="flex flex-col items-center h-full gap-y-0.5 py-1"
-                  :class="{'bg-sh-medium-red': subject === 'Hardware', 'bg-sh-medium-blue' : subject === 'Frontend', 'bg-sh-medium-green' : subject === 'Backend', 'bg-sh-medium-yellow': subject === 'TIMI', 'bg-gray-200': subject === 'Proyecto'}"
-                >
-                  <span
-                    class="text-sh-black text-[14px] md:text-[16px] font-semibold"
-                    x-text="subject"></span>
-                  <span
-                    class="text-gray-600 text-[12px] md:text-[14px]"
-                    x-text="room"></span>
-                  <span
-                    class="text-gray-600 text-[12px] md:text-[14px]"
-                    x-text="teacher"></span>
-                </div>
-              </template>
+            <div class="bg-gray-50 w-full overflow-hidden">
+              <div
+                class="w-[500%] flex transition-transform"
+                :style="{gridrowstart: row,transform: `translateX(${(day) * -20}%)`}"
+              >
+                <template x-for="index in [0,1,2,3,4]">
+                  <div
+                    class="flex flex-col grid-col-start-2 w-1/5 overflow-hidden"
+                    x-data="{ slotData: []}"
+                    x-effect={`slotData = $store.timetable.getTimetableByGridPos(row, index + 1)`}
+                  >
+                    <template x-for="{subject,room,teacher} in slotData">
+                      <div
+                        class="flex flex-col items-center h-full gap-y-0.5 py-1"
+                        :class="{'bg-sh-medium-red': subject === 'Hardware', 'bg-sh-medium-blue' : subject === 'Frontend', 'bg-sh-medium-green' : subject === 'Backend', 'bg-sh-medium-yellow': subject === 'TIMI', 'bg-gray-200': subject === 'Proyecto'}"
+                      >
+                        <span class="text-[14px]">
+                          <span
+                            class="text-sh-black font-semibold"
+                            x-text="subject"></span>
+                          <span class="text-gray-600" x-text="' - ' + teacher"
+                          ></span>
+                        </span>
+                        <span
+                          class="text-gray-600 text-[12px] md:text-[14px]"
+                          x-text="room"></span>
+                      </div>
+                    </template>
+                  </div>
+                </template>
+              </div>
             </div>
           </template>
         </div>
