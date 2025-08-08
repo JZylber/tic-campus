@@ -3,10 +3,10 @@ interface Props {
   course: string;
   minimized: string;
   open: string;
+  placement: number;
 }
 
-const { course, minimized, open } = Astro.props;
-const markPlacement = 6;
+const { course, minimized, open, placement } = Astro.props;
 ---
 
 <template x-if={`$store.student.course === '${course}' && $store.marks`}>
@@ -20,7 +20,7 @@ const markPlacement = 6;
         ]
         class="w-[calc(24px+var(--spacing)*4)] aspect-square text-[20px] font-bold border-4 bg-white rounded-full flex justify-center items-center"
         x-bind:class="{ 'border-white text-sh-dark-gray': !$store.marks.markData.finalMark || passed, 'border-sh-red text-sh-red': $store.marks.markData.finalMark && !passed }"
-        @click={`$store.section.changeSection('nota',${markPlacement}); ${open} = false`}
+        @click={`$store.section.changeSection('nota',${placement}); ${open} = false`}
       >
         <span
           x-show="$store.marks.markData.finalMark"
@@ -55,7 +55,7 @@ const markPlacement = 6;
       </div>
       <p
         class="text-gray-600 cursor-pointer"
-        @click={`$store.section.changeSection('nota',${markPlacement}); ${open} = false`}
+        @click={`$store.section.changeSection('nota',${placement}); ${open} = false`}
       >
         <span class="hover:underline">Más Información</span>
       </p>
