@@ -54,8 +54,8 @@ interface AlpineTimetableStore {
       room: string;
       teacher: string;
     }>;
-  };
-  seminars: Array<string>;
+  } | null;
+  seminars: Array<string> | null;
   setTimetable: (dataSheetId: string) => void;
   setSeminars: (dataSheetId: string, studentId: number) => Promise<void>;
   getTimetableByGridPos: (
@@ -135,8 +135,8 @@ export default (Alpine: Alpine) => {
     publicURL: (url: string) => void;
   });
   Alpine.store("timetable", {
-    timetable: {},
-    seminars: [],
+    timetable: null,
+    seminars: null,
     async setTimetable(dataSheetId: string) {
       this.timetable = await getTimetable(dataSheetId);
     },
@@ -145,19 +145,21 @@ export default (Alpine: Alpine) => {
     },
     getTimetableByGridPos(row: number, col: number) {
       const slots = [];
-      for (const [subject, blocks] of Object.entries(this.timetable)) {
-        for (const block of blocks) {
-          slots.push({
-            coordinates: [
-              block.block + (block.block > 3 ? 1 : 0), // Adjust for the 4th block being a different row
-              daysOfWeek.indexOf(block.day) + 1,
-            ],
-            data: {
-              subject,
-              room: block.room,
-              teacher: block.teacher,
-            },
-          });
+      if (this.timetable !== null) {
+        for (const [subject, blocks] of Object.entries(this.timetable)) {
+          for (const block of blocks) {
+            slots.push({
+              coordinates: [
+                block.block + (block.block > 3 ? 1 : 0), // Adjust for the 4th block being a different row
+                daysOfWeek.indexOf(block.day) + 1,
+              ],
+              data: {
+                subject,
+                room: block.room,
+                teacher: block.teacher,
+              },
+            });
+          }
         }
       }
       // Sort by "Proyecto" last

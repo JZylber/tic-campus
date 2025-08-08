@@ -1,4 +1,5 @@
 ---
+import Loader from "../../loader/Loader.astro";
 import SectionLayout from "../SectionLayout.astro";
 
 interface Props {
@@ -14,14 +15,19 @@ const { position, subject } = Astro.props;
   <h1 class="text-[36px] font-bold text-center p-4">
     Horarios 2do Cuatrimestre
   </h1>
-  <template x-if="Object.keys($store.timetable.timetable).length === 0">
+  <Loader show="$store.timetable.timetable === null" />
+  <template
+    x-if="$store.timetable.timetable && Object.keys($store.timetable.timetable).length === 0"
+  >
     <div
       class="flex-grow flex justify-center items-center text-[20px] md:text-[24px]"
     >
       Proximamente...
     </div>
   </template>
-  <template x-if="Object.keys($store.timetable.timetable).length > 0">
+  <template
+    x-if="$store.timetable.timetable && Object.keys($store.timetable.timetable).length > 0"
+  >
     <div class="flex">
       <div
         class="hidden md:grid grid-cols-[40px_repeat(5,minmax(0,1fr))] grid-rows-[32px_repeat(3,minmax(0,1fr))_12px_repeat(3,minmax(0,1fr))] items-stretch border-gray-400 border-2 w-full max-w-full rounded-xl overflow-hidden gap-[1px] bg-gray-400"
