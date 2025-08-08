@@ -63,7 +63,12 @@ const { course, subject, items } = Astro.props;
         </template>
       </div>
     </div>
-    <MarkLink minimized="!open && isMobile" course={course} open="open" />
+    <MarkLink
+      minimized="!open && isMobile"
+      course={course}
+      open="open"
+      placement={items.length}
+    />
   </div>
   <div
     class="absolute top-0 left-full bg-sh-black opacity-30 h-full w-[calc(100vw-var(--spacing)*12-24px)] sm:w-[calc(95vw-var(--spacing)*12-24px)] z-10 sm:rounded-xl"
