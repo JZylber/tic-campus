@@ -49,7 +49,31 @@ const { position, subject } = Astro.props;
   <template
     x-if="$store.timetable.timetable && Object.keys($store.timetable.timetable).length > 0"
   >
-    <div class="flex">
+    <div class="flex flex-col gap-y-4" x-data="{personalized: false}">
+      <template
+        x-if="$store.timetable.seminars && $store.timetable.seminars.length > 0"
+      >
+        <div class="flex justify-center w-full" x-init="personalized = true">
+          <div
+            class="rounded-lg bg-gray-400 text-[16px] font-bold text-gray-300 flex justify-center items-center w-60 h-10 overflow-hidden"
+          >
+            <div
+              class="w-1/2 h-full flex justify-center items-center cursor-pointer transition-colors"
+              :class="{'bg-sh-purple text-white': personalized}"
+              @click="personalized = true"
+            >
+              <span>Propios</span>
+            </div>
+            <div
+              class="w-1/2 h-full flex justify-center items-center cursor-pointer transition"
+              :class="{'bg-sh-purple text-white': !personalized}"
+              @click="personalized = false"
+            >
+              <span>Rotación</span>
+            </div>
+          </div>
+        </div>
+      </template>
       <div
         class="hidden md:grid grid-cols-[40px_repeat(5,minmax(0,1fr))] grid-rows-[32px_repeat(3,minmax(0,1fr))_12px_repeat(3,minmax(0,1fr))] items-stretch border-gray-400 border-2 w-full max-w-full rounded-xl overflow-hidden gap-[1px] bg-gray-400"
       >
@@ -97,14 +121,14 @@ const { position, subject } = Astro.props;
           >
             <div
               class="bg-gray-50 flex flex-col"
-              x-data="{ slotData: []}"
-              x-effect={`slotData = $store.timetable.getTimetableByGridPos(row, col)`}
+              x-data="{ slotData: [], project: false }"
+              x-effect="slotData = $store.timetable.getTimetableByGridPos(row, col); if($store.timetable.seminars){project = !slotData.some(slot => $store.timetable.seminars.includes(slot.subject))}"
               :style="{ gridcolumnstart: col, gridrowstart: row }"
             >
               <template x-for="{subject,room,teacher} in slotData">
                 <div
-                  class="flex flex-col items-center h-full gap-y-0.5 py-1"
-                  :class="{'bg-sh-medium-red': subject === 'Hardware', 'bg-sh-medium-blue' : subject === 'Frontend', 'bg-sh-medium-green' : subject === 'Backend', 'bg-sh-medium-yellow': subject === 'TIMI', 'bg-gray-200': subject === 'Proyecto'}"
+                  class="flex flex-col items-center h-full gap-y-0.5 py-1 transition-opacity"
+                  :class="{'bg-sh-medium-red': subject === 'Hardware', 'bg-sh-medium-blue' : subject === 'Frontend', 'bg-sh-medium-green' : subject === 'Backend', 'bg-sh-medium-yellow': subject === 'TIMI', 'bg-gray-200': subject === 'Proyecto', 'opacity-10': personalized && ((subject === 'Proyecto' && !project)||(subject !== 'Proyecto' && project))}"
                 >
                   <span
                     class="text-sh-black text-[14px] md:text-[16px] font-semibold"
@@ -194,13 +218,13 @@ const { position, subject } = Astro.props;
                 <template x-for="index in [0,1,2,3,4]">
                   <div
                     class="flex flex-col grid-col-start-2 w-1/5 overflow-hidden"
-                    x-data="{ slotData: []}"
-                    x-effect={`slotData = $store.timetable.getTimetableByGridPos(row, index + 1)`}
+                    x-data="{ slotData: [], project: false }"
+                    x-effect={`slotData = $store.timetable.getTimetableByGridPos(row, index + 1); if($store.timetable.seminars){project = !slotData.some(slot => $store.timetable.seminars.includes(slot.subject))}`}
                   >
                     <template x-for="{subject,room,teacher} in slotData">
                       <div
                         class="flex flex-col items-center h-full gap-y-0.5 py-1"
-                        :class="{'bg-sh-medium-red': subject === 'Hardware', 'bg-sh-medium-blue' : subject === 'Frontend', 'bg-sh-medium-green' : subject === 'Backend', 'bg-sh-medium-yellow': subject === 'TIMI', 'bg-gray-200': subject === 'Proyecto'}"
+                        :class="{'bg-sh-medium-red': subject === 'Hardware', 'bg-sh-medium-blue' : subject === 'Frontend', 'bg-sh-medium-green' : subject === 'Backend', 'bg-sh-medium-yellow': subject === 'TIMI', 'bg-gray-200': subject === 'Proyecto', 'opacity-10': personalized && ((project && subject !== 'Proyecto') || (!project && subject === 'Proyecto'))}"
                       >
                         <span class="text-[14px]">
                           <span
