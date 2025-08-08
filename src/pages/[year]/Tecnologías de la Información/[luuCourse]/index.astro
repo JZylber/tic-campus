@@ -4,6 +4,7 @@ import Activities from "../../../../components/sections/activities/Activities.as
 import Layout from "../../../../layouts/Layout.astro";
 import Material from "../../../../components/sections/material/Material.astro";
 import Navbar from "../../../../components/navbar/Navbar.astro";
+import Timetable from "../../../../components/sections/timetable/Timetable.astro";
 
 export function getStaticPaths() {
   return [
@@ -26,6 +27,7 @@ const items = [
   { name: "home", icon: "home", title: subject },
   { name: "actividades", icon: "school", title: "Actividades" },
   { name: "material", icon: "construction", title: "Material" },
+  { name: "horarios", icon: "calendar_month", title: "Horarios" },
 ];
 ---
 
@@ -43,5 +45,6 @@ const items = [
     />
     <Activities subject={subject} course={luuCourse} year={year} position={1} />
     <Material subject={subject} position={2} />
+    <Timetable subject={subject} position={3} />
   </main>
 </Layout>
