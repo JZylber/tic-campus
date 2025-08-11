@@ -177,6 +177,8 @@ const { position, subject } = Astro.props;
         </div>
         <div
           class="w-full grid grid-cols-[40px_1fr] grid-rows-[repeat(3,1fr)_12px_repeat(3,1fr)] bg-gray-400 gap-0.5 items-stretch"
+          x-swipe:left="day = Math.min(day + 1, 4)"
+          x-swipe:right="day = Math.max(day - 1, 0)"
         >
           <div
             class="bg-gray-50 row-start-1 col-start-1 flex justify-center items-center text-[20px] font-bold"
