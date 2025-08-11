@@ -15,6 +15,7 @@ import {
 import { fetchHTMLData, prepareCrumbs } from "./aux/loadData";
 import collapse from "@alpinejs/collapse";
 import persist from "@alpinejs/persist";
+import detectSwipe from "./aux/swipeDetect";
 
 window.getSubjectData = getSubjectData;
 window.getSubjectProgram = getSubjectProgram;
@@ -103,6 +104,39 @@ export default (Alpine: Alpine) => {
       mql.onchange = handler;
       // Be sure you clean up your listeners as a best practice
       cleanup(() => mql.removeEventListener("change", handler));
+    }
+  );
+  Alpine.directive(
+    "swipe",
+    (elem, { value, modifiers, expression }, { evaluateLater, cleanup }) => {
+      // console.log({ value, modifiers });
+      const evaluate = expression ? evaluateLater(expression) : () => {};
+      const callback = (arg: string) => {
+        evaluate(() => {}, { scope: {}, params: [arg] });
+      };
+      const threshold =
+        (modifiers[0] === "threshold" &&
+          (modifiers[1] || "").endsWith("px") &&
+          Number(modifiers[1].replace("px", ""))) ||
+        50;
+
+      const detectorInstance = detectSwipe(
+        elem,
+        function (direction) {
+          if (!value) {
+            callback(direction);
+            return;
+          }
+          if (direction === value) {
+            callback(direction);
+            return;
+          }
+        },
+        threshold
+      );
+      cleanup(() => {
+        detectorInstance.disable();
+      });
     }
   );
   Alpine.store("section", {
