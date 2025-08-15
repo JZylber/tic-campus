@@ -41,6 +41,7 @@ const { position, subject } = Astro.props;
           passed: 0,
         },
       },
+      specialActivitiesIds: [],
       regularActivities() {
         return this.activities.filter(
           (activity) => !activity.special && !activity.inRevision
@@ -163,6 +164,7 @@ const { position, subject } = Astro.props;
             dataSheetId
           ),
         ]);
+        this.specialActivitiesIds = specialActivities;
         this.activities = activities.map((activity) => ({
           ...activity,
           inRevision: redos.includes(activity.id),
@@ -229,6 +231,7 @@ const { position, subject } = Astro.props;
           passed: number;
         };
       };
+      specialActivitiesIds: number[];
       regularActivities: () => Array<Activity>;
       specialActivities: () => Array<Activity>;
       redoCoveredActivities: () => Array<number>;
@@ -661,10 +664,14 @@ const { position, subject } = Astro.props;
         Todos las actividades/trabajos prácticos que reciben una nota numérica.
         Se aprueban con una nota mayor o igual a 6.
       </p>
-      <div class="flex justify-center">
+      <div
+        class="flex justify-center"
+        x-data="{courseMarkedActivities: []}"
+        x-effect="courseMarkedActivities = $store.course.activities.filter(act => act.type === 'Trabajo Práctico')"
+      >
         <div
           class="border-gray-400 border-2 w-full max-w-full md:w-4/5 md:min-w-80 md:max-w-4xl rounded-xl overflow-hidden"
-          x-show="$store.marks.marks.length > 0"
+          x-show="courseMarkedActivities.length > 0"
         >
           <table class="border-collapse w-full">
             <thead class="bg-gray-300 text-gray-600">
@@ -674,41 +681,54 @@ const { position, subject } = Astro.props;
               </tr>
             </thead>
             <tbody>
-              <template x-for="activity in $store.marks.marks">
+              <template x-for="markedActivity in courseMarkedActivities">
                 <tr
                   class="border-t border-gray-400"
-                  x-data="{redo: activity.inRevision}"
+                  x-data="{activity: undefined}"
+                  x-effect="activity = $store.marks.marks.find(act => act.id === markedActivity.id)"
                 >
                   <td class="text-[14px] md:text-[16px] p-2">
-                    <span x-text="activity.name"></span>
+                    <span x-text="markedActivity.name"></span>
                   </td>
                   <td class="p-2">
-                    <RecoveredChip id="activity.id">
+                    <RecoveredChip id="markedActivity.id">
                       <div
                         class="rounded-full flex justify-center items-center px-2 py-1 gap-x-2 text-[16px]"
                         x-bind:class="{
-                      'bg-sh-light-yellow text-sh-yellow': redo,
-                      'bg-sh-light-green text-sh-green': activity.mark >= 6 && !redo,
-                      'bg-sh-light-red text-sh-red': activity.mark < 6 && !redo
+                      'bg-sh-light-yellow text-sh-yellow': activity && activity.inRevision,
+                      'bg-sh-light-green text-sh-green': activity && activity.mark >= 6 && !activity.inRevision,
+                      'bg-sh-light-red text-sh-red': activity && activity.mark < 6 && !activity.inRevision,
+                      'bg-sh-light-purple text-gray-600': !activity && markedActivity.inProgress,
+                      'bg-gray-200 text-gray-600': !activity && !markedActivity.inProgress
                     }"
                       >
-                        <span
-                          class="text-[14px] md:text-[16px]"
-                          x-text="activity.mark"
-                          x-show="!redo"></span>
-                        <span
-                          class="material-symbols-outlined text-[16px]! md:text-[20px]!"
-                          x-text="'more_horiz'"
-                          x-show="redo"></span>
+                        <template x-if="activity && !activity.inRevision">
+                          <span
+                            class="text-[14px] md:text-[16px]"
+                            x-text="activity.mark"></span>
+                        </template>
+                        <template
+                          x-if="activity && activity.inRevision || !activity && markedActivity.inProgress"
+                        >
+                          <span
+                            class="material-symbols-outlined text-[16px]! md:text-[20px]!"
+                            x-text="'more_horiz'"></span>
+                        </template>
                         <span
                           class="text-[14px] md:text-[16px] text-center md:text-left"
                           x-text="(()=>{
-                          if(redo){
+                          if(!activity && markedActivity.inProgress){
+                            return 'En Progreso'
+                          }
+                          if(!activity && !markedActivity.inProgress){
+                            return 'Sin Calificar'
+                          }
+                          if(activity && activity.inRevision){
                             return 'En Revisión'
                           }
-                          if(activity.comment) {
-                          return activity.comment;
-                          } else if(activity.mark >= 6){
+                          if(activity && activity.comment) {
+                            return activity.comment;
+                          } else if(activity && activity.mark >= 6){
                             return 'Aprobada'
                           } else {
                             return 'En Proceso'
@@ -738,7 +758,9 @@ const { position, subject } = Astro.props;
       <div class="flex justify-center">
         <div
           class="border-gray-400 border-2 w-full max-w-full md:w-4/5 md:min-w-80 md:max-w-4xl rounded-xl overflow-hidden"
-          x-show="$store.marks.activities.length > 0"
+          x-data="{courseActivities: []}"
+          x-effect="courseActivities = $store.course.activities.filter(act => act.type === 'Actividad' && !$store.marks.specialActivitiesIds.includes(act.id))"
+          x-show="courseActivities.length > 0"
         >
           <table class="border-collapse w-full">
             <thead class="bg-gray-300 text-gray-600">
@@ -748,39 +770,54 @@ const { position, subject } = Astro.props;
               </tr>
             </thead>
             <tbody>
-              <template
-                x-for="activity in $store.marks.activities.filter(act => !act.special)"
-              >
+              <template x-for="courseActivity in courseActivities">
                 <tr
                   class="border-t border-gray-400"
-                  x-data="{redo: activity.inRevision}"
+                  x-data="{activity: undefined}"
+                  x-effect="activity = $store.marks.activities.find(act => act.id === courseActivity.id)"
                 >
                   <td class="text-[14px] md:text-[16px] p-2">
-                    <span x-text="activity.name"></span>
+                    <span x-text="courseActivity.name"></span>
                   </td>
                   <td class="p-2">
                     <RecoveredChip id="activity.id">
                       <div
                         class="rounded-full flex justify-center items-center px-2 py-1 gap-x-2"
                         x-bind:class="{
-                      'bg-sh-light-yellow text-sh-yellow': redo,
-                      'bg-sh-light-green text-sh-green': activity.done && !redo,
-                      'bg-sh-light-red text-sh-red': !activity.done && !redo
+                      'bg-sh-light-yellow text-sh-yellow': activity && activity.inRevision,
+                      'bg-sh-light-green text-sh-green': activity && activity.done && !activity.inRevision,
+                      'bg-sh-light-red text-sh-red': activity && !activity.done && !activity.inRevision,
+                      'bg-sh-light-purple text-gray-600': !activity && courseActivity.inProgress,
+                      'bg-sh-light-blue text-sh-blue': !activity && courseActivity.optional,
+                      'bg-gray-200 text-gray-600': !activity && !courseActivity.inProgress
                     }"
                       >
-                        <span
-                          class="material-symbols-outlined text-[16px]! md:text-[20px]!"
-                          x-text="redo ? 'more_horiz' : (activity.done ? 'check' : 'close')"
-                        ></span>
+                        <template
+                          x-if="activity || !activity && courseActivity.inProgress"
+                        >
+                          <span
+                            class="material-symbols-outlined text-[16px]! md:text-[20px]!"
+                            x-text="(activity && activity.inRevision || !activity && courseActivity.inProgress ) ? 'more_horiz' : (activity.done ? 'check' : 'close')"
+                          ></span>
+                        </template>
                         <span
                           class="text-[14px] md:text-[16px] text-center md:text-left"
                           x-text="(()=>{
-                          if(redo){
+                          if(!activity && courseActivity.inProgress){
+                            return 'En Progreso'
+                          }
+                            else if(!activity && !courseActivity.inProgress && !courseActivity.optional){
+                            return 'Sin Calificar'
+                          }
+                          else if(!activity && courseActivity.optional){
+                            return 'Opcional'
+                          }
+                          else if(activity && activity.inRevision){
                             return 'En Revisión'
                           }
-                          else if(activity.comment) {
+                          else if(activity && activity.comment) {
                             return activity.comment;
-                          } else if(activity.done){
+                          } else if(activity && activity.done){
                             return 'Hecha'
                           } else {
                             return 'Pendiente'

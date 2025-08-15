@@ -17,7 +17,7 @@ const { subject, course, year, position } = Astro.props;
   <div
     class="w-full"
     x-data="{ unitsData: [], loading: true, currentContent: null, articleOpen: false, articleURL:''}"
-    x-init={`unitsData = (await getSubjectData('${course}', '${subject}', dataSheetId)).reverse();loading = false;`}
+    x-init={`unitsData = (await getSubjectData('${course}', '${subject}', dataSheetId)).reverse();$store.course.setActivities([...unitsData]);loading = false;`}
     @changedsection.window="articleOpen = false;"
   >
     <div class="w-full">
@@ -67,7 +67,7 @@ const { subject, course, year, position } = Astro.props;
                       x-text="(()=>{switch(content.type) {
                           case 'Trabajo Práctico': return 'workspace_premium'
                           case 'Encuesta': return 'checklist';
-                          case 'Recuperatorio': return 'redo';
+                          case 'Recuperatorio': return 'refresh';
                           default: return 'description';
                         }})()"
                     >
