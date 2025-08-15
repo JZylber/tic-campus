@@ -17,14 +17,14 @@ export const partial = true;
 <ol>
   <li>
     Inicializar la carpeta como proyecto de <em>Node JS</em> haciendo <InlineCodeBlock
-      code="npm init"
+      code="npm init -y"
       lang="bash"
     />.
   </li>
   <li>Crear un archivo <em>index.js</em></li>
   <li>
     Importar la función
-    <code class="language-javascript">generarEspacio</code> del archivo
+    <InlineCodeBlock lang="javascript" code="function generarEspacio(n)" /> del archivo
     <em>busqueda.js</em> usando
     <InlineCodeBlock code={`import {generarEspacio} from "./busqueda.js";`} />.
   </li>
@@ -35,14 +35,16 @@ export const partial = true;
     una lista de 100 nombres y muestrenla por consola.
     <strong>IMPORTANTE:</strong> la primera vez que corran les va a tirar un error
     de
-    <code class="language-bash"
-      >SyntaxError: Cannot use import statement outside a module</code
-    >. ¿Cómo se soluciona? No se los voy a decir. Googleen.
+    <InlineCodeBlock
+      code="SyntaxError: Cannot use import statement outside a module"
+      lang="bash"
+    />. ¿Cómo se soluciona? No se los voy a decir. Googleen.
   </li>
   <li>
     Finalmente, escriban código en <em>index.js</em> que dada la lista de 100 nombres,
     encuentre donde está Wally, es decir, en que posición de la lista se encuentra.<strong
-      >No pueden usar <code class="language-javascript">indexOf</code></strong
+    >
+      No pueden usar <em>indexOf</em></strong
     >, quiero que practiquen ciclos. Muestren este resultado por consola.
   </li>
 </ol>
