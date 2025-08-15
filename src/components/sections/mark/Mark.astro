@@ -259,12 +259,7 @@ const { position, subject } = Astro.props;
     position={position}
     xInit=`if($store.student.id !== -1){$store.marks.calculateMarks(dataSheetId, '${subject}', $store.student.course, {name:$store.student.name,surname:$store.student.surname,id:$store.student.id})};$watch('$store.student.id', (id) => {if(id !== -1){$store.marks.calculateMarks(dataSheetId, '${subject}', $store.student.course, {name:$store.student.name,surname:$store.student.surname,id:id})}})`
   >
-    <h1
-      class="text-[36px] font-bold text-center p-4"
-      x-effect="console.log($store.course.activities)"
-    >
-      Nota
-    </h1>
+    <h1 class="text-[36px] font-bold text-center p-4">Nota</h1>
     <div class="flex flex-col md:flex-row gap-x-8 pt-4 md:pb-4 justify-center">
       <div
         class="flex flex-col gap-y-2 shrink-0 pb-2 border-b-2 border-gray-300 md:pb-0 md:border-b-0"
@@ -746,7 +741,9 @@ const { position, subject } = Astro.props;
       <div class="flex justify-center">
         <div
           class="border-gray-400 border-2 w-full max-w-full md:w-4/5 md:min-w-80 md:max-w-4xl rounded-xl overflow-hidden"
-          x-show="$store.marks.activities.length > 0"
+          x-data="{courseActivities: []}"
+          x-effect="courseActivities = $store.course.activities.filter(act => act.type === 'Actividad' && !$store.marks.specialActivitiesIds.includes(act.id))"
+          x-show="courseActivities.length > 0"
         >
           <table class="border-collapse w-full">
             <thead class="bg-gray-300 text-gray-600">
@@ -756,39 +753,54 @@ const { position, subject } = Astro.props;
               </tr>
             </thead>
             <tbody>
-              <template
-                x-for="activity in $store.marks.activities.filter(act => !act.special)"
-              >
+              <template x-for="courseActivity in courseActivities">
                 <tr
                   class="border-t border-gray-400"
-                  x-data="{redo: activity.inRevision}"
+                  x-data="{activity: undefined}"
+                  x-effect="activity = $store.marks.activities.find(act => act.id === courseActivity.id)"
                 >
                   <td class="text-[14px] md:text-[16px] p-2">
-                    <span x-text="activity.name"></span>
+                    <span x-text="courseActivity.name"></span>
                   </td>
                   <td class="p-2">
                     <RecoveredChip id="activity.id">
                       <div
                         class="rounded-full flex justify-center items-center px-2 py-1 gap-x-2"
                         x-bind:class="{
-                      'bg-sh-light-yellow text-sh-yellow': redo,
-                      'bg-sh-light-green text-sh-green': activity.done && !redo,
-                      'bg-sh-light-red text-sh-red': !activity.done && !redo
+                      'bg-sh-light-yellow text-sh-yellow': activity && activity.inRevision,
+                      'bg-sh-light-green text-sh-green': activity && activity.done && !activity.inRevision,
+                      'bg-sh-light-red text-sh-red': activity && !activity.done && !activity.inRevision,
+                      'bg-sh-light-purple text-gray-600': !activity && courseActivity.inProgress,
+                      'bg-sh-light-blue text-sh-blue': !activity && courseActivity.optional,
+                      'bg-gray-200 text-gray-600': !activity && !courseActivity.inProgress
                     }"
                       >
-                        <span
-                          class="material-symbols-outlined text-[16px]! md:text-[20px]!"
-                          x-text="redo ? 'more_horiz' : (activity.done ? 'check' : 'close')"
-                        ></span>
+                        <template
+                          x-if="activity || !activity && courseActivity.inProgress"
+                        >
+                          <span
+                            class="material-symbols-outlined text-[16px]! md:text-[20px]!"
+                            x-text="(activity && activity.inRevision || !activity && courseActivity.inProgress ) ? 'more_horiz' : (activity.done ? 'check' : 'close')"
+                          ></span>
+                        </template>
                         <span
                           class="text-[14px] md:text-[16px] text-center md:text-left"
                           x-text="(()=>{
-                          if(redo){
+                          if(!activity && courseActivity.inProgress){
+                            return 'En Progreso'
+                          }
+                            else if(!activity && !courseActivity.inProgress && !courseActivity.optional){
+                            return 'Sin Calificar'
+                          }
+                          else if(!activity && courseActivity.optional){
+                            return 'Opcional'
+                          }
+                          else if(activity && activity.inRevision){
                             return 'En Revisión'
                           }
-                          else if(activity.comment) {
+                          else if(activity && activity.comment) {
                             return activity.comment;
-                          } else if(activity.done){
+                          } else if(activity && activity.done){
                             return 'Hecha'
                           } else {
                             return 'Pendiente'
