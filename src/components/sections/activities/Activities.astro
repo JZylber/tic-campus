@@ -56,7 +56,7 @@ const { subject, course, year, position } = Astro.props;
                 } else {
                   currentContent = content;
                   articleOpen = true; 
-                  articleURL =  $store.baseURL.dataURL + '/${year}/${subject}/activities/' + content.textURL;}
+                  articleURL =  $store.baseURL.dataURL + '/${year}/${subject}/articles/' + content.textURL;}
                 })()`}
                   x-init="if(content.latest) open = true"
                 >
