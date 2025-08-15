@@ -14,27 +14,81 @@ const { subject, position } = Astro.props;
     <h1 class="text-[30px] md:text-[36px] font-bold text-center p-4">
       Reentregas
     </h1>
-    <p class="text-gray-600 text-[16px] md:text-[20px] text-justify">
+    <p class="text-gray-600 text-[14px] md:text-[16px] text-justify">
       Todas las actividades de clase se pueden reentregar las veces que uno
       quiera
       <strong
         >siempre y cuando se cumpla con las fechas máximas de reentrega</strong
       >. Dichas fechas se van a encontrar en el calendario del curso.
     </p>
-    <p class="text-gray-600 text-[16px] md:text-[20px] text-justify">
+    <p class="text-gray-600 text-[14px] md:text-[16px] text-justify">
       Para reentregar una actividad, se tiene que completar alguno de los
       formularios linkeados a continuación. Hay 2 formularios: uno para las
       actividades de clase, y otro para las actividades obligatorias/con nota.
       Por cada actividad que se desee reentregar, se debe completar el
       formulario.
     </p>
-    <p class="text-gray-600 text-[16px] md:text-[20px] text-justify">
+    <p class="text-gray-600 text-[14px] md:text-[16px] text-justify">
       Al completar el formulario, la actividad/trabajo práctico debería aparecer
       como 'En Revisión' al refrescar la página.
       <strong>Si esto no ocurre contactarse con el docente.</strong>
       Esta será excluida temporalmente del cálculo de la nota final hasta que la
       reentrega sea revisada por el docente.
     </p>
+    <h2 class="font-semibold text-[20px] md:text-[24px]">Guía de Reentregas</h2>
+    <div class="flex flex-col divide-gray-300 divide-y-2">
+      <div class="flex items-center gap-x-4 py-2">
+        <span
+          class="material-symbols-outlined text-[20px]! sm:text-[24px]! text-gray-400"
+          >pending</span
+        ><span class="text-[14px] md:text-[16px]"
+          >Todavía no se corrigió. <strong
+            >No tienen que completar el formulario de reentrega.</strong
+          ></span
+        >
+      </div>
+      <div class="flex items-center gap-x-4 py-2">
+        <span
+          class="material-symbols-outlined text-[20px]! sm:text-[24px]! text-sh-green"
+          >check_circle</span
+        ><span class="text-[14px] md:text-[16px]"
+          >Corregido y suficiente/aprobado. No hace falta reentregar, aunque se
+          puede reentregar para sumar extras. En trabajos prácticos, esto puede
+          sumar nota. En actividades de clase, los extras son solo para aura
+          farming y no suman nota.</span
+        >
+      </div>
+      <div class="flex items-center gap-x-4 py-2">
+        <span
+          class="material-symbols-outlined text-[20px]! sm:text-[24px]! text-sh-yellow"
+          >pending</span
+        ><span class="text-[14px] md:text-[16px]"
+          >Se está considerando la reentrega. El docente lo tiene en su lista de
+          cosas para hacer, paciencia. <strong
+            >No tienen que completar de vuelta el formulario de reentrega.</strong
+          ></span
+        >
+      </div>
+      <div class="flex items-center gap-x-4 py-2">
+        <span
+          class="material-symbols-outlined text-[20px]! sm:text-[24px]! text-sh-red"
+          >cancel</span
+        ><span class="text-[14px] md:text-[16px]"
+          >Corregido y desaprobado/incompleto/insuficiente/sin hacer. Baja la
+          nota. Si quieren mejorar dicha nota, completen el formulario de
+          reentrega correspondiente. <strong
+            >Revisen que las cosas estén en el repositorio y que estén bien, no
+            completen el formulario si el trabajo no está listo para ser
+            reentregado.</strong
+          > Es agotador y provoca frustración tomarme el trabajo de revisar trabajos
+          que siguen incompletos o directamente ni están. Si tienen dudas, acercarse
+          al docente.</span
+        >
+      </div>
+    </div>
+    <h2 class="font-semibold text-[20px] md:text-[24px]">
+      Formularios de Reentrega
+    </h2>
     <div class="flex justify-center pt-4">
       <div
         class="w-full md:w-4/5 md:min-w-80 max-w-4xl flex flex-col md:grid grid-cols-2 grid-rows-2 gap-y-2 gap-x-6"
