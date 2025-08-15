@@ -1,5 +1,191 @@
 ---
+import CodeBlock from "../../../../../../components/articles/code-block/CodeBlock.astro";
+import InlineCodeBlock from "../../../../../../components/articles/code-block/InlineCodeBlock.astro";
+
 export const partial = true;
 ---
 
-<p>Proximamente...</p>
+<h2>¿Qué es Node.js?</h2>
+<p>
+  Node.js es un <strong>entorno de ejecución</strong> para JavaScript que nos permite
+  correr código fuera del navegador, directamente en la computadora.
+</p>
+<p>
+  En otras palabras, gracias a Node.js podemos usar JavaScript no solo para
+  hacer páginas web, sino también para <strong>programar el backend</strong> o interactuar
+  con el sistema operativo.
+</p>
+<p>Esto significa que podemos:</p>
+<ul>
+  <li>Leer y escribir archivos en el disco.</li>
+  <li>
+    Trabajar con comunicación serial (por ejemplo, hablar con placas como
+    Arduino).
+  </li>
+  <li>Crear servidores web (el año que viene).</li>
+  <li>
+    Usar recursos otros de la computadora que en un navegador están bloqueados
+    por seguridad.
+  </li>
+</ul>
+<p>
+  En resumen: Node.js abre la puerta para que JavaScript sea un lenguaje de
+  propósito general, no limitado al frontend.
+</p>
+<h2>¿Por qué usar Node.js?</h2>
+<p>
+  En el navegador, JavaScript no puede acceder directamente a archivos de la
+  computadora o a hardware como puertos seriales, por razones de seguridad. ¿Se
+  imaginan si cada página de internet tuviese acceso irrestricto a nuestros
+  archivos y nuestro sistema operativo?
+</p>
+<p>En cambio, Node.js sí puede, lo que nos permite:</p>
+<ul>
+  <li>Procesar grandes volúmenes de datos desde archivos.</li>
+  <li>
+    Automatizar tareas (por ejemplo, renombrar un montón de imágenes de golpe).
+  </li>
+  <li>Controlar hardware como impresoras 3D, placas de sensores o robots.</li>
+  <li>Crear scripts de administración del sistema.</li>
+</ul>
+<h2>Instalación</h2>
+<p>
+  <strong
+    >Esto solo es necesario si están usando una computadora personal. Las del
+    colegio tiene Node.js</strong
+  >
+</p>
+<ol>
+  <li>
+    Entrar a la web oficial: <a
+      href="https://nodejs.org"
+      target="_blank"
+      rel="noopener">nodejs.org</a
+    >.
+  </li>
+  <li>Descargar la <strong>versión LTS</strong> (Long Term Support).</li>
+  <li>Instalar siguiendo las opciones por defecto.</li>
+</ol>
+<p>Para verificar que está instalado:</p>
+<CodeBlock lang="bash" code="node -v" />
+<p>Ejemplo de salida:</p>
+<CodeBlock lang="bash" code="v22.11.0" />
+<h2>Crear y ejecutar un proyecto</h2>
+<ol>
+  <li>
+    Crear una carpeta para el proyecto. Si es un repositorio de GitHub, clonar
+    el repositorio, y usar el repositorio clonado como carpeta del proyecto
+  </li>
+  <li>
+    Inicializar el proyecto (esto crea el archivo <em>package.json</em>, lo
+    vamos a explicar en la siguiente sección):
+    <InlineCodeBlock code="npm init -y" lang="bash" />. El <em>-y</em> responde "sí"
+    a todas las preguntas y usa valores por defecto.
+  </li>
+  <li>
+    Crear un archivo <em>index.js</em> con este contenido: <InlineCodeBlock
+      code='console.log("¡Hola desde Node.js!");'
+      lang="js"
+    />
+  </li>
+  <li>
+    Ejecutar el archivo desde la terminal:
+    <InlineCodeBlock code="node index.js" lang="bash" />. Resultado:
+    <em>¡Hola desde Node.js!</em>
+  </li>
+</ol>
+<h2>¿Qué es el <em>package.json</em>?</h2>
+<p>
+  Es un archivo que guarda <strong
+    >la información y configuración del proyecto</strong
+  >. Contiene:
+</p>
+<ul>
+  <li>Nombre y versión del proyecto.</li>
+  <li>Descripción.</li>
+  <li>Dependencias (bibliotecas externas que instalamos).</li>
+  <li>Scripts (atajos para correr comandos).</li>
+</ul>
+<p>Ejemplo básico de <em>package.json</em>:</p>
+<CodeBlock
+  lang="json"
+  code=`{
+  "name": "mi-proyecto",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  }
+}`
+/>
+<p>Con esto, podemos correr nuestro archivo así:</p>
+<CodeBlock lang="bash" code="npm start" />
+<p>
+  Si ven el <em>package.json</em>, esto es equivalente a hacer <InlineCodeBlock
+    code="node index.js"
+    lang="bash"
+  />
+</p>
+<h2>Importar y exportar archivos JS</h2>
+<p>
+  En Node.js podemos separar el código en varios archivos y <strong
+    >compartir funciones, variables o clases</strong
+  > entre ellos. Hay dos sistemas principales:
+</p>
+<h3>1) CommonJS (sistema clásico de Node.js)</h3>
+<p><strong>Para exportar</strong>:</p>
+<CodeBlock
+  lang="js"
+  code={`// archivo suma.js
+function sumar(a, b) {
+  return a + b;
+}
+module.exports = sumar;`}
+/>
+<p><strong>Para importar</strong>:</p>
+<CodeBlock
+  lang="js"
+  code={`// archivo index.js
+const sumar = require('./suma.js');
+console.log(sumar(2, 3)); // 5
+`}
+/>
+<h3>2) ES Modules (estándar moderno de JavaScript)</h3>
+<p><strong>Este es el que vamos a usar en esta materia.</strong></p>
+<p>
+  Para usar este sistema, hay que indicarlo en <em>package.json</em>. ¡Tira un
+  error si no lo hacemos!
+</p>
+<CodeBlock lang="json" code=`{
+  "type": "module"
+}` />
+<p><strong>Exportar</strong>:</p>
+
+<CodeBlock
+  lang="js"
+  code={`// archivo suma.js
+export function sumar(a, b) {
+  return a + b;
+}`}
+/>
+<p><strong>Importar</strong>:</p>
+<CodeBlock
+  lang="js"
+  code={`// archivo index.js
+import { sumar } from './suma.js';
+console.log(sumar(2, 3)); // 5
+`}
+/>
+<h2>Resumen</h2>
+<ul>
+  <li>
+    Node.js permite usar JavaScript como lenguaje de backend y de propósito
+    general.
+  </li>
+  <li>Podemos acceder a archivos, hardware y red.</li>
+  <li>Los proyectos se organizan con <em>package.json</em>.</li>
+  <li>
+    Dos formas de importar código: <strong>CommonJS</strong> (<em>require</em>)
+    y <strong>ES Modules</strong> (<em>import</em>).
+  </li>
+</ul>
