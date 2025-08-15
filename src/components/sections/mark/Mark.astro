@@ -41,6 +41,7 @@ const { position, subject } = Astro.props;
           passed: 0,
         },
       },
+      specialActivitiesIds: [],
       regularActivities() {
         return this.activities.filter(
           (activity) => !activity.special && !activity.inRevision
@@ -163,6 +164,7 @@ const { position, subject } = Astro.props;
             dataSheetId
           ),
         ]);
+        this.specialActivitiesIds = specialActivities;
         this.activities = activities.map((activity) => ({
           ...activity,
           inRevision: redos.includes(activity.id),
@@ -229,6 +231,7 @@ const { position, subject } = Astro.props;
           passed: number;
         };
       };
+      specialActivitiesIds: number[];
       regularActivities: () => Array<Activity>;
       specialActivities: () => Array<Activity>;
       redoCoveredActivities: () => Array<number>;
@@ -256,7 +259,12 @@ const { position, subject } = Astro.props;
     position={position}
     xInit=`if($store.student.id !== -1){$store.marks.calculateMarks(dataSheetId, '${subject}', $store.student.course, {name:$store.student.name,surname:$store.student.surname,id:$store.student.id})};$watch('$store.student.id', (id) => {if(id !== -1){$store.marks.calculateMarks(dataSheetId, '${subject}', $store.student.course, {name:$store.student.name,surname:$store.student.surname,id:id})}})`
   >
-    <h1 class="text-[36px] font-bold text-center p-4">Nota</h1>
+    <h1
+      class="text-[36px] font-bold text-center p-4"
+      x-effect="console.log($store.course.activities)"
+    >
+      Nota
+    </h1>
     <div class="flex flex-col md:flex-row gap-x-8 pt-4 md:pb-4 justify-center">
       <div
         class="flex flex-col gap-y-2 shrink-0 pb-2 border-b-2 border-gray-300 md:pb-0 md:border-b-0"

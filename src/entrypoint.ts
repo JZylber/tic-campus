@@ -16,6 +16,7 @@ import { fetchHTMLData, prepareCrumbs } from "./aux/loadData";
 import collapse from "@alpinejs/collapse";
 import persist from "@alpinejs/persist";
 import detectSwipe from "./aux/swipeDetect";
+import type { Unit } from "./aux/types";
 
 window.getSubjectData = getSubjectData;
 window.getSubjectProgram = getSubjectProgram;
@@ -40,6 +41,14 @@ const isOnCampus = () => {
 const courseRegex = /NR\d[A-Z]/;
 
 const daysOfWeek = ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes"];
+
+interface CourseActivity {
+  id: number;
+  name: string;
+  type: string;
+  inProgress: boolean;
+  optional: boolean;
+}
 
 interface AlpineSectionStore {
   currentSection: string;
@@ -209,6 +218,42 @@ export default (Alpine: Alpine) => {
         });
     },
   } as AlpineTimetableStore);
+  Alpine.store("course", {
+    course: "",
+    activities: [],
+    setCourse(course: string) {
+      if (!courseRegex.test(course)) {
+        throw new Error(`Invalid course name: ${course}`);
+      }
+      this.course = course;
+    },
+    setActivities(activitiesXUnit: Array<Unit>) {
+      // Get all unit contents into a single array
+      let activitiesArray = activitiesXUnit.reverse().flatMap((unit) => {
+        return unit.contents.map((content) => ({
+          id: content.id,
+          name: content.name,
+          type: content.type,
+          inProgress: content.latest,
+          optional: content.optional,
+        }));
+      });
+      // Filter keep only types 'Trabajo Práctico', 'Actividad' and 'Encuesta'
+      activitiesArray = activitiesArray.filter((activity) => {
+        return (
+          activity.type === "Trabajo Práctico" ||
+          activity.type === "Actividad" ||
+          activity.type === "Encuesta"
+        );
+      });
+      this.activities = activitiesArray;
+    },
+  } as {
+    course: string;
+    activities: Array<CourseActivity>;
+    setCourse: (course: string) => void;
+    setActivities: (activitiesXUnit: Array<Unit>) => void;
+  });
   Alpine.store("student", {
     name: Alpine.$persist("").using(sessionStorage),
     surname: Alpine.$persist("").using(sessionStorage),
