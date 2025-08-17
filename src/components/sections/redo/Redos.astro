@@ -14,19 +14,58 @@ const { subject, position } = Astro.props;
     <h1 class="text-[30px] md:text-[36px] font-bold text-center p-4">
       Reentregas
     </h1>
+    <h2 class="font-semibold text-[20px] md:text-[24px]">
+      Formularios de Reentrega
+    </h2>
+    <div class="flex justify-center pt-4">
+      <div
+        class="w-full md:w-4/5 md:min-w-80 max-w-4xl flex flex-col md:grid grid-cols-2 grid-rows-2 gap-y-2 gap-x-6"
+        x-data="{activitiesLink: '', markedActivitiesLink: ''}"
+        x-effect={`let {activitiesRedo, markedActivitiesRedo} = await getSubjectRedoLinks('${subject}', dataSheetId); activitiesLink = activitiesRedo; markedActivitiesLink = markedActivitiesRedo;`}
+      >
+        <a
+          x-bind:href="activitiesLink"
+          class="w-full flex justify-center items-center rounded-xl gap-x-4 bg-sh-purple px-4 py-2 cursor-pointer hover:shadow-lg"
+        >
+          <span class="max-md:hidden"
+            ><span class="material-symbols-outlined text-[24px]"
+              >psychology</span
+            ></span
+          >
+          <span class="text-[20px]">Actividades de clase</span>
+        </a>
+        <a
+          x-bind:href="markedActivitiesLink"
+          class="w-full flex justify-center items-center rounded-xl gap-x-4 bg-sh-purple px-4 py-2 cursor-pointer hover:shadow-lg order-3 md:order-2"
+        >
+          <span class="max-md:hidden"
+            ><span class="material-symbols-outlined text-[24px]">help</span
+            ></span
+          >
+          <span class="text-[20px]">Actividades con nota</span>
+        </a>
+        <span
+          class="w-full text-center text-[12px] md:text-[14px] order-2 md:order-3"
+          >para actividades de clase</span
+        >
+        <span class="w-full text-center text-[12px] md:text-[14px] order-4"
+          >para actividades con nota u obligatorias</span
+        >
+      </div>
+    </div>
     <p class="text-gray-600 text-[14px] md:text-[16px] text-justify">
       Todas las actividades de clase se pueden reentregar las veces que uno
       quiera
       <strong
         >siempre y cuando se cumpla con las fechas máximas de reentrega</strong
-      >. Dichas fechas se van a encontrar en el calendario del curso.
+      >. La fecha máxima es un bimestre más de cuando fue dada para entregar en
+      clase.
     </p>
     <p class="text-gray-600 text-[14px] md:text-[16px] text-justify">
       Para reentregar una actividad, se tiene que completar alguno de los
-      formularios linkeados a continuación. Hay 2 formularios: uno para las
-      actividades de clase, y otro para las actividades obligatorias/con nota.
-      Por cada actividad que se desee reentregar, se debe completar el
-      formulario.
+      formularios linkeados arriba. Hay 2 formularios: uno para las actividades
+      de clase, y otro para las actividades obligatorias/con nota. Por cada
+      actividad que se desee reentregar, se debe completar el formulario.
     </p>
     <p class="text-gray-600 text-[14px] md:text-[16px] text-justify">
       Al completar el formulario, la actividad/trabajo práctico debería aparecer
@@ -80,47 +119,8 @@ const { subject, position } = Astro.props;
             >Revisen que las cosas estén en el repositorio y que estén bien, no
             completen el formulario si el trabajo no está listo para ser
             reentregado.</strong
-          > Es frustrante y agotador tomarme el trabajo de revisar trabajos que siguen
+          > Es frustrante y agotador tomarse el trabajo de revisar trabajos que siguen
           incompletos o directamente ni están. Si tienen dudas, acercarse al docente.</span
-        >
-      </div>
-    </div>
-    <h2 class="font-semibold text-[20px] md:text-[24px]">
-      Formularios de Reentrega
-    </h2>
-    <div class="flex justify-center pt-4">
-      <div
-        class="w-full md:w-4/5 md:min-w-80 max-w-4xl flex flex-col md:grid grid-cols-2 grid-rows-2 gap-y-2 gap-x-6"
-        x-data="{activitiesLink: '', markedActivitiesLink: ''}"
-        x-effect={`let {activitiesRedo, markedActivitiesRedo} = await getSubjectRedoLinks('${subject}', dataSheetId); activitiesLink = activitiesRedo; markedActivitiesLink = markedActivitiesRedo;`}
-      >
-        <a
-          x-bind:href="activitiesLink"
-          class="w-full flex justify-center items-center rounded-xl gap-x-4 bg-sh-purple px-4 py-2 cursor-pointer hover:shadow-lg"
-        >
-          <span class="max-md:hidden"
-            ><span class="material-symbols-outlined text-[24px]"
-              >psychology</span
-            ></span
-          >
-          <span class="text-[20px]">Actividades de clase</span>
-        </a>
-        <a
-          x-bind:href="markedActivitiesLink"
-          class="w-full flex justify-center items-center rounded-xl gap-x-4 bg-sh-purple px-4 py-2 cursor-pointer hover:shadow-lg order-3 md:order-2"
-        >
-          <span class="max-md:hidden"
-            ><span class="material-symbols-outlined text-[24px]">help</span
-            ></span
-          >
-          <span class="text-[20px]">Actividades con nota</span>
-        </a>
-        <span
-          class="w-full text-center text-[12px] md:text-[14px] order-2 md:order-3"
-          >para actividades de clase</span
-        >
-        <span class="w-full text-center text-[12px] md:text-[14px] order-4"
-          >para actividades con nota u obligatorias</span
         >
       </div>
     </div>
