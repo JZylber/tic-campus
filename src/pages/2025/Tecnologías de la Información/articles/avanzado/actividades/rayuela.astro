@@ -1,4 +1,6 @@
 ---
+import CodeBlock from "../../../../../../components/articles/code-block/CodeBlock.astro";
+
 export const partial = true;
 ---
 
@@ -15,8 +17,10 @@ export const partial = true;
   numerados convenientemente. Tenemos una carpeta de partes, y conocemos el
   orden de los párrafos:
 </p>
-<pre>
-        <code class="language-javascript">[71, 1, 2, 116, 3, 84, 4, 5, 81, 74, 6, 7, 8, 93, 68, 9, 104, 10, 65, 11, 136]</code></pre>
+<CodeBlock
+  lang="javascript"
+  code={`[71, 1, 2, 116, 3, 84, 4, 5, 81, 74, 6, 7, 8, 93, 68, 9, 104, 10, 65, 11, 136]`}
+/>
 <p>
   Crear un programa en Javascript, usando Node JS, que tome las partes de cada
   uno de los archivos, en el orden provisto anteriormente, y reconstruya el
@@ -25,16 +29,16 @@ export const partial = true;
 <ul>
   <li>
     Les recomiendo tener al orden en forma de lista, y recorrerla para ir
-    tomando las partes
+    tomando las partes.
   </li>
   <li>
-    Para ir acumulando, pueden hacer una variable que vaya acumulando el cuento
+    Para ir acumulando, pueden hacer una variable que vaya acumulando el cuento.
   </li>
   <li>
     Para que se mantengan los párrafos como párrafos, y no sea un choclo
     espantoso enorme, pueden agregar al final de cada párrafo que recupera un
-    salto de línea, que se representa con "\n". Esto provoca los mismo que un
-    "enter" en un texto.
+    salto de línea, que se representa con <em>"\n"</em>. Esto provoca los mismo
+    que un "enter" en un texto.
   </li>
 </ul>
 <p>
@@ -45,8 +49,15 @@ export const partial = true;
 <p>
   Supongamos que no tienen la lista del orden para copiar y pegar, sino que
   tienen un archivo, orden.txt. Este tiene el orden de las partes, una por
-  línea.
+  línea. Por ejemplo,
 </p>
+<CodeBlock
+  lang="JSON"
+  code={`71
+1
+2
+...`}
+/>
 <ol>
   <li>
     Creen el archivo orden.txt con el contenido de la lista, uno por línea.
@@ -54,6 +65,6 @@ export const partial = true;
   <li>
     Modifiquen el programa para que obtenga el orden de las partes de este
     archivo. <strong>TIP:</strong> recuerden que el caracter que representa un salto
-    de línea es "\n"
+    de línea es <em>"\n"</em>
   </li>
 </ol>
