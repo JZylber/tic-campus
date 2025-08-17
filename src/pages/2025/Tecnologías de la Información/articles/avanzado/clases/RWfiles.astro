@@ -1,5 +1,126 @@
 ---
+import { Code } from "astro:components";
+import CodeBlock from "../../../../../../components/articles/code-block/CodeBlock.astro";
+import InlineCodeBlock from "../../../../../../components/articles/code-block/InlineCodeBlock.astro";
+
 export const partial = true;
 ---
 
-<p>Proximamente...</p>
+<h2>¿Por qué leer y escribir archivos?</h2>
+<p>
+  Cuando programamos en backend, muchas veces necesitamos <strong
+    >guardar información</strong
+  > en la computadora, o <strong>leer datos</strong> que ya están guardados.
+</p>
+<ul>
+  <li>Un sistema de notas que guarda las calificaciones de estudiantes.</li>
+  <li>Un blog que guarda los textos de los posts en archivos.</li>
+  <li>Un programa que guarda un log con las acciones realizadas.</li>
+</ul>
+<p>
+  En Node.js, esto se puede hacer gracias al <strong
+    >módulo <em>fs</em> (file system)</strong
+  >, que nos permite manipular archivos en el disco.
+</p>
+
+<h2>Importar <em>fs</em> con ES6 modules</h2>
+<p>
+  Como dijimos en la clase anterior, para importar archivos y/o librerías vamos
+  a usar ES6 modules, osea, <em>import</em>. La forma de importar <em>fs</em> es:
+</p>
+<CodeBlock lang="javascript" code={`import fs from "fs";`} />
+<p>Esto nos habilita a usar las funciones de fs para manejo de archivos.</p>
+
+<h2>Escribir archivos con <em>writeFileSync</em></h2>
+<p>
+  La función <strong>writeFileSync</strong> sirve para <strong
+    >crear un archivo nuevo</strong
+  > o <strong>sobreescribir un archivo existente</strong>.
+</p>
+<p>Su sintaxis es:</p>
+<CodeBlock lang="javascript" code={`fs.writeFileSync(ruta, contenido);`} />
+<ul>
+  <li><em>ruta</em>: es el nombre o la ruta del archivo.</li>
+  <li>
+    <em>contenido</em>: lo que queremos escribir (en este apunte, texto plano (<em
+      >.txt</em
+    >).
+  </li>
+</ul>
+<p>Ejemplo:</p>
+<CodeBlock
+  lang="javascript"
+  code={`import fs from "fs";
+fs.writeFileSync("mensaje.txt", "Hola, este es un archivo de prueba");`}
+/>
+<p>
+  Esto crea (o sobreescribe) un archivo llamado <strong>mensaje.txt</strong> en la
+  carpeta del proyecto.
+</p>
+
+<h2>Leer archivos con <em>readFileSync</em></h2>
+<p>
+  La función <strong>readFileSync</strong> nos permite leer el contenido de un archivo
+  ya existente.
+</p>
+<p>Su sintaxis es:</p>
+<CodeBlock
+  lang="javascript"
+  code={`let contenido = fs.readFileSync(ruta, encoding);`}
+/>
+<ul>
+  <li><em>ruta</em>: el archivo que queremos leer.</li>
+  <li>
+    <em>encoding</em>: normalmente <em>"utf-8"</em> para leer como texto y no como
+    datos binarios. Tiene que ver con Hardware, si les interesa el tema preguntenle
+    a Darío/Sofi.
+  </li>
+</ul>
+<p>Ejemplo:</p>
+<CodeBlock
+  lang="javascript"
+  code={`import fs from "fs";
+let texto = fs.readFileSync("mensaje.txt", "utf-8");
+console.log(texto);`}
+/>
+<p>Salida esperada:</p>
+<CodeBlock lang="bash" code="Hola, este es un archivo de prueba" />
+<h2>Ejemplo completo</h2>
+<p>
+  Supongamos que queremos crear un programa que guarde el nombre de un docente
+  en un archivo <em>.txt</em> y después lo lea.
+</p>
+<p>Archivo: <strong>index.js</strong></p>
+<CodeBlock
+  lang="javascript"
+  code={`import fs from "fs";
+// Escribimos un archivo .txt
+fs.writeFileSync("docente.txt", "Nombre: Mark Fisher");
+// Leemos el archivo .txt
+const contenido = fs.readFileSync("docente.txt", "utf-8");
+
+// Mostramos el contenido en consola
+console.log("Contenido del archivo:");
+console.log(contenido);
+`}
+/>
+
+<p>Para ejecutar en la terminal:</p>
+<CodeBlock lang="bash" code="node index.js" />
+<p>Salida esperada:</p>
+<CodeBlock lang="javascript" code="Nombre: Mark Fisher" />
+<h2>Resumen</h2>
+<ul>
+  <li>
+    <InlineCodeBlock
+      lang="javascript"
+      code='fs.writeFileSync("archivo.txt", "contenido")'
+    /> → crea/sobreescribe un archivo.
+  </li>
+  <li>
+    <InlineCodeBlock
+      lang="javascript"
+      code='fs.readFileSync("archivo.txt", "utf-8")'
+    /> → lee un archivo como texto.
+  </li>
+</ul>
