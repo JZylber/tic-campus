@@ -83,9 +83,24 @@ console.log(numeros); // [1, 2, 3]`}
 console.log(letras.length); // 3`}
 />
 <p>Ojo: el último índice válido es length - 1.</p>
+<h2>Iterar un array con while</h2>
+<p>
+  Una forma muy común de trabajar con arrays es recorrerlos con un ciclo while.
+</p>
+<CodeBlock
+  lang="javascript"
+  code={`let frutas = ["manzana", "banana", "naranja"];
+let i = 0;
+while (i < frutas.length) {
+  console.log("Fruta: ", frutas[i]);
+  i++;
+}`}
+/>
+<p>Esto recorre todos los elementos del array, usando el índice i.</p>
 <h2>Iterar un array con for</h2>
 <p>
-  Una forma muy común de trabajar con arrays es recorrerlos con un ciclo for.
+  El caso anterior, pero reescrito con un ciclo for, que es más compacto y común
+  para este tipo de tareas:
 </p>
 <CodeBlock
   lang="javascript"
@@ -95,7 +110,7 @@ for (let i = 0; i < frutas.length; i++) {
   console.log("Fruta: ", frutas[i]);
 }`}
 />
-<p>Esto recorre todos los elementos del array, usando el índice i.</p>
+<h2>Ejemplo de iteración de un array</h2>
 <p>
   En muchos casos, se itera sobre arrays para hacer operaciones sobre todos los
   elementos. Por ejemplo, si quiero sumar todos los números de un array de
