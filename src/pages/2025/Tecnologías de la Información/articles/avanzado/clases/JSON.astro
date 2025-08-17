@@ -1,5 +1,152 @@
 ---
+import CodeBlock from "../../../../../../components/articles/code-block/CodeBlock.astro";
+import InlineCodeBlock from "../../../../../../components/articles/code-block/InlineCodeBlock.astro";
+
 export const partial = true;
 ---
 
-<p>Proximamente...</p>
+<h2>¿Qué es JSON?</h2>
+<p>
+  <strong>JSON</strong> significa <em>JavaScript Object Notation</em>. Es un <strong
+    >formato estándar</strong
+  > para intercambiar y guardar datos. Se parece a los objetos de JavaScript, pero
+  con reglas claras para que cualquier lenguaje lo pueda entender.
+</p>
+<ul>
+  <li>
+    Las <strong>claves</strong> de los objetos van entre comillas dobles <em
+      >""</em
+    >.
+  </li>
+  <li>
+    Tipos admitidos: <em>string</em>, <em>number</em>, <em>boolean</em>, <em
+      >null</em
+    >, <em>array</em> y <em>object</em>.
+  </li>
+  <li>No se pueden guardar funciones ni referencias.</li>
+</ul>
+<h2>¿Por qué usar un estándar?</h2>
+<p>
+  Porque JSON funciona como un <strong>idioma común</strong> entre programas y lenguajes.
+  Como es común, tenemos regaladas las funciones para convertir a JSON o leer JSON.
+  Algunos usos comunes:
+</p>
+<ul>
+  <li>Guardar datos en archivos para usarlos después.</li>
+  <li>
+    Enviar y recibir información entre cliente y servidor (¡SoqueTIC usa JSON
+    para funcionar!).
+  </li>
+  <li>Manejar configuraciones y listas (usuarios, productos, etc.).</li>
+</ul>
+
+<h2>Funciones clave en JavaScript</h2>
+<p>JavaScript trae dos funciones integradas para trabajar con JSON:</p>
+<ol>
+  <li>
+    <InlineCodeBlock
+      code="JSON.stringify(value, replacer, space)"
+      lang="javascript"
+    />: convierte un objeto/array a <strong>texto JSON</strong>.
+  </li>
+  <CodeBlock
+    lang="javascript"
+    code={`// Ejemplo básico
+let persona = { nombre: "Ana", edad: 17 };
+let jsonPersona = JSON.stringify(persona);
+console.log(jsonPersona); // {"nombre":"Ana","edad":17}
+
+// Con identación para que quede legible (space = 2)
+let legible = JSON.stringify(persona, null, 2);
+console.log(legible);
+/*
+{
+    "nombre": "Ana",
+    "edad": 17
+}
+*/`}
+  />
+</ol>
+<li>
+  <InlineCodeBlock code="JSON.parse(texto)" lang="javascript" />: interpreta un <strong
+    >texto JSON</strong
+  > y lo convierte a objeto/array de JS.
+  <CodeBlock
+    lang="javascript"
+    code={`// Ejemplo básico
+const texto = '{"nombre":"Luis","edad":16}';
+const obj = JSON.parse(texto);
+console.log(obj.nombre); // Luis
+`}
+  />
+</li>
+
+<h2>Leer y escribir archivos JSON en Node.js</h2>
+<p>
+  Como ya saben usar <em>fs</em>, combinamos lectura/escritura de archivos con <em
+    >JSON.parse</em
+  > y <em>JSON.stringify</em>.
+</p>
+
+<p>Archivo inicial: <em>nombres.json</em></p>
+<CodeBlock
+  lang="json"
+  code={`[
+    "Luka",
+    "Nikola",
+    "Domantas"
+]`}
+/>
+
+<p>Script de Node.js: leer, agregar y guardar</p>
+<CodeBlock
+  lang="javascript"
+  code={`import fs from "fs";
+
+// 1) Leer el archivo como texto (UTF-8)
+let data = fs.readFileSync("nombres.json", "utf-8");
+
+// 2) Interpretar el texto JSON a un array de JS
+let nombres = JSON.parse(data);
+
+// 3) Agregar un nuevo nombre
+nombres.push("Slavoj");
+
+// 4) Convertir el array a JSON con identación (2 espacios)
+let nuevoJson = JSON.stringify(nombres, null, 2);
+
+// 5) Escribir el archivo actualizado
+fs.writeFileSync("nombres.json", nuevoJson);
+
+console.log("Nombre agregado con éxito!");
+`}
+/>
+
+<p>Resultado esperado en <em>nombres.json</em></p>
+<CodeBlock
+  lang="json"
+  code={`[
+  "Luka",
+  "Nikola",
+  "Domantas",
+  "Slavoj"
+]`}
+/>
+
+<p>
+  <strong>Nota:</strong> Asegurate de que el archivo <em>nombres.json</em> exista
+  y tenga JSON válido. Si está vacío o con comas de más, <em>JSON.parse</em>
+  va a fallar.
+</p>
+<h2>Resumen</h2>
+<ul>
+  <li><strong>JSON</strong> es un estándar para compartir/guardar datos.</li>
+  <li><em>JSON.stringify</em> convierte objetos/arrays a texto JSON.</li>
+  <li>
+    <em>JSON.parse</em> interpreta texto JSON y lo vuelve objeto/array de JS.
+  </li>
+  <li>
+    Con <em>fs</em> en Node.js podemos persistir datos en archivos <em>.json</em
+    >.
+  </li>
+</ul>
