@@ -1,4 +1,5 @@
 ---
+import CodeBlock from "../../../../../../components/articles/code-block/CodeBlock.astro";
 import InlineCodeBlock from "../../../../../../components/articles/code-block/InlineCodeBlock.astro";
 
 export const partial = true;
@@ -11,17 +12,26 @@ export const partial = true;
   >
   Veo un node_modules pusheado y se llevan la materia automáticamente.
 </p>
+<a
+  href="https://imgflip.com/i/a3ce0g"
+  class="flex justify-center items-center w-full my-2"
+  ><img
+    src="https://i.imgflip.com/a3ce0g.jpg"
+    class="rounded-lg w-full max-w-[400px]"
+    alt="meme simpsons hay tabla"
+  /></a
+>
 <p>
   Este TP, obviamente, usa SoqueTIC. Para instalarlo, pueden hacerlo igual que
   cualquier otra librería usando npm:
-  <code class="language-bash">npm i soquetic</code>
 </p>
+<CodeBlock lang="bash" code={`npm i soquetic`} />
 <h2>Consigna Base</h2>
 <p>
   Seguimos desarrollando la aplicación para "Los Pelados". En este caso,
-  contamos con un frontend hecho, preparado para usar soquetic.
+  contamos con un frontend hecho, preparado para usar SoqueTIC.
   <strong>Usen el ejercicio anterior de guía</strong>. Construir un backend en
-  Node JS usando soquetic que responda a 3 eventos:
+  Node JS usando SoqueTIC que responda a 3 eventos:
 </p>
 <ul>
   <li>
@@ -36,17 +46,17 @@ export const partial = true;
     <em>"pedido"</em>: Recibe un pedido en forma de objeto, se debe guardar en
     la lista de objetos que se encuentra data/pedidos.json.
     <strong>Debe retornar un objeto</strong> que contenga el atributo
-    <code class="language-javascript">ok</code> con el valor
-    <code class="language-javascript">true</code> si el pedido fue guardado correctamente,
-    o <code class="language-javascript">false</code> si no se pudo guardar. Por ejemplo
+    <em class="language-javascript">ok</em> con el valor
+    <em class="language-javascript">true</em> si el pedido fue guardado correctamente,
+    o <em class="language-javascript">false</em> si no se pudo guardar. Por ejemplo
     se envía el objeto
     <InlineCodeBlock lang="js" code={`{ok:true}`} /> si se guardó correctamente.
   </li>
 </ul>
 <p>
   <strong>No se olviden</strong> de iniciar el servidor con
-  <code class="language-javascript">startServer</code>. Por defecto se
-  inicializa en el puerto 3000.
+  <em class="language-javascript">startServer</em>. Por defecto se inicializa en
+  el puerto 3000.
 </p>
 <p>
   Levantar el frontend y probar que anda. Para ejecutar el frontend, como usa
@@ -59,9 +69,11 @@ export const partial = true;
   Hacer un pequeño frontend (HTML + JS) que le consulte al backend por los
   pedidos hechos y los muestre. Van a tener que agregarle funcionalidad al
   backend par cumplir con esto. Pueden hacerlo en modo fiaca y hacer simplemente
-  un <code class="language-javascript">console.log</code> de lo obtenido en el backend.
+  un <InlineCodeBlock lang="javascript" code={`console.log()`} /> de lo obtenido
+  en el backend.
 </p>
 <h2>Consigna Manija II</h2>
+<p><strong>ESTO ES BASTANTE MANIJA ENTER AT YOUR OWN RISK.</strong></p>
 <p>
   Hacerle las modificaciones necesarias al backend y al frontend para permitir
   más de un producto por cliente.
