@@ -35,16 +35,17 @@ export const partial = true;
 </p>
 <ul>
   <li>
-    <em>"sabores"</em>: Devolver la lista de todos los sabores, que se encuentra
-    en data/sabores.json.
+    <em>"sabores"</em>: Evento de tipo <strong>GET</strong>. Devolver la lista
+    de todos los sabores, que se encuentra en data/sabores.json.
   </li>
   <li>
-    <em>"productos"</em>: Devolver la lista de todos los productos, que se
-    encuentra en data/productos.json.
+    <em>"productos"</em>: Evento de tipo <strong>GET</strong>. Devolver la lista
+    de todos los productos, que se encuentra en data/productos.json.
   </li>
   <li>
-    <em>"pedido"</em>: Recibe un pedido en forma de objeto, se debe guardar en
-    la lista de objetos que se encuentra data/pedidos.json.
+    <em>"pedido"</em>: Evento de tipo <strong>POST</strong>. Recibe un pedido en
+    forma de objeto, se debe guardar en la lista de objetos que se encuentra
+    data/pedidos.json.
     <strong>Debe retornar un objeto</strong> que contenga el atributo
     <em class="language-javascript">ok</em> con el valor
     <em class="language-javascript">true</em> si el pedido fue guardado correctamente,
