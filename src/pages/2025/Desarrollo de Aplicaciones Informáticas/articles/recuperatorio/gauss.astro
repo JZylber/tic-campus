@@ -1,0 +1,78 @@
+---
+import CodeBlock from "../../../../../components/articles/code-block/CodeBlock.astro";
+import InlineCodeBlock from "../../../../../components/articles/code-block/InlineCodeBlock.astro";
+---
+
+<p>
+  No Shulian. ¿Por qué nos hacés esto? La respuesta la saben y es que es un
+  recuperatorio. Elijo el tema que quiero.
+</p>
+<h2>Introducción</h2>
+<p>
+  Saben que es factorización de polinomios. Si llegaron a 5to, lo aprobaron
+  alguna vez. Este TP necesita que sepan factorizar <strong
+    >en raíces racionales</strong
+  > un polinomio de cualquier grado. Osea, necesitan conocer teorema del resto, Ruffini,
+  fórmula resolvente, etc. Aunque sea entender lo que hacen, no el detalle de como.
+</p>
+<h2>Programa</h2>
+<p>
+  El archivo <em>main.py</em> contiene la implementación de la factorización de polinomios,
+  en particular, la función <InlineCodeBlock
+    lang="python"
+    code="def factorize_polynomial(polynomial : list[float]) -> list[float]"
+  />
+  que toma un polinomio como lista de coeficientes y devuelve sus raíces racionales.
+  A los polinomios los vamos a representar como una lista de coeficientes. Por ejemplo,
+  el polinomio x<sup>4</sup> - 6x<sup>3</sup> + 13x<sup>2</sup> - 12x + 4 se representaría
+  como <InlineCodeBlock lang="python" code="[1, -6, 13, -12, 4]" />. Las raíces
+  se devuelven en forma de lista, con raíces repetidas duplicadas. Por ejemplo,
+  el polinomio x<sup>4</sup> - 6x<sup>3</sup> + 13x<sup>2</sup> - 12x + 4, que se
+  factoriza a (x - 1)<sup>2</sup> (x - 2)<sup>2</sup>, devolvería la lista <InlineCodeBlock
+    lang="python"
+    code="[1, 1, 2, 2]"
+  />. La lista de raíces puede no estar en orden, es decir <strong
+    >los tests no pueden depender del orden de las raíces</strong
+  > (de hecho, la función incluye un desordenador para evitar que me adapten la solución
+  al orden). Algunas consideraciones más:
+</p>
+<ul>
+  <li>
+    El programa levanta una excepción del tipo <InlineCodeBlock
+      lang="python"
+      code="TypeError"
+    /> si los coeficientes son de un tipo no numérico.
+  </li>
+  <li>
+    El programa solo toma polinomios de al menos grado 1. No toma ni constantes
+    ni polinomios vacío. Levanta una excepción del tipo <InlineCodeBlock
+      lang="python"
+      code="ValueError"
+    /> si eso ocurre.
+  </li>
+  <li>Coeficientes 0 al principio del polinomio son eliminados.</li>
+  <li>
+    Si tiene más de dos raíces irracionales o complejas, no va a devolver
+    ninguna irracional. No es fundamental que entiendan esto último, pero lo
+    aclaro por si eligen hacer tests de esto. No es necesario para la consigna
+    hacer tests de este último punto.
+  </li>
+</ul>
+<h2>Requisitos</h2>
+<p>
+  Se pueden instalar todas las librerías necesarias (pytest y coverage), con el
+  siguiente comando:
+</p>
+<CodeBlock lang="bash" code="pip install -r requirements.txt" />
+<h2>Consigna</h2>
+<p>
+  Armar un conjunto de tests para la función <InlineCodeBlock
+    lang="python"
+    code="def factorize_polynomial(polynomial : list[float]) -> list[float]"
+  /> que tenga 100% de line y branch coverage <strong
+    >sobre dicha función</strong
+  >. El tp <strong>es individual</strong> y <strong
+    >se defiende oralmente en clase</strong
+  >. Les voy a hacer preguntas respecto a testing y cobertura, así que un mínimo
+  de base teórica tienen que tener.
+</p>
