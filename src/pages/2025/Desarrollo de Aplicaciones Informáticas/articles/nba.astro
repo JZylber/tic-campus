@@ -1,4 +1,6 @@
 ---
+import InlineCodeBlock from "../../../../components/articles/code-block/InlineCodeBlock.astro";
+
 export const partial = true;
 ---
 
@@ -9,28 +11,30 @@ export const partial = true;
 </p>
 <p>
   <strong>PARA NINGUNO DE LOS PUNTOS HAY QUE EDITAR EL HTML</strong> Solo el archivo
-  <code>main.js</code>, y si tienen ganas, <code>style.css</code> para que se vea
-  lindo.
+  <em>main.js</em>, y si tienen ganas, <em>style.css</em> para que se vea lindo.
 </p>
 <h2>Punto 1</h2>
 <p>
-  Llenar ambos <code>&lt;select&gt;</code> con etiquetas
-  <code>&lt;option&gt;</code> como equipos hay en el array
-  <code>equipos</code> de main.js. Haganlo mediante código, no editando el html.
+  Llenar ambos <InlineCodeBlock lang="html" code={`<select>`} /> con etiquetas
+  <InlineCodeBlock lang="html" code={`<option>`} /> como equipos hay en el array
+  <InlineCodeBlock lang="javascript" code={`const equipos`} /> de main.js. Haganlo
+  mediante código, no editando el html.
 </p>
 <h2>Punto 2</h2>
 <p>
-  Hacer que al cambiar (evento <code>change</code>) el
-  <code>&lt;select&gt;</code>, se ponga la imagen del equipo apropiada. Hacerlo
-  para ambos select. <strong>TIP</strong>: Alcanza con cambiar el atributo
-  <code>src</code> de las imágenes.
+  Hacer que al cambiar (evento <em>change</em>) el
+  <InlineCodeBlock lang="html" code={`<select>`} />, se ponga la imagen del
+  equipo apropiada. Hacerlo para ambos select. <strong>TIP</strong>: Alcanza con
+  cambiar el atributo
+  <em>src</em> de las imágenes.
 </p>
 <h2>Punto 3</h2>
 <p>
-  Hacer que al hacer click (evento <code>click</code>) en &quot;Programar
-  Fecha&quot; se agregue un nuevo <code>&lt;div&gt;</code> dentro del
-  <code>&lt;div id=&quot;fechas&quot;&gt;</code> con un partido entre los 2 equipos
-  actualmente seleccionados. Debe ser de la forma &lt;imagen_equipo1&gt; &lt;nombre_equipo1&gt;
-  VS &lt;nombre_equipo2&gt; &lt;imagen_equipo2&gt;. Pueden agregar código css para
-  que no se vea horrendo.
+  Hacer que al hacer click (evento <em>click</em>) en &quot;Programar
+  Fecha&quot; se agregue un nuevo <InlineCodeBlock lang="html" code="<div>" /> dentro
+  del
+  <InlineCodeBlock lang="html" code={`<div id="fechas">`} /> con un partido entre
+  los 2 equipos actualmente seleccionados. Debe ser de la forma &lt;imagen_equipo1&gt;
+  &lt;nombre_equipo1&gt; VS &lt;nombre_equipo2&gt; &lt;imagen_equipo2&gt;. Pueden
+  agregar código css para que no se vea horrendo.
 </p>
