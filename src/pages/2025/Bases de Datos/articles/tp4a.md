@@ -21,12 +21,12 @@ Tenemos una base de datos con 3 tablas
 
 
 
-## Ejercicio 1
+# Ejercicio 1
 
 * Crear la base de datos en Neon
 
 
-## Ejercicio 2
+# Ejercicio 2
 ## Desarrollar los siguientes endpoints
 
 ### /crearusuario
@@ -52,7 +52,7 @@ Token
 
 * Devuelve las canciones escuchadas por el usuario logueado y la cantidad de reproducciones
 
-## Ejercicio 3
+# Ejercicio 3
 
 Deployar el backend en Vercel
 
