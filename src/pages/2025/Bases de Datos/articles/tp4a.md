@@ -38,22 +38,22 @@ userid
 nombre
 password
 
--> Crea un registro en la tabla usuario, con el password hasheado usando bcrypt
+* Crea un registro en la tabla usuario, con el password hasheado usando bcrypt
 
 # /login
 Recibe:
 userid
 password
 
--> Si no existe el usuario da un error
--> Si no coincide el password da un error
--> Si coincide usuario y password, devuelve un token JWT
+* Si no existe el usuario da un error
+* Si no coincide el password da un error
+* Si coincide usuario y password, devuelve un token JWT
 
 # /escucho
 Recibe:
 Token
 
--> Devuelve las canciones escuchadas por el usuario logueado y la cantidad de reproducciones
+* Devuelve las canciones escuchadas por el usuario logueado y la cantidad de reproducciones
 
 ### Ejercicio 3
 
