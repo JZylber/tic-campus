@@ -27,7 +27,7 @@ Tenemos una base de datos con 3 tablas
 
 
 # Ejercicio 2
-## Desarrollar los siguientes endpoints
+* Desarrollar los siguientes endpoints
 
 ### /crearusuario
 Recibe:
