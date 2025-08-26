@@ -5,32 +5,31 @@
 
 Tenemos una base de datos con 3 tablas
 
-USUARIO
-PK - ID
-Nombre
-Password
+# USUARIO
+* PK - ID
+* Nombre
+* Password
 
-CANCION
-PK - ID
-Nombre
+# CANCION
+* PK - ID
+* Nombre
 
 
-ESCUCHA
-PK - ID
-FK - UsuarioID
-FK - CancionID
-Reproducciones
+# ESCUCHA
+* PK - ID
+* FK - UsuarioID
+* FK - CancionID
+* Reproducciones
 
 
 
 ### Ejercicio 1
 
-Crear la base de datos en Neon
+* Crear la base de datos en Neon
 
 
 ### Ejercicio 2
-
-Desarrollar los siguientes endpoints
+# Desarrollar los siguientes endpoints
 
 # /crearusuario
 Recibe:
