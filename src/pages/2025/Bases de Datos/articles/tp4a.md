@@ -1,21 +1,19 @@
 # TP4-A
 # Autenticacion
 
-## Consigna
-
 Tenemos una base de datos con 3 tablas
 
-# USUARIO
+### USUARIO
 * PK - ID
 * Nombre
 * Password
 
-# CANCION
+### CANCION
 * PK - ID
 * Nombre
 
 
-# ESCUCHA
+### ESCUCHA
 * PK - ID
 * FK - UsuarioID
 * FK - CancionID
@@ -23,15 +21,15 @@ Tenemos una base de datos con 3 tablas
 
 
 
-### Ejercicio 1
+## Ejercicio 1
 
 * Crear la base de datos en Neon
 
 
-### Ejercicio 2
-# Desarrollar los siguientes endpoints
+## Ejercicio 2
+## Desarrollar los siguientes endpoints
 
-# /crearusuario
+### /crearusuario
 Recibe:
 userid
 nombre
@@ -39,7 +37,7 @@ password
 
 * Crea un registro en la tabla usuario, con el password hasheado usando bcrypt
 
-# /login
+### /login
 Recibe:
 userid
 password
@@ -48,13 +46,13 @@ password
 * Si no coincide el password da un error
 * Si coincide usuario y password, devuelve un token JWT
 
-# /escucho
+### /escucho
 Recibe:
 Token
 
 * Devuelve las canciones escuchadas por el usuario logueado y la cantidad de reproducciones
 
-### Ejercicio 3
+## Ejercicio 3
 
 Deployar el backend en Vercel
 
