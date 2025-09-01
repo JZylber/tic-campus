@@ -1,5 +1,197 @@
 ---
+import CodeBlock from "../../../../../../components/articles/code-block/CodeBlock.astro";
+import InlineCodeBlock from "../../../../../../components/articles/code-block/InlineCodeBlock.astro";
+
 export const partial = true;
 ---
 
-<p>Proximamente...</p>
+<p>
+  En proyectos de backend con Node JS suele ser común que tengamos que
+  <strong>recorrer listas</strong> para:
+</p>
+<ul>
+  <li>
+    <strong>Búsqueda</strong>: encontrar un elemento que cumple cierta
+    condición.
+  </li>
+  <li>
+    <strong>Filtrado</strong>: armar una nueva lista con todos los elementos que
+    cumplen cierta condición.
+  </li>
+</ul>
+
+<p>Son dos conceptos relacionados pero no iguales:</p>
+<ul>
+  <li>La búsqueda devuelve un único resultado (o ninguno).</li>
+  <li>
+    El filtrado devuelve una lista de resultados, que puede estar vacía o tener
+    varios elementos.
+  </li>
+</ul>
+
+<h2>Búsqueda</h2>
+<p>
+  En la búsqueda nos interesa un solo elemento. Por ejemplo, tenemos una lista
+  de productos:
+</p>
+
+<CodeBlock
+  lang="javascript"
+  code={`const productos = [
+  { id: 1, nombre: "Mouse", precio: 5000 },
+  { id: 2, nombre: "Teclado", precio: 12000 },
+  { id: 3, nombre: "Monitor", precio: 80000 },
+  { id: 4, nombre: "Teclado", precio: 6000 }
+];
+`}
+/>
+
+<p>
+  Queremos encontrar el producto con <em>id</em> igual a 2. Como sabemos que solo
+  hay un producto con ese <em>id</em>, podemos usar una variable para guardar el
+  resultado y cortar el ciclo con <em>break</em>:
+</p>
+
+<CodeBlock
+  lang="javascript"
+  code={`let encontrado = null;
+
+for (let i = 0; i < productos.length; i++) {
+    if (productos[i].id === 2) {
+        encontrado = productos[i];
+        break; // terminamos porque ya lo encontramos
+    }
+}
+
+console.log("Producto encontrado:", encontrado);
+`}
+/>
+
+<p><strong>Salida:</strong></p>
+<CodeBlock
+  lang="bash"
+  code={`Producto encontrado: { id: 2, nombre: 'Teclado', precio: 12000 }`}
+/>
+
+<h2>Filtrado</h2>
+<p>
+  En el filtrado acumulamos en una lista todos los elementos que cumplen la
+  condición. Por ejemplo, queremos los productos cuyo precio sea mayor o igual a
+  10.000:
+</p>
+
+<CodeBlock
+  lang="javascript"
+  code={`let caros = [];
+
+for (let i = 0; i < productos.length; i++) {
+    if (productos[i].precio >= 10000) {
+        caros.push(productos[i]);
+    }
+}
+
+console.log("Productos caros:", caros);
+`}
+/>
+
+<p><strong>Salida:</strong></p>
+<CodeBlock
+  lang="bash"
+  code={`Productos caros: [
+    { id: 2, nombre: 'Teclado', precio: 12000 },
+    { id: 3, nombre: 'Monitor', precio: 80000 }
+]`}
+/>
+
+<h3>Filtrado por pertenencia a una lista</h3>
+<p>
+  A veces queremos quedarnos con todos los elementos cuyo valor esté en un
+  conjunto de interés. Para eso usamos el método <em>includes</em>, que devuelve <em
+    >true</em
+  >
+  si un valor está dentro de una lista.
+</p>
+
+<p>
+  Ejemplo: queremos los productos cuyo nombre esté en la lista <InlineCodeBlock
+    lang="javascript"
+    code=`["Mouse", "Monitor"]`
+  />.
+</p>
+
+<CodeBlock
+  lang="javascript"
+  code={`let seleccionados = [];
+let nombresInteres = ["Mouse", "Monitor"];
+
+for (let i = 0; i < productos.length; i++) {
+    if (nombresInteres.includes(productos[i].nombre)) {
+        seleccionados.push(productos[i]);
+    }
+}
+
+console.log("Seleccionados:", seleccionados);
+`}
+/>
+
+<p><strong>Salida:</strong></p>
+<CodeBlock
+  lang="bash"
+  code={`Seleccionados: [
+    { id: 1, nombre: 'Mouse', precio: 5000 },
+    { id: 3, nombre: 'Monitor', precio: 80000 }
+]`}
+/>
+
+<h3>Filtrado con múltiples condiciones</h3>
+<p>
+  También podemos combinar condiciones. Por ejemplo: queremos todos los
+  productos que cuesten más de 10.000
+  <strong>y además</strong> su nombre esté en la lista <InlineCodeBlock
+    lang="javascript"
+    code=`["Teclado", "Monitor"]`
+  />.
+</p>
+
+<CodeBlock
+  lang="javascript"
+  code={`let filtrados = [];
+let nombresValidos = ["Monitor", "Teclado"];
+
+for (let i = 0; i < productos.length; i++) {
+    if (productos[i].precio > 10000 && nombresValidos.includes(productos[i].nombre)) {
+        filtrados.push(productos[i]);
+    }
+}
+
+console.log("Filtrados:", filtrados);
+`}
+/>
+
+<p><strong>Salida:</strong></p>
+<CodeBlock
+  lang="bash"
+  code={`Filtrados: [
+    { id: 2, nombre: 'Teclado', precio: 12000 },
+    { id: 3, nombre: 'Monitor', precio: 80000 }
+]`}
+/>
+
+<h2>Conclusión</h2>
+<ul>
+  <li>
+    <strong>Búsqueda</strong>: nos quedamos con un único elemento, usando una
+    variable y <em>break</em> para cortar el ciclo.
+  </li>
+  <li>
+    <strong>Filtrado</strong>: acumulamos en una lista todos los que cumplen.
+  </li>
+  <li>
+    El método <em>includes</em> permite verificar si un valor está en una lista,
+    lo cual es útil para condiciones de pertenencia.
+  </li>
+  <li>
+    Podemos combinar condiciones con <em>&amp;&amp;</em> (y lógico) o <em>||</em
+    > (o lógico).
+  </li>
+</ul>
