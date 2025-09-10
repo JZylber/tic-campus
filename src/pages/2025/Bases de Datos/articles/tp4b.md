@@ -1,5 +1,5 @@
-# TP4-A
-# Autenticacion
+# TP4-B
+# Arquitectura
 
 Tenemos una base de datos con 3 tablas
 
@@ -20,44 +20,47 @@ Tenemos una base de datos con 3 tablas
 * Reproducciones
 
 
-
 # Ejercicio 1
 
-* Crear la base de datos en Neon
+## Agregar una nueva tabla ROL con la siguiente estructura:
+* PK - ID
+* Tipo de Rol : Admin o Usuario
+
 
 
 # Ejercicio 2
-* Desarrollar los siguientes endpoints
 
-### /crearusuario
-Recibe:
-userid
-nombre
-password
+## Agregar el campo rol a la tabla usuarios y asociar todos los usuarios un rol
 
-* Crea un registro en la tabla usuario, con el password hasheado usando bcrypt
-
-### /login
-Recibe:
-userid
-password
-
-* Si no existe el usuario da un error
-* Si no coincide el password da un error
-* Si coincide usuario y password, devuelve un token JWT
-
-### /escucho
-Recibe:
-Token
-
-* Devuelve las canciones escuchadas por el usuario logueado y la cantidad de reproducciones
 
 # Ejercicio 3
 
-Deployar el backend en Vercel
+##   Reescribir el codigo para incorporar rutas como middleware y modificar la estructura del proyecto para separar la funcionalidad por capas:
+* index
+* routes
+* controllers
+* services
 
-* El db.js puede usar las variables de ambiente de vercel en caso que el project de vercel este conectado a la base de datos desde "Storage"
-* Sino tambien esta permitido crear por separado la base de datos en Neon y hardcodear en el db.js las credenciales de acceso a la bd neon
+
+# Ejercicio 4
+* Desarrollar los siguientes endpoints
+
+### POST /cancion
+Recibe:
+id
+nombre
+
+### PUT /cancion
+Recibe:
+id
+nombre
+
+### DELETE /cancion
+Recibe:
+id
+
+Solo pueden ejecutarlos los usuarios que tengan rol admin
 
 
-## La entrega se hace tipo "demo" donde cada grupo debe mostrar que su backend funciona como pide la consigna
+## La entrega se hace tipo "demo" donde cada grupo debe mostrar que su backend funciona desde vercel
+## Reutilizar el repo de tp4a 
