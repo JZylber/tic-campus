@@ -1,6 +1,8 @@
 
 ### Arquitectura 3
+
 ## Arquitectura 2
+
 # Arquitectura 1
 
 Tenemos una base de datos con 3 tablas
