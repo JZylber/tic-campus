@@ -1,19 +1,19 @@
-# TP4-B
-# Arquitectura
+
+### Arquitectura
 
 Tenemos una base de datos con 3 tablas
 
-### USUARIO
+# USUARIO
 * PK - ID
 * Nombre
 * Password
 
-### CANCION
+# CANCION
 * PK - ID
 * Nombre
 
 
-### ESCUCHA
+# ESCUCHA
 * PK - ID
 * FK - UsuarioID
 * FK - CancionID
