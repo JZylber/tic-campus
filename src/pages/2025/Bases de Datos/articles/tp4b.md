@@ -56,21 +56,27 @@ Tenemos una base de datos con 3 tablas
 
 ## Desarrollar los siguientes endpoints
 
-### POST /cancion
+### 1) POST /cancion
 Recibe:
 id
 nombre
 
-### PUT /cancion
+### 2) PUT /cancion
 Recibe:
 id
 nombre
 
-### DELETE /cancion
+### 3)DELETE /cancion
 Recibe:
 id
 
-* IMPORTANTE: Estos métodos solo pueden ser ejecutados por los usuarios que tengan rol admin
+*** IMPORTANTE: Estos 3 métodos solo pueden ser ejecutados por los usuarios que tengan rol admin ***
+
+### 4) POST /escucho
+Recibe: 
+id (cancion)
+-> Graba el registro en la tabla "escucha" asociando el id del usuario (que viene en el token) al id de la cancion recibida
+
 
 
 ## La entrega se hace tipo "demo" donde cada grupo debe mostrar que su backend funciona desde vercel
