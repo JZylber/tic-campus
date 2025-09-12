@@ -20,7 +20,7 @@ Tenemos una base de datos con 3 tablas
 * Reproducciones
 
 
-# Ejercicio 1
+# <u>Ejercicio 1</u>
 
 ### Agregar un nuevo campo a la tabla USUARIO
 * Rol : Admin o Usuario
@@ -41,10 +41,11 @@ Tenemos una base de datos con 3 tablas
 # Ejercicio 4
 
 ###  Refactorizar el codigo para utilizar rutas como middleware y modificar la estructura del proyecto para separar la funcionalidad por capas:
-* index
-* routes
-* controllers
-* services
+* index.js
+* /routes
+* /controllers
+* /services
+* /middlewares
 
 
 # Ejercicio 5
