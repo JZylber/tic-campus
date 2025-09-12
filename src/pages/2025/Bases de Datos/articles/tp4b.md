@@ -22,7 +22,7 @@ Tenemos una base de datos con 3 tablas
 
 # Ejercicio 1
 
-## Agregar una nueva tabla ROL con la siguiente estructura:
+### Agregar una nueva tabla ROL con la siguiente estructura:
 * PK - ID
 * Tipo de Rol : Admin o Usuario
 
@@ -30,12 +30,12 @@ Tenemos una base de datos con 3 tablas
 
 # Ejercicio 2
 
-## Agregar el campo rol a la tabla usuarios y asociar todos los usuarios un rol
+### Agregar el campo rol a la tabla usuarios y asociar todos los usuarios un rol
 
 
 # Ejercicio 3
 
-##   Reescribir el codigo para incorporar rutas como middleware y modificar la estructura del proyecto para separar la funcionalidad por capas:
+###   Reescribir el codigo para incorporar rutas como middleware y modificar la estructura del proyecto para separar la funcionalidad por capas:
 * index
 * routes
 * controllers
@@ -43,7 +43,8 @@ Tenemos una base de datos con 3 tablas
 
 
 # Ejercicio 4
-* Desarrollar los siguientes endpoints
+
+## Desarrollar los siguientes endpoints
 
 ### POST /cancion
 Recibe:
