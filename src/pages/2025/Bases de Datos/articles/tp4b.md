@@ -1,5 +1,7 @@
 
-### Arquitectura
+### Arquitectura 3
+## Arquitectura 2
+# Arquitectura 1
 
 Tenemos una base de datos con 3 tablas
 
@@ -20,7 +22,7 @@ Tenemos una base de datos con 3 tablas
 * Reproducciones
 
 
-# <u>Ejercicio 1</u>
+# Ejercicio 1
 
 ### Agregar un nuevo campo a la tabla USUARIO
 * Rol : Admin o Usuario
