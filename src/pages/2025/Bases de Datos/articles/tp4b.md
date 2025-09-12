@@ -70,7 +70,7 @@ nombre
 Recibe:
 id
 
-*** IMPORTANTE: Estos 3 métodos solo pueden ser ejecutados por los usuarios que tengan rol admin ***
+** IMPORTANTE: Estos 3 métodos solo pueden ser ejecutados por los usuarios que tengan rol admin **
 
 ### 4) POST /escucho
 Recibe: 
