@@ -22,27 +22,32 @@ Tenemos una base de datos con 3 tablas
 
 # Ejercicio 1
 
-### Agregar una nueva tabla ROL con la siguiente estructura:
-* PK - ID
-* Tipo de Rol : Admin o Usuario
-
+### Agregar un nuevo campo a la tabla USUARIO
+* Rol : Admin o Usuario
 
 
 # Ejercicio 2
 
-### Agregar el campo rol a la tabla usuarios y asociar todos los usuarios un rol
+### Asociar a todos los usuarios a un rol
 
 
 # Ejercicio 3
 
-###   Reescribir el codigo para incorporar rutas como middleware y modificar la estructura del proyecto para separar la funcionalidad por capas:
+###  Desarrollar los middlewares verifyToken y verifyAdmin
+* verifyToken: Chequea que el Header del req contenga un token y si esta correcto asigna el contenido del mismo a un nuevo atributo (user) de la clase req y continua (next). Si no viene el token (o es invalido) devolver error
+* verifyAdmin: Chequea que el user del req tenga asociado el rol admin. Si es admin continuar (next), sino dar error
+
+  
+# Ejercicio 4
+
+###  Refactorizar el codigo para utilizar rutas como middleware y modificar la estructura del proyecto para separar la funcionalidad por capas:
 * index
 * routes
 * controllers
 * services
 
 
-# Ejercicio 4
+# Ejercicio 5
 
 ## Desarrollar los siguientes endpoints
 
@@ -60,7 +65,7 @@ nombre
 Recibe:
 id
 
-Solo pueden ejecutarlos los usuarios que tengan rol admin
+* IMPORTANTE: Estos métodos solo pueden ser ejecutados por los usuarios que tengan rol admin
 
 
 ## La entrega se hace tipo "demo" donde cada grupo debe mostrar que su backend funciona desde vercel
