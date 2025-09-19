@@ -58,7 +58,6 @@ Tenemos una base de datos con 3 tablas
 
 ### 1) POST /cancion
 Recibe:
-id
 nombre
 
 ### 2) PUT /cancion
