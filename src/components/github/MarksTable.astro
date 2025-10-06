@@ -1,0 +1,12 @@
+---
+import Loader from "../loader/Loader.astro";
+
+import Select from "../../components/misc/select/Select.astro";
+---
+
+<div x-data="{marks: markCalculations}" x-effect="marks.loading">
+  <Loader show="marks.loading" />
+  <div class="w-full flex flex-col gap-y-4" x-show="!marks.loading">
+    <span>Loaded</span>
+  </div>
+</div>

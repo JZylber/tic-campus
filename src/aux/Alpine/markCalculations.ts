@@ -6,6 +6,7 @@ import {
   getSubjectMarkingCriteria,
   getAllRedos,
   getAllCourses,
+  getSubjectIds,
 } from "../fetchData";
 
 interface Activity {
@@ -217,14 +218,17 @@ class Student {
 export default () =>
   ({
     students: [],
+    loading: true,
     async init() {
-      const sheetId = "1Am9Ynjfoo_bWAsCWts5HJUgoFcx0dRKRLFPk_bN6EqU";
+      console.log("Initializing mark calculations...");
+      const sheetId = "1VZ_KPk4aZJFPlAgx188y0wW8p3psbbtZgix1L8a-5kE";
       const [
         students,
         classActivities,
         markedActivities,
         redoActivities,
         subjectData,
+        unitData,
         coursesData,
       ] = await Promise.all([
         getStudents(sheetId),
@@ -238,10 +242,13 @@ export default () =>
             sheetId
           ),
         ]),
+        getSubjectIds(sheetId),
         getAllCourses(sheetId),
       ]);
+      this.loading = false;
     },
   } as {
     students: Student[];
+    loading: boolean;
     init: () => Promise<void>;
   });
