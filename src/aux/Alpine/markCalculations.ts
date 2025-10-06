@@ -104,6 +104,18 @@ class Student {
   setRedo(subject: string, activity: RedoActivity) {
     this.subjectData[subject].redoActivities.push(activity);
     this.subjectData[subject].redos[activity.id] = activity.mark;
+    const coveredActivities = activity.coveredActivities;
+    // For each covered activity, find in markedActivities and classActivities and set madeUp to true
+    coveredActivities.forEach((activityId) => {
+      const markedActivity = this.subjectData[subject].markedActivities.find(
+        (a) => a.id === activityId
+      );
+      if (markedActivity) markedActivity.madeUp = true;
+      const classActivity = this.subjectData[subject].classActivities.find(
+        (a) => a.id === activityId
+      );
+      if (classActivity) classActivity.madeUp = true;
+    });
   }
   setProportion(subject: string, proportion: number) {
     this.subjectData[subject].finalMark.proportion = proportion;
@@ -213,15 +225,20 @@ class Student {
   getRedoActivities(subject: string) {
     return this.subjectData[subject].redoActivities;
   }
+  getSubjects() {
+    return Object.keys(this.subjectData);
+  }
 }
-
 export default () =>
   ({
     students: [],
     loading: true,
     async init() {
-      console.log("Initializing mark calculations...");
       const sheetId = "1VZ_KPk4aZJFPlAgx188y0wW8p3psbbtZgix1L8a-5kE";
+      const subjects = [
+        "Tecnologías de la Información",
+        "Desarrollo de Aplicaciones Informáticas",
+      ];
       const [
         students,
         classActivities,
@@ -235,16 +252,90 @@ export default () =>
         getAllActivities(sheetId),
         getAllMarks(sheetId),
         getAllRedos(sheetId),
-        await Promise.all([
-          getSubjectMarkingCriteria("Tecnologías de la Información", sheetId),
-          getSubjectMarkingCriteria(
-            "Desarrollo de Aplicaciones Informáticas",
-            sheetId
-          ),
-        ]),
+        await Promise.all(
+          subjects.map((subject) => getSubjectMarkingCriteria(subject, sheetId))
+        ),
         getSubjectIds(sheetId),
         getAllCourses(sheetId),
       ]);
+      // Map subjectData to an object with subject name as key
+      const subjectDataMap = subjects.reduce((acc, subject, index) => {
+        acc[subject] = subjectData[index];
+        return acc;
+      }, {} as Record<string, Awaited<ReturnType<typeof getSubjectMarkingCriteria>>>);
+      // Create students and map them by student DNI
+      const studentMap = students.reduce((acc, student) => {
+        acc[student.DNI] = new Student(
+          student.name,
+          student.surname,
+          student.DNI.toString(),
+          student.course,
+          [coursesData.find((c) => c.id === student.course)?.subject || ""]
+        );
+        return acc;
+      }, {} as Record<string, Student>);
+      // Cast all activities to ClassActivity and add them to the corresponding student
+      classActivities.forEach((activity) => {
+        // Find if activity is compulsory if is in some special activities list of subjectData
+        const activitySubject = unitData[activity.id];
+        const isSpecialActivity = subjectDataMap[
+          activitySubject
+        ].specialActivities.includes(activity.id);
+        const classActivity: ClassActivity = {
+          id: activity.id.toString(),
+          name: activity.name,
+          madeUp: false,
+          comment: activity.comment || "",
+          done: activity.done,
+          compulsory: isSpecialActivity || false,
+        };
+        studentMap[activity.studentId].setClassActivity(
+          activitySubject,
+          classActivity
+        );
+      });
+      // Cast all marked activities to MarkedActivity and add them to the corresponding student
+      markedActivities.forEach((activity) => {
+        const activitySubject = unitData[activity.id];
+        const markedActivity: MarkedActivity = {
+          id: activity.id.toString(),
+          name: activity.name,
+          madeUp: false,
+          comment: activity.comment || "",
+          mark: activity.mark,
+        };
+        studentMap[activity.studentId].setMarkedActivity(
+          activitySubject,
+          markedActivity
+        );
+      });
+      // Cast all redo activities to RedoActivity and add them to the corresponding student
+      redoActivities.forEach((activity) => {
+        // Get first covered activity to determine subject
+        const coveredActivity = activity.coveredActivities[0];
+        const activitySubject = unitData[coveredActivity];
+        const redoActivity: RedoActivity = {
+          id: "0",
+          name: activity.name,
+          madeUp: false,
+          comment: activity.comment || "",
+          mark: activity.mark,
+          coveredActivities: activity.coveredActivities.map((id) =>
+            id.toString()
+          ),
+        };
+        studentMap[activity.studentId].setRedo(activitySubject, redoActivity);
+      });
+      // Set proportion for each student and subject
+      Object.values(studentMap).forEach((student) => {
+        student.getSubjects().forEach((subject) => {
+          const proportion = subjectDataMap[subject].proportion;
+          student.setProportion(subject, proportion);
+          // Calculate final mark
+          student.calculateFinalMark(subject);
+        });
+      });
+      this.students = Object.values(studentMap);
       this.loading = false;
     },
   } as {

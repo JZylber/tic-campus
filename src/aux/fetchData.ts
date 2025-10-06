@@ -531,6 +531,7 @@ export const getAllActivities = async (dataSheetId: string) => {
     query: `SELECT * WHERE J = TRUE`,
   });
   return allActivities.map((activity) => ({
+    studentId: activity["DNI Estudiante"] as string,
     id: parseInt(activity["Id Actividad"] as string),
     name: activity["Nombre Actividad"] as string,
     done: activity["Realizada"] as boolean,
@@ -545,6 +546,7 @@ export const getAllMarks = async (dataSheetId: string) => {
     query: `SELECT * WHERE J = TRUE`,
   });
   return allMarks.map((mark) => ({
+    studentId: mark["DNI Estudiante"] as string,
     id: mark["Id Actividad"] as number,
     name: mark["Nombre Actividad"] as string,
     mark: mark["Nota"] as number,
@@ -565,6 +567,7 @@ export const getAllRedos = async (dataSheetId: string) => {
     name: redo["Nombre Recuperatorio"] as string,
     mark: parseInt(redo["Nota"] as string),
     comment: redo["Aclaración"] as string,
+    studentId: redo["DNI Estudiante"] as string,
   }));
 };
 
@@ -572,7 +575,7 @@ export const getSubjectIds = async (dataSheetId: string) => {
   let unitsQuery = getSheetData({
     sheetID: dataSheetId,
     sheetName: "Unidades",
-    query: `SELECT *"`,
+    query: `SELECT *`,
   });
   let contentsQuery = getSheetData({
     sheetID: dataSheetId,
@@ -586,7 +589,7 @@ export const getSubjectIds = async (dataSheetId: string) => {
   // Construct a units per subject mapping
   let unitsPerSubject = units.reduce(
     (acc: Record<string, Array<string>>, unit) => {
-      let subject = unit["Materia"];
+      let subject = unit["Id Materia"];
       if (acc[subject]) {
         acc[subject].push(unit["Nombre"]);
       } else {

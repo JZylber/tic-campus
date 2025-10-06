@@ -4,9 +4,11 @@ import Loader from "../loader/Loader.astro";
 import Select from "../../components/misc/select/Select.astro";
 ---
 
-<div x-data="{marks: markCalculations}" x-effect="marks.loading">
+<div x-data="{marks: markCalculations()}" x-init="marks.init()">
   <Loader show="marks.loading" />
   <div class="w-full flex flex-col gap-y-4" x-show="!marks.loading">
-    <span>Loaded</span>
+    <template x-for="student in marks.students" :key="student.id">
+      <span x-text="student.name" x-init="console.log(student)"></span>
+    </template>
   </div>
 </div>
