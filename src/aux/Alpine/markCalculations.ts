@@ -103,10 +103,10 @@ class Student {
   }
   setRedo(subject: string, activity: RedoActivity) {
     this.subjectData[subject].redoActivities.push(activity);
-    this.subjectData[subject].redos[activity.id] = activity.mark;
     const coveredActivities = activity.coveredActivities;
     // For each covered activity, find in markedActivities and classActivities and set madeUp to true
     coveredActivities.forEach((activityId) => {
+      this.subjectData[subject].redos[activityId] = activity.mark;
       const markedActivity = this.subjectData[subject].markedActivities.find(
         (a) => a.id === activityId
       );

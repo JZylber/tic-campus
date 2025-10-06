@@ -4,9 +4,63 @@ import Loader from "../loader/Loader.astro";
 import Select from "../../components/misc/select/Select.astro";
 ---
 
-<div x-data="{marks: markCalculations()}" x-init="marks.init()">
+<div
+  x-data="{marks: markCalculations(),filter: {course: '', text: ''}, filteredStudents: []}"
+  x-effect="filteredStudents = marks.students.filter(s => {
+    let courseFilter = true;
+    let textFilter = true;
+    let normalizedText = filter.text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    if (filter.text !== '') {
+      textFilter = s.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(normalizedText) || s.surname.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(normalizedText);
+    }
+    if (filter.course !== '') {
+      courseFilter = s.course === filter.course;
+    }
+    return textFilter && courseFilter;
+  })"
+  x-init="marks.init();"
+>
   <Loader show="marks.loading" />
   <div class="w-full flex flex-col gap-y-4" x-show="!marks.loading">
+    <div
+      class="flex w-full gap-x-8"
+      x-data="{courses: [{value:'',label:'Todos'}]} "
+      x-effect="courses = courses.concat([...new Set(marks.students.map(student => student.course))].map(course => {
+      return {
+        value: course,
+        label: course
+      };
+    }));
+    filter.course = courses[0].value;
+    filter.text = '';"
+    >
+      <div class={`flex flex-col items-center md:items-start gap-2`}>
+        <label
+          class="text-center md:text-left text-sh-dark-gray text-[16px] font-semibold"
+          >Nombre y Apellido</label
+        >
+        <div
+          class="flex justify-between items-stretch w-full max-w-[200px] h-[44px] rounded-xl text-sh-dark-gray text-[16px] border-2 border-sh-gray"
+        >
+          <div class="flex items-center basis-0 grow px-2">
+            <input class="w-full focus:outline-0" x-model="filter.text" />
+          </div>
+          <div class="flex items-center">
+            <span
+              class="material-symbols-outlined text-[24px] text-sh-dark-gray px-2"
+            >
+              search
+            </span>
+          </div>
+        </div>
+      </div>
+      <Select
+        title="Curso"
+        xModel="filter.course"
+        options="courses"
+        className="grow"
+      />
+    </div>
     <table class="w-full">
       <thead class="bg-sh-black text-gray-50 text-lg font-semibold">
         <tr>
@@ -22,7 +76,7 @@ import Select from "../../components/misc/select/Select.astro";
         </tr>
       </thead>
       <tbody>
-        <template x-for="student in marks.students" :key="student.id">
+        <template x-for="student in filteredStudents" :key="student.id">
           <tr
             class="border-b-2 border-gray-300 hover:bg-gray-300 cursor-pointer"
             x-data="{ finalMarkData : student.getFinalMarkData(student.getSubjects()[0]) }"
