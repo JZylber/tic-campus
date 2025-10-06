@@ -165,8 +165,11 @@ document.body.appendChild(nuevoParrafo);`}
   <li>Un campo de texto (<InlineCodeBlock lang="html" code="<input>" />).</li>
   <li>Un botón (<InlineCodeBlock lang="html" code="<button>" />).</li>
   <li>
-    Un párrafo (<InlineCodeBlock lang="html" code="<p>" />) que va a mostrar lo
-    que escribimos en el input, al hacer clic en el botón.
+    Una lista (<InlineCodeBlock lang="html" code="<ul>" />) que al hacer clic en
+    el botón, va a mostrar en nuevos items (<InlineCodeBlock
+      lang="html"
+      code="<li>"
+    />) lo que escribimos en el input.
   </li>
 </ul>
 <h3>HTML</h3>
@@ -174,7 +177,7 @@ document.body.appendChild(nuevoParrafo);`}
   lang="html"
   code={`<input id="miInput" type="text" placeholder="Escribí algo...">
 <button id="miBoton">Mostrar texto</button>
-<p id="resultado"></p>`}
+<ul id="resultado"></ul>`}
 />
 <h3>JavaScript</h3>
 <CodeBlock
@@ -187,8 +190,12 @@ let resultado = document.getElementById("resultado");
 function mostrarTexto() {
   // Tomamos el valor del input
   let texto = input.value;
-  // Lo mostramos en el párrafo
-  resultado.textContent = texto;
+  // Creamos un elemento li nuevo
+  let item = document.createElement("li");
+  // Le asignamos como texto a lo obtenido en el input
+  item.textContent = texto;
+  // Lo agregagamos al documento como hijo de la lista
+  resultado.appendChild(item);
 }
 
 // Agregamos un evento al botón

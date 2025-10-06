@@ -1,0 +1,133 @@
+---
+import Loader from "../loader/Loader.astro";
+
+import Select from "../../components/misc/select/Select.astro";
+---
+
+<div
+  x-data="{marks: markCalculations(),filter: {course: '', text: ''}, filteredStudents: []}"
+  x-effect="filteredStudents = marks.students.filter(s => {
+    let courseFilter = true;
+    let textFilter = true;
+    let normalizedText = filter.text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    if (filter.text !== '') {
+      textFilter = s.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(normalizedText) || s.surname.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(normalizedText);
+    }
+    if (filter.course !== '') {
+      courseFilter = s.course === filter.course;
+    }
+    return textFilter && courseFilter;
+  })"
+  x-init="marks.init();"
+  class="min-w-full"
+>
+  <Loader show="marks.loading" />
+  <div class="w-full flex flex-col gap-y-4" x-show="!marks.loading">
+    <div
+      class="flex w-full gap-x-8"
+      x-data="{courses: [{value:'',label:'Todos'}]} "
+      x-effect="courses = courses.concat([...new Set(marks.students.map(student => student.course))].map(course => {
+      return {
+        value: course,
+        label: course
+      };
+    }));
+    filter.course = courses[0].value;
+    filter.text = '';"
+    >
+      <div class={`flex flex-col items-center md:items-start gap-2`}>
+        <label
+          class="text-center md:text-left text-sh-dark-gray text-[16px] font-semibold"
+          >Nombre y Apellido</label
+        >
+        <div
+          class="flex justify-between items-stretch w-full max-w-[200px] h-[44px] rounded-xl text-sh-dark-gray text-[16px] border-2 border-sh-gray"
+        >
+          <div class="flex items-center basis-0 grow px-2">
+            <input class="w-full focus:outline-0" x-model="filter.text" />
+          </div>
+          <div class="flex items-center">
+            <span
+              class="material-symbols-outlined text-[24px] text-sh-dark-gray px-2"
+            >
+              search
+            </span>
+          </div>
+        </div>
+      </div>
+      <Select
+        title="Curso"
+        xModel="filter.course"
+        options="courses"
+        className="grow"
+      />
+    </div>
+    <table class="w-full">
+      <thead class="bg-sh-black text-gray-50 text-lg font-semibold">
+        <tr>
+          <th class="px-4 py-2">Nombre</th>
+          <th class="px-4 py-2">Apellido</th>
+          <th class="px-4 py-2">Curso</th>
+          <th class="px-4 py-2">Ac. Clase</th>
+          <th class="px-4 py-2">Ac. Nota</th>
+          <th class="px-4 py-2">Promedio</th>
+          <th class="px-4 py-2">Nota Ap</th>
+          <th class="px-4 py-2">Especiales</th>
+          <th class="px-4 py-2">Final</th>
+        </tr>
+      </thead>
+      <tbody>
+        <template x-for="student in filteredStudents" :key="student.id">
+          <tr
+            class="border-b-2 border-gray-300 hover:bg-gray-300 cursor-pointer"
+            x-data="{ finalMarkData : student.getFinalMarkData(student.getSubjects()[0]) }"
+          >
+            <td class="px-4 py-2 text-center" x-text="student.name"></td>
+            <td class="px-4 py-2 text-center" x-text="student.surname"></td>
+            <td class="px-4 py-2 text-center" x-text="student.course"></td>
+            <td
+              class="px-4 py-2 text-right"
+              x-text="finalMarkData.classActivitiesContribution"></td>
+            <td
+              class="px-4 py-2 text-right"
+              x-text="finalMarkData.markedActivitiesContribution"></td>
+            <td class="px-4 py-2 text-right" x-text="finalMarkData.averageMark"
+            ></td>
+            <td class="px-4 py-2">
+              <div class="flex justify-center items-center">
+                <span
+                  class="material-symbols-outlined"
+                  x-text="finalMarkData.allMarkedActivitiesPassed ? 'check_circle' : 'cancel'"
+                  x-bind:class="{
+                  'text-sh-green':finalMarkData.allMarkedActivitiesPassed,
+                  'text-sh-red': !finalMarkData.allMarkedActivitiesPassed
+                }"
+                ></span>
+              </div></td
+            >
+            <td class="px-4 py-2">
+              <div class="flex justify-center items-center">
+                <span
+                  class="material-symbols-outlined"
+                  x-text="finalMarkData.allCompulsoryClassActivitiesDone ? 'check_circle' : 'cancel'"
+                  x-bind:class="{
+                  'text-sh-green':finalMarkData.allCompulsoryClassActivitiesDone,
+                  'text-sh-red': !finalMarkData.allCompulsoryClassActivitiesDone
+                }"
+                ></span>
+              </div></td
+            >
+            <td
+              class="px-4 py-2 text-right"
+              x-text="finalMarkData.finalMark"
+              x-bind:class="{
+                  'text-sh-green':finalMarkData.finalMark >= 6,
+                  'text-sh-red': finalMarkData.finalMark < 6
+                }"
+            ></td>
+          </tr>
+        </template>
+      </tbody>
+    </table>
+  </div>
+</div>

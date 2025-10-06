@@ -523,3 +523,109 @@ export const getStudentSeminars = async (
     return [];
   }
 };
+
+export const getAllActivities = async (dataSheetId: string) => {
+  const allActivities = await getSheetData({
+    sheetID: dataSheetId,
+    sheetName: "Actividad",
+    query: `SELECT * WHERE J = TRUE`,
+  });
+  return allActivities.map((activity) => ({
+    studentId: activity["DNI Estudiante"] as string,
+    id: parseInt(activity["Id Actividad"] as string),
+    name: activity["Nombre Actividad"] as string,
+    done: activity["Realizada"] as boolean,
+    comment: activity["Aclaración"] as string,
+  }));
+};
+
+export const getAllMarks = async (dataSheetId: string) => {
+  const allMarks = await getSheetData({
+    sheetID: dataSheetId,
+    sheetName: "Nota",
+    query: `SELECT * WHERE J = TRUE`,
+  });
+  return allMarks.map((mark) => ({
+    studentId: mark["DNI Estudiante"] as string,
+    id: mark["Id Actividad"] as number,
+    name: mark["Nombre Actividad"] as string,
+    mark: mark["Nota"] as number,
+    comment: mark["Aclaración"] as string,
+  }));
+};
+
+export const getAllRedos = async (dataSheetId: string) => {
+  const allRedos = await getSheetData({
+    sheetID: dataSheetId,
+    sheetName: "Recuperatorio",
+    query: `SELECT * WHERE J = TRUE`,
+  });
+  return allRedos.map((redo) => ({
+    coveredActivities: (redo["Id Actividad"] as string)
+      .split(",")
+      .map((id) => parseInt(id)),
+    name: redo["Nombre Recuperatorio"] as string,
+    mark: parseInt(redo["Nota"] as string),
+    comment: redo["Aclaración"] as string,
+    studentId: redo["DNI Estudiante"] as string,
+  }));
+};
+
+export const getSubjectIds = async (dataSheetId: string) => {
+  let unitsQuery = getSheetData({
+    sheetID: dataSheetId,
+    sheetName: "Unidades",
+    query: `SELECT *`,
+  });
+  let contentsQuery = getSheetData({
+    sheetID: dataSheetId,
+    sheetName: "Contenidos",
+    query: `SELECT *`,
+  });
+  const [units, contents] = (await Promise.all([
+    unitsQuery,
+    contentsQuery,
+  ])) as Array<Array<Record<string, string>>>;
+  // Construct a units per subject mapping
+  let unitsPerSubject = units.reduce(
+    (acc: Record<string, Array<string>>, unit) => {
+      let subject = unit["Id Materia"];
+      if (acc[subject]) {
+        acc[subject].push(unit["Nombre"]);
+      } else {
+        acc[subject] = [unit["Nombre"]];
+      }
+      return acc;
+    },
+    {}
+  );
+  // Construct an activity per subject mapping
+  let activitiesPerSubject = contents.reduce(
+    (acc: Record<string, Array<number>>, content) => {
+      let unit = content["Unidad"];
+      let subject = Object.keys(unitsPerSubject).find((subject) =>
+        unitsPerSubject[subject].includes(unit)
+      );
+      if (subject) {
+        if (acc[subject]) {
+          acc[subject].push(parseInt(content["Id"]));
+        } else {
+          acc[subject] = [parseInt(content["Id"])];
+        }
+      }
+      return acc;
+    },
+    {}
+  );
+  // Construct an activity to subject mapping
+  let subjectIds = Object.entries(activitiesPerSubject).reduce(
+    (acc: Record<string, string>, [subject, activities]) => {
+      activities.forEach((activityId) => {
+        acc[activityId] = subject;
+      });
+      return acc;
+    },
+    {}
+  );
+  return subjectIds;
+};

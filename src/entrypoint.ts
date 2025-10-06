@@ -17,6 +17,7 @@ import collapse from "@alpinejs/collapse";
 import persist from "@alpinejs/persist";
 import detectSwipe from "./aux/swipeDetect";
 import type { Unit } from "./aux/types";
+import markCalculations from "./aux/Alpine/markCalculations";
 
 window.getSubjectData = getSubjectData;
 window.getSubjectProgram = getSubjectProgram;
@@ -370,4 +371,5 @@ export default (Alpine: Alpine) => {
     const shadow = shadowContainer.shadowRoot as unknown as HTMLElement;
     Alpine.initTree(shadow);
   }
+  Alpine.data("markCalculations", markCalculations);
 };
