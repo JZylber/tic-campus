@@ -19,6 +19,7 @@ import Select from "../../components/misc/select/Select.astro";
     return textFilter && courseFilter;
   })"
   x-init="marks.init();"
+  class="min-w-full"
 >
   <Loader show="marks.loading" />
   <div class="w-full flex flex-col gap-y-4" x-show="!marks.loading">
@@ -81,9 +82,9 @@ import Select from "../../components/misc/select/Select.astro";
             class="border-b-2 border-gray-300 hover:bg-gray-300 cursor-pointer"
             x-data="{ finalMarkData : student.getFinalMarkData(student.getSubjects()[0]) }"
           >
-            <td class="px-4 py-2" x-text="student.name"></td>
-            <td class="px-4 py-2" x-text="student.surname"></td>
-            <td class="px-4 py-2" x-text="student.course"></td>
+            <td class="px-4 py-2 text-center" x-text="student.name"></td>
+            <td class="px-4 py-2 text-center" x-text="student.surname"></td>
+            <td class="px-4 py-2 text-center" x-text="student.course"></td>
             <td
               class="px-4 py-2 text-right"
               x-text="finalMarkData.classActivitiesContribution"></td>
