@@ -336,6 +336,16 @@ export default () =>
         });
       });
       this.students = Object.values(studentMap);
+      // Sort students by course, surname, name
+      this.students.sort((a, b) => {
+        if (a.course < b.course) return -1;
+        if (a.course > b.course) return 1;
+        if (a.surname < b.surname) return -1;
+        if (a.surname > b.surname) return 1;
+        if (a.name < b.name) return -1;
+        if (a.name > b.name) return 1;
+        return 0;
+      });
       this.loading = false;
     },
   } as {

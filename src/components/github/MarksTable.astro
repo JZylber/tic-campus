@@ -7,8 +7,72 @@ import Select from "../../components/misc/select/Select.astro";
 <div x-data="{marks: markCalculations()}" x-init="marks.init()">
   <Loader show="marks.loading" />
   <div class="w-full flex flex-col gap-y-4" x-show="!marks.loading">
-    <template x-for="student in marks.students" :key="student.id">
-      <span x-text="student.name" x-init="console.log(student)"></span>
-    </template>
+    <table class="w-full">
+      <thead class="bg-sh-black text-gray-50 text-lg font-semibold">
+        <tr>
+          <th class="px-4 py-2">Nombre</th>
+          <th class="px-4 py-2">Apellido</th>
+          <th class="px-4 py-2">Curso</th>
+          <th class="px-4 py-2">Ac. Clase</th>
+          <th class="px-4 py-2">Ac. Nota</th>
+          <th class="px-4 py-2">Promedio</th>
+          <th class="px-4 py-2">Nota Ap</th>
+          <th class="px-4 py-2">Especiales</th>
+          <th class="px-4 py-2">Final</th>
+        </tr>
+      </thead>
+      <tbody>
+        <template x-for="student in marks.students" :key="student.id">
+          <tr
+            class="border-b-2 border-gray-300 hover:bg-gray-300 cursor-pointer"
+            x-data="{ finalMarkData : student.getFinalMarkData(student.getSubjects()[0]) }"
+          >
+            <td class="px-4 py-2" x-text="student.name"></td>
+            <td class="px-4 py-2" x-text="student.surname"></td>
+            <td class="px-4 py-2" x-text="student.course"></td>
+            <td
+              class="px-4 py-2 text-right"
+              x-text="finalMarkData.classActivitiesContribution"></td>
+            <td
+              class="px-4 py-2 text-right"
+              x-text="finalMarkData.markedActivitiesContribution"></td>
+            <td class="px-4 py-2 text-right" x-text="finalMarkData.averageMark"
+            ></td>
+            <td class="px-4 py-2">
+              <div class="flex justify-center items-center">
+                <span
+                  class="material-symbols-outlined"
+                  x-text="finalMarkData.allMarkedActivitiesPassed ? 'check_circle' : 'cancel'"
+                  x-bind:class="{
+                  'text-sh-green':finalMarkData.allMarkedActivitiesPassed,
+                  'text-sh-red': !finalMarkData.allMarkedActivitiesPassed
+                }"
+                ></span>
+              </div></td
+            >
+            <td class="px-4 py-2">
+              <div class="flex justify-center items-center">
+                <span
+                  class="material-symbols-outlined"
+                  x-text="finalMarkData.allCompulsoryClassActivitiesDone ? 'check_circle' : 'cancel'"
+                  x-bind:class="{
+                  'text-sh-green':finalMarkData.allCompulsoryClassActivitiesDone,
+                  'text-sh-red': !finalMarkData.allCompulsoryClassActivitiesDone
+                }"
+                ></span>
+              </div></td
+            >
+            <td
+              class="px-4 py-2 text-right"
+              x-text="finalMarkData.finalMark"
+              x-bind:class="{
+                  'text-sh-green':finalMarkData.finalMark >= 6,
+                  'text-sh-red': finalMarkData.finalMark < 6
+                }"
+            ></td>
+          </tr>
+        </template>
+      </tbody>
+    </table>
   </div>
 </div>
