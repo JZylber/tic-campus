@@ -1,0 +1,85 @@
+---
+import CodeBlock from "../../../../../../components/articles/code-block/CodeBlock.astro";
+
+export const partial = true;
+---
+
+<p>
+  Esta vuelta les regalé el <em>.gitignore</em>. ¡Más vale que no vea un <strong
+    >node_modules</strong
+  > pusheado!
+</p>
+<p>
+  Este TP, obviamente, usa SoqueTIC. Para instalarlo, pueden hacerlo igual que
+  cualquier otra librería usando npm:
+</p>
+<CodeBlock lang="bash" code="npm i soquetic" />
+<p>
+  Para levantar el frontend hay que usar, como siempre, LiveServer. El archivo
+  index.html dentro de la carpeta frontend te permite recorrer los distintos
+  puntos de la consigna. Para el extra, hay otro html en la carpeta coleccion.
+</p>
+<h2>Introducción</h2>
+<p>
+  Oscar Agustín Alejandro Schulz Solari, más conocido como <strong
+    >Xul Solar</strong
+  > es un icónico artista argentino del siglo XX. Este trabajo está dedicado a su
+  increíble obra.
+</p>
+<h2>Consigna Base</h2>
+<p>
+  <strong>Haciendo ambos puntos de la consigna base obtendrían un 6</strong>.
+</p>
+<h3>Punto 1 - Obras</h3>
+<p>
+  Responder al evento <em>"obras"</em> de tipo <strong>GET</strong> que devuelva
+  un array con todas las obras de Xul Solar. Este array se encuentra en el archivo
+  <em>data/obras.json</em>.
+</p>
+<h3>Punto 2 - Colección</h3>
+<p>
+  Nos interesa registrar las obras de Xul Solar en una colección. Para ello, se
+  deben responder a los siguientes eventos:
+</p>
+<ul>
+  <li>
+    <em>"colección"</em>: Evento de tipo <strong>GET</strong>. Devuelve un array
+    con los <strong>ids</strong> (<em>números</em>) de las obras que hay en la
+    colección.
+  </li>
+  <li>
+    <em>"modificarColección"</em>: Evento de tipo <strong>POST</strong>. Permite
+    agregar o quitar una obra a la colección. <strong
+      >Para la consigna base solo nos va a importar la parte de agregar.</strong
+    > El evento recibe un objeto con la siguiente forma:
+    <CodeBlock
+      lang="javascript"
+      code={`{
+  id: number, // id de la obra a agregar o quitar
+  enColección: boolean // booleano que indica si la obra debe agregarse (true) o quitarse (false)
+}`}
+    />
+    Si <em>enColección</em> es true, se agrega la obra a la colección (guardando
+    su id). Si es false, no se hace nada (por ahora). <strong
+      >Retornar true al final de la operación</strong
+    >
+  </li>
+</ul>
+<p>
+  <strong>TIP:</strong> Para registrar la colección, tienen que armar un archivo
+  .json. ¿Tal vez uno que contenga los ids de las obras en la colección?
+</p>
+<h2>Extras</h2>
+<h3>Punto 3 - Quitar de Colección</h3>
+<p><strong>Este extra vale un punto.</strong></p>
+<p>
+  Modificar el evento <em>"modificarColección"</em> para permitir quitar obras de
+  la colección. Esto debería ocurrir cuando <em>enColección</em> sea false.
+</p>
+<h3>Punto 4 - Obras en Colección</h3>
+<p><strong>Este extra vale dos puntos.</strong></p>
+<p>
+  Responder al evento <em>"obrasColección"</em> de tipo <strong>GET</strong>.
+  Devuelve un array con las obras que hay en la colección (no solo sus ids, sino
+  todos sus datos).
+</p>
