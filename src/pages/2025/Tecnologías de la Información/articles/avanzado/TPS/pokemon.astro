@@ -5,11 +5,8 @@ export const partial = true;
 ---
 
 <p>
-  <strong
-    >¡NO SE OLVIDEN DE ARMAR EL .gitignore para excluir todo lo que no quieren
-    commitear!</strong
-  >
-  Veo un node_modules pusheado y se llevan la materia automáticamente.
+  Les regalé el <em>.gitignore</em>. ¡Más vale que no vea un node_modules
+  pusheado! Se llevan la materia automáticamente.
 </p>
 <p>
   Este TP, obviamente, usa SoqueTIC. Para instalarlo, pueden hacerlo igual que
@@ -17,74 +14,117 @@ export const partial = true;
 </p>
 <CodeBlock lang="bash" code="npm i soquetic" />
 <p>
-  Para levantar el frontend hay que usar, como siempre, LiveServer. El archivo
-  index.html te permite recorrer los distintos puntos de la consigna.
+  <strong
+    >Para levantar el frontend hay que usar, como siempre, LiveServer.
+  </strong>
 </p>
-<h2>Consigna</h2>
+<h2>Consigna Base</h2>
 <p>
   La Pokédex es la base de datos de todos los pókemon. Queremos construir una
-  tabla que nos deje filtrar por algunos parámetros, además de registar que
-  pókemon fuimos capturando. Contamos con la información en el archivo
-  pokemon.json.
+  tabla que nos deje filtrar por algunos parámetros. Contamos con la información
+  en el archivo pokemon.json.
+</p>
+<h3>Punto 0</h3>
+<p>
+  Armar un programa usando Node JS y SoqueTIC que permita responder al mensaje <em
+    >"pokémon"</em
+  > de tipo <strong>POST</strong>. El evento envía un objeto con la siguiente
+  forma:
+</p>
+<CodeBlock
+  lang="javascript"
+  code={`{
+  types: string[], // lista de tipos del pokémon a buscar
+  generation: string, // generación del pokémon a buscar. Puede ser "all" para todas las generaciones o un número del 1 al 7
+  legendary: boolean // si es true, se buscan pokémon comunes y legendarios. Si es false, solo no legendarios.
+}`}
+/>
+<p>
+  Por ahora, ignoren el parámetro y devuelvan todo el contenido del archivo <em
+    >data/pokemon.json</em
+  > sin filtrar. A diferencia de casi todos los ejercicios que venimos haciendo,
+  <strong>no devuelvan el array directamente</strong>, sino un objeto con la
+  clave pokemon cuyo valor es el array. Esto es para que ande el Punto 4.
+</p>
+<h3>Punto 1 - Legendarios</h3>
+<p>
+  Modificar la función que responde al evento <em>'pokémon'</em> para filtrar el
+  array de pokémon dependiendo del atributo <em>legendary</em> de la información
+  enviada por el frontend. En particular, si es true, devolver todos los pokémon
+  (legendarios y no legendarios). Si es false, devolver solo los no legendarios.
+</p>
+<h3>Punto 2 - Generación</h3>
+<p>
+  Modificar la función que responde al evento <em>'pokémon'</em> para filtrar el
+  array de pokémon dependiendo del atributo <em>generation</em> de la información
+  enviada por el frontend. En particular, si es "all", devolver todos los pokémon.
+  Si es un número del 1 al 7, devolver solo los de esa generación.
 </p>
 <p>
-  Armar un programa usando Node JS y SoqueTIC que permita responder a los
-  siguientes mensajes:
-</p>
-<ul>
-  <li>
-    <em>"pokemon"</em>: Recibe como parámetro un objeto con 2 atributos:
-    generation y legendary. Se debe filtrar la lista de pókemon en base a estos
-    criterios de la siguiente forma:
-    <ul>
-      <li>
-        <strong>generation</strong>: Siempre es de tipo
-        <em>string</em>. Si dice "all", se deben devolver todos los pókemon
-        independiente de la generación. Si dice otro valor, se deben devolver
-        los pókemon de esa generación.
-      </li>
-      <li>
-        <strong>legendary</strong>: Siempre es de tipo
-        <em>boolean</em>. Si es
-        <em>false</em>, se deben devolver todos los pókemon que no sean
-        legendarios. Si es
-        <em>true</em>, se deben devolver todos los pókemon <strong
-          >incluyendo los legendarios</strong
-        >.
-      </li>
-    </ul>
-  </li>
-  <li>
-    <em>"capture"</em>: Recibe como parámetro un objeto con 2 atributos: id y
-    captured. Se debe modificar el pókemon con el id recibido para que su
-    atributo Captured sea el valor recibido (ya es
-    <em>boolean</em>).
-    <strong>Actualizar el archivo pokemon.json para reflejar este cambio</strong
-    >.
-  </li>
-</ul>
-<p>
-  Haciendo este punto, obtienen un 7. Si quieren el 10, tienen que hacer la
-  consigna manija
+  Haciendo los puntos 0, 1 y 2 obtienen un 6. Si quieren el 10, tienen que hacer
+  las consignas manijas.
 </p>
 <h2>Consigna manija</h2>
-<p>Haciendo esta consigna llegan al 10.</p>
+<h3>Punto 3 - Tipo</h3>
+<p>Haciendo esta consigna suman 2 puntos.</p>
 <p>
-  Ahora nos interesa filtrar por tipos. Al objeto que recibe el evento
-  <em>"pokemon"</em>, se le suma un atributo, <em>"types"</em>, que contiene una
-  lista de tipos. La lista de pokémon resultantes del evento debe contener
-  pokémon cuyo tipo y subtipo están dentro de esta lista, es decir, se deben
-  excluir pokémon cuyo tipo principal o subtipo no estén en la lista recibida
-  por parámetros.
+  Modificar la función que responde al evento <em>'pokémon'</em> para filtrar el
+  array de pokémon dependiendo del atributo <em>types</em> de la información enviada
+  por el frontend. Se deben devolver solo los pokémon que tengan
+  <strong>alguno</strong> de los tipos indicados (ya sea como tipo o subtipo). Es
+  decir, si el tipo o subtipo del pokémon no está en la lista, no debe ser incluido
+  en el resultado.
 </p>
+<h3>Punto 4 - Promedio</h3>
+<p>Haciendo esta consigna suman 2 puntos.</p>
 <p>
-  <strong>No se debe romper la funcionalidad de la consigna anterior</strong>
+  Modificar la función que responde al evento <em>'pokémon'</em> para que devuelva
+  un objeto cuyos atributos sean el promedio de los niveles de los pokémon que cumplen
+  con los filtros aplicados en los puntos anteriores. En particular, debe ser el
+  promedio de los stats:
 </p>
-<p><strong>TIPS:</strong></p>
 <ul>
-  <li>
-    Para ver si un elemento está en una lista, ¿Por qué no buscan a Wally?
-  </li>
-  <li>Estén atentos a que no todos los pokémon tienen subtipo</li>
-  <li>No se olviden de no romper la consigna base</li>
+  <li>hp</li>
+  <li>attack</li>
+  <li>defense</li>
+  <li>sp_attack</li>
+  <li>sp_defense</li>
+  <li>speed</li>
 </ul>
+<p>
+  Recapitulando, este objeto representaría el pokémon promedio entre todos
+  aquello que cumplen con los filtros aplicados. Se deben sumar los valores de
+  cada stat de todos los pokémon que cumplen con los filtros y dividirlos por la
+  cantidad de pokémon que cumplen con los filtros.
+</p>
+<p>El objeto devuelto debe tener la siguiente forma:</p>
+<CodeBlock
+  lang="javascript"
+  code={`{
+  hp: number,
+  attack: number,
+  defense: number,
+  sp_attack: number,
+  sp_defense: number,
+  speed: number
+}`}
+/>
+<p>
+  y dentro del objeto a retornar al front, debe ir en el atributo <em
+    >'average'</em
+  >, es decir, el objeto final a retornar debería tener la forma:
+</p>
+<CodeBlock
+  lang="javascript"
+  code={`{
+  pokemon: Pokemon[], // array de pokémon que cumplen con los filtros
+  average: { // objeto con el promedio de stats de los pokémon que cumplen con los filtros
+    hp: number,
+    attack: number,
+    defense: number,
+    sp_attack: number,
+    sp_defense: number,
+    speed: number
+  }
+}`}
+/>
