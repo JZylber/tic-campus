@@ -25,5 +25,5 @@ Modificar la capa de services para que TODOS los accesos a la base de datos se r
 ## Paso 6
 Crear el equipo en Github Classroom a traves de este link https://classroom.github.com/a/lQuKsp6f y registrar a todos sus integrantes
 
-## Paso 5
+## Entrega
 Probar todo, y una vez confirmado que todos los endpoints funcionan subir el repo al github classroom
