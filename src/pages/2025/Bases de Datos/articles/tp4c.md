@@ -17,7 +17,7 @@ Modificar la tabla Escucha. Eliminar el campo reproducciones y agregar el campo 
 Crear la carpeta models y adentro crear 3 archivos con los models para las 3 tablas
 
 ## Paso 4
-Modificar el archivo index.js (o app.js) para que se declaren las relaciones entre los modelos de Sequelize y se ejecute el comanmdo sync
+Modificar el archivo index.js (o app.js) para que se declaren las relaciones entre los modelos de Sequelize y se ejecute el comando sync
 
 ## Paso 5
 Modificar la capa de services para que TODOS los accesos a la base de datos se realicen a traves de Sequelize
