@@ -215,3 +215,75 @@ carta_nueva.mostrar_carta()
 descripcion = str(carta_nueva)
 print(f"Descripción: {descripcion}")`}
 />
+
+<h2>Ejemplo integrador: clase Mazo</h2>
+<p>
+  Voy a mostrar otro ejemplo más complejo con un constructor interesante, la
+  clase Mazo. De hecho, vamos a usar como insumo la clase carta (de hecho esto
+  lo hace un ejemplo de composición, tema que vamos a ver más adelante)
+</p>
+<CodeBlock
+  lang="python"
+  code={`import random as rnd
+
+class Carta:
+    def __init__(self, numero, palo) -> None:
+        self.numero = numero
+        self.palo = palo
+    def __str__(self) -> str:
+        return f"{self.numero} de {self.palo}"
+    
+class Mazo:
+    """
+    Clase Mazo
+    Representa un mazo de cartas españolas de 40 cartas (4 palos: "oro", "copa", "espada", "basto"),
+    con los números del 1 al 12 excluyendo 8 y 9. El mazo mantiene las cartas en una lista
+    donde el extremo final de la lista actúa como el tope para sacar/poner cartas.
+    Atributos
+    ---------
+    cartas : list
+        Lista que contiene las instancias de Carta que forman el mazo. El orden de la lista
+        representa el orden actual del mazo; sacar_carta() extrae la carta del final de la lista.
+    Métodos
+    -------
+    __init__() -> None
+        Crea un mazo ordenado de 40 cartas (por defecto: todos los números válidos para cada palo).
+        Depende de la clase Carta para instanciar cada carta.
+    __str__() -> str
+        Devuelve una representación en cadena del mazo, normalmente como una lista de las
+        representaciones de cada carta (asume que Carta implementa __str__).
+    mezclar() -> None
+        Mezcla el mazo in-place usando random.shuffle.
+    sacar_carta() -> Carta
+        Extrae y devuelve la carta del tope del mazo (el último elemento de la lista).
+        Lanza IndexError si el mazo está vacío.
+    poner_carta(carta: Carta) -> None
+        Añade la carta proporcionada al tope del mazo (al final de la lista).
+    """
+    def __init__(self) -> None:
+        self.cartas = []
+        for palo in ["oro", "copa", "espada", "basto"]:
+            for numero in range(1, 13):
+                if not(numero == 8 or numero == 9):
+                    self.cartas.append(Carta(numero, palo))
+
+    def __str__(self) -> str:
+        return str([str(carta) for carta in self.cartas])
+    
+    def mezclar(self) -> None:
+       rnd.shuffle(self.cartas)
+
+    def sacar_carta(self) -> Carta:
+        return self.cartas.pop()
+    
+    def poner_carta(self, carta: Carta) -> None:
+        self.cartas.append(carta)
+
+# Ejemplo
+m = Mazo()
+m.mezclar()
+carta_sacada = m.sacar_carta()
+print(carta_sacada)
+m.poner_carta(carta_sacada)
+`}
+/>
