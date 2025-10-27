@@ -1,4 +1,7 @@
 ---
+import CodeBlock from "../../../../components/articles/code-block/CodeBlock.astro";
+import InlineCodeBlock from "../../../../components/articles/code-block/InlineCodeBlock.astro";
+
 export const partial = true;
 ---
 
@@ -10,58 +13,78 @@ export const partial = true;
   >
 </p>
 <h2>Consigna</h2>
-<p>Hacer una clase y un conjunto de tests de dicha clase.</p>
 <h3>Rollinga</h3>
 <p>
-  Crear una clase <code>Rollinga</code> (en el archivo <code>rollinga.py</code>)
-  que:
+  Crear una clase <InlineCodeBlock lang="python" code="Rollinga" />
+  (en el archivo
+  <em>rollinga.py</em>) que:
 </p>
 <ul>
   <li>
     Se inicialice con un nombre pasado por parámetro, 0 de felicidad, 0 de
-    birras, 0 de panchos, no tiene papas y tiene flequillo
+    birras, 0 de panchos y tiene flequillo
   </li>
   <li>
-    Tenga un método <code>tomar_birras</code> que toma un parámetro (cantidad de
-    birras) y cosuma esa cantidad de birras. Si el rollinga quiere consumir más birras
-    de las que tiene, consume todas las que tenga. Aumenta en 1 su felicidad por
-    birra consumida.
+    Tenga un método <em>tomar_birras</em> que toma un parámetro (cantidad de birras)
+    y consuma esa cantidad de birras. Si el rollinga quiere consumir más birras de
+    las que tiene, consume todas las que tenga. Aumenta en 1 su felicidad por birra
+    consumida.
   </li>
   <li>
-    Tenga un método <code>comer_pancho</code> que no tome parámetros, y, si el rollinga
-    tiene al menos un pancho, lo consuma y aumente en 1 su felicidad. Si además tenía
-    papas, aumenta en 2 su felicidad, pero deja de tener papas.
+    Tenga un método <em>comer_pancho</em> que toma un parámetro (cantidad de panchos)
+    y consuma esa cantidad de panchos. Si el rollinga quiere consumir más panchos
+    de los que tiene, consume todos los que tenga. Aumenta en 2 su felicidad por
+    pancho consumido.
+  </li>
+  <li>
+    Tenga un método <em>corta_flequillo</em> (sin parámetros) que corte el flequillo
+  </li>
+  <li>
+    Tenga un método <em>crece_flequillo</em> (sin parámetros) que reponga el flequillo
+    del rollinga.
   </li>
   <li>
     Si el rollinga no tiene flequillo, no puede ni tomar birras ni comer panchos
-    porque la vida dejó de tener sentido
+    porque la vida dejó de tener sentido.
   </li>
 </ul>
+<p>Verifiquar que la implementación funciona corriendo el archivo de tests</p>
+<CodeBlock code={`python -m pytest test_rollinga.py`} lang="bash" />
+<h2>Consigna Manija</h2>
 <h3>Jesús</h3>
 <p>
-  A Jesús le interesa evaluar que sus discípulos rollingas se comporten
-  correctamente. Para eso, va a armar un
-  <strong>conjunto de tests usando <code>pytest</code></strong>. Tener en cuenta
-  casos con y sin flequillo, con o sin papas, una o múltiples birras, que desee
-  más birras de las que tiene, uno o múltiples panchos y las combinaciones de
-  estos casos.
+  Jesús provee a sus discípulos. Para eso, hacer una clase <InlineCodeBlock
+    lang="python"
+    code="Jesus"
+  />
+  (en el archivo <em>jesus.py</em>) que:
 </p>
-<h3>Ejemplo</h3>
-<p>Si creo 4 rollingas:</p>
-<ol>
-  <li>Con 2 birras</li>
-  <li>Con 3 birras, dos panchos y sin flequillo</li>
-  <li>Con 2 panchos</li>
-  <li>Con 2 panchos y papas</li>
-</ol>
-<p>
-  Todos comen un pancho. Luego, reponerle el flequillo al rollinga 2. Hacer que
-  todos tomen sus birras, y vuelvan a comer un pancho. La felicidad debería
-  quedar:
-</p>
-<ol>
-  <li>2</li>
-  <li>4 (el primer pancho no lo come al no tener flequillo)</li>
-  <li>2</li>
-  <li>3 (el primer pancho lo come con papas, el segundo no)</li>
-</ol>
+<ul>
+  <li>Se inicialice sin discípulos</li>
+  <li>
+    Tenga un método <em>adoptar_rollinga</em> que tome como parámetro un objeto de
+    la clase <InlineCodeBlock lang="python" code="Rollinga" /> y lo adopte como discípulo.
+  </li>
+  <li>
+    Tenga un método <em>hacer_birras</em> que le de <strong>una</strong> birra a
+    cada uno de sus discípulos.
+  </li>
+  <li>
+    Tenga un método <em>hacer_panchos</em> que le de <strong>un</strong> pancho a
+    cada uno de sus discípulos.
+  </li>
+  <li>
+    Tenga un método <em>reestablecer_flequillos</em> que recupera los flequillos
+    de todos sus discípulos.
+  </li>
+  <li>
+    Tenga un método <em>milagro_rollinga</em> que hace que los rollingas discípulos
+    tomen todas las birras y coman todos los panchos que tengan.
+  </li>
+  <li>
+    Tenga un método <em>felicidad_total</em> que devuelve la felicidad total de todos
+    sus discípulos.
+  </li>
+</ul>
+<p>Verifiquar que la implementación funciona corriendo el archivo de tests</p>
+<CodeBlock code={`python -m pytest test_jesus.py`} lang="bash" />
