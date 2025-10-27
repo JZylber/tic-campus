@@ -1,5 +1,217 @@
 ---
+import CodeBlock from "../../../../../components/articles/code-block/CodeBlock.astro";
+import InlineCodeBlock from "../../../../../components/articles/code-block/InlineCodeBlock.astro";
+
 export const partial = true;
 ---
 
-<p>Proximamente...</p>
+<h2>Conceptos Básicos</h2>
+
+<p>
+  La POO se basa en crear <strong>objetos</strong> que tienen características y pueden
+  realizar acciones. Para esto, usamos <strong>clases</strong> como "moldes" para
+  construir esos objetos.
+</p>
+<p>Para ejemplificar, vamos a modelar una carta de la baraja española.</p>
+
+<h3>Clases e Instancias</h3>
+<ul>
+  <li>
+    <strong>Clase:</strong> Es la <strong>plantilla</strong> o <strong
+      >molde</strong
+    > para crear objetos. Define las características (atributos) y los comportamientos
+    (métodos) comunes a todos los objetos de ese tipo. En nuestro ejemplo, la clase
+    sería <code>Carta</code>.
+  </li>
+  <li>
+    <strong>Instancia u Objeto:</strong> Es la <strong>realización</strong> concreta
+    de una clase. Cada carta específica que creamos (ej: el "tres de copas") es una
+    instancia de la clase <code>Carta</code>.
+  </li>
+</ul>
+
+<h3>Atributos</h3>
+<p>
+  Los <strong>atributos</strong> son las <strong>características</strong> o <strong
+    >datos</strong
+  > que definen el estado de un objeto. Son como las variables que pertenecen a la
+  instancia.
+</p>
+<ul>
+  <li>
+    <em>Ejemplo en una carta:</em> El número (<em>1</em> al <em>12</em>) y el
+    palo (<em>oro</em>, <em>copa</em>, <em>espada</em>, <em>basto</em>).
+  </li>
+</ul>
+
+<h3>Métodos</h3>
+<p>
+  Los <strong>métodos</strong> son las <strong>acciones</strong> o <strong
+    >comportamientos</strong
+  > que un objeto puede realizar. Son funciones que están definidas dentro de la
+  clase y operan sobre los atributos del objeto.
+</p>
+<ul>
+  <li>
+    <em>Ejemplo en una carta:</em> Un método podría ser <em>mostrar_carta()</em>
+    para que la carta se "muestre" por consola.
+  </li>
+</ul>
+
+<h2>Self</h2>
+<h3>¿Qué es?</h3>
+<p>
+  Cuando vos creás una instancia (un objeto, como el "siete de copas"), self es
+  la manera que tiene Python de decirle a la función (al método) "Laburá con
+  este objeto que está llamando a este método/atributo".
+</p>
+<p>
+  <strong>Es obligatorio</strong>: Siempre tiene que ser el primer parámetro de
+  cualquier método (incluyendo el <InlineCodeBlock
+    lang="python"
+    code="def __init__"
+  />) que definas dentro de una clase.
+</p>
+<h2>Constructores</h2>
+
+<p>
+  El <strong>constructor</strong> es un método especial que se llama automáticamente
+  cuando creás una <strong>nueva instancia</strong> de una clase. En Python, este
+  método se llama <code>__init__</code> (doble guion bajo antes y después).
+</p>
+
+<h3>Motivación</h3>
+<p>
+  Su propósito principal es <strong>inicializar</strong> el estado del nuevo objeto,
+  es decir, darle valores iniciales a sus atributos.
+</p>
+
+<h2>Definiendo atributos</h2>
+<p>
+  Los atributos son las características que definen el estado de una instancia
+  (objeto). ¿Cómo definimos que nuestra carta tiene un número y un palo?
+</p>
+<p>
+  Los atributos se definen y se inicializan dentro del constructor (<em
+    >__init__</em
+  >) usando la palabra clave <em>self</em>. <strong
+    >No se deben agregar atributos fuera del constructor</strong
+  > (se puede pero no es buena práctica).
+</p>
+<CodeBlock code={`self.nombre_del_atributo = valor_inicial`} lang="python" />
+
+<h2>Definiendo métodos</h2>
+<p>
+  Los métodos son como las funciones, pero que se definen dentro de una clase.
+  Representan las acciones que el objeto puede hacer.
+</p>
+<p>
+  Se definen igual que una función con def, pero con una diferencia clave:
+  siempre llevan a <em>self</em> como primer parámetro.
+</p>
+
+<h2>Ejemplo: Clase Carta</h2>
+<p>
+  Vamos a definir nuestra clase Carta para la <em>baraja española</em> (la de 48
+  cartas, del 1 al 12).
+</p>
+
+<CodeBlock
+  lang="python"
+  code={`
+class Carta:
+    # Este es el método constructor
+    def __init__(self, numero, palo):
+        # 'self' se refiere a la nueva carta que se está creando
+        # Inicializamos los atributos 'numero' y 'palo'
+        self.numero = numero
+        self.palo = palo
+
+    # Método simple para mostrar la carta
+    def mostrar_carta(self):
+        print(f"La carta es el {self.numero} de {self.palo}.")
+
+# Creando instancias (objetos) de la clase Carta
+carta1 = Carta(1, "oro")
+carta2 = Carta(12, "espada") # El rey (12)
+carta3 = Carta(7, "copa")
+
+# Usamos el método de la instancia
+carta1.mostrar_carta()
+carta3.mostrar_carta()
+`}
+/>
+
+<h2>El Método <em>__str__</em></h2>
+
+<h3>¿Qué es <em>__str__</em>?</h3>
+<p>
+  <em>__str__</em> (también con doble guion bajo) es otro método "mágico" o especial
+  en Python. Sirve para definir cómo debe representarse una <strong
+    >instancia como una cadena de texto (string)</strong
+  >.
+</p>
+
+<h3>¿Por qué es útil?</h3>
+<p>
+  Cuando intentamos imprimir un objeto directamente (usando <InlineCodeBlock
+    code="print(objeto)"
+    lang="python"
+  />
+  ) o convertirlo a string (<InlineCodeBlock
+    code="str(objeto)"
+    lang="python"
+  />), Python, por defecto, muestra una representación técnica (algo como <InlineCodeBlock
+    lang="bash"
+    code="<__main__.Carta object at 0x...>"
+  />, que no nos dice mucho).
+</p>
+<p>
+  <strong
+    >El método <em>__str__</em> nos permite reemplazar esa representación técnica
+    por una que sea clara y legible para un humano.</strong
+  >
+</p>
+<p>
+  Debe <strong>devolver</strong> (usar <em>return</em>) una cadena de texto con
+  la descripción del objeto.
+</p>
+
+<h3>Modificando el ejemplo de Carta</h3>
+<p>
+  Agreguemos el método <em>__str__</em> a nuestra clase <em>Carta</em>:
+</p>
+
+<CodeBlock
+  lang="python"
+  code={`
+class Carta:
+    def __init__(self, numero, palo):
+        self.numero = numero
+        self.palo = palo
+
+    # El método especial __str__
+    def __str__(self):
+        # Devolvemos una descripción clara de la carta
+        return f"{self.numero} de {self.palo}"
+
+    # El método mostrar_carta ya no es tan necesario si tenemos __str__
+    def mostrar_carta(self):
+        print(str(self)) # Ahora usa la representación __str__
+
+# Creamos una nueva instancia
+carta_nueva = Carta(5, "basto")
+
+# ¡Mirá la diferencia!
+print("--- Sin __str__ (antes):")
+# Si no tuviéramos __str__, esto imprimiría la dirección de memoria.
+# Pero gracias a __str__, ahora imprime la representación que definimos:
+print(carta_nueva) 
+
+print("--- Usando el método que llama a __str__:")
+carta_nueva.mostrar_carta()
+
+# También funciona si la convertimos a string
+descripcion = str(carta_nueva)
+print(f"Descripción: {descripcion}")`}
+/>
