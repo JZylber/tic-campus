@@ -532,10 +532,10 @@ const { position, subject } = Astro.props;
                     <td class="p-2">
                       <div class="w-full flex justify-center items-center">
                         <div
-                          class="rounded-full flex justify-center items-center px-2 py-1 gap-x-2"
+                          class="rounded-full flex justify-center items-center px-2 py-1 gap-x-2 border"
                           x-bind:class="{
-                          'bg-sh-light-red text-sh-red': redo.mark < 6,
-                          'bg-sh-light-yellow text-sh-yellow': redo.mark >= 6}"
+                          'bg-sh-light-red border-sh-medium-red text-sh-red': redo.mark < 6,
+                          'bg-sh-light-yellow border-sh-medium-yellow text-sh-yellow': redo.mark >= 6}"
                         >
                           <span
                             class="text-[14px] md:text-[16px]"
@@ -619,11 +619,11 @@ const { position, subject } = Astro.props;
                   <td class="p-2">
                     <RecoveredChip id="activity.id">
                       <div
-                        class="rounded-full flex justify-center items-center px-2 py-1 gap-x-2"
+                        class="rounded-full flex justify-center items-center px-2 py-1 gap-x-2 border"
                         x-bind:class="{
-                          'bg-sh-light-yellow text-sh-yellow': redo,
-                      'bg-sh-light-green text-sh-green': activity.done && !redo,
-                      'bg-sh-light-red text-sh-red': !activity.done && !redo
+                          'bg-sh-light-yellow  border-sh-medium-yellow text-sh-yellow': redo,
+                      'bg-sh-light-green border-sh-medium-green text-sh-green': activity.done && !redo,
+                      'bg-sh-light-red border-sh-medium-red text-sh-red': !activity.done && !redo
                     }"
                       >
                         <span
@@ -693,13 +693,13 @@ const { position, subject } = Astro.props;
                   <td class="p-2">
                     <RecoveredChip id="markedActivity.id">
                       <div
-                        class="rounded-full flex justify-center items-center px-2 py-1 gap-x-2 text-[16px]"
+                        class="rounded-full flex justify-center items-center px-2 py-1 gap-x-2 text-[16px] border"
                         x-bind:class="{
-                      'bg-sh-light-yellow text-sh-yellow': activity && activity.inRevision,
-                      'bg-sh-light-green text-sh-green': activity && activity.mark >= 6 && !activity.inRevision,
-                      'bg-sh-light-red text-sh-red': activity && activity.mark < 6 && !activity.inRevision,
-                      'bg-sh-light-purple text-gray-600': !activity && markedActivity.inProgress,
-                      'bg-gray-200 text-gray-600': !activity && !markedActivity.inProgress
+                      'bg-sh-light-yellow border-sh-medium-yellow  text-sh-yellow': activity && activity.inRevision,
+                      'bg-sh-light-green border-sh-medium-green text-sh-green': activity && activity.mark >= 6 && !activity.inRevision,
+                      'bg-sh-light-red border-sh-medium-red text-sh-red': activity && activity.mark < 6 && !activity.inRevision,
+                      'bg-sh-light-purple border-sh-purple text-gray-600': !activity && markedActivity.inProgress,
+                      'bg-gray-200 border-gray-400 text-gray-600': !activity && !markedActivity.inProgress
                     }"
                       >
                         <template x-if="activity && !activity.inRevision">
@@ -782,14 +782,14 @@ const { position, subject } = Astro.props;
                   <td class="p-2">
                     <RecoveredChip id="activity.id">
                       <div
-                        class="rounded-full flex justify-center items-center px-2 py-1 gap-x-2"
+                        class="rounded-full flex justify-center items-center px-2 py-1 gap-x-2 border"
                         x-bind:class="{
-                      'bg-sh-light-yellow text-sh-yellow': activity && activity.inRevision,
-                      'bg-sh-light-green text-sh-green': activity && activity.done && !activity.inRevision,
-                      'bg-sh-light-red text-sh-red': activity && !activity.done && !activity.inRevision,
-                      'bg-sh-light-purple text-gray-600': !activity && courseActivity.inProgress,
-                      'bg-sh-light-blue text-sh-blue': !activity && courseActivity.optional,
-                      'bg-gray-200 text-gray-600': !activity && !courseActivity.inProgress
+                      'bg-sh-light-yellow border-sh-medium-yellow text-sh-yellow': activity && activity.inRevision,
+                      'bg-sh-light-green border-sh-medium-green text-sh-green': activity && activity.done && !activity.inRevision,
+                      'bg-sh-light-red border-sh-medium-red text-sh-red': activity && !activity.done && !activity.inRevision,
+                      'bg-sh-light-purple border-sh-purple text-gray-600': !activity && courseActivity.inProgress,
+                      'bg-sh-light-blue border-sh-medium-blue text-sh-blue': !activity && courseActivity.optional,
+                      'bg-gray-200 border-gray-400 text-gray-600': !activity && !courseActivity.inProgress
                     }"
                       >
                         <template
