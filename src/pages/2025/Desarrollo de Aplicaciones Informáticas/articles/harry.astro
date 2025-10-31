@@ -1,6 +1,17 @@
 ---
+import CodeBlock from "../../../../components/articles/code-block/CodeBlock.astro";
+import InlineCodeBlock from "../../../../components/articles/code-block/InlineCodeBlock.astro";
+
 export const partial = true;
 ---
+
+<h2>Instalación</h2>
+
+<p>
+  Necesitan pytest para correr los tests. Pueden instalarlo con requirements.txt
+</p>
+
+<CodeBlock lang="bash" code="pip install -r requirements.txt" />
 
 <h2>Introducción</h2>
 <p>
@@ -11,48 +22,37 @@ export const partial = true;
 </p>
 <h2>Consigna</h2>
 <p>
-  Crear la clase <code>Mago</code> (en el archivo <code>harry.py</code>) que:
+  Crear la clase <em>Mago</em> (en el archivo <em>harry.py</em>) que:
 </p>
 <ul>
   <li>Se inicialice con el nombre</li>
   <li>
-    Tenga un método <code>crear_horrocruxes(numero)</code> que cree el número pasado
-    por parámetro de <em>horrocruxes</em>. Para pensar: ¿Los
+    Tenga un método <InlineCodeBlock
+      code="crear_horrocruxes(numero: int)"
+      lang="python"
+    /> que cree el número pasado por parámetro de <em>horrocruxes</em>. Para
+    pensar: ¿Los
     <em>horrocruxes</em> deben ser guardados fuera o dentro de la clase mago?
   </li>
   <li>
-    Tenga el método <code>morir()</code>. Si no tiene <em>horrocruxes</em>,
-    morirá. Si tiene <em>horrocruxes</em>, restará un <em>horrocrux</em> de su total.
+    Tenga el método <InlineCodeBlock code="morir()" lang="python" />. Si no
+    tiene <em>horrocruxes</em>, morirá. Si tiene <em>horrocruxes</em>, restará
+    un <em>horrocrux</em> de su total.
   </li>
-  <li>Tenga el método <code>vivo()</code> que devuelva si está vivo o no.</li>
   <li>
-    Tenga el método <code>avada_kedavra(mago enemigo)</code>, que mate al mago
-    enemigo (usar el método morir del mago enemigo).
+    Tenga el método <InlineCodeBlock code="vivo() -> bool" lang="python" /> que devuelva
+    si está vivo o no (debe retornar True o False).
+  </li>
+  <li>
+    Tenga el método <InlineCodeBlock
+      code="avada_kedavra(mago enemigo)"
+      lang="python"
+    /> que mate al mago enemigo (<strong>TIP:</strong> usar el método morir del mago
+    enemigo).
   </li>
 </ul>
-<p>
-  Luego, crear una serie de tests de unidad para la clase <code>Mago</code> en el
-  archivo <code>harry_tests.py</code>. Algunas cosas a tener en cuenta:
-</p>
-<ul>
-  <li>Testear el estado inicial del mago</li>
-  <li>
-    Tratar en lo posible de testear los métodos de forma independiente, pero
-    algunos no se puede ( <code>avada_kedavra</code> con <code>vivo</code>)
-  </li>
-  <li>
-    <strong>NO</strong> testeen <code>morir</code>. No porque no se deba hacer,
-    si no porque lo vamos a considerar &quot;privado&quot;, es decir, que no va
-    a ser llamado por las instancias de forma directa si no por otros métodos.
-  </li>
-  <li>
-    Concentrarse en situaciones, como por ejemplo <code>avada_kedavra</code> sin
-    <em>horrocruxes</em>, <code>avada_kedavra</code> con <em>horrocruxes</em>,
-    <code>avada_kedavra</code> suficientes veces como para acabar con los
-    <em>horrocruxes</em>, etc.
-  </li>
-</ul>
-<p>Pueden trabajar la clase y los tests de forma independiente.</p>
+<p>Prueben que ande corriendo los tests con:</p>
+<CodeBlock lang="bash" code="python -m pytest" />
 <h2>Datos de color</h2>
 <p>
   J.K Rowling creó otras escuelas de magia además de Hogwarts. Sin embargo, se
