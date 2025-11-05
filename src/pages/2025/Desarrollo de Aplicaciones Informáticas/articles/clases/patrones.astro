@@ -194,3 +194,128 @@ probar_aceleracion(mi_moto) # Llama al acelerar() de Moto`}
   >acelerar()</em
 >.
 <h2>Clases abstractas</h2>
+<p>
+  Una <strong>Clase Abstracta</strong> (o <em>Abstract Base Class</em>, <em
+    >ABC</em
+  >) es como un <strong>"contrato"</strong> o un <strong>"modelo"</strong> incompleto
+  que <strong>no se puede usar directamente</strong>.
+</p>
+
+<ul>
+  <li>
+    <strong>No se puede instanciar:</strong> Esto significa que <strong
+      >no podés crear objetos</strong
+    > directamente de una clase abstracta. Si intentás hacer <em
+      >mi_objeto = ClaseAbstracta()</em
+    >, ¡Python te va a tirar un error!
+  </li>
+  <li>
+    <strong>Define una interfaz:</strong> Su principal objetivo es <strong
+      >definir un conjunto de métodos</strong
+    > (uno o más) que <em>obligatoriamente</em> deben implementar todas las clases
+    que hereden de ella. Estos son los <strong>métodos abstractos</strong>.
+  </li>
+</ul>
+
+<p>
+  En criollo, la clase abstracta dice: "Si sos una 'Figura', tenés que tener un
+  método para calcular tu 'área', ¡sí o sí!".
+</p>
+<h3>¿Para qué usamos las Clases Abstractas?</h3>
+<p>
+  Usamos las <em>ABC</em> para lograr algo que en <em>POO</em> (Programación Orientada
+  a Objetos) llamamos <strong>polimorfismo</strong> de una manera <strong
+    >controlada</strong
+  > y para forzar la <strong>consistencia</strong> en la estructura del código.
+</p>
+
+<ul>
+  <li>
+    <strong>Forzar la Implementación:</strong> Es el caso de uso principal. Asegurás
+    que cualquier clase hija ("subclase") que herede del contrato <strong
+      >cumpla con todos los métodos</strong
+    > definidos como abstractos. Esto evita bugs y hace que el código sea más predecible.
+  </li>
+  <li>
+    <strong>Definir Interfaces Comunes:</strong> Si tenés un sistema con varios tipos
+    de objetos (ej: <em>Perro</em>, <em>Gato</em>, <em>Pez</em>) que deben
+    realizar la <em>misma acción</em> (ej: <em>comer()</em>), la clase abstracta
+    (<em>Animal</em>) te garantiza que todos tendrán ese método, aunque cada uno
+    lo implemente a su manera. Todas las clases hijas compartirán una <strong
+      >interfaz común</strong
+    > y por lo tanto son polimorficas.
+  </li>
+  <li>
+    <strong>Diseño Robusto:</strong> Al establecer este "esqueleto" de antemano,
+    estás mejorando el <strong>diseño arquitectónico</strong> de tu aplicación, haciéndola
+    más fácil de mantener y expandir a futuro (<em>escalabilidad</em>).
+  </li>
+</ul>
+<h3>Ejemplo</h3>
+<p>Hagamos un ejemplo con formas geométricas</p>
+<CodeBlock
+  lang="python"
+  code={`from abc import ABC, abstractmethod
+
+# 1. Definimos la Clase Abstracta 'FormaGeometrica'
+class FormaGeometrica(ABC):
+    """
+    Clase abstracta que modela una forma geométrica
+    y fuerza la implementación del cálculo de área.
+    """
+
+    @abstractmethod # Decorador que marca el método como obligatorio
+    def calcular_area(self):
+        # Un método abstracto NO tiene implementación (o puede tener una muy básica)
+        pass 
+
+    # NOTA: Podría tener métodos normales con implementación aquí
+    def mostrar_info(self):
+        print("Esto es una forma geométrica.")
+
+
+# 2. Implementamos una Subclase 'Cuadrado'
+class Cuadrado(FormaGeometrica):
+    def __init__(self, lado):
+        self.lado = lado
+        
+    # OBLIGATORIO: Debemos implementar 'calcular_area'
+    def calcular_area(self):
+        # Acá usamos la lógica específica del Cuadrado
+        return self.lado * self.lado
+
+
+# 3. Implementamos otra Subclase 'Circulo'
+class Circulo(FormaGeometrica):
+    def __init__(self, radio):
+        self.radio = radio
+        
+    # OBLIGATORIO: También implementamos 'calcular_area', pero distinto
+    def calcular_area(self):
+        # Usamos la lógica específica del Círculo (pi * radio^2)
+        return 3.14159 * self.radio * self.radio
+
+
+# --- Uso en el Código ---
+
+# a) Instanciar clases concretas (Cuadrado y Círculo)
+mi_cuadrado = Cuadrado(lado=5)
+mi_circulo = Circulo(radio=3)
+
+print(f"Área del cuadrado: {mi_cuadrado.calcular_area()}") # Imprime: 25
+print(f"Área del círculo: {mi_circulo.calcular_area()}") # Imprime: 28.27431
+mi_cuadrado.mostrar_info() # Funciona el método de la clase abstracta
+
+
+# b) Intentar instanciar la Clase Abstracta (¡ERROR!)
+# forma_base = FormaGeometrica() 
+# >> Esto tiraría: TypeError: Can't instantiate abstract class FormaGeometrica with abstract method calcular_area`}
+/>
+<p>
+  Si intentás crear una clase que herede de <em>FormaGeometrica</em> (como hicimos
+  con <em>Cuadrado</em> y <em>Circulo</em>), pero te <strong>olvidás</strong> de
+  definir el método <em>calcular_area()</em>, <strong
+    >Python no va a dejar</strong
+  > crear objetos de esa nueva clase. ¡El "contrato" no fue cumplido! Y ahí está
+  la magia de las clases abstractas: <strong>garantizar la estructura</strong>.
+</p>
