@@ -1,4 +1,6 @@
 ---
+import CodeBlock from "../../../../../components/articles/code-block/CodeBlock.astro";
+
 export const partial = true;
 ---
 
@@ -18,7 +20,111 @@ export const partial = true;
     >Design Patterns: Elements of Reusable Object-Oriented Software</a
   >
 </p>
-
 <h2>Herencia</h2>
+<h3>¿Qué es la Herencia en clases?</h3>
+<p>
+  La herencia permite que una clase (llamada <strong>clase hija</strong> o <strong
+    >subclase</strong
+  >) tome prestados o "herede" todos los <strong>atributos</strong> y <strong
+    >métodos</strong
+  > de otra clase (llamada <strong>clase padre</strong> o <strong
+    >superclase</strong
+  >). Es como si la clase hija fuera una versión <strong>especializada</strong> de
+  la clase padre.
+</p>
+<ul>
+  <li>
+    <strong>Clase Padre (Superclase):</strong> Define las características <strong
+      >comunes</strong
+    > y generales.
+  </li>
+  <li>
+    <strong>Clase Hija (Subclase):</strong> Hereda lo de la padre y agrega sus propias
+    características <strong>únicas</strong>.
+  </li>
+</ul>
+<h3>Sintaxis Básica</h3>
+<p>
+  Para que una clase herede de otra, simplemente la ponemos entre <strong
+    >paréntesis</strong
+  > al definir la hija:
+</p>
+<CodeBlock
+  lang="python"
+  code={`class Vehiculo: # Clase Padre
+    def __init__(self, marca, modelo):
+        self.marca = marca
+        self.modelo = modelo
+
+    def arrancar(self):
+        return f"El {self.marca} {self.modelo} está arrancando."
+
+class Auto(Vehiculo): # Clase Hija: 'Auto' hereda de 'Vehiculo'
+    def tocar_bocina(self):
+        return "¡Pip Piiip!"
+
+# ¡Miren qué fácil! Un objeto 'mi_auto' puede usar el método 'arrancar' de 'Vehiculo'
+mi_auto = Auto("Renault", "12") # Alto auto
+print(mi_auto.arrancar()) # Output: El Renault 12 está arrancando.`}
+/>
+<h3>Búsqueda de Métodos</h3>
+<p>
+  Cuando se llama a un método en una instancia de una clase hija, Python sigue
+  un orden de búsqueda específico:
+</p>
+<ol>
+  <li>
+    <strong>Busca en la clase Hija:</strong> Primero, mira si el método está definido
+    en la <strong>propia clase hija</strong>.
+  </li>
+  <li>
+    <strong>Busca en la clase Padre:</strong> Si no lo encuentra en la hija, sube
+    al toque a la <strong>clase padre</strong> (y si esa padre tiene otra padre,
+    sigue subiendo la "cadena de herencia").
+  </li>
+</ol>
+
+<p>
+  Si el método está en la hija, lo usa; si no, sube a la padre. Si está en <strong
+    >ambas</strong
+  >, usa el de la <strong>hija</strong> (¡es el más específico!), esto se llama <strong
+    >sobrescritura</strong
+  > (<em>override</em>). Si no lo encuentra en ningún lado, ¡tira un error!
+</p>
+<h3>Super</h3>
+<p>
+  A veces, querés que la clase hija haga algo <strong>además</strong> de lo que hace
+  la padre, o querés <strong>reutilizar</strong> el código de inicialización (<em
+    >__init__</em
+  >) de la clase padre. ¡Ahí entra en juego <em>super()</em>!
+</p>
+
+<p>
+  <strong><em>super()</em></strong> te da acceso a la <strong
+    >clase padre</strong
+  >. El uso más común es en el método <em>__init__</em> de la hija:
+</p>
+<CodeBlock
+  lang="python"
+  code={`class Vehiculo:
+    def __init__(self, marca, modelo):
+        self.marca = marca
+        self.modelo = modelo
+        print("Vehículo creado.") # Lo que hace la clase padre al inicializar
+
+class Camioneta(Vehiculo):
+    def __init__(self, marca, modelo, capacidad_carga):
+        # Llama al __init__ de 'Vehiculo' para no repetir código de marca y modelo
+        super().__init__(marca, modelo) 
+        # Luego, agrega su atributo específico
+        self.capacidad_carga = capacidad_carga
+        print("Camioneta creada con extras.")
+
+# ¡El super() hace el trabajo pesado de la inicialización de la padre!
+mi_camioneta = Camioneta("Toyota", "Hilux", "1 Tonelada")
+print(mi_camioneta.capacidad_carga) # Output: 1 Tonelada
+# Noten que se ejecutaron los dos 'print' de los __init__`}
+/>
 <h2>Polimorfismo</h2>
+
 <h2>Clases abstractas</h2>
