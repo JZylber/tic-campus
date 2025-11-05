@@ -81,6 +81,7 @@ import Select from "../../components/misc/select/Select.astro";
           <tr
             class="border-b-2 border-gray-300 hover:bg-gray-300 cursor-pointer"
             x-data="{ finalMarkData : student.getFinalMarkData(student.getSubjects()[0]) }"
+            @click="$store.student.setStudent(student.name, student.surname, student.course, student.id); window.location.href = new Date().getFullYear() + (parseInt(student.course[2]) === 5 ? '/Desarrollo%20de%20Aplicaciones%20Informáticas/': '/Tecnologías%20de%20la%20Información/') + student.course "
           >
             <td class="px-4 py-2 text-center" x-text="student.name"></td>
             <td class="px-4 py-2 text-center" x-text="student.surname"></td>
