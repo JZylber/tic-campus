@@ -126,5 +126,71 @@ print(mi_camioneta.capacidad_carga) # Output: 1 Tonelada
 # Noten que se ejecutaron los dos 'print' de los __init__`}
 />
 <h2>Polimorfismo</h2>
+<p>
+  Dos clases son polimorficas si tienen los mismos mensajes (métodos) pero
+  pueden tener implementaciones diferentes.
+</p>
+<p>
+  Volvamos al ejemplo de los vehículos. Queremos que todos tengan la acción de <em
+    >acelerar()</em
+  >, pero obviamente no aceleran de la misma manera.
+</p>
+<CodeBlock
+  lang="python"
+  code={`# 1. Clase Base (Madre)
+class Vehiculo:
+    def __init__(self, marca):
+        self.marca = marca
+    
+    def acelerar(self): # Método genérico
+        # Esta implementación por defecto es un poco vaga, ¡pero es la base!
+        print(f"El {self.marca} se está moviendo...") 
 
+# 2. Clases Derivadas (Hijas) que SOBRESCRIBEN el método
+class Auto(Vehiculo):
+    # La clase Auto hereda de Vehiculo
+    def acelerar(self): 
+        # ¡ACÁ está el polimorfismo! Sobreescribimos el método.
+        print(f"El Auto {self.marca} acelera a fondo.")
+
+class Moto(Vehiculo):
+    # La clase Moto hereda de Vehiculo
+    def acelerar(self): 
+        # Sobreescribimos de nuevo, con otra acción específica.
+        print(f"La Moto {self.marca} levanta la rueda.")
+
+# 3. Uso Polimórfico
+# Definimos una función que no sabe QUÉ objeto va a recibir, ¡solo que tiene el método acelerar!
+def probar_aceleracion(vehiculo):
+    vehiculo.acelerar() # Llama al método APROPIADO para el objeto
+
+# Instanciamos los objetos
+mi_auto = Auto("Renault 12")
+mi_moto = Moto("Honda Titan")
+
+print("--- Probando Aceleración ---")
+probar_aceleracion(mi_auto) # Llama al acelerar() de Auto
+probar_aceleracion(mi_moto) # Llama al acelerar() de Moto`}
+/>
+<p>
+  Aunque la función <em>probar_aceleracion()</em> siempre llama a <em
+    >vehiculo.acelerar()</em
+  >, el resultado cambia porque:
+</p>
+<ul>
+  <li>
+    Cuando le pasamos <em>mi_auto</em>, Python usa el <em>acelerar()</em> definido
+    en la clase <strong><em>Auto</em></strong>.
+  </li>
+  <li>
+    Cuando le pasamos <em>mi_moto</em>, Python usa el <em>acelerar()</em> definido
+    en la clase <strong><em>Moto</em></strong>.
+  </li>
+</ul>
+<p>
+  <strong>¡Eso es el polimorfismo!</strong> El mismo nombre (<em>acelerar</em>)
+  se comporta de distintas "formas" según el objeto
+</p>, y la función puede ejecutarse con cualquier objeto que tenga el método <em
+  >acelerar()</em
+>.
 <h2>Clases abstractas</h2>
