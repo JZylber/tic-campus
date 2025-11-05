@@ -365,11 +365,5 @@ export default (Alpine: Alpine) => {
       dataSheetId: string
     ) => Promise<void>;
   });
-  const shadowContainer = document.querySelector("#campus-insertion");
-  if (shadowContainer !== null && isOnCampus()) {
-    // Butchering of types but OH WELL
-    const shadow = shadowContainer.shadowRoot as unknown as HTMLElement;
-    Alpine.initTree(shadow);
-  }
   Alpine.data("markCalculations", markCalculations);
 };

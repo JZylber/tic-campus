@@ -82,25 +82,41 @@
   shadow.innerHTML += doc.body.innerHTML;
   const loadScripts = scripts.map((el, index) => {
     return new Promise((resolve, reject) => {
-      const newScript = document.createElement("script");
-      // Copy all atributtes from the original script tag
-      for (let i = 0; i < el.attributes.length; i++) {
-        newScript.setAttribute(el.attributes[i].name, el.attributes[i].value);
-      }
-      if (el.src) {
-        // If the source is a relative path, add the base URL at the front
-        if (el.src.startsWith("https://campus.ort.edu.ar/tic-campus")) {
-          newScript.src = el.src.replace("https://campus.ort.edu.ar/", baseURL);
-        }
-      }
-      newScript.innerText = el.innerText;
-      // onload resolve the promise
-      newScript.onload = () => {
+      // Check if if the script has inline code
+      if (el.innerText) {
+        // Eval content directly and resolve
+        eval(el.innerText);
         resolve();
-      };
-      shadow.appendChild(newScript);
+      } else if (!el.src) {
+        // If no src and no inline code, resolve
+        resolve();
+      } else {
+        // If has src, create a new script tag and set the src
+        const newScript = document.createElement("script");
+        // Copy all atributtes from the original script tag
+        for (let i = 0; i < el.attributes.length; i++) {
+          newScript.setAttribute(el.attributes[i].name, el.attributes[i].value);
+        }
+        if (el.src) {
+          // If the source is a relative path, add the base URL at the front
+          if (el.src.startsWith("https://campus.ort.edu.ar/campus-proyecto")) {
+            newScript.src = el.src.replace(
+              "https://campus.ort.edu.ar/",
+              baseURL
+            );
+          } else {
+            newScript.src = el.src;
+          }
+        }
+        // onload resolve the promise
+        newScript.onload = () => {
+          resolve();
+        };
+        shadow.appendChild(newScript);
+      }
     });
   });
   await Promise.all(loadScripts);
+  window.Alpine.initTree(parent.shadowRoot);
   triggerDOMContentLoaded();
 </script>
