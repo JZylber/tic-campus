@@ -698,6 +698,7 @@ const { position, subject } = Astro.props;
                       'bg-sh-light-yellow border-sh-medium-yellow  text-sh-yellow': activity && activity.inRevision,
                       'bg-sh-light-green border-sh-medium-green text-sh-green': activity && activity.mark >= 6 && !activity.inRevision,
                       'bg-sh-light-red border-sh-medium-red text-sh-red': activity && activity.mark < 6 && !activity.inRevision,
+                      'bg-sh-light-blue border-sh-medium-blue text-sh-blue': !activity && markedActivity.optional,
                       'bg-sh-light-purple border-sh-purple text-gray-600': !activity && markedActivity.inProgress,
                       'bg-gray-200 border-gray-400 text-gray-600': !activity && !markedActivity.inProgress
                     }"
@@ -719,6 +720,9 @@ const { position, subject } = Astro.props;
                           x-text="(()=>{
                           if(!activity && markedActivity.inProgress){
                             return 'En Progreso'
+                          }
+                          if(!activity && markedActivity.optional){
+                            return 'Opcional'
                           }
                           if(!activity && !markedActivity.inProgress){
                             return 'Sin Calificar'
