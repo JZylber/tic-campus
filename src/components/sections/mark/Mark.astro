@@ -17,8 +17,8 @@ const { position, subject } = Astro.props;
     getActivitiesAndMarks,
     getRedos,
     getSubjectMarkingCriteria,
-  } from "../../../aux/fetchData";
-  import type { Activity, MarkedActivity } from "../../../aux/types";
+  } from "../../../scripts/fetchData";
+  import type { Activity, MarkedActivity } from "../../../scripts/types";
   import { round } from "../../../entrypoint";
 
   document.addEventListener("alpine:init", () => {

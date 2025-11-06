@@ -11,13 +11,14 @@ import {
   getStudents,
   getTimetable,
   getStudentSeminars,
-} from "./aux/fetchData";
-import { fetchHTMLData, prepareCrumbs } from "./aux/loadData";
+} from "./scripts/fetchData";
+import { fetchHTMLData, prepareCrumbs } from "./scripts/loadData";
 import collapse from "@alpinejs/collapse";
 import persist from "@alpinejs/persist";
-import detectSwipe from "./aux/swipeDetect";
-import type { Unit } from "./aux/types";
-import markCalculations from "./aux/Alpine/markCalculations";
+import type { Unit } from "./scripts/types";
+import markCalculations from "./scripts/alpine/markCalculations";
+import twMQDirective from "./scripts/alpine/directives/twMediaQuery";
+import swipeDirective from "./scripts/alpine/directives/swipe";
 
 window.getSubjectData = getSubjectData;
 window.getSubjectProgram = getSubjectProgram;
@@ -82,73 +83,8 @@ interface AlpineTimetableStore {
 export default (Alpine: Alpine) => {
   Alpine.plugin(collapse);
   Alpine.plugin(persist);
-  Alpine.directive(
-    "tw",
-    (
-      el,
-      { value, expression, modifiers },
-      { Alpine, evaluateLater, evaluate, effect, cleanup }
-    ) => {
-      // Set up the expression to be evaluated later in the listener callback
-      const run = evaluateLater(expression);
-
-      const rootStyles = getComputedStyle(document.documentElement);
-      const isMax = value.startsWith("max");
-      let breakpoint = "";
-      if (isMax) {
-        breakpoint = rootStyles.getPropertyValue(
-          `--breakpoint-${value.slice(4)}`
-        );
-      } else {
-        breakpoint = rootStyles.getPropertyValue(`--breakpoint-${value}`);
-      }
-      const mql = isMax
-        ? window.matchMedia(`(max-width: ${breakpoint})`)
-        : window.matchMedia(`(min-width: ${breakpoint})`);
-      const handler = () => {
-        if (mql.matches) {
-          effect(() => run());
-        }
-      };
-      handler();
-      mql.onchange = handler;
-      // Be sure you clean up your listeners as a best practice
-      cleanup(() => mql.removeEventListener("change", handler));
-    }
-  );
-  Alpine.directive(
-    "swipe",
-    (elem, { value, modifiers, expression }, { evaluateLater, cleanup }) => {
-      // console.log({ value, modifiers });
-      const evaluate = expression ? evaluateLater(expression) : () => {};
-      const callback = (arg: string) => {
-        evaluate(() => {}, { scope: {}, params: [arg] });
-      };
-      const threshold =
-        (modifiers[0] === "threshold" &&
-          (modifiers[1] || "").endsWith("px") &&
-          Number(modifiers[1].replace("px", ""))) ||
-        50;
-
-      const detectorInstance = detectSwipe(
-        elem,
-        function (direction) {
-          if (!value) {
-            callback(direction);
-            return;
-          }
-          if (direction === value) {
-            callback(direction);
-            return;
-          }
-        },
-        threshold
-      );
-      cleanup(() => {
-        detectorInstance.disable();
-      });
-    }
-  );
+  Alpine.directive("tw", twMQDirective);
+  Alpine.directive("swipe", swipeDirective);
   Alpine.store("section", {
     currentSection: "",
     currentSectionIndex: -1,
