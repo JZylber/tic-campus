@@ -1,4 +1,4 @@
-import { round } from "../../entrypoint";
+import { round } from "../../../entrypoint";
 import {
   getAllActivities,
   getAllMarks,
@@ -7,7 +7,7 @@ import {
   getAllRedos,
   getAllCourses,
   getSubjectIds,
-} from "../fetchData";
+} from "../../fetchData";
 
 interface Activity {
   name: string;

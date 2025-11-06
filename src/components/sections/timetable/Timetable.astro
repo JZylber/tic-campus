@@ -10,8 +10,14 @@ interface Props {
 const { position, subject } = Astro.props;
 ---
 
-<script></script>
-<SectionLayout name="horarios" position={position}>
+<script>
+  import timetableData from "../../../scripts/Alpine/data/timetable";
+
+  document.addEventListener("alpine:init", () => {
+    Alpine.data("timetableData", timetableData);
+  });
+</script>
+<SectionLayout name="horarios" position={position} xData="timetableData()">
   <h1 class="text-[36px] font-bold text-center p-4">
     Horarios 2do Cuatrimestre
   </h1>
