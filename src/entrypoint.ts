@@ -1,6 +1,5 @@
 import { type Alpine } from "alpinejs";
 import {
-  getStudentData,
   getSubjectData,
   getSubjectProgram,
   getSubjectPresentation,
@@ -17,9 +16,6 @@ import markCalculations from "./scripts/alpine/data/markCalculations";
 import twMQDirective from "./scripts/alpine/directives/twMediaQuery";
 import swipeDirective from "./scripts/alpine/directives/swipe";
 import pageData from "./scripts/alpine/stores/pageData";
-import sectionData, {
-  type AlpineSectionStore,
-} from "./scripts/alpine/data/section";
 import courseStore from "./scripts/alpine/stores/course";
 import studentStore from "./scripts/alpine/stores/student";
 
@@ -34,15 +30,6 @@ window.prepareCrumbs = prepareCrumbs;
 window.getFixedMarks = getFixedMarks;
 window.getStudents = getStudents;
 
-export const round = (num: number, decimals: number) => {
-  return Math.round(num * Math.pow(10, decimals)) / Math.pow(10, decimals);
-};
-
-const isOnCampus = () => {
-  const host = window.location.host;
-  return host === "campus.ort.edu.ar";
-};
-
 export default (Alpine: Alpine) => {
   Alpine.plugin(collapse);
   Alpine.plugin(persist);
@@ -51,5 +38,4 @@ export default (Alpine: Alpine) => {
   Alpine.store("pageData", pageData());
   Alpine.store("course", courseStore());
   Alpine.store("student", studentStore(Alpine));
-  Alpine.data("markCalculations", markCalculations);
 };

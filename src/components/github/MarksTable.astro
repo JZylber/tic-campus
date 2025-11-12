@@ -4,6 +4,13 @@ import Loader from "../loader/Loader.astro";
 import Select from "../../components/misc/select/Select.astro";
 ---
 
+<script>
+  import markCalculations from "../../scripts/alpine/data/markCalculations";
+  document.addEventListener("alpine:init", () => {
+    Alpine.data("markCalculations", markCalculations);
+  });
+</script>
+
 <div
   x-data="{marks: markCalculations(),filter: {course: '', text: ''}, filteredStudents: []}"
   x-effect="filteredStudents = marks.students.filter(s => {
