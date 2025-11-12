@@ -15,7 +15,7 @@ const { name, position, xInit, xData } = Astro.props;
   x-data=`{${xData?"..."+xData+",":""}offset: ${position}}`
   class="absolute inset-0 w-full h-full bg-gray-50 overflow-y-hidden overflow-x-hidden transition-transform duration-300"
   :style="`transform: translateY(calc(100%*${offset}))`"
-  x-init=`offset = ${position} - $store.section.currentSectionIndex;$watch('$store.section.currentSectionIndex', (value) => {offset = ${position} - value;$refs.sectionContent.scrollTop = 0});${xInit}`
+  x-init=`offset = ${position} - currentSectionIndex;$watch('currentSectionIndex', (value) => {offset = ${position} - value;$refs.sectionContent.scrollTop = 0});${xInit}`
 >
   <div
     x-ref="sectionContent"
