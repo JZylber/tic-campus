@@ -13,13 +13,13 @@ const { position, subject } = Astro.props;
 ---
 
 <script>
+  import { round } from "../../../scripts/alpine/data/markCalculations";
   import {
     getActivitiesAndMarks,
     getRedos,
     getSubjectMarkingCriteria,
   } from "../../../scripts/fetchData";
   import type { Activity, MarkedActivity } from "../../../scripts/types";
-  import { round } from "../../../entrypoint";
 
   document.addEventListener("alpine:init", () => {
     Alpine.store("marks", {

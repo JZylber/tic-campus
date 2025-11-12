@@ -3,11 +3,6 @@ import { Alpine as AlpineType } from "alpinejs";
 
 declare global {
   var Alpine: AlpineType;
-  var getSubjectData: (
-    subject: string,
-    course: string,
-    dataSheetId: string
-  ) => Promise<UnitData[]>;
   var getSubjectProgram: (
     subject: string,
     dataSheetId: string

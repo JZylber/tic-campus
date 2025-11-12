@@ -1,6 +1,5 @@
 import { type Alpine } from "alpinejs";
 import {
-  getSubjectData,
   getSubjectProgram,
   getSubjectPresentation,
   getSubjectRedoLinks,
@@ -12,14 +11,12 @@ import {
 import { fetchHTMLData, prepareCrumbs } from "./scripts/loadData";
 import collapse from "@alpinejs/collapse";
 import persist from "@alpinejs/persist";
-import markCalculations from "./scripts/alpine/data/markCalculations";
 import twMQDirective from "./scripts/alpine/directives/twMediaQuery";
 import swipeDirective from "./scripts/alpine/directives/swipe";
 import pageData from "./scripts/alpine/stores/pageData";
 import courseStore from "./scripts/alpine/stores/course";
 import studentStore from "./scripts/alpine/stores/student";
 
-window.getSubjectData = getSubjectData;
 window.getSubjectProgram = getSubjectProgram;
 window.getSubjectPresentation = getSubjectPresentation;
 window.getSubjectRedoLinks = getSubjectRedoLinks;
