@@ -26,3 +26,4 @@ const pageData = () => {
   };
 };
 export default pageData;
+export type PageDataStore = ReturnType<typeof pageData>;

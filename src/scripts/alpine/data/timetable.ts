@@ -1,8 +1,10 @@
+import type { AlpineComponent } from "alpinejs";
 import { getStudentSeminars, getTimetable } from "../../fetchData";
+import type { PageDataStore } from "../stores/pageData";
 
 const daysOfWeek = ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes"];
 
-type AlpineTimetableStore = {
+type AlpineTimetableData = AlpineComponent<{
   timetable: {
     [key: string]: Array<{
       day: string;
@@ -22,12 +24,17 @@ type AlpineTimetableStore = {
     room: string;
     teacher: string;
   }>;
-};
+}>;
 
 const timetableData = () => {
   return {
     timetable: null,
     seminars: null,
+    init() {
+      this.$watch("$store.pageData.dataSheetId", (dataSheetId: string) => {
+        this.setTimetable(dataSheetId);
+      });
+    },
     async setTimetable(dataSheetId: string) {
       this.timetable = await getTimetable(dataSheetId);
     },
@@ -65,7 +72,7 @@ const timetableData = () => {
           return 0;
         });
     },
-  } as AlpineTimetableStore;
+  } as AlpineTimetableData;
 };
 
 export default timetableData;

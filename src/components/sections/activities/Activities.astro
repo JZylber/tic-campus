@@ -17,7 +17,7 @@ const { subject, course, year, position } = Astro.props;
   <div
     class="w-full"
     x-data="{ unitsData: [], loading: true, currentContent: null, articleOpen: false, articleURL:''}"
-    x-init={`unitsData = (await getSubjectData('${course}', '${subject}', dataSheetId)).reverse();$store.course.setActivities([...unitsData]);loading = false;`}
+    x-init={`unitsData = (await getSubjectData('${course}', '${subject}', $store.pageData.dataSheetId)).reverse();$store.course.setActivities([...unitsData]);loading = false;`}
     @changedsection.window="articleOpen = false;"
   >
     <div class="w-full">
@@ -56,7 +56,7 @@ const { subject, course, year, position } = Astro.props;
                 } else {
                   currentContent = content;
                   articleOpen = true; 
-                  articleURL =  $store.baseURL.dataURL + '/${year}/${subject}/articles/' + content.textURL;}
+                  articleURL =  $store.pageData.dataURL + '/${year}/${subject}/articles/' + content.textURL;}
                 })()`}
                   x-init="if(content.latest) open = true"
                 >
@@ -75,7 +75,7 @@ const { subject, course, year, position } = Astro.props;
                     <img
                       x-show="content.type === 'Actividad'"
                       class="w-[24px] h-[24px]"
-                      :src="$store.baseURL.publicURL(`icons/${'shovel'}.svg`)"
+                      :src="$store.pageData.publicURL(`icons/${'shovel'}.svg`)"
                     />
                   </span>
                   <div

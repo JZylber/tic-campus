@@ -14,7 +14,7 @@ const { subject, year, position } = Astro.props;
 <SectionLayout name="programa" position={position}>
   <div
     x-data="{html: '', loading: true}"
-    x-init={`html = await fetchHTMLData($store.baseURL.dataURL + '/${year}/${subject}/program'); loading = false;`}
+    x-init={`html = await fetchHTMLData($store.pageData.dataURL + '/${year}/${subject}/program'); loading = false;`}
     class="w-full"
   >
     <h1 class="text-[30px] md:text-[36px] font-bold text-center p-4">

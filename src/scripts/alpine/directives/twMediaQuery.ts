@@ -1,6 +1,6 @@
 import type { DirectiveCallback } from "alpinejs";
 
-const twDirective: DirectiveCallback = (
+const twMQDirective: DirectiveCallback = (
   el,
   { value, expression, modifiers },
   { Alpine, evaluateLater, evaluate, effect, cleanup }
@@ -30,4 +30,4 @@ const twDirective: DirectiveCallback = (
   cleanup(() => mql.removeEventListener("change", handler));
 };
 
-export default twDirective;
+export default twMQDirective;

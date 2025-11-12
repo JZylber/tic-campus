@@ -25,7 +25,7 @@ const { subject, course, position, presentation, multiCourse } = Astro.props;
     >
       <a
         class="w-full max-w-[200px] md:max-w-[250px] rounded-xl bg-sh-purple p-2 flex justify-center items-center gap-x-4 hover:shadow-lg cursor-pointer"
-        x-bind:href={`${!multiCourse} ? await getCourseLink('${course}', dataSheetId) : await getCourseLink('${course}', dataSheetId, '${subject}')`}
+        x-bind:href={`${!multiCourse} ? await getCourseLink('${course}', $store.pageData.dataSheetId) : await getCourseLink('${course}', $store.pageData.dataSheetId, '${subject}')`}
       >
         <span class="max-md:hidden flex items-center justify-center"
           ><span class="material-symbols-outlined text-[28px]">groups</span
@@ -80,7 +80,7 @@ const { subject, course, position, presentation, multiCourse } = Astro.props;
           padding: 0;
           margin: 0;
         "
-        x-bind:src={`await getSubjectPresentation('${subject}', dataSheetId)`}
+        x-bind:src={`await getSubjectPresentation('${subject}', $store.pageData.dataSheetId)`}
         allowfullscreen="allowfullscreen"
         allow="fullscreen"
       >

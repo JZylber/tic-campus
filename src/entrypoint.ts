@@ -9,8 +9,6 @@ import {
   getCourseGroupLink,
   getFixedMarks,
   getStudents,
-  getTimetable,
-  getStudentSeminars,
 } from "./scripts/fetchData";
 import { fetchHTMLData, prepareCrumbs } from "./scripts/loadData";
 import collapse from "@alpinejs/collapse";
@@ -20,6 +18,9 @@ import markCalculations from "./scripts/alpine/data/markCalculations";
 import twMQDirective from "./scripts/alpine/directives/twMediaQuery";
 import swipeDirective from "./scripts/alpine/directives/swipe";
 import pageData from "./scripts/alpine/stores/pageData";
+import sectionStore, {
+  type AlpineSectionStore,
+} from "./scripts/alpine/stores/section";
 
 window.getSubjectData = getSubjectData;
 window.getSubjectProgram = getSubjectProgram;
@@ -50,29 +51,13 @@ interface CourseActivity {
   optional: boolean;
 }
 
-interface AlpineSectionStore {
-  currentSection: string;
-  currentSectionIndex: number;
-  changeSection: (section: string, index: number) => void;
-}
-
 export default (Alpine: Alpine) => {
   Alpine.plugin(collapse);
   Alpine.plugin(persist);
   Alpine.directive("tw", twMQDirective);
   Alpine.directive("swipe", swipeDirective);
-  Alpine.store("section", {
-    currentSection: "",
-    currentSectionIndex: -1,
-    changeSection(section, index) {
-      this.currentSection = section;
-      this.currentSectionIndex = index;
-    },
-    init() {
-      this.changeSection("home", 0);
-    },
-  } as AlpineSectionStore);
-  Alpine.store("baseURL", pageData());
+  Alpine.store("section", sectionStore());
+  Alpine.store("pageData", pageData());
 
   Alpine.store("course", {
     course: "",
