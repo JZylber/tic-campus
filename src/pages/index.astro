@@ -240,7 +240,7 @@ filterableCourses.sort((a, b) => {
                 <div class="flex gap-2 w-full flex-wrap">
                   <template x-for="division in course.divisions">
                     <a
-                      :href="`${$store.baseURL.dataURL}/${course.year}/${course.subject}/${division.name}`"
+                      :href="`${$store.pageData.dataURL}/${course.year}/${course.subject}/${division.name}`"
                       class="flex gap-x-4 py-2 px-4 rounded-xl bg-gray-300 cursor-pointer hover:shadow-lg"
                     >
                       <span

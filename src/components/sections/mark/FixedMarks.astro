@@ -1,11 +1,7 @@
----
-
----
-
 <div class="w-full flex justify-center">
   <div
     x-data="{marks: undefined, loading: true}"
-    x-init="if($store.student.id !== -1){marks = await window.getFixedMarks($store.student.id,dataSheetId); loading = false;};$watch('$store.student.id', async (id) => {marks = await window.getFixedMarks(id,dataSheetId); loading = false;})"
+    x-init="if($store.student.id !== -1){marks = await window.getFixedMarks($store.student.id,$store.pageData.dataSheetId); loading = false;};$watch('$store.student.id', async (id) => {marks = await window.getFixedMarks(id,$store.pageData.dataSheetId); loading = false;})"
     class="lg:w-4/5 md:w-full mt-2 flex flex-col items-center border-2 border-gray-400 rounded-2xl p-2"
   >
     <template x-if="loading">

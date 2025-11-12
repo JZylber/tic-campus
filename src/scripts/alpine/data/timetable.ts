@@ -31,15 +31,30 @@ const timetableData = () => {
     timetable: null,
     seminars: null,
     init() {
+      const dataSheetId = (Alpine.store("pageData") as PageDataStore)
+        .dataSheetId;
+      const studentId = (Alpine.store("student") as { id: number }).id;
+      this.setTimetable(dataSheetId);
+      this.setSeminars(dataSheetId, studentId);
       this.$watch("$store.pageData.dataSheetId", (dataSheetId: string) => {
         this.setTimetable(dataSheetId);
       });
+      this.$watch("$store.student.id", (studentId: number) => {
+        const dataSheetId = (Alpine.store("pageData") as PageDataStore)
+          .dataSheetId;
+
+        this.setSeminars(dataSheetId, studentId);
+      });
     },
     async setTimetable(dataSheetId: string) {
-      this.timetable = await getTimetable(dataSheetId);
+      if (dataSheetId !== "") {
+        this.timetable = await getTimetable(dataSheetId);
+      }
     },
     async setSeminars(dataSheetId: string, studentId: number) {
-      this.seminars = await getStudentSeminars(studentId, dataSheetId);
+      if (studentId !== -1 && dataSheetId !== "") {
+        this.seminars = await getStudentSeminars(studentId, dataSheetId);
+      }
     },
     getTimetableByGridPos(row: number, col: number) {
       const slots = [];
