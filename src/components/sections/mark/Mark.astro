@@ -13,13 +13,21 @@ const { position, subject } = Astro.props;
 ---
 
 <script>
+  import type { AlpineComponent } from "alpinejs";
   import { round } from "../../../scripts/alpine/data/markCalculations";
+  import type { PageDataStore } from "../../../scripts/alpine/stores/pageData";
+  import type { AlpineStudentStore } from "../../../scripts/alpine/stores/student";
   import {
     getActivitiesAndMarks,
+    getFixedMarks,
     getRedos,
     getSubjectMarkingCriteria,
   } from "../../../scripts/fetchData";
-  import type { Activity, MarkedActivity } from "../../../scripts/types";
+  import type {
+    Activity,
+    FixedMarks,
+    MarkedActivity,
+  } from "../../../scripts/types";
 
   document.addEventListener("alpine:init", () => {
     Alpine.store("marks", {
@@ -251,6 +259,35 @@ const { position, subject } = Astro.props;
       activitiesMarkContribution: () => number;
       markedActivitiesMarkContribution: () => number;
     });
+    Alpine.data(
+      "fixedMarks",
+      () =>
+        ({
+          marks: undefined,
+          loading: true,
+          async getMarks() {
+            const studentId = (Alpine.store("student") as AlpineStudentStore)
+              .id;
+            const dataSheetId = (Alpine.store("pageData") as PageDataStore)
+              .dataSheetId;
+            if (studentId !== -1) {
+              this.marks = await getFixedMarks(studentId, dataSheetId);
+              this.loading = false;
+            }
+          },
+          async init() {
+            await this.getMarks();
+            this.$watch("$store.student.id", async (id: string) => {
+              this.loading = true;
+              await this.getMarks();
+            });
+          },
+        }) as AlpineComponent<{
+          marks: FixedMarks | undefined;
+          loading: boolean;
+          getMarks: () => Promise<void>;
+        }>
+    );
   });
 </script>
 <template x-if="$store.marks">
