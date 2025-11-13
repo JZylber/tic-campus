@@ -14,64 +14,62 @@ const { subject, course, year, position } = Astro.props;
 ---
 
 <script>
-  const { course, subject, year } =
-    (document.getElementById("activitiesSection")!.dataset as {
-      course: string;
-      subject: string;
-      year: string;
-    }) ?? {};
-  import type { AlpineComponent } from "alpinejs";
   import type { AlpineCourseStore } from "../../../scripts/alpine/stores/course";
   import type { PageDataStore } from "../../../scripts/alpine/stores/pageData";
   import { getSubjectData } from "../../../scripts/fetchData";
   import type { Unit } from "../../../scripts/types";
 
   document.addEventListener("alpine:init", () => {
-    Alpine.data("activitiesData", () => ({
-      unitsData: [] as Unit[],
-      loading: true,
-      currentContent: null,
-      articleOpen: false,
-      articleURL: "",
-      async init() {
-        const dataSheetId = (Alpine.store("pageData") as PageDataStore)
-          .dataSheetId;
-        this.unitsData = (
-          await getSubjectData(course, subject, dataSheetId)
-        ).reverse();
-        const courseStore = Alpine.store("course") as AlpineCourseStore;
-        courseStore.setActivities([...this.unitsData]);
-        this.loading = false;
-      },
-      itemOpen: (
-        content: any,
-        data: { currentContent: any; articleOpen: boolean; articleURL: string }
-      ) => {
-        return () => {
-          if (content.textURL.startsWith("https:")) {
-            data.currentContent = null;
-            window.open(content.textURL, "_blank");
-          } else {
-            const dataURL = (Alpine.store("pageData") as PageDataStore).dataURL;
-            data.currentContent = content;
-            data.articleOpen = true;
-            data.articleURL =
-              dataURL + `/${year}/${subject}/articles/` + content.textURL;
+    Alpine.data(
+      "activitiesData",
+      (subject: string, course: string, year: string) => ({
+        unitsData: [] as Unit[],
+        loading: true,
+        currentContent: null,
+        articleOpen: false,
+        articleURL: "",
+        async init() {
+          const dataSheetId = (Alpine.store("pageData") as PageDataStore)
+            .dataSheetId;
+          this.unitsData = (
+            await getSubjectData(course, subject, dataSheetId)
+          ).reverse();
+          const courseStore = Alpine.store("course") as AlpineCourseStore;
+          courseStore.setActivities([...this.unitsData]);
+          this.loading = false;
+        },
+        itemOpen: (
+          content: any,
+          data: {
+            currentContent: any;
+            articleOpen: boolean;
+            articleURL: string;
           }
-        };
-      },
-    }));
+        ) => {
+          return () => {
+            if (content.textURL.startsWith("https:")) {
+              data.currentContent = null;
+              window.open(content.textURL, "_blank");
+            } else {
+              const dataURL = (Alpine.store("pageData") as PageDataStore)
+                .dataURL;
+              data.currentContent = content;
+              data.articleOpen = true;
+              data.articleURL =
+                dataURL + `/${year}/${subject}/articles/` + content.textURL;
+            }
+          };
+        },
+      })
+    );
   });
 </script>
 
 <SectionLayout name="actividades" position={position}>
   <div
     class="w-full"
-    data-subject={subject}
-    data-course={course}
-    data-year={year}
     id="activitiesSection"
-    x-data="activitiesData()"
+    x-data=`activitiesData('${subject}','${course}','${year}')`
     @changedsection.window="articleOpen = false;"
   >
     <div class="w-full">
