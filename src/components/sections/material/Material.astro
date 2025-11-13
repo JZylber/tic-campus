@@ -9,11 +9,30 @@ interface Props {
 const { subject, position } = Astro.props;
 ---
 
-<SectionLayout name="material" position={position}>
+<script>
+  import type { PageDataStore } from "../../../scripts/alpine/stores/pageData";
+  import { getSubjectMaterial } from "../../../scripts/fetchData";
+  import type { Material } from "../../../scripts/types";
+
+  document.addEventListener("alpine:init", () => {
+    Alpine.data("materialData", (subject: string) => ({
+      materials: [] as Material[],
+      async init() {
+        this.materials = await getSubjectMaterial(
+          subject,
+          (Alpine.store("pageData") as PageDataStore).dataSheetId
+        );
+      },
+    }));
+  });
+</script>
+<SectionLayout
+  name="material"
+  position={position}
+  xData={`materialData('${subject}')`}
+>
   <div
     class="flex flex-col md:grid gap-2 grid-cols-[repeat(auto-fill,minmax(300px,1fr))] auto-rows-fr"
-    x-data="{ materials: [] }"
-    x-init={`materials= await window.getSubjectMaterial('${subject}', $store.pageData.dataSheetId)`}
   >
     <template x-for={`material in materials`}>
       <a
