@@ -13,7 +13,6 @@ const { subject, year, position } = Astro.props;
 
 <script>
   import type { PageDataStore } from "../../../scripts/alpine/stores/pageData";
-  import { fetchHTMLData } from "../../../scripts/loadData";
 
   document.addEventListener("alpine:init", () => {
     Alpine.data("programData", (year: string, subject: string) => ({
@@ -21,10 +20,8 @@ const { subject, year, position } = Astro.props;
       html: "",
       async init() {
         const dataURL = (Alpine.store("pageData") as PageDataStore).dataURL;
-        const response = await fetchHTMLData(
-          dataURL + `/${year}/${subject}/program`
-        );
-        this.html = response;
+        const response = await fetch(dataURL + `/${year}/${subject}/program`);
+        this.html = await response.text();
         this.loading = false;
       },
     }));

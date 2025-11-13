@@ -1,6 +1,43 @@
+<script>
+  type Crumb = { text: string; link: string };
+  type Menu = Array<string>;
+  document.addEventListener("alpine:init", () => {
+    Alpine.data("prepareCrumbs", () => ({
+      crumbs: [] as Array<Crumb>,
+      menu: [] as Menu,
+      init() {
+        let leftovers = document.querySelectorAll(
+          "#leftoverinformation a.breadcrumb"
+        ) as NodeListOf<HTMLAnchorElement>;
+        if (leftovers.length > 0) {
+          leftovers.forEach((el) => {
+            this.crumbs.push({ text: el.innerText, link: el.href });
+          });
+        }
+        let menuLeftoverLinks = document.querySelectorAll(
+          "#leftoverinformation ul a"
+        ) as NodeListOf<HTMLAnchorElement>;
+        if (menuLeftoverLinks.length > 0) {
+          menuLeftoverLinks.forEach((el) => {
+            // Replace i tags with span tags with class material-symbols-outlined
+            let iTags = el.querySelectorAll("i");
+            iTags.forEach((i) => {
+              let span = document.createElement("span");
+              span.classList.add("material-symbols-outlined");
+              span.classList.add("text-[16px]");
+              span.innerText = i.innerText;
+              i.replaceWith(span);
+            });
+            this.menu.push(el.outerHTML);
+          });
+        }
+      },
+    }));
+  });
+</script>
+
 <div
-  x-data="{ crumbs: [], menu: [] }"
-  x-init="let {crumbs,menu} = prepareCrumbs(); $data.crumbs = crumbs; $data.menu = menu;"
+  x-data="prepareCrumbs()"
   class="flex justify-between items-center gap-x-4"
   x-show="crumbs.length > 0 || menu.length > 0"
 >
