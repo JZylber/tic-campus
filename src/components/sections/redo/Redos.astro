@@ -9,6 +9,24 @@ interface Props {
 const { subject, position } = Astro.props;
 ---
 
+<script>
+  import type { PageDataStore } from "../../../scripts/alpine/stores/pageData";
+  import { getSubjectRedoLinks } from "../../../scripts/fetchData";
+
+  document.addEventListener("alpine:init", () => {
+    Alpine.data("redoData", (subject: string) => ({
+      activitiesLink: "",
+      markedActivitiesLink: "",
+      async init() {
+        const dataSheetId = (Alpine.store("pageData") as PageDataStore)
+          .dataSheetId;
+        const response = await getSubjectRedoLinks(subject, dataSheetId);
+        this.activitiesLink = response.activitiesRedo;
+        this.markedActivitiesLink = response.markedActivitiesRedo;
+      },
+    }));
+  });
+</script>
 <SectionLayout name="reentregas" position={position}>
   <div class="flex flex-col gap-y-4">
     <h1 class="text-[30px] md:text-[36px] font-bold text-center p-4">
@@ -20,8 +38,7 @@ const { subject, position } = Astro.props;
     <div class="flex justify-center pt-4">
       <div
         class="w-full md:w-4/5 md:min-w-80 max-w-4xl flex flex-col md:grid grid-cols-2 grid-rows-2 gap-y-2 gap-x-6"
-        x-data="{activitiesLink: '', markedActivitiesLink: ''}"
-        x-effect={`let {activitiesRedo, markedActivitiesRedo} = await getSubjectRedoLinks('${subject}', dataSheetId); activitiesLink = activitiesRedo; markedActivitiesLink = markedActivitiesRedo;`}
+        x-data=`redoData('${subject}')`
       >
         <a
           x-bind:href="activitiesLink"

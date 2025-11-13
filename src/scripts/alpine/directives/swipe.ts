@@ -1,3 +1,5 @@
+import type { DirectiveCallback } from "alpinejs";
+
 const ALLOWED_SWIPE_TIME = 300;
 
 class SwipeDetect {
@@ -87,4 +89,38 @@ function detectSwipe(
   return new SwipeDetect(target, callback, threshold);
 }
 
-export default detectSwipe;
+const swipeDirective: DirectiveCallback = (
+  elem,
+  { value, modifiers, expression },
+  { evaluateLater, cleanup }
+) => {
+  // console.log({ value, modifiers });
+  const evaluate = expression ? evaluateLater(expression) : () => {};
+  const callback = (arg: string) => {
+    evaluate(() => {}, { scope: {}, params: [arg] });
+  };
+  const threshold =
+    (modifiers[0] === "threshold" &&
+      (modifiers[1] || "").endsWith("px") &&
+      Number(modifiers[1].replace("px", ""))) ||
+    50;
+
+  const detectorInstance = detectSwipe(
+    elem,
+    function (direction) {
+      if (!value) {
+        callback(direction);
+        return;
+      }
+      if (direction === value) {
+        callback(direction);
+        return;
+      }
+    },
+    threshold
+  );
+  cleanup(() => {
+    detectorInstance.disable();
+  });
+};
+export default swipeDirective;

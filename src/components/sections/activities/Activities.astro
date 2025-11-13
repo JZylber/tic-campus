@@ -13,11 +13,63 @@ interface Props {
 const { subject, course, year, position } = Astro.props;
 ---
 
+<script>
+  import type { AlpineCourseStore } from "../../../scripts/alpine/stores/course";
+  import type { PageDataStore } from "../../../scripts/alpine/stores/pageData";
+  import { getSubjectData } from "../../../scripts/fetchData";
+  import type { Unit } from "../../../scripts/types";
+
+  document.addEventListener("alpine:init", () => {
+    Alpine.data(
+      "activitiesData",
+      (subject: string, course: string, year: string) => ({
+        unitsData: [] as Unit[],
+        loading: true,
+        currentContent: null,
+        articleOpen: false,
+        articleURL: "",
+        async init() {
+          const dataSheetId = (Alpine.store("pageData") as PageDataStore)
+            .dataSheetId;
+          this.unitsData = (
+            await getSubjectData(course, subject, dataSheetId)
+          ).reverse();
+          const courseStore = Alpine.store("course") as AlpineCourseStore;
+          courseStore.setActivities([...this.unitsData]);
+          this.loading = false;
+        },
+        itemOpen: (
+          content: any,
+          data: {
+            currentContent: any;
+            articleOpen: boolean;
+            articleURL: string;
+          }
+        ) => {
+          return () => {
+            if (content.textURL.startsWith("https:")) {
+              data.currentContent = null;
+              window.open(content.textURL, "_blank");
+            } else {
+              const dataURL = (Alpine.store("pageData") as PageDataStore)
+                .dataURL;
+              data.currentContent = content;
+              data.articleOpen = true;
+              data.articleURL =
+                dataURL + `/${year}/${subject}/articles/` + content.textURL;
+            }
+          };
+        },
+      })
+    );
+  });
+</script>
+
 <SectionLayout name="actividades" position={position}>
   <div
     class="w-full"
-    x-data="{ unitsData: [], loading: true, currentContent: null, articleOpen: false, articleURL:''}"
-    x-init={`unitsData = (await getSubjectData('${course}', '${subject}', dataSheetId)).reverse();$store.course.setActivities([...unitsData]);loading = false;`}
+    id="activitiesSection"
+    x-data=`activitiesData('${subject}','${course}','${year}')`
     @changedsection.window="articleOpen = false;"
   >
     <div class="w-full">
@@ -49,15 +101,7 @@ const { subject, course, year, position } = Astro.props;
               <template x-for="content in unit.contents">
                 <div
                   class="cursor-pointer border-t-2 md:border-l-4 md:border-t-0 border-gray-300 md:border-gray-50 py-1 px-4 hover:border-sh-purple flex items-center w-full max-w-full overflow-clip"
-                  x-on:click={`(() => {
-                if(content.textURL.startsWith('https:')){
-                  currentContent = null;
-                  window.open(content.textURL, '_blank');
-                } else {
-                  currentContent = content;
-                  articleOpen = true; 
-                  articleURL =  $store.baseURL.dataURL + '/${year}/${subject}/articles/' + content.textURL;}
-                })()`}
+                  @click="itemOpen(content,$data)"
                   x-init="if(content.latest) open = true"
                 >
                   <span class="max-md:hidden flex justify-between items-center">
@@ -75,7 +119,7 @@ const { subject, course, year, position } = Astro.props;
                     <img
                       x-show="content.type === 'Actividad'"
                       class="w-[24px] h-[24px]"
-                      :src="$store.baseURL.publicURL(`icons/${'shovel'}.svg`)"
+                      :src="$store.pageData.publicURL(`icons/${'shovel'}.svg`)"
                     />
                   </span>
                   <div
@@ -127,7 +171,7 @@ const { subject, course, year, position } = Astro.props;
                     </div>
                   </div>
                   <template
-                    x-if={`['Actividad','Trabajo Práctico','Encuesta'].includes(content.type) && $store.student.course === '${course}'`}
+                    x-if={`['Actividad','Trabajo Práctico','Encuesta'].includes(content.type) && $store.student.course === '${course}' && $store.marks`}
                   >
                     <span
                       x-show="!(optional && pending)"
