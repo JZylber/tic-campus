@@ -18,7 +18,7 @@ const { subject, course, year, position } = Astro.props;
   import type { AlpineCourseStore } from "../../../scripts/alpine/stores/course";
   import type { PageDataStore } from "../../../scripts/alpine/stores/pageData";
   import { getSubjectData } from "../../../scripts/fetchData";
-  import type { Unit } from "../../../scripts/types";
+  import type { Activity, MarkedActivity, Unit } from "../../../scripts/types";
 
   document.addEventListener("alpine:init", () => {
     Alpine.data(
@@ -69,6 +69,42 @@ const { subject, course, year, position } = Astro.props;
       pending: true,
       redo: false,
       optional: content.optional,
+      init() {
+        if (this.content.type === "Actividad") {
+          this.$watch("$store.marks.activities", (activities) => {
+            const results = activities.find(
+              (activity: Activity) => activity.id === this.content.id
+            );
+            if (results) {
+              this.updateStatus(results.done, false, results.inRevision);
+            }
+          });
+        } else if (
+          this.content.type === "Trabajo Práctico" ||
+          this.content.type === "Encuesta"
+        ) {
+          this.$watch("$store.marks.marks", (markedActivities) => {
+            const results = markedActivities.find(
+              (mark: MarkedActivity) => mark.id === this.content.id
+            );
+            if (results) {
+              this.updateStatus(results.mark >= 6, false, results.inRevision);
+            }
+          });
+          this.$watch("$store.marks.activities", (activities) => {
+            const specialActivity = activities.find(
+              (activity: Activity) => activity.id === this.content.id
+            );
+            if (specialActivity) {
+              this.updateStatus(
+                specialActivity.done,
+                false,
+                specialActivity.inRevision
+              );
+            }
+          });
+        }
+      },
       get symbol() {
         switch (this.content.type) {
           case "Trabajo Práctico":
@@ -97,7 +133,20 @@ const { subject, course, year, position } = Astro.props;
             return "Artículo";
         }
       },
-      init() {},
+      get markSymbol() {
+        if (this.pending || this.redo) {
+          return "pending";
+        } else if (this.passed) {
+          return "check_circle";
+        } else {
+          return "cancel";
+        }
+      },
+      updateStatus(passed: boolean, pending: boolean, redo: boolean) {
+        this.passed = passed;
+        this.pending = pending;
+        this.redo = redo;
+      },
     }));
   });
 </script>
@@ -202,33 +251,8 @@ const { subject, course, year, position } = Astro.props;
                     <span
                       x-show="!(optional && pending)"
                       class="material-symbols-outlined text-[24px] w-[24px] shrink-0 md:ml-auto"
-                      x-data="{ passed: false, pending: true, redo: false, optional: content.optional }"
-                      x-text="(()=>{if(pending || redo) {return 'pending'} else if(passed) {return 'check_circle'} else {return 'cancel'}})()"
-                      x-bind:class="(()=>{if(pending) {return 'text-gray-400'}else if(redo){return 'text-sh-yellow'} else if(passed) {return 'text-sh-green'} else {return 'text-sh-red'}})()"
-                      x-effect="
-                          if(content.type === 'Actividad') {
-                            const results = $store.marks.activities.find(activity => activity.id === content.id);
-                            if(results) {
-                              passed = results.done;
-                              pending = false;
-                              redo = results.inRevision;
-                            }}
-                            else if(content.type === 'Trabajo Práctico' || content.type === 'Encuesta') {
-                              const results = $store.marks.marks.find(mark => mark.id === content.id);
-                              const specialActivity = $store.marks.activities.find(activity => activity.id === content.id);
-                              if(results) {
-                                passed = results.mark >= 6;
-                                pending = false;
-                                redo = results.inRevision;
-                              }
-                              else if(specialActivity) {
-                                passed = specialActivity.done;
-                                pending = false;
-                                redo = specialActivity.inRevision;
-                              }
-                            }
-                          
-                            "
+                      x-text="markSymbol"
+                      :class="(()=>{if(pending) {return 'text-gray-400'}else if(redo){return 'text-sh-yellow'} else if(passed) {return 'text-sh-green'} else {return 'text-sh-red'}})()"
                     >
                     </span>
                   </template>
