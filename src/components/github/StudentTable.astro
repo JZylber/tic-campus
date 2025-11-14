@@ -4,46 +4,76 @@ import Loader from "../loader/Loader.astro";
 import Select from "../../components/misc/select/Select.astro";
 ---
 
-<div
-  class="w-full flex justify-center py-4"
-  x-data="{loading:true, students: [], courses: [{value:'',label:'Todos'}],filter: {course: '', text: ''}, filteredStudents: []}"
-  x-effect="filteredStudents = students.filter(s => {
-    let courseFilter = true;
-    let textFilter = true;
-    let normalizedText = filter.text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-    if (filter.text !== '') {
-      textFilter = s.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(normalizedText) || s.surname.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(normalizedText);
-    }
-    if (filter.course !== '') {
-      courseFilter = s.course === filter.course;
-    }
-    return textFilter && courseFilter;
-  })"
-  x-init="
-  const [testStudents, shuliStudents, leanStudents] = await Promise.all([
-    window.getStudents('1ppAnySYCXVRyJtXem9A-d3uZzujJVYVSTun_lI6yZWo'),
-    window.getStudents('1Am9Ynjfoo_bWAsCWts5HJUgoFcx0dRKRLFPk_bN6EqU'),
-    window.getStudents('1VZ_KPk4aZJFPlAgx188y0wW8p3psbbtZgix1L8a-5kE'),
-    window.getStudents('16t4_OiokJCYG8Qs_4FhxBLR13Rnr8HD3ppiHcJB9zzc')
-  ]);
-  students = [...testStudents, ...shuliStudents, ...leanStudents].sort((a, b) => {
-    if (a.course < b.course) return -1;
-    if (a.course > b.course) return 1;
-    if (a.surname < b.surname) return -1;
-    if (a.surname > b.surname) return 1;
-    return 0;
-  });
-  courses = courses.concat([...new Set(students.map(student => student.course))].map(course => {
-    return {
-      value: course,
-      label: course
-    };
+<script>
+  import { getStudents } from "../../scripts/fetchData";
+  Alpine.data("studentsPage", () => ({
+    loading: true,
+    students: [] as Awaited<ReturnType<typeof getStudents>>,
+    courses: [{ value: "", label: "Todos" }],
+    filter: { course: "", text: "" },
+    init() {
+      Promise.all([
+        getStudents("1ppAnySYCXVRyJtXem9A-d3uZzujJVYVSTun_lI6yZWo"),
+        getStudents("1Am9Ynjfoo_bWAsCWts5HJUgoFcx0dRKRLFPk_bN6EqU"),
+        getStudents("1VZ_KPk4aZJFPlAgx188y0wW8p3psbbtZgix1L8a-5kE"),
+        getStudents("16t4_OiokJCYG8Qs_4FhxBLR13Rnr8HD3ppiHcJB9zzc"),
+      ]).then(([testStudents, shuliStudents, leanStudents]) => {
+        this.students = [
+          ...testStudents,
+          ...shuliStudents,
+          ...leanStudents,
+        ].sort((a, b) => {
+          if (a.course < b.course) return -1;
+          if (a.course > b.course) return 1;
+          if (a.surname < b.surname) return -1;
+          if (a.surname > b.surname) return 1;
+          return 0;
+        });
+        this.courses = this.courses.concat(
+          [...new Set(this.students.map((student) => student.course))].map(
+            (course) => {
+              return {
+                value: course,
+                label: course,
+              };
+            }
+          )
+        );
+        this.filter.course = this.courses[0].value;
+        this.filter.text = "";
+        this.loading = false;
+      });
+    },
+    get filteredStudents() {
+      return this.students.filter((s) => {
+        let courseFilter = true;
+        let textFilter = true;
+        let normalizedText = this.filter.text
+          .toLowerCase()
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "");
+        if (this.filter.text !== "") {
+          textFilter =
+            s.name
+              .toLowerCase()
+              .normalize("NFD")
+              .replace(/[\u0300-\u036f]/g, "")
+              .includes(normalizedText) ||
+            s.surname
+              .toLowerCase()
+              .normalize("NFD")
+              .replace(/[\u0300-\u036f]/g, "")
+              .includes(normalizedText);
+        }
+        if (this.filter.course !== "") {
+          courseFilter = s.course === this.filter.course;
+        }
+        return textFilter && courseFilter;
+      });
+    },
   }));
-  filter.course = courses[0].value;
-  filter.text = '';
-  loading = false;
-  "
->
+</script>
+<div class="w-full flex justify-center py-4" x-data="studentsPage()">
   <Loader show="loading" />
   <div class="w-full flex flex-col gap-y-4" x-show="!loading">
     <div class="flex w-full gap-x-8">
