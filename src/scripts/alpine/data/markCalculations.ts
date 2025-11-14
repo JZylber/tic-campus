@@ -116,9 +116,13 @@ export class Student {
   private activitiesContribution(subject: string) {
     // 1 for each activity done, 1*mark/10 for each made up activity, compulsory activities are excluded
     // Filter out compulsory activities first
+    // If withRevisions is true, also filter out activities in revision
     const nonCompulsoryActivities = this.subjectData[
       subject
-    ].classActivities.filter((activity) => !activity.compulsory);
+    ].classActivities.filter(
+      (activity) =>
+        !activity.compulsory && (!this.withRevisions || !activity.inRevision)
+    );
 
     const classActivitiesTotalContribution = nonCompulsoryActivities.reduce(
       (acc, activity) => {
@@ -146,7 +150,10 @@ export class Student {
   }
   private markedActivitiesContribution(subject: string) {
     // Average of all marked activities, each out of 10, multiplied by proportion. Made up activities count as their mark.
-    const markedActivities = this.subjectData[subject].markedActivities;
+    // If withRevisions is true, filter out activities in revision
+    const markedActivities = this.subjectData[subject].markedActivities.filter(
+      (activity) => !this.withRevisions || !activity.inRevision
+    );
     if (markedActivities.length === 0) return 0;
     const totalMarks = markedActivities.reduce((acc, activity) => {
       const madeUp = this.subjectData[subject].redos[activity.id];
@@ -182,9 +189,13 @@ export class Student {
       classActivitiesContribution + markedActivitiesContribution;
     this.subjectData[subject].finalMark.averageMark = round(averageMark, 2);
     // Check if all compulsory activities are done
+    // If withRevisions is true, ignore activities in revision
     const compulsoryActivities = this.subjectData[
       subject
-    ].classActivities.filter((activity) => activity.compulsory);
+    ].classActivities.filter(
+      (activity) =>
+        activity.compulsory && (!this.withRevisions || !activity.inRevision)
+    );
     const allCompulsoryDone = compulsoryActivities.every((activity) => {
       const madeUp = this.subjectData[subject].redos[activity.id];
       if (madeUp !== undefined) return true;
