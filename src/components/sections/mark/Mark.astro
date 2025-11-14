@@ -14,7 +14,7 @@ const { position, subject } = Astro.props;
 
 <script>
   import type { AlpineComponent } from "alpinejs";
-  import { round } from "../../../scripts/alpine/data/markCalculations";
+  import { Student } from "../../../scripts/alpine/data/markCalculations";
   import type { PageDataStore } from "../../../scripts/alpine/stores/pageData";
   import type { AlpineStudentStore } from "../../../scripts/alpine/stores/student";
   import {
@@ -29,236 +29,99 @@ const { position, subject } = Astro.props;
     MarkedActivity,
   } from "../../../scripts/types";
 
-  document.addEventListener("alpine:init", () => {
-    Alpine.store("marks", {
-      activities: [],
-      marks: [],
-      redos: [],
-      markData: {
-        finalMark: null,
-        averageMark: 0,
-        proportion: 1,
-        activities: {
-          markContribution: 0,
-          total: 0,
-          done: 0,
-        },
-        markedActivities: {
-          markContribution: 0,
-          total: 0,
-          passed: 0,
-        },
-      },
-      specialActivitiesIds: [],
-      regularActivities() {
-        return this.activities.filter(
-          (activity) => !activity.special && !activity.inRevision
+  const studentMarkStore = () => ({
+    student: null as Student | null,
+    subject: "",
+    loading: true,
+    async start(
+      subject: string,
+      name: string,
+      surname: string,
+      course: string,
+      id: string
+    ) {
+      this.subject = subject;
+      this.student = new Student(name, surname, id, course, [subject]);
+      const dataSheetId = (Alpine.store("pageData") as PageDataStore)
+        .dataSheetId;
+      const year = parseInt(this.student.course[2]);
+      const [
+        { activities, marks, studentRedos },
+        { proportion, specialActivities },
+        inRevisionIds,
+      ] = await Promise.all([
+        getActivitiesAndMarks(parseInt(this.student.id), dataSheetId),
+        getSubjectMarkingCriteria(subject, dataSheetId),
+        getRedos(year, this.student.name, this.student.surname, dataSheetId),
+      ]);
+      this.student.setProportion(subject, proportion);
+      activities.forEach((activity) => {
+        // Check if activity is special
+        activity.compulsory = specialActivities.some(
+          (spAct) => spAct === parseInt(activity.id)
         );
-      },
-      specialActivities() {
-        return this.activities.filter((activity) => activity.special);
-      },
-      redoCoveredActivities() {
-        return this.redos
-          .filter((redo) => redo.mark >= 6)
-          .reduce((acc, redo) => acc.concat(redo.ids), []);
-      },
-      markedActivities() {
-        return this.marks.filter((activity) => !activity.inRevision);
-      },
-      allMarkedActivitiesPassed() {
-        let redoCoveredActivities = this.redoCoveredActivities();
-        return this.markedActivities()
-          .filter((activitiy) => !redoCoveredActivities.includes(activitiy.id))
-          .every((activity) => activity.mark >= 6);
-      },
-      allSpecialActivitiesDone() {
-        let redoCoveredActivities = this.redoCoveredActivities();
-        return this.specialActivities()
-          .filter((activity) => !redoCoveredActivities.includes(activity.id))
-          .every((activity) => activity.done);
-      },
-      activitiesMarkContribution() {
-        let redoCoveredActivities = this.redoCoveredActivities();
-        let consideredActivities = this.activities.filter(
-          (activity) => !activity.inRevision && !activity.special
-        );
-        let validActivities = consideredActivities.filter((activity) => {
-          return !redoCoveredActivities.includes(activity.id);
-        });
-        let totalValidActivities = validActivities.length;
-        let doneValidActivities = validActivities.filter(
-          (activity) => activity.done
-        ).length;
-        // Contribuciones de los recuperatorios
-        let activitiesContribution = this.redos
-          .filter((redo) => redo.mark >= 6)
-          .map((redo) => {
-            let total = redo.ids.filter((id: number) =>
-              this.activities.find(
-                (activity) => activity.id === id && !activity.special
-              )
-            ).length;
-            return {
-              mark: redo.mark,
-              weight: total / consideredActivities.length,
-            };
-          });
-        if (totalValidActivities > 0) {
-          activitiesContribution.push({
-            mark: (doneValidActivities / totalValidActivities) * 10,
-            weight: totalValidActivities / consideredActivities.length,
-          });
-        }
-        let markContribution = activitiesContribution.reduce(
-          (acc, activity) => acc + activity.mark * activity.weight,
-          0
-        );
-        return round(markContribution * (1 - this.markData.proportion), 2);
-      },
-      markedActivitiesMarkContribution() {
-        let redoCoveredMarks = this.redoCoveredActivities();
-        let consideredMarks = this.marks.filter(
-          (activity) => !activity.inRevision && !activity.special
-        );
-        let validMarks = consideredMarks
-          .filter((activity) => {
-            return !redoCoveredMarks.includes(activity.id);
-          })
-          .map((m) => m.mark);
-        // Contribuciones de los recuperatorios
-        let marksContribution = this.redos
-          .filter((redo) => redo.mark >= 6)
-          .reduce((acc, redo) => {
-            let coveredMarkedActivities = redo.ids.filter((id: number) =>
-              this.marks.find((activity) => activity.id === id)
-            ).length;
-            return acc.concat(Array(coveredMarkedActivities).fill(redo.mark));
-          }, []);
-        marksContribution = marksContribution.concat(validMarks);
-        let markContribution =
-          this.markData.activities.markContribution /
-          (1 - this.markData.proportion);
-        if (marksContribution.length > 0) {
-          markContribution =
-            marksContribution.reduce(
-              (acc: number, mark: number) => acc + mark,
-              0
-            ) / marksContribution.length;
-        }
-        return round(markContribution * this.markData.proportion, 2);
-      },
-      async calculateMarks(
-        dataSheetId: string,
-        subject: string,
-        course: string,
-        student: {
-          name: string;
-          surname: string;
-          id: number;
-        }
-      ) {
-        let [
-          { activities, marks, studentRedos },
-          { proportion, specialActivities },
-          redos,
-        ] = await Promise.all([
-          getActivitiesAndMarks(student.id, dataSheetId),
-          getSubjectMarkingCriteria(subject, dataSheetId),
-          getRedos(
-            parseInt(course.slice(2)),
-            student.name,
-            student.surname,
-            dataSheetId
-          ),
-        ]);
-        this.specialActivitiesIds = specialActivities;
-        this.activities = activities.map((activity) => ({
-          ...activity,
-          inRevision: redos.includes(activity.id),
-          special: specialActivities.includes(activity.id),
-        }));
-        this.marks = marks.map((mark) => ({
-          ...mark,
-          inRevision: redos.includes(mark.id),
-        }));
-        this.redos = studentRedos;
-        this.markData.proportion = proportion;
-        // Esta cuenta no tiene en cuenta que un estudiante pueda estar en múltiples materias
-        this.markData.activities.total = this.regularActivities().length;
-        this.markData.markedActivities.total = this.markedActivities().length;
-        this.markData.activities.done = this.regularActivities().filter(
-          (activity) => activity.done
-        ).length;
-        this.markData.markedActivities.passed = this.markedActivities().filter(
-          (activity) => activity.mark >= 6
-        ).length;
-        this.markData.activities.markContribution =
-          this.activitiesMarkContribution();
-        this.markData.markedActivities.markContribution =
-          this.markedActivitiesMarkContribution();
-        this.markData.averageMark = round(
-          this.markData.activities.markContribution +
-            this.markData.markedActivities.markContribution,
-          2
-        );
-        const allSpecialActivitiesDone = this.allSpecialActivitiesDone();
-        const allMarkedActivitiesPassed = this.allMarkedActivitiesPassed();
-        this.markData.finalMark =
-          allSpecialActivitiesDone && allMarkedActivitiesPassed
-            ? Math.round(this.markData.averageMark)
-            : Math.min(4, Math.round(this.markData.averageMark));
-        if (
-          this.markData.activities.total === 0 &&
-          this.markData.markedActivities.total === 0
-        ) {
-          this.markData.finalMark = null;
-        } else {
-          this.markData.finalMark = Math.min(
-            Math.max(1, this.markData.finalMark),
-            10
-          );
-        }
-      },
-    } as {
-      activities: any[];
-      marks: any[];
-      redos: any[];
-      markData: {
-        finalMark: number | null;
-        averageMark: number;
-        proportion: number;
-        activities: {
-          markContribution: number;
-          total: number;
-          done: number;
-        };
-        markedActivities: {
-          markContribution: number;
-          total: number;
-          passed: number;
-        };
+        this.student!.setClassActivity(subject, activity);
+      });
+      marks.forEach((mark) => {
+        this.student!.setMarkedActivity(subject, mark);
+      });
+      studentRedos.forEach((redo) => {
+        this.student!.setRedo(subject, redo);
+      });
+      inRevisionIds.forEach((activityId) => {
+        this.student!.setInRevision(subject, activityId);
+      });
+      this.student!.calculateFinalMark(subject);
+      this.loading = false;
+    },
+    allMarkedActivitiesPassed() {
+      return this.student!.getFinalMarkData(this.subject)
+        .allMarkedActivitiesPassed;
+    },
+    allSpecialActivitiesDone() {
+      return this.student!.getFinalMarkData(this.subject)
+        .allCompulsoryClassActivitiesDone;
+    },
+    get markData() {
+      return { ...this.student!.getFinalMarkData(this.subject) };
+    },
+    get regularActivities() {
+      const activities = this.student!.getActivities(this.subject).filter(
+        (activity) => !activity.compulsory && !activity.inRevision
+      );
+      return {
+        all: activities,
+        total: activities.length,
+        done: activities.filter((act) => act.done).length,
       };
-      specialActivitiesIds: number[];
-      regularActivities: () => Array<Activity>;
-      specialActivities: () => Array<Activity>;
-      redoCoveredActivities: () => Array<number>;
-      markedActivities: () => Array<MarkedActivity>;
-      allSpecialActivitiesDone: () => boolean;
-      allMarkedActivitiesPassed: () => boolean;
-      calculateMarks: (
-        dataSheetId: string,
-        subject: string,
-        course: string,
-        student: {
-          name: string;
-          surname: string;
-          id: number;
-        }
-      ) => Promise<void>;
-      activitiesMarkContribution: () => number;
-      markedActivitiesMarkContribution: () => number;
-    });
+    },
+    get markedActivities() {
+      const activities = this.student!.getMarkedActivities(this.subject).filter(
+        (activity) => !activity.inRevision
+      );
+      return {
+        all: activities,
+        total: activities.length,
+        passed: activities.filter((act) => act.mark >= 6).length,
+      };
+    },
+    get redos() {
+      return this.student!.getRedoActivities(this.subject);
+    },
+    get specialActivitiesIds() {
+      return this.student!.getActivities(this.subject)
+        .filter((activity) => activity.compulsory)
+        .map((activity) => activity.id);
+    },
+    specialActivities() {
+      return this.student!.getActivities(this.subject).filter(
+        (activity) => activity.compulsory
+      );
+    },
+  });
+
+  document.addEventListener("alpine:init", () => {
+    Alpine.store("marks", studentMarkStore());
     Alpine.data(
       "fixedMarks",
       () =>
@@ -290,12 +153,11 @@ const { position, subject } = Astro.props;
     );
   });
 </script>
-<template x-if="$store.marks">
-  <SectionLayout
-    name="nota"
-    position={position}
-    xInit=`if($store.student.id !== -1){$store.marks.calculateMarks($store.pageData.dataSheetId, '${subject}', $store.student.course, {name:$store.student.name,surname:$store.student.surname,id:$store.student.id})};$watch('$store.student.id', (id) => {if(id !== -1){$store.marks.calculateMarks($store.pageData.dataSheetId, '${subject}', $store.student.course, {name:$store.student.name,surname:$store.student.surname,id:id})}})`
-  >
+<template
+  x-if="!$store.marks.loading"
+  x-effect=`if($store.student.id){$store.marks.start('${subject}',$store.student.name,$store.student.surname,$store.student.course,$store.student.id)}`
+>
+  <SectionLayout name="nota" position={position}>
     <h1 class="text-[36px] font-bold text-center p-4">Nota</h1>
     <div class="flex flex-col md:flex-row gap-x-8 pt-4 md:pb-4 justify-center">
       <div
@@ -366,16 +228,16 @@ const { position, subject } = Astro.props;
         <div
           class="flex gap-x-2 justify-between items-center"
           x-data="{ progress: 1 }"
-          x-effect="progress = $store.marks.markData.activities.total > 0 ? $store.marks.markData.activities.done/$store.marks.markData.activities.total : 1"
+          x-effect="progress = $store.marks.regularActivities.total > 0 ? $store.marks.regularActivities.done/$store.marks.regularActivities.total : 1"
         >
           <p class="text-[14px] md:text-[18px] text-gray-600">
             <span
               class="text-sh-black"
-              x-text="$store.marks.markData.activities.done"></span>
+              x-text="$store.marks.regularActivities.done"></span>
             de
             <span
               class="text-sh-black"
-              x-text="$store.marks.markData.activities.total"></span>
+              x-text="$store.marks.regularActivities.total"></span>
             actividades de clase hechas
           </p>
           <Progress fraction="progress" />
@@ -383,16 +245,16 @@ const { position, subject } = Astro.props;
         <div
           class="flex gap-x-2 justify-between items-center"
           x-data="{ progress: 1 }"
-          x-effect="progress = $store.marks.markData.markedActivities.total > 0 ? $store.marks.markData.markedActivities.passed/$store.marks.markData.markedActivities.total : 1"
+          x-effect="progress = $store.marks.markedActivities.total > 0 ? $store.marks.markedActivities.passed/$store.marks.markedActivities.total : 1"
         >
           <p class="text-[14px] md:text-[18px] text-gray-600">
             <span
               class="text-sh-black"
-              x-text="$store.marks.markData.markedActivities.passed"></span>
+              x-text="$store.marks.markedActivities.passed"></span>
             de
             <span
               class="text-sh-black"
-              x-text="$store.marks.markData.markedActivities.total"></span>
+              x-text="$store.marks.markedActivities.total"></span>
             actividades con nota aprobadas
           </p>
           <Progress fraction="progress" />
@@ -466,19 +328,19 @@ const { position, subject } = Astro.props;
             ></line>
             <text x="410" y="80" class="fill-gray-400">10</text>
             <line
-              x-show="$store.marks.markData.markedActivities.markContribution >= 0.5"
+              x-show="$store.marks.markData.markedActivitiesContribution >= 0.5"
               x1="30"
               y1="30"
               y2="30"
-              x-bind:x2="40*$store.marks.markData.markedActivities.markContribution + 10"
+              x-bind:x2="40*$store.marks.markData.markedActivitiesContribution + 10"
               stroke-linecap="round"
               class="stroke-sh-purple stroke-[20]"></line>
             <line
-              x-show="$store.marks.markData.activities.markContribution >= 0.5"
+              x-show="$store.marks.markData.classActivitiesContribution >= 0.5"
               y1="30"
               y2="30"
-              x-bind:x1="40*$store.marks.markData.markedActivities.markContribution + 30"
-              x-bind:x2="40*($store.marks.markData.activities.markContribution + $store.marks.markData.markedActivities.markContribution) + 10"
+              x-bind:x1="40*$store.marks.markData.classActivitiesContribution + 30"
+              x-bind:x2="40*($store.marks.markData.classActivitiesContribution + $store.marks.markData.markedActivitiesContribution) + 10"
               stroke-linecap="round"
               class="stroke-sh-blue stroke-[20]"></line>
           </svg>
@@ -509,8 +371,7 @@ const { position, subject } = Astro.props;
             <div
               class="max-md:order-2 row-start-2 flex justify-center gap-x-2 text-[20px] items-center text-sh-purple"
             >
-              <span
-                x-text="$store.marks.markData.markedActivities.markContribution"
+              <span x-text="$store.marks.markData.markedActivitiesContribution"
               ></span>
             </div>
             <div
@@ -521,7 +382,7 @@ const { position, subject } = Astro.props;
             <div
               class="max-md:order-5 row-start-2 flex justify-center gap-x-2 text-[20px] items-center text-sh-blue"
             >
-              <span x-text="$store.marks.markData.activities.markContribution"
+              <span x-text="$store.marks.markData.classActivitiesContribution"
               ></span>
             </div>
             <div
@@ -602,8 +463,8 @@ const { position, subject } = Astro.props;
                             <span
                               class="text-[12px] md:text-[14px]"
                               x-text="(()=>{
-                          let activity = $store.marks.activities.find(activity => activity.id === id) ? $store.marks.activities.find(activity => activity.id === id).name : null;
-                          let markedActivity = $store.marks.marks.find(markedActivity => markedActivity.id === id) ? $store.marks.marks.find(markedActivity => markedActivity.id === id) : null;
+                          let activity = $store.marks.regularActivities.all.find(activity => activity.id === id) ? $store.marks.regularActivities.all.find(activity => activity.id === id).name : null;
+                          let markedActivity = $store.marks.markedActivities.all.find(markedActivity => markedActivity.id === id) ? $store.marks.markedActivities.all.find(markedActivity => markedActivity.id === id) : null;
                           if(activity){
                             return activity;
                           } else if(markedActivity) {
@@ -722,7 +583,7 @@ const { position, subject } = Astro.props;
                 <tr
                   class="border-t border-gray-400"
                   x-data="{activity: undefined}"
-                  x-effect="activity = $store.marks.marks.find(act => act.id === markedActivity.id)"
+                  x-effect="activity = $store.marks.markedActivities.all.find(act => act.id === markedActivity.id)"
                 >
                   <td class="text-[14px] md:text-[16px] p-2">
                     <span x-text="markedActivity.name"></span>
@@ -815,7 +676,7 @@ const { position, subject } = Astro.props;
                 <tr
                   class="border-t border-gray-400"
                   x-data="{activity: undefined}"
-                  x-effect="activity = $store.marks.activities.find(act => act.id === courseActivity.id)"
+                  x-effect="activity = $store.marks.regularActivities.all.find(act => act.id === courseActivity.id)"
                 >
                   <td class="text-[14px] md:text-[16px] p-2">
                     <span x-text="courseActivity.name"></span>

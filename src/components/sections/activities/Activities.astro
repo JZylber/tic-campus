@@ -18,7 +18,11 @@ const { subject, course, year, position } = Astro.props;
   import type { AlpineCourseStore } from "../../../scripts/alpine/stores/course";
   import type { PageDataStore } from "../../../scripts/alpine/stores/pageData";
   import { getSubjectData } from "../../../scripts/fetchData";
-  import type { Activity, MarkedActivity, Unit } from "../../../scripts/types";
+  import type {
+    ClassActivity,
+    MarkedActivity,
+    Unit,
+  } from "../../../scripts/types";
 
   document.addEventListener("alpine:init", () => {
     Alpine.data(
@@ -71,21 +75,24 @@ const { subject, course, year, position } = Astro.props;
       optional: content.optional,
       init() {
         if (this.content.type === "Actividad") {
-          this.$watch("$store.marks.activities", (activities) => {
-            const results = activities.find(
-              (activity: Activity) => activity.id === this.content.id
-            );
-            if (results) {
-              this.updateStatus(results.done, false, results.inRevision);
+          this.$watch(
+            "$store.marks.activities",
+            (activities: ClassActivity[]) => {
+              const results = activities.find(
+                (activity) => parseInt(activity.id) === this.content.id
+              );
+              if (results) {
+                this.updateStatus(results.done, false, results.inRevision);
+              }
             }
-          });
+          );
         } else if (
           this.content.type === "Trabajo Práctico" ||
           this.content.type === "Encuesta"
         ) {
           this.$watch("$store.marks.marks", (markedActivities) => {
             const results = markedActivities.find(
-              (mark: MarkedActivity) => mark.id === this.content.id
+              (mark: MarkedActivity) => parseInt(mark.id) === this.content.id
             );
             if (results) {
               this.updateStatus(results.mark >= 6, false, results.inRevision);
@@ -93,7 +100,8 @@ const { subject, course, year, position } = Astro.props;
           });
           this.$watch("$store.marks.activities", (activities) => {
             const specialActivity = activities.find(
-              (activity: Activity) => activity.id === this.content.id
+              (activity: ClassActivity) =>
+                parseInt(activity.id) === this.content.id
             );
             if (specialActivity) {
               this.updateStatus(

@@ -1,12 +1,12 @@
 import Fuse from "fuse.js";
 import type {
-  Activity,
+  ClassActivity,
   Content,
   FixedMark,
   FixedMarks,
   MarkedActivity,
   Material,
-  Redo,
+  RedoActivity,
   Term,
   Unit,
 } from "./types";
@@ -335,12 +335,17 @@ const getStudentActivities = async (studentId: number, dataSheetId: string) => {
     sheetName: "Actividad",
     query: `SELECT * WHERE B = ${studentId} AND J = TRUE`,
   });
-  return allActivities.map((activity) => ({
-    id: parseInt(activity["Id Actividad"] as string),
-    name: activity["Nombre Actividad"] as string,
-    done: activity["Realizada"] as boolean,
-    comment: activity["Aclaración"] as string,
-  }));
+  return allActivities.map(
+    (activity) =>
+      ({
+        id: activity["Id Actividad"] as string,
+        name: activity["Nombre Actividad"] as string,
+        done: activity["Realizada"] as boolean,
+        comment: activity["Aclaración"] as string,
+        compulsory: false,
+        madeUp: false,
+      } as ClassActivity)
+  );
 };
 
 const getStudentMarks = async (studentId: number, dataSheetId: string) => {
@@ -349,12 +354,16 @@ const getStudentMarks = async (studentId: number, dataSheetId: string) => {
     sheetName: "Nota",
     query: `SELECT * WHERE B = ${studentId} AND J = TRUE`,
   });
-  return allMarks.map((mark) => ({
-    id: mark["Id Actividad"] as number,
-    name: mark["Nombre Actividad"] as string,
-    mark: mark["Nota"] as number,
-    comment: mark["Aclaración"] as string,
-  }));
+  return allMarks.map(
+    (mark) =>
+      ({
+        id: mark["Id Actividad"] as string,
+        name: mark["Nombre Actividad"] as string,
+        mark: mark["Nota"] as number,
+        comment: mark["Aclaración"] as string,
+        madeUp: false,
+      } as MarkedActivity)
+  );
 };
 
 const getStudentRedos = async (studentId: number, dataSheetId: string) => {
@@ -363,12 +372,17 @@ const getStudentRedos = async (studentId: number, dataSheetId: string) => {
     sheetName: "Recuperatorio",
     query: `SELECT * WHERE B = ${studentId} AND J = TRUE`,
   });
-  return allRedos.map((redo) => ({
-    ids: (redo["Id Actividad"] as string).split(",").map((id) => parseInt(id)),
-    name: redo["Nombre Recuperatorio"] as string,
-    mark: parseInt(redo["Nota"] as string),
-    comment: redo["Aclaración"] as string,
-  }));
+  return allRedos.map(
+    (redo) =>
+      ({
+        id: redo["Id Recuperatorio"] as string,
+        coveredActivities: (redo["Id Actividad"] as string).split(","),
+        name: redo["Nombre Recuperatorio"] as string,
+        mark: parseInt(redo["Nota"] as string),
+        comment: redo["Aclaración"] as string,
+        madeUp: false,
+      } as RedoActivity)
+  );
 };
 
 export const getActivitiesAndMarks = async (
@@ -384,9 +398,9 @@ export const getActivitiesAndMarks = async (
     redosPromise,
   ]);
   return {
-    activities: activities as Array<Activity>,
+    activities: activities as Array<ClassActivity>,
     marks: marks as Array<MarkedActivity>,
-    studentRedos: redos as Array<Redo>,
+    studentRedos: redos as Array<RedoActivity>,
   };
 };
 
@@ -424,7 +438,7 @@ export const getRedos = async (
         .includes(`${studentSurname} - ${studentName}`)
     )
     .map((mark) => mark["Id Actividad"]);
-  const redos = studentActivitiesRedo.concat(studentMarksRedo) as Array<number>;
+  const redos = studentActivitiesRedo.concat(studentMarksRedo) as Array<string>;
   return redos;
 };
 

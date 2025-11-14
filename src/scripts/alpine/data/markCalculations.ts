@@ -7,26 +7,7 @@ import {
   getAllCourses,
   getSubjectIds,
 } from "../../fetchData";
-
-interface Activity {
-  name: string;
-  id: string;
-  madeUp: boolean;
-  comment: string;
-}
-
-interface ClassActivity extends Activity {
-  done: boolean;
-  compulsory: boolean;
-}
-
-interface MarkedActivity extends Activity {
-  mark: number;
-}
-
-interface RedoActivity extends MarkedActivity {
-  coveredActivities: string[];
-}
+import type { ClassActivity, MarkedActivity, RedoActivity } from "../../types";
 
 interface MarkData {
   averageMark: number;
@@ -38,11 +19,12 @@ interface MarkData {
   finalMark: number;
 }
 
-class Student {
+export class Student {
   name: string;
   surname: string;
   id: string;
   course: string;
+  withRevisions: boolean;
   private subjectData: Record<
     string,
     {
@@ -59,12 +41,14 @@ class Student {
     surname: string,
     id: string,
     course: string,
-    subjects: string[]
+    subjects: string[],
+    withRevisions: boolean = false
   ) {
     this.name = name;
     this.surname = surname;
     this.id = id;
     this.course = course;
+    this.withRevisions = withRevisions;
     this.subjectData = subjects.reduce((acc, subject) => {
       acc[subject] = {
         classActivities: [],
@@ -99,6 +83,16 @@ class Student {
   }
   setMarkedActivity(subject: string, activity: MarkedActivity) {
     this.subjectData[subject].markedActivities.push(activity);
+  }
+  setInRevision(subject: string, activityId: string) {
+    const classActivity = this.subjectData[subject].classActivities.find(
+      (a) => a.id === activityId
+    );
+    if (classActivity) classActivity.inRevision = true;
+    const markedActivity = this.subjectData[subject].markedActivities.find(
+      (a) => a.id === activityId
+    );
+    if (markedActivity) markedActivity.inRevision = true;
   }
   setRedo(subject: string, activity: RedoActivity) {
     this.subjectData[subject].redoActivities.push(activity);
@@ -291,6 +285,7 @@ export default () =>
           comment: activity.comment || "",
           done: activity.done,
           compulsory: isSpecialActivity || false,
+          inRevision: false,
         };
         studentMap[activity.studentId].setClassActivity(
           activitySubject,
@@ -306,6 +301,7 @@ export default () =>
           madeUp: false,
           comment: activity.comment || "",
           mark: activity.mark,
+          inRevision: false,
         };
         studentMap[activity.studentId].setMarkedActivity(
           activitySubject,
@@ -326,6 +322,7 @@ export default () =>
           coveredActivities: activity.coveredActivities.map((id) =>
             id.toString()
           ),
+          inRevision: false,
         };
         studentMap[activity.studentId].setRedo(activitySubject, redoActivity);
       });
