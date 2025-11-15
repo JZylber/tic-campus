@@ -5,7 +5,7 @@ import Select from "../../components/misc/select/Select.astro";
 ---
 
 <script>
-  import markCalculations from "../../scripts/alpine/data/markCalculations";
+  import markCalculations from "../../scripts/alpine/data/marks/markCalculations";
   document.addEventListener("alpine:init", () => {
     Alpine.data("markCalculations", markCalculations);
   });

@@ -6,8 +6,12 @@ import {
   getAllRedos,
   getAllCourses,
   getSubjectIds,
-} from "../../fetchData";
-import type { ClassActivity, MarkedActivity, RedoActivity } from "../../types";
+} from "../../../fetchData";
+import type {
+  ClassActivity,
+  MarkedActivity,
+  RedoActivity,
+} from "../../../types";
 
 export interface MarkData {
   averageMark: number;

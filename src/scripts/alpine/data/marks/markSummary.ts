@@ -1,7 +1,7 @@
 import type { AlpineComponent } from "alpinejs";
-import type { AlpineStudentMarkStore } from "../stores/marks";
+import type { AlpineStudentMarkStore } from "../../stores/marks";
 import type { MarkData } from "./markCalculations";
-import type { ClassActivity } from "../../types";
+import type { ClassActivity } from "../../../types";
 
 const markSummaryData = (subject: string) =>
   ({

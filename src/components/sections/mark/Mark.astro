@@ -13,46 +13,14 @@ const { position, subject } = Astro.props;
 ---
 
 <script>
-  import type { AlpineComponent } from "alpinejs";
-  import type { PageDataStore } from "../../../scripts/alpine/stores/pageData";
-  import type { AlpineStudentStore } from "../../../scripts/alpine/stores/student";
-  import { getFixedMarks } from "../../../scripts/fetchData";
-  import type { FixedMarks } from "../../../scripts/types";
   import studentMarkStore from "../../../scripts/alpine/stores/marks";
-  import markSummaryData from "../../../scripts/alpine/data/markSummary";
+  import markSummaryData from "../../../scripts/alpine/data/marks/markSummary";
+  import fixedMarksData from "../../../scripts/alpine/data/marks/fixedMarks";
 
   document.addEventListener("alpine:init", () => {
     Alpine.store("marks", studentMarkStore());
     Alpine.data("markSummary", markSummaryData);
-    Alpine.data(
-      "fixedMarks",
-      () =>
-        ({
-          marks: undefined,
-          loading: true,
-          async getMarks() {
-            const studentId = (Alpine.store("student") as AlpineStudentStore)
-              .id;
-            const dataSheetId = (Alpine.store("pageData") as PageDataStore)
-              .dataSheetId;
-            if (studentId !== -1) {
-              this.marks = await getFixedMarks(studentId, dataSheetId);
-              this.loading = false;
-            }
-          },
-          async init() {
-            await this.getMarks();
-            this.$watch("$store.student.id", async (id: string) => {
-              this.loading = true;
-              await this.getMarks();
-            });
-          },
-        }) as AlpineComponent<{
-          marks: FixedMarks | undefined;
-          loading: boolean;
-          getMarks: () => Promise<void>;
-        }>
-    );
+    Alpine.data("fixedMarks", fixedMarksData);
   });
 </script>
 <template

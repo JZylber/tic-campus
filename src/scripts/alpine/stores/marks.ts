@@ -3,7 +3,7 @@ import {
   getRedos,
   getSubjectMarkingCriteria,
 } from "../../fetchData";
-import { Student } from "../data/markCalculations";
+import { Student } from "../data/marks/markCalculations";
 import type { PageDataStore } from "./pageData";
 
 const studentMarkStore = () => ({
