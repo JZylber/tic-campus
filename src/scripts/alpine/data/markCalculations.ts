@@ -9,7 +9,7 @@ import {
 } from "../../fetchData";
 import type { ClassActivity, MarkedActivity, RedoActivity } from "../../types";
 
-interface MarkData {
+export interface MarkData {
   averageMark: number;
   classActivitiesContribution: number;
   markedActivitiesContribution: number;

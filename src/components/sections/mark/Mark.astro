@@ -1,7 +1,7 @@
 ---
 import SectionLayout from "../SectionLayout.astro";
 import FixedMarks from "./FixedMarks.astro";
-import Progress from "./Progress.astro";
+import Summary from "./summary/Summary.astro";
 import RecoveredChip from "./RecoveredChip.astro";
 
 interface Props {
@@ -14,114 +14,16 @@ const { position, subject } = Astro.props;
 
 <script>
   import type { AlpineComponent } from "alpinejs";
-  import { Student } from "../../../scripts/alpine/data/markCalculations";
   import type { PageDataStore } from "../../../scripts/alpine/stores/pageData";
   import type { AlpineStudentStore } from "../../../scripts/alpine/stores/student";
-  import {
-    getActivitiesAndMarks,
-    getFixedMarks,
-    getRedos,
-    getSubjectMarkingCriteria,
-  } from "../../../scripts/fetchData";
-  import type {
-    Activity,
-    FixedMarks,
-    MarkedActivity,
-  } from "../../../scripts/types";
-
-  const studentMarkStore = () => ({
-    student: null as Student | null,
-    subject: "",
-    loading: true,
-    async start(
-      subject: string,
-      name: string,
-      surname: string,
-      course: string,
-      id: string
-    ) {
-      this.subject = subject;
-      this.student = new Student(name, surname, id, course, [subject]);
-      const dataSheetId = (Alpine.store("pageData") as PageDataStore)
-        .dataSheetId;
-      const year = parseInt(this.student.course[2]);
-      const [
-        { activities, marks, studentRedos },
-        { proportion, specialActivities },
-        inRevisionIds,
-      ] = await Promise.all([
-        getActivitiesAndMarks(parseInt(this.student.id), dataSheetId),
-        getSubjectMarkingCriteria(subject, dataSheetId),
-        getRedos(year, this.student.name, this.student.surname, dataSheetId),
-      ]);
-      this.student.setProportion(subject, proportion);
-      activities.forEach((activity) => {
-        // Check if activity is special
-        activity.compulsory = specialActivities.some(
-          (spAct) => spAct === parseInt(activity.id)
-        );
-        this.student!.setClassActivity(subject, activity);
-      });
-      marks.forEach((mark) => {
-        this.student!.setMarkedActivity(subject, mark);
-      });
-      studentRedos.forEach((redo) => {
-        this.student!.setRedo(subject, redo);
-      });
-      inRevisionIds.forEach((activityId) => {
-        this.student!.setInRevision(subject, activityId);
-      });
-      this.student!.calculateFinalMark(subject);
-      this.loading = false;
-    },
-    allMarkedActivitiesPassed() {
-      return this.student!.getFinalMarkData(this.subject)
-        .allMarkedActivitiesPassed;
-    },
-    allSpecialActivitiesDone() {
-      return this.student!.getFinalMarkData(this.subject)
-        .allCompulsoryClassActivitiesDone;
-    },
-    get markData() {
-      return { ...this.student!.getFinalMarkData(this.subject) };
-    },
-    get regularActivities() {
-      const activities = this.student!.getActivities(this.subject).filter(
-        (activity) => !activity.compulsory && !activity.inRevision
-      );
-      return {
-        all: activities,
-        total: activities.length,
-        done: activities.filter((act) => act.done).length,
-      };
-    },
-    get markedActivities() {
-      const activities = this.student!.getMarkedActivities(this.subject).filter(
-        (activity) => !activity.inRevision
-      );
-      return {
-        all: activities,
-        total: activities.length,
-        passed: activities.filter((act) => act.mark >= 6).length,
-      };
-    },
-    get redos() {
-      return this.student!.getRedoActivities(this.subject);
-    },
-    get specialActivitiesIds() {
-      return this.student!.getActivities(this.subject)
-        .filter((activity) => activity.compulsory)
-        .map((activity) => activity.id);
-    },
-    specialActivities() {
-      return this.student!.getActivities(this.subject).filter(
-        (activity) => activity.compulsory
-      );
-    },
-  });
+  import { getFixedMarks } from "../../../scripts/fetchData";
+  import type { FixedMarks } from "../../../scripts/types";
+  import studentMarkStore from "../../../scripts/alpine/stores/marks";
+  import markSummaryData from "../../../scripts/alpine/data/markSummary";
 
   document.addEventListener("alpine:init", () => {
     Alpine.store("marks", studentMarkStore());
+    Alpine.data("markSummary", markSummaryData);
     Alpine.data(
       "fixedMarks",
       () =>
@@ -159,126 +61,7 @@ const { position, subject } = Astro.props;
 >
   <SectionLayout name="nota" position={position}>
     <h1 class="text-[36px] font-bold text-center p-4">Nota</h1>
-    <div class="flex flex-col md:flex-row gap-x-8 pt-4 md:pb-4 justify-center">
-      <div
-        class="flex flex-col gap-y-2 shrink-0 pb-2 border-b-2 border-gray-300 md:pb-0 md:border-b-0"
-      >
-        <div
-          class="rounded-2xl text-white grow flex flex-col gap-y-1 p-2 justify-center items-center"
-          x-bind:class="{
-          'bg-sh-black': !$store.marks.markData.finalMark,
-          'bg-sh-green': $store.marks.markData.finalMark && $store.marks.markData.finalMark >= 6,
-          'bg-sh-red': $store.marks.markData.finalMark && $store.marks.markData.finalMark < 6
-        }"
-        >
-          <span
-            class="text-[48px] font-bold"
-            x-show="$store.marks.markData.finalMark"
-            x-text="$store.marks.markData.finalMark"></span>
-          <span
-            class="!text-[72px] material-symbols-outlined"
-            x-show="!$store.marks.markData.finalMark">more_horiz</span
-          >
-          <span
-            class="text-[24px] font-semibold"
-            x-text="$store.marks.markData.finalMark ? ($store.marks.markData.finalMark >= 6 ? 'Aprobado' : 'En Proceso'):'Sin Calificar'"
-          ></span>
-        </div>
-        <div class="flex items-center gap-x-2 md:gap-x-4">
-          <span
-            class="material-symbols-outlined"
-            x-text="Math.round($store.marks.markData.averageMark) >= 6 ? 'check_circle' : 'cancel'"
-            x-bind:class="{
-          'text-sh-green': Math.round($store.marks.markData.averageMark) >= 6,
-          'text-sh-red': Math.round($store.marks.markData.averageMark) < 6
-            }"
-          ></span>
-          <span class="text-[14px] md:text-[18px] text-gray-600 shrink-0"
-            >Promedio mayor o igual a 6</span
-          >
-        </div>
-        <div class="flex items-center gap-x-2 md:gap-x-4">
-          <span
-            class="material-symbols-outlined"
-            x-text="$store.marks.allMarkedActivitiesPassed() ? 'check_circle' : 'cancel'"
-            x-bind:class="{
-          'text-sh-green': $store.marks.allMarkedActivitiesPassed(),
-          'text-sh-red': !$store.marks.allMarkedActivitiesPassed()
-            }"
-          ></span>
-          <span class="text-[14px] md:text-[18px] text-gray-600 shrink-0"
-            >Actividades con nota aprobadas</span
-          >
-        </div>
-        <div class="flex items-center gap-x-2 md:gap-x-4">
-          <span
-            class="material-symbols-outlined"
-            x-text="$store.marks.allSpecialActivitiesDone()? 'check_circle' : 'cancel'"
-            x-bind:class="{
-          'text-sh-green': $store.marks.allSpecialActivitiesDone(),
-          'text-sh-red': !$store.marks.allSpecialActivitiesDone()
-            }"
-          ></span>
-          <span class="text-[14px] md:text-[18px] text-gray-600 shrink-0"
-            >Actividades obligatorias hechas</span
-          >
-        </div>
-      </div>
-      <div class="py-2 flex flex-col justify-around">
-        <div
-          class="flex gap-x-2 justify-between items-center"
-          x-data="{ progress: 1 }"
-          x-effect="progress = $store.marks.regularActivities.total > 0 ? $store.marks.regularActivities.done/$store.marks.regularActivities.total : 1"
-        >
-          <p class="text-[14px] md:text-[18px] text-gray-600">
-            <span
-              class="text-sh-black"
-              x-text="$store.marks.regularActivities.done"></span>
-            de
-            <span
-              class="text-sh-black"
-              x-text="$store.marks.regularActivities.total"></span>
-            actividades de clase hechas
-          </p>
-          <Progress fraction="progress" />
-        </div>
-        <div
-          class="flex gap-x-2 justify-between items-center"
-          x-data="{ progress: 1 }"
-          x-effect="progress = $store.marks.markedActivities.total > 0 ? $store.marks.markedActivities.passed/$store.marks.markedActivities.total : 1"
-        >
-          <p class="text-[14px] md:text-[18px] text-gray-600">
-            <span
-              class="text-sh-black"
-              x-text="$store.marks.markedActivities.passed"></span>
-            de
-            <span
-              class="text-sh-black"
-              x-text="$store.marks.markedActivities.total"></span>
-            actividades con nota aprobadas
-          </p>
-          <Progress fraction="progress" />
-        </div>
-        <div
-          class="flex gap-x-2 justify-between items-center"
-          x-data="{progress: 1}"
-          x-effect="progress = ($store.marks.specialActivities()).length > 0 ? ($store.marks.specialActivities()).filter(spAct => spAct.done).length / ($store.marks.specialActivities()).length: 1"
-        >
-          <p class="text-[14px] md:text-[18px] text-gray-600">
-            <span
-              class="text-sh-black"
-              x-text="$store.marks.specialActivities().filter(spAct => spAct.done).length"
-            ></span>
-            de
-            <span
-              class="text-sh-black"
-              x-text="$store.marks.specialActivities().length"></span>
-            actividades obligatorias hechas
-          </p>
-          <Progress fraction="progress" />
-        </div>
-      </div>
-    </div>
+    <Summary subject={subject} />
     <div class="flex flex-col gap-y-2 py-4 border-t-2 border-gray-300">
       <h2 class="text-[20px] md:text-[24px] font-semibold">Nota promedio</h2>
       <p class="text-gray-600">
