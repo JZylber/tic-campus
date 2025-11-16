@@ -3,7 +3,7 @@ import type { Unit } from "../../types";
 export const courseRegex = /NR\d[A-Z]/;
 
 interface CourseActivity {
-  id: number;
+  id: string;
   name: string;
   type: string;
   inProgress: boolean;

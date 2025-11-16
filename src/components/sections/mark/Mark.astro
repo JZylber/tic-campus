@@ -184,7 +184,7 @@ const { position, subject } = Astro.props;
                     <span x-text="activity.name"></span>
                   </td>
                   <td class="p-2">
-                    <RecoveredChip id="activity.id">
+                    <RecoveredChip recovered="activity.madeUp">
                       <div
                         class="rounded-full flex justify-center items-center px-2 py-1 gap-x-2 border"
                         x-bind:class="{
@@ -258,7 +258,7 @@ const { position, subject } = Astro.props;
                     <span x-text="markedActivity.name"></span>
                   </td>
                   <td class="p-2">
-                    <RecoveredChip id="markedActivity.id">
+                    <RecoveredChip recovered="activity && activity.madeUp">
                       <div
                         class="rounded-full flex justify-center items-center px-2 py-1 gap-x-2 text-[16px] border"
                         x-bind:class="{
@@ -350,7 +350,7 @@ const { position, subject } = Astro.props;
                     <span x-text="courseActivity.name"></span>
                   </td>
                   <td class="p-2">
-                    <RecoveredChip id="courseActivity.id">
+                    <RecoveredChip recovered="activity && activity.madeUp">
                       <div
                         class="rounded-full flex justify-center items-center px-2 py-1 gap-x-2 border"
                         x-bind:class="{

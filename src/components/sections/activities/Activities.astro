@@ -14,12 +14,12 @@ const { subject, course, year, position } = Astro.props;
 ---
 
 <script>
-  import type { Content } from "../../../aux/types";
   import type { AlpineCourseStore } from "../../../scripts/alpine/stores/course";
   import type { PageDataStore } from "../../../scripts/alpine/stores/pageData";
   import { getSubjectData } from "../../../scripts/fetchData";
   import type {
     ClassActivity,
+    Content,
     MarkedActivity,
     Unit,
   } from "../../../scripts/types";
@@ -79,7 +79,7 @@ const { subject, course, year, position } = Astro.props;
             "$store.marks.activities",
             (activities: ClassActivity[]) => {
               const results = activities.find(
-                (activity) => parseInt(activity.id) === this.content.id
+                (activity) => activity.id === this.content.id
               );
               if (results) {
                 this.updateStatus(results.done, false, results.inRevision);
@@ -92,7 +92,7 @@ const { subject, course, year, position } = Astro.props;
         ) {
           this.$watch("$store.marks.marks", (markedActivities) => {
             const results = markedActivities.find(
-              (mark: MarkedActivity) => parseInt(mark.id) === this.content.id
+              (mark: MarkedActivity) => mark.id === this.content.id
             );
             if (results) {
               this.updateStatus(results.mark >= 6, false, results.inRevision);
@@ -100,8 +100,7 @@ const { subject, course, year, position } = Astro.props;
           });
           this.$watch("$store.marks.activities", (activities) => {
             const specialActivity = activities.find(
-              (activity: ClassActivity) =>
-                parseInt(activity.id) === this.content.id
+              (activity: ClassActivity) => activity.id === this.content.id
             );
             if (specialActivity) {
               this.updateStatus(

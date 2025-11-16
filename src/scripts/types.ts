@@ -7,7 +7,7 @@ export enum ContentType {
 }
 
 export interface Content {
-  id: number;
+  id: string;
   name: string;
   topic: string;
   type: ContentType;

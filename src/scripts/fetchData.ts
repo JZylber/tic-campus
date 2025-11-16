@@ -118,7 +118,7 @@ export const getSubjectData = async (
       (c) => c["Id"] === content["Id Contenido"]
     ) as Record<string, string>;
     return {
-      id: parseInt(contentData["Id"]),
+      id: contentData["Id"].toString(),
       name: contentData["Nombre"],
       imgURL: contentData["Imagen"],
       topic: contentData["Tema"],
@@ -205,7 +205,7 @@ export const getSubjectMarkingCriteria = async (
     specialActivities: criteriaTable[0]["Actividades Especiales"]
       ? (criteriaTable[0]["Actividades Especiales"] as string)
           .split(",")
-          .map((el) => parseInt(el))
+          .map((el) => el.trim())
       : [],
   };
   return criteria;
@@ -338,7 +338,7 @@ const getStudentActivities = async (studentId: number, dataSheetId: string) => {
   return allActivities.map(
     (activity) =>
       ({
-        id: activity["Id Actividad"] as string,
+        id: activity["Id Actividad"].toString(),
         name: activity["Nombre Actividad"] as string,
         done: activity["Realizada"] as boolean,
         comment: activity["Aclaración"] as string,
@@ -357,7 +357,7 @@ const getStudentMarks = async (studentId: number, dataSheetId: string) => {
   return allMarks.map(
     (mark) =>
       ({
-        id: mark["Id Actividad"] as string,
+        id: mark["Id Actividad"].toString(),
         name: mark["Nombre Actividad"] as string,
         mark: mark["Nota"] as number,
         comment: mark["Aclaración"] as string,
@@ -376,7 +376,9 @@ const getStudentRedos = async (studentId: number, dataSheetId: string) => {
     (redo) =>
       ({
         id: redo["Id Recuperatorio"] as string,
-        coveredActivities: (redo["Id Actividad"] as string).split(","),
+        coveredActivities: (redo["Id Actividad"] as string)
+          .split(",")
+          .map((id) => id.trim()),
         name: redo["Nombre Recuperatorio"] as string,
         mark: parseInt(redo["Nota"] as string),
         comment: redo["Aclaración"] as string,
@@ -577,7 +579,7 @@ export const getAllRedos = async (dataSheetId: string) => {
   return allRedos.map((redo) => ({
     coveredActivities: (redo["Id Actividad"] as string)
       .split(",")
-      .map((id) => parseInt(id)),
+      .map((id) => id.trim()),
     name: redo["Nombre Recuperatorio"] as string,
     mark: parseInt(redo["Nota"] as string),
     comment: redo["Aclaración"] as string,

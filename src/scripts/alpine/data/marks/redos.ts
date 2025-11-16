@@ -17,13 +17,8 @@ const redosMarkData = (subject: string) => ({
     }
   },
   name(id: string) {
-    console.log("Looking for activity with id:", id);
     let classActivity = this.student!.getActivities(this.subject).find(
       (activity) => parseInt(id) === parseInt(activity.id)
-    );
-    console.log(
-      "Found class activity:",
-      this.student!.getActivities(this.subject)
     );
     if (classActivity) {
       return classActivity.name;
