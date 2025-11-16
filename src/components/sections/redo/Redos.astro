@@ -10,22 +10,21 @@ const { subject, position } = Astro.props;
 ---
 
 <script>
+  import setAlpineData from "../../../scripts/alpine/setAlpineData";
   import type { PageDataStore } from "../../../scripts/alpine/stores/pageData";
   import { getSubjectRedoLinks } from "../../../scripts/fetchData";
 
-  document.addEventListener("alpine:init", () => {
-    Alpine.data("redoData", (subject: string) => ({
-      activitiesLink: "",
-      markedActivitiesLink: "",
-      async init() {
-        const dataSheetId = (Alpine.store("pageData") as PageDataStore)
-          .dataSheetId;
-        const response = await getSubjectRedoLinks(subject, dataSheetId);
-        this.activitiesLink = response.activitiesRedo;
-        this.markedActivitiesLink = response.markedActivitiesRedo;
-      },
-    }));
-  });
+  setAlpineData("redoData", (subject: string) => ({
+    activitiesLink: "",
+    markedActivitiesLink: "",
+    async init() {
+      const dataSheetId = (Alpine.store("pageData") as PageDataStore)
+        .dataSheetId;
+      const response = await getSubjectRedoLinks(subject, dataSheetId);
+      this.activitiesLink = response.activitiesRedo;
+      this.markedActivitiesLink = response.markedActivitiesRedo;
+    },
+  }));
 </script>
 <SectionLayout name="reentregas" position={position}>
   <div class="flex flex-col gap-y-4">

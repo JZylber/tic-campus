@@ -50,36 +50,16 @@ const studentMarkStore = () => ({
     this.student!.calculateFinalMark(subject);
     this.loading = false;
   },
-  allMarkedActivitiesPassed() {
-    return this.student!.getFinalMarkData(this.subject)
-      .allMarkedActivitiesPassed;
-  },
-  allSpecialActivitiesDone() {
-    return this.student!.getFinalMarkData(this.subject)
-      .allCompulsoryClassActivitiesDone;
-  },
   get markData() {
     return { ...this.student!.getFinalMarkData(this.subject) };
   },
-  get regularActivities() {
-    const activities = this.student!.getActivities(this.subject).filter(
-      (activity) => !activity.compulsory && !activity.inRevision
+  get classActivities() {
+    return this.student!.getActivities(this.subject).filter(
+      (activity) => !activity.compulsory
     );
-    return {
-      all: activities,
-      total: activities.length,
-      done: activities.filter((act) => act.done).length,
-    };
   },
   get markedActivities() {
-    const activities = this.student!.getMarkedActivities(this.subject).filter(
-      (activity) => !activity.inRevision
-    );
-    return {
-      all: activities,
-      total: activities.length,
-      passed: activities.filter((act) => act.mark >= 6).length,
-    };
+    return this.student!.getMarkedActivities(this.subject);
   },
   get redos() {
     return this.student!.getRedoActivities(this.subject);

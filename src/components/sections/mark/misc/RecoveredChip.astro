@@ -8,7 +8,7 @@ const { id } = Astro.props;
 
 <div
   x-data="{ recovered: false }"
-  x-effect=`recovered = $store.marks.redos.filter(redo => redo.mark >= 6).some((redo) => redo.ids.includes(${id}))`
+  x-effect=`recovered = $store.marks.redos.filter(redo => redo.mark >= 6).some((redo) => redo.coveredActivities.includes(${id}))`
   class="flex flex-col md:flex-row w-full items-center justify-center gap-2"
 >
   <slot />

@@ -1,83 +1,86 @@
 <script>
+  import setAlpineData from "../../scripts/alpine/setAlpineData";
   type Crumb = { text: string; link: string };
   type Menu = Array<string>;
-  document.addEventListener("alpine:init", () => {
-    Alpine.data("prepareCrumbs", () => ({
-      crumbs: [] as Array<Crumb>,
-      menu: [] as Menu,
-      init() {
-        let leftovers = document.querySelectorAll(
-          "#leftoverinformation a.breadcrumb"
-        ) as NodeListOf<HTMLAnchorElement>;
-        if (leftovers.length > 0) {
-          leftovers.forEach((el) => {
-            this.crumbs.push({ text: el.innerText, link: el.href });
+  setAlpineData("prepareCrumbs", {
+    crumbs: [] as Array<Crumb>,
+    menu: [] as Menu,
+    init() {
+      console.log("Preparing crumbs and menu");
+      let leftovers = document.querySelectorAll(
+        "#leftoverinformation a.breadcrumb"
+      ) as NodeListOf<HTMLAnchorElement>;
+      if (leftovers.length > 0) {
+        leftovers.forEach((el) => {
+          this.crumbs.push({ text: el.innerText, link: el.href });
+        });
+      }
+      let menuLeftoverLinks = document.querySelectorAll(
+        "#leftoverinformation ul a"
+      ) as NodeListOf<HTMLAnchorElement>;
+      if (menuLeftoverLinks.length > 0) {
+        menuLeftoverLinks.forEach((el) => {
+          // Replace i tags with span tags with class material-symbols-outlined
+          let iTags = el.querySelectorAll("i");
+          iTags.forEach((i) => {
+            let span = document.createElement("span");
+            span.classList.add("material-symbols-outlined");
+            span.classList.add("text-[16px]");
+            span.innerText = i.innerText;
+            i.replaceWith(span);
           });
-        }
-        let menuLeftoverLinks = document.querySelectorAll(
-          "#leftoverinformation ul a"
-        ) as NodeListOf<HTMLAnchorElement>;
-        if (menuLeftoverLinks.length > 0) {
-          menuLeftoverLinks.forEach((el) => {
-            // Replace i tags with span tags with class material-symbols-outlined
-            let iTags = el.querySelectorAll("i");
-            iTags.forEach((i) => {
-              let span = document.createElement("span");
-              span.classList.add("material-symbols-outlined");
-              span.classList.add("text-[16px]");
-              span.innerText = i.innerText;
-              i.replaceWith(span);
-            });
-            this.menu.push(el.outerHTML);
-          });
-        }
-      },
-    }));
+          this.menu.push(el.outerHTML);
+        });
+      }
+    },
   });
 </script>
-
-<div
-  x-data="prepareCrumbs()"
-  class="flex justify-between items-center gap-x-4"
-  x-show="crumbs.length > 0 || menu.length > 0"
+<template
+  x-if="$data.prepareCrumbs"
+  x-effect="if($data.prepareCrumbs){$data = prepareCrumbs()}"
 >
   <div
-    class="text-[12px] sm:text-[14px] text-gray-400 [&>a+a]:before:content-['/'] [&>a+a]:before:px-2"
-    x-show="crumbs.length > 0"
+    class="flex justify-between items-center gap-x-4"
+    x-show="crumbs.length > 0 || menu.length > 0"
   >
-    <template x-for="crumb in crumbs">
-      <a
-        x-bind:href="crumb.link"
-        x-text="crumb.text"
-        class="last:text-primary-black last:font-semibold"></a>
-    </template>
-  </div>
-  <div
-    id="menu"
-    class="rounded-lg border-2 border-gray-300 w-8 h-8 flex justify-center items-center cursor-pointer relative shrink-0"
-    x-data="{open: false}"
-    x-show="menu.length > 0"
-    @click.stop="open = !open"
-    @click.outside="open = false"
-  >
-    <span class="material-symbols-outlined text-[20px]">more_vert</span>
-    <ul
-      x-show="open"
-      class="absolute top-0 left-0 translate-y-8 -translate-x-[calc(100%-2rem)] flex flex-col w-[200px] bg-gray-50 rounded-lg shadow-xl border-2 border-gray-300 z-10 overflow-hidden"
-      x-transition:enter="transition ease-in duration-300"
-      x-transition:enter-start="opacity-0"
-      x-transition:enter-end="opacity-100"
-      x-transition:leave="transition ease-out duration-300"
-      x-transition:leave-start="opacity-100"
-      x-transition:leave-end="opacity-0"
+    <div
+      class="text-[12px] sm:text-[14px] text-gray-400 [&>a+a]:before:content-['/'] [&>a+a]:before:px-2"
+      x-show="crumbs.length > 0"
     >
-      <template x-for="menuLink in menu">
-        <li
-          x-html="menuLink"
-          class="[&>a]:flex [&>a]:items-center [&>a]:text-[16px] [&>a]:gap-x-2 [&>a]:p-2 text-gray-600 border-t-2 border-gray-300 first-of-type:border-t-0 [&>a]:w-full [&>a]:hover:bg-gray-300 [&>a]:hover:text-primary-dark-gray"
-        >
-        </li>
+      <template x-for="crumb in crumbs">
+        <a
+          x-bind:href="crumb.link"
+          x-text="crumb.text"
+          class="last:text-primary-black last:font-semibold"></a>
       </template>
-    </ul>
+    </div>
+    <div
+      id="menu"
+      class="rounded-lg border-2 border-gray-300 w-8 h-8 flex justify-center items-center cursor-pointer relative shrink-0"
+      x-data="{open: false}"
+      x-show="menu.length > 0"
+      @click.stop="open = !open"
+      @click.outside="open = false"
+    >
+      <span class="material-symbols-outlined text-[20px]">more_vert</span>
+      <ul
+        x-show="open"
+        class="absolute top-0 left-0 translate-y-8 -translate-x-[calc(100%-2rem)] flex flex-col w-[200px] bg-gray-50 rounded-lg shadow-xl border-2 border-gray-300 z-10 overflow-hidden"
+        x-transition:enter="transition ease-in duration-300"
+        x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100"
+        x-transition:leave="transition ease-out duration-300"
+        x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0"
+      >
+        <template x-for="menuLink in menu">
+          <li
+            x-html="menuLink"
+            class="[&>a]:flex [&>a]:items-center [&>a]:text-[16px] [&>a]:gap-x-2 [&>a]:p-2 text-gray-600 border-t-2 border-gray-300 first-of-type:border-t-0 [&>a]:w-full [&>a]:hover:bg-gray-300 [&>a]:hover:text-primary-dark-gray"
+          >
+          </li>
+        </template>
+      </ul>
+    </div>
   </div>
-</div>
+</template>

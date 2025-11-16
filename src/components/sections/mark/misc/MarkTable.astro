@@ -1,0 +1,22 @@
+---
+const { columns } = Astro.props;
+---
+
+<div class="flex justify-center">
+  <div
+    class="border-gray-400 border-2 w-full max-w-full md:w-4/5 md:min-w-80 md:max-w-4xl rounded-xl overflow-hidden"
+  >
+    <table class="border-collapse w-full">
+      <thead class="bg-gray-300 text-gray-600">
+        <tr>
+          <template x-for=`column in ${columns}`>
+            <th class="text-[14px] md:text-[16px] p-2" x-text="column"></th>
+          </template>
+        </tr>
+      </thead>
+      <tbody>
+        <slot />
+      </tbody>
+    </table>
+  </div>
+</div>
