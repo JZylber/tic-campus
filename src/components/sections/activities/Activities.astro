@@ -14,11 +14,16 @@ const { subject, course, year, position } = Astro.props;
 ---
 
 <script>
-  import type { Content } from "../../../aux/types";
   import type { AlpineCourseStore } from "../../../scripts/alpine/stores/course";
   import type { PageDataStore } from "../../../scripts/alpine/stores/pageData";
+  import type { AlpineStudentMarkStore } from "../../../scripts/alpine/stores/marks";
   import { getSubjectData } from "../../../scripts/fetchData";
-  import type { Activity, MarkedActivity, Unit } from "../../../scripts/types";
+  import type {
+    ClassActivity,
+    Content,
+    MarkedActivity,
+    Unit,
+  } from "../../../scripts/types";
 
   document.addEventListener("alpine:init", () => {
     Alpine.data(
@@ -71,38 +76,26 @@ const { subject, course, year, position } = Astro.props;
       optional: content.optional,
       init() {
         if (this.content.type === "Actividad") {
-          this.$watch("$store.marks.activities", (activities) => {
-            const results = activities.find(
-              (activity: Activity) => activity.id === this.content.id
-            );
-            if (results) {
-              this.updateStatus(results.done, false, results.inRevision);
-            }
-          });
+          if (Alpine.store("marks")) {
+            this.updateClassActivity();
+          }
+          this.$watch("$store.marks.classActivities", () =>
+            this.updateClassActivity()
+          );
         } else if (
           this.content.type === "Trabajo Práctico" ||
           this.content.type === "Encuesta"
         ) {
-          this.$watch("$store.marks.marks", (markedActivities) => {
-            const results = markedActivities.find(
-              (mark: MarkedActivity) => mark.id === this.content.id
-            );
-            if (results) {
-              this.updateStatus(results.mark >= 6, false, results.inRevision);
-            }
-          });
-          this.$watch("$store.marks.activities", (activities) => {
-            const specialActivity = activities.find(
-              (activity: Activity) => activity.id === this.content.id
-            );
-            if (specialActivity) {
-              this.updateStatus(
-                specialActivity.done,
-                false,
-                specialActivity.inRevision
-              );
-            }
-          });
+          if (Alpine.store("marks")) {
+            this.updateMarkedActivity();
+            this.updateClassActivity();
+          }
+          this.$watch("$store.marks.markedActivities", () =>
+            this.updateMarkedActivity()
+          );
+          this.$watch("$store.marks.classActivities", () =>
+            this.updateMarkedActivity()
+          );
         }
       },
       get symbol() {
@@ -140,6 +133,29 @@ const { subject, course, year, position } = Astro.props;
           return "check_circle";
         } else {
           return "cancel";
+        }
+      },
+      updateClassActivity() {
+        const contentId = this.content.id;
+        const activities = (Alpine.store("marks") as AlpineStudentMarkStore)
+          .classActivities as ClassActivity[];
+        const results = activities.find(
+          (activity) => activity.id === contentId
+        );
+        if (results) {
+          this.updateStatus(results.done, false, results.inRevision);
+        }
+      },
+      updateMarkedActivity() {
+        const contentId = this.content.id;
+        const markedActivities = (
+          Alpine.store("marks") as AlpineStudentMarkStore
+        ).markedActivities as MarkedActivity[];
+        const results = markedActivities.find(
+          (mark: MarkedActivity) => mark.id === contentId
+        );
+        if (results) {
+          this.updateStatus(results.mark >= 6, false, results.inRevision);
         }
       },
       updateStatus(passed: boolean, pending: boolean, redo: boolean) {

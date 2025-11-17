@@ -6,29 +6,14 @@ import {
   getAllRedos,
   getAllCourses,
   getSubjectIds,
-} from "../../fetchData";
+} from "../../../fetchData";
+import type {
+  ClassActivity,
+  MarkedActivity,
+  RedoActivity,
+} from "../../../types";
 
-interface Activity {
-  name: string;
-  id: string;
-  madeUp: boolean;
-  comment: string;
-}
-
-interface ClassActivity extends Activity {
-  done: boolean;
-  compulsory: boolean;
-}
-
-interface MarkedActivity extends Activity {
-  mark: number;
-}
-
-interface RedoActivity extends MarkedActivity {
-  coveredActivities: string[];
-}
-
-interface MarkData {
+export interface MarkData {
   averageMark: number;
   classActivitiesContribution: number;
   markedActivitiesContribution: number;
@@ -38,11 +23,12 @@ interface MarkData {
   finalMark: number;
 }
 
-class Student {
+export class Student {
   name: string;
   surname: string;
   id: string;
   course: string;
+  withRevisions: boolean;
   private subjectData: Record<
     string,
     {
@@ -59,12 +45,14 @@ class Student {
     surname: string,
     id: string,
     course: string,
-    subjects: string[]
+    subjects: string[],
+    withRevisions: boolean = false
   ) {
     this.name = name;
     this.surname = surname;
     this.id = id;
     this.course = course;
+    this.withRevisions = withRevisions;
     this.subjectData = subjects.reduce((acc, subject) => {
       acc[subject] = {
         classActivities: [],
@@ -100,6 +88,16 @@ class Student {
   setMarkedActivity(subject: string, activity: MarkedActivity) {
     this.subjectData[subject].markedActivities.push(activity);
   }
+  setInRevision(subject: string, activityId: string) {
+    const classActivity = this.subjectData[subject].classActivities.find(
+      (a) => a.id === activityId
+    );
+    if (classActivity) classActivity.inRevision = true;
+    const markedActivity = this.subjectData[subject].markedActivities.find(
+      (a) => a.id === activityId
+    );
+    if (markedActivity) markedActivity.inRevision = true;
+  }
   setRedo(subject: string, activity: RedoActivity) {
     this.subjectData[subject].redoActivities.push(activity);
     const coveredActivities = activity.coveredActivities;
@@ -122,9 +120,13 @@ class Student {
   private activitiesContribution(subject: string) {
     // 1 for each activity done, 1*mark/10 for each made up activity, compulsory activities are excluded
     // Filter out compulsory activities first
+    // If withRevisions is true, also filter out activities in revision
     const nonCompulsoryActivities = this.subjectData[
       subject
-    ].classActivities.filter((activity) => !activity.compulsory);
+    ].classActivities.filter(
+      (activity) =>
+        !activity.compulsory && (!this.withRevisions || !activity.inRevision)
+    );
 
     const classActivitiesTotalContribution = nonCompulsoryActivities.reduce(
       (acc, activity) => {
@@ -152,7 +154,10 @@ class Student {
   }
   private markedActivitiesContribution(subject: string) {
     // Average of all marked activities, each out of 10, multiplied by proportion. Made up activities count as their mark.
-    const markedActivities = this.subjectData[subject].markedActivities;
+    // If withRevisions is true, filter out activities in revision
+    const markedActivities = this.subjectData[subject].markedActivities.filter(
+      (activity) => !this.withRevisions || !activity.inRevision
+    );
     if (markedActivities.length === 0) return 0;
     const totalMarks = markedActivities.reduce((acc, activity) => {
       const madeUp = this.subjectData[subject].redos[activity.id];
@@ -188,9 +193,13 @@ class Student {
       classActivitiesContribution + markedActivitiesContribution;
     this.subjectData[subject].finalMark.averageMark = round(averageMark, 2);
     // Check if all compulsory activities are done
+    // If withRevisions is true, ignore activities in revision
     const compulsoryActivities = this.subjectData[
       subject
-    ].classActivities.filter((activity) => activity.compulsory);
+    ].classActivities.filter(
+      (activity) =>
+        activity.compulsory && (!this.withRevisions || !activity.inRevision)
+    );
     const allCompulsoryDone = compulsoryActivities.every((activity) => {
       const madeUp = this.subjectData[subject].redos[activity.id];
       if (madeUp !== undefined) return true;
@@ -291,6 +300,7 @@ export default () =>
           comment: activity.comment || "",
           done: activity.done,
           compulsory: isSpecialActivity || false,
+          inRevision: false,
         };
         studentMap[activity.studentId].setClassActivity(
           activitySubject,
@@ -306,6 +316,7 @@ export default () =>
           madeUp: false,
           comment: activity.comment || "",
           mark: activity.mark,
+          inRevision: false,
         };
         studentMap[activity.studentId].setMarkedActivity(
           activitySubject,
@@ -326,6 +337,7 @@ export default () =>
           coveredActivities: activity.coveredActivities.map((id) =>
             id.toString()
           ),
+          inRevision: false,
         };
         studentMap[activity.studentId].setRedo(activitySubject, redoActivity);
       });

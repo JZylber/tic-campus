@@ -1,4 +1,4 @@
-import { type Alpine } from "alpinejs";
+import type { Alpine } from "alpinejs";
 import collapse from "@alpinejs/collapse";
 import persist from "@alpinejs/persist";
 import twMQDirective from "./scripts/alpine/directives/twMediaQuery";

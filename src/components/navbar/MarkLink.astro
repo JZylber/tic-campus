@@ -9,7 +9,9 @@ interface Props {
 const { course, minimized, open, placement } = Astro.props;
 ---
 
-<template x-if={`$store.student.course === '${course}' && $store.marks`}>
+<template
+  x-if={`$store.student.course === '${course}' && !$store.marks.loading`}
+>
   <div
     class="grow flex flex-col justify-end"
     x-data="{ minimized: false, passed: false }"
@@ -17,7 +19,6 @@ const { course, minimized, open, placement } = Astro.props;
   >
     <div x-show="minimized" x-transition.opacity class="cursor-pointer">
       <div
-        ]
         class="w-[calc(24px+var(--spacing)*4)] aspect-square text-[20px] font-bold border-4 bg-white rounded-full flex justify-center items-center"
         x-bind:class="{ 'border-white text-sh-dark-gray': !$store.marks.markData.finalMark || passed, 'border-sh-red text-sh-red': $store.marks.markData.finalMark && !passed }"
         @click={`changeSection('nota',${placement}); ${open} = false`}

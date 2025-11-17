@@ -6,7 +6,8 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "lint": "eslint src --ext .js,.ts,.astro"
   },
   "dependencies": {
     "@alpinejs/collapse": "^3.14.9",
@@ -23,6 +24,9 @@
   },
   "devDependencies": {
     "@types/alpinejs__collapse": "^3.13.4",
-    "@types/alpinejs__persist": "^3.13.4"
+    "@types/alpinejs__persist": "^3.13.4",
+    "@typescript-eslint/parser": "^8.46.4",
+    "eslint": "^9.39.1",
+    "eslint-plugin-astro": "^1.5.0"
   }
 }
