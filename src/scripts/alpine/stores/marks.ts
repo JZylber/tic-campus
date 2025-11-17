@@ -34,7 +34,7 @@ const studentMarkStore = () => ({
     activities.forEach((activity) => {
       // Check if activity is special
       activity.compulsory = specialActivities.some(
-        (spAct) => spAct === parseInt(activity.id)
+        (spAct) => spAct === activity.id
       );
       this.student!.setClassActivity(subject, activity);
     });

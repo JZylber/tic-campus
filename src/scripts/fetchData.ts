@@ -548,7 +548,7 @@ export const getAllActivities = async (dataSheetId: string) => {
   });
   return allActivities.map((activity) => ({
     studentId: activity["DNI Estudiante"] as string,
-    id: parseInt(activity["Id Actividad"] as string),
+    id: activity["Id Actividad"].toString() as string,
     name: activity["Nombre Actividad"] as string,
     done: activity["Realizada"] as boolean,
     comment: activity["Aclaración"] as string,
