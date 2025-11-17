@@ -7,6 +7,7 @@ import Redos from "./sections/Redos.astro";
 import CompulsoryActivities from "./sections/CompulsoryActivities.astro";
 import MarkedActivities from "./sections/MarkedActivities.astro";
 import ClassActivities from "./sections/ClassActivities.astro";
+import AverageMark from "./summary/AverageMark.astro";
 
 interface Props {
   subject: string;
@@ -36,126 +37,7 @@ const { position, subject } = Astro.props;
   <SectionLayout name="nota" position={position}>
     <h1 class="text-[36px] font-bold text-center p-4">Nota</h1>
     <Summary subject={subject} />
-    <div class="flex flex-col gap-y-2 py-4 border-t-2 border-gray-300">
-      <h2 class="text-[20px] md:text-[24px] font-semibold">Nota promedio</h2>
-      <p class="text-gray-600">
-        La nota promedio se compone en un
-        <span x-text="$store.marks.markData.proportion*100"></span>% promediando
-        las actividades con nota y en un
-        <span x-text="Math.round((1 - $store.marks.markData.proportion)*100)"
-        ></span>% por la proporción de actividades hechas en clase.
-      </p>
-      <div class="w-full flex justify-center">
-        <div class="flex flex-col items-center py-4 max-w-2xl w-4/5">
-          <svg
-            class="max-sm:hidden w-full"
-            xmlns="http://www.w3.org/2000/svg"
-            version="1.1"
-            viewBox="0 0 440 100"
-          >
-            <line x1="20" y1="0" x2="20" y2="60" class="stroke-gray-400"></line>
-            <text x="15" y="80" class="fill-gray-400">0</text>
-            <line x1="60" y1="0" x2="60" y2="60" class="stroke-gray-400"></line>
-            <text x="55" y="80" class="fill-gray-400">1</text>
-            <line x1="100" y1="0" x2="100" y2="60" class="stroke-gray-400"
-            ></line>
-            <text x="95" y="80" class="fill-gray-400">2</text>
-            <line x1="140" y1="0" x2="140" y2="60" class="stroke-gray-400"
-            ></line>
-            <text x="135" y="80" class="fill-gray-400">3</text>
-            <line x1="180" y1="0" x2="180" y2="60" class="stroke-gray-400"
-            ></line>
-            <text x="175" y="80" class="fill-gray-400">4</text>
-            <line x1="220" y1="0" x2="220" y2="60" class="stroke-gray-400"
-            ></line>
-            <text x="215" y="80" class="fill-gray-400">5</text>
-            <line x1="260" y1="0" x2="260" y2="60" class="stroke-gray-400"
-            ></line>
-            <text x="255" y="80" class="fill-gray-400">6</text>
-            <line x1="300" y1="0" x2="300" y2="60" class="stroke-gray-400"
-            ></line>
-            <text x="295" y="80" class="fill-gray-400">7</text>
-            <line x1="340" y1="0" x2="340" y2="60" class="stroke-gray-400"
-            ></line>
-            <text x="335" y="80" class="fill-gray-400">8</text>
-            <line x1="380" y1="0" x2="380" y2="60" class="stroke-gray-400"
-            ></line>
-            <text x="375" y="80" class="fill-gray-400">9</text>
-            <line x1="420" y1="0" x2="420" y2="60" class="stroke-gray-400"
-            ></line>
-            <text x="410" y="80" class="fill-gray-400">10</text>
-            <line
-              x-show="$store.marks.markData.markedActivitiesContribution >= 0.5"
-              x1="30"
-              y1="30"
-              y2="30"
-              x-bind:x2="40*$store.marks.markData.markedActivitiesContribution + 10"
-              stroke-linecap="round"
-              class="stroke-sh-purple stroke-[20]"></line>
-            <line
-              x-show="$store.marks.markData.classActivitiesContribution >= 0.5"
-              y1="30"
-              y2="30"
-              x-bind:x1="40*$store.marks.markData.classActivitiesContribution + 30"
-              x-bind:x2="40*($store.marks.markData.classActivitiesContribution + $store.marks.markData.markedActivitiesContribution) + 10"
-              stroke-linecap="round"
-              class="stroke-sh-blue stroke-[20]"></line>
-          </svg>
-          <div
-            class="flex flex-col md:grid grid-cols-[2fr_30px_2fr_30px_1fr] grid-rows-2"
-          >
-            <div class="flex justify-center gap-x-2 text-[16px] items-center">
-              <div
-                class="max-md:hidden rounded-full h-[16px] w-[16px] bg-sh-purple"
-              >
-              </div>
-              <span>Actividades con nota</span>
-            </div>
-            <div
-              class="max-md:order-4 col-start-3 flex justify-center gap-x-2 text-[16px] items-center"
-            >
-              <div
-                class="max-md:hidden rounded-full h-[16px] w-[16px] bg-sh-blue"
-              >
-              </div>
-              <span>Actividades de clase</span>
-            </div>
-            <div
-              class="max-md:order-7 col-start-5 flex justify-center gap-x-2 text-[16px] items-center"
-            >
-              <span>Promedio</span>
-            </div>
-            <div
-              class="max-md:order-2 row-start-2 flex justify-center gap-x-2 text-[20px] items-center text-sh-purple"
-            >
-              <span x-text="$store.marks.markData.markedActivitiesContribution"
-              ></span>
-            </div>
-            <div
-              class="max-md:order-3 row-start-2 flex justify-center gap-x-2 text-[20px] items-center"
-            >
-              <span>+</span>
-            </div>
-            <div
-              class="max-md:order-5 row-start-2 flex justify-center gap-x-2 text-[20px] items-center text-sh-blue"
-            >
-              <span x-text="$store.marks.markData.classActivitiesContribution"
-              ></span>
-            </div>
-            <div
-              class="border-t border-sh-black md:border-t-0 max-md:order-6 row-start-2 flex justify-center gap-x-2 text-[20px] items-center"
-            >
-              <span class="max-md:hidden"> = </span>
-            </div>
-            <div
-              class="max-md:order-8 row-start-2 flex justify-center gap-x-2 text-[20px] items-center"
-            >
-              <span x-text="$store.marks.markData.averageMark"></span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <AverageMark />
     <Redos subject={subject} />
     <CompulsoryActivities />
     <MarkedActivities />
