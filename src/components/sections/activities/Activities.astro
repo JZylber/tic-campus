@@ -75,7 +75,6 @@ const { subject, course, year, position } = Astro.props;
       redo: false,
       optional: content.optional,
       init() {
-        console.log(this);
         if (this.content.type === "Actividad") {
           if (Alpine.store("marks")) {
             this.updateClassActivity();
