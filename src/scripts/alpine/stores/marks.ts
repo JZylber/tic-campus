@@ -47,6 +47,7 @@ const studentMarkStore = () => ({
     inRevisionIds.forEach((activityId) => {
       this.student!.setInRevision(subject, activityId);
     });
+    this.student!.withRevisions = true;
     this.student!.calculateFinalMark(subject);
     this.loading = false;
   },

@@ -432,14 +432,14 @@ export const getRedos = async (
         .split(", ")
         .includes(`${studentSurname} - ${studentName}`)
     )
-    .map((activity) => activity["Id Actividad"]);
+    .map((activity) => activity["Id Actividad"].toString());
   const studentMarksRedo = marksRedo
     .filter((mark) =>
       (mark.Integrantes as string)
         .split(", ")
         .includes(`${studentSurname} - ${studentName}`)
     )
-    .map((mark) => mark["Id Actividad"]);
+    .map((mark) => mark["Id Actividad"].toString());
   const redos = studentActivitiesRedo.concat(studentMarksRedo) as Array<string>;
   return redos;
 };
