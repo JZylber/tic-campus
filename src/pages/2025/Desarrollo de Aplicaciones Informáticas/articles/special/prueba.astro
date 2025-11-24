@@ -1,1 +1,104 @@
-<p>Proximamente...</p>
+---
+import CodeBlock from "../../../../../components/articles/code-block/CodeBlock.astro";
+---
+
+<p>
+  Estas son algunas posibles preguntas de cada unidad, y sus respuestas. Las
+  explicaciones no son necesarias como parte de la respuesta, las incluyo para
+  que entiendan la respuesta. En el caso de las preguntas de opción múltiple, se
+  incuyen todas las opciones además de la respuesta correcta.
+</p>
+<h2>Unidad 1</h2>
+<p>¿Cuál es la salida mostrada por consola del siguiente código?</p>
+<CodeBlock
+  lang="python"
+  code={`pos = 0
+lista = ["Dario","Wally","Shulian"]
+for i in range(len(lista)):
+    elemento = lista[i]
+    if elemento == "Wally":
+        pos = i
+print(f"La posición de Wally es {pos}")
+`}
+/>
+<p><em>Respuesta:</em> La posición de Wally es 1</p>
+<p>
+  <em>Explicación:</em> El código recorre la lista y compara cada elemento con el
+  string "Wally". Cuando encuentra una coincidencia, asigna el índice actual (i)
+  a la variable pos. Al finalizar el ciclos, pos contiene el valor 1, que es donde
+  se encuentra "Wally" en la lista (recuerden que los índices en Python comienzan
+  en 0).
+</p>
+<h2>Unidad 2</h2>
+<p>
+  Dado la función f y el siguiente conjunto de tests para pytest, ¿Cuál es la
+  cobertura de líneas? Indiquen los números de líneas cubiertas (1 es el def, y
+  cuentenlo como línea cubierta).
+</p>
+<CodeBlock
+  lang="python"
+  code={`def f(x):
+    if x > 0:
+        return "positivo"
+    elif x < 0:
+        return "negativo"
+    else:
+        return "cero"
+def test_f_positivo():
+    assert f(5) == "positivo"
+def test_f_cero():
+    assert f(0) == "cero"
+`}
+/><p>
+  <em>Respuesta:</em> Se cubren 6/7 líneas, osea, 86% de cobertura. Se cubren las
+  líneas 1,2,3,4,6 y 7.
+</p>
+<p>
+  <em>Explicación:</em> Se cubren todas las líneas excepto la línea 5, que es el
+  caso resultante de que elif x &lt; 0 evalúe a True, ya que no hay ningún test que
+  llame a f con un valor menor a 0.
+</p>
+<h2>Unidad 3</h2>
+<p>¿Cuántos atributos tiene el objeto <em>coeficientes</em>, y cuáles son?</p>
+<CodeBlock
+  lang="javascript"
+  code={`let coeficientes = {
+    hombre: { astenico: 0.85, atletico: 0.76, picnico: 0.64 },
+    mujer: { astenico: 0.76, atletico: 0.67, picnico: 0.58 },
+};
+`}
+/>
+<p><em>Respuesta:</em> 2 atributos: hombre y mujer.</p>
+<p>
+  <em>Explicación:</em> El objeto coeficientes tiene dos atributos principales, que
+  son hombre y mujer. Cada uno de estos atributos es a su vez un objeto que contiene
+  tres atributos adicionales: astenico, atletico y picnico, pero no son atributos
+  del objeto coeficientes.
+</p>
+<h2>Unidad 4</h2>
+<p>
+  Dado el siguiente fragmento de código, ¿qué resultado se muestra por pantalla?
+</p>
+<CodeBlock
+  lang="python"
+  code={`class A:
+    def __init__(self, x):
+        self.x = x
+    def get_x(self):
+        return self.x
+class B(A):
+    def __init__(self,x,y):
+        super().__init__(x)
+        self.y = y
+    def get_y(self):
+        return self.y + 10
+obj = B(5, 10)
+print(obj.get_x())
+`}
+/>
+<p><em>Respuesta:</em> 5</p>
+<p>
+  <em>Explicación:</em> El método get_x() devuelve el valor de x, que es 5 en este
+  caso. Eso se debe a que la clase B hereda de la clase A, y el método get_x() está
+  definido en la clase A.
+</p>
