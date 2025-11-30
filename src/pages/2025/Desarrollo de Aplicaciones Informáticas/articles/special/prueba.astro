@@ -29,6 +29,26 @@ print(f"La posición de Wally es {pos}")
   se encuentra "Wally" en la lista (recuerden que los índices en Python comienzan
   en 0).
 </p>
+<p>
+  ¿Cuál es la salida mostrada por consola del siguiente código? Considerar que
+  las listas en python se pasan por referencia.
+</p>
+<CodeBlock
+  lang="python"
+  code={`
+lista = ["Dario","Wally","Shulian"]
+def sumar_chiqui(lista_de_nombres):
+    lista_de_nombres.append("Chiqui")
+sumar_chiqui(lista)
+print(lista)
+`}
+/>
+<p><em>Respuesta:</em> ['Dario', 'Wally', 'Shulian', 'Chiqui']</p>
+<p>
+  <em>Explicación:</em> La función sumar_chiqui modifica la lista original al agregar
+  "Chiqui" a ella. Dado que las listas en Python se pasan por referencia, cualquier
+  modificación dentro de la función afecta a la lista original fuera de la función.
+</p>
 <h2>Unidad 2</h2>
 <p>
   Dado la función f y el siguiente conjunto de tests para pytest, ¿Cuál es la
