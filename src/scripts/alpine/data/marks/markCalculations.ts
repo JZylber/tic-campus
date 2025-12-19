@@ -103,15 +103,20 @@ export class Student {
     const coveredActivities = activity.coveredActivities;
     // For each covered activity, find in markedActivities and classActivities and set madeUp to true
     coveredActivities.forEach((activityId) => {
-      this.subjectData[subject].redos[activityId] = activity.mark;
       const markedActivity = this.subjectData[subject].markedActivities.find(
         (a) => a.id === activityId
       );
-      if (markedActivity) markedActivity.madeUp = true;
+      if (markedActivity && activity.mark >= 6) {
+        markedActivity.madeUp = true;
+        this.subjectData[subject].redos[activityId] = activity.mark;
+      }
       const classActivity = this.subjectData[subject].classActivities.find(
         (a) => a.id === activityId
       );
-      if (classActivity) classActivity.madeUp = true;
+      if (classActivity) {
+        classActivity.madeUp = true;
+        classActivity.madeUp = true;
+      }
     });
   }
   setProportion(subject: string, proportion: number) {
@@ -163,6 +168,8 @@ export class Student {
       const madeUp = this.subjectData[subject].redos[activity.id];
       if (madeUp !== undefined) {
         acc += madeUp;
+        if (madeUp < 6)
+          this.subjectData[subject].finalMark.allMarkedActivitiesPassed = false;
         return acc;
       }
       // If not made up, and mark is below 6, set allMarkedActivitiesPassed to false
