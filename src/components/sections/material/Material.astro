@@ -10,21 +10,20 @@ const { subject, position } = Astro.props;
 ---
 
 <script>
+  import setAlpineData from "../../../scripts/alpine/setAlpineData";
   import type { PageDataStore } from "../../../scripts/alpine/stores/pageData";
   import { getSubjectMaterial } from "../../../scripts/fetchData";
   import type { Material } from "../../../scripts/types";
 
-  document.addEventListener("alpine:init", () => {
-    Alpine.data("materialData", (subject: string) => ({
-      materials: [] as Material[],
-      async init() {
-        this.materials = await getSubjectMaterial(
-          subject,
-          (Alpine.store("pageData") as PageDataStore).dataSheetId
-        );
-      },
-    }));
-  });
+  setAlpineData("materialData", (subject: string) => ({
+    materials: [] as Material[],
+    async init() {
+      this.materials = await getSubjectMaterial(
+        subject,
+        (Alpine.store("pageData") as PageDataStore).dataSheetId
+      );
+    },
+  }));
 </script>
 <SectionLayout
   name="material"

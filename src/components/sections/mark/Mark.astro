@@ -21,13 +21,13 @@ const { position, subject } = Astro.props;
   import markSummaryData from "../../../scripts/alpine/data/marks/markSummary";
   import fixedMarksData from "../../../scripts/alpine/data/marks/fixedMarks";
   import redosMarkData from "../../../scripts/alpine/data/marks/redos";
+  import setAlpineStore from "../../../scripts/alpine/setAlpineStore";
+  import setAlpineData from "../../../scripts/alpine/setAlpineData";
 
-  document.addEventListener("alpine:init", () => {
-    Alpine.store("marks", studentMarkStore());
-    Alpine.data("markSummary", markSummaryData);
-    Alpine.data("redoMarkData", redosMarkData);
-    Alpine.data("fixedMarks", fixedMarksData);
-  });
+  setAlpineStore("marks", studentMarkStore());
+  setAlpineData("markSummary", markSummaryData);
+  setAlpineData("redoMarkData", redosMarkData);
+  setAlpineData("fixedMarks", fixedMarksData);
 </script>
 <template
   x-if="!$store.marks.loading"

@@ -12,35 +12,34 @@ const { subject, course, position, presentation, multiCourse } = Astro.props;
 ---
 
 <script>
+  import setAlpineData from "../../../scripts/alpine/setAlpineData";
   import type { PageDataStore } from "../../../scripts/alpine/stores/pageData";
   import {
     getCourseGroupLink,
     getSubjectPresentation,
   } from "../../../scripts/fetchData";
 
-  document.addEventListener("alpine:init", () => {
-    Alpine.data(
-      "homeData",
-      (multicourse: boolean, course: string, subject: string) => ({
-        groupLink: "",
-        presentationLink: "",
-        async init() {
-          const dataSheetId = (Alpine.store("pageData") as PageDataStore)
-            .dataSheetId;
-          const dataPromises = [];
-          if (!multicourse) {
-            dataPromises.push(getCourseGroupLink(course, dataSheetId));
-          } else {
-            dataPromises.push(getCourseGroupLink(course, dataSheetId, subject));
-          }
-          dataPromises.push(getSubjectPresentation(subject, dataSheetId));
-          const [groupLink, presentationLink] = await Promise.all(dataPromises);
-          this.groupLink = groupLink;
-          this.presentationLink = presentationLink;
-        },
-      })
-    );
-  });
+  setAlpineData(
+    "homeData",
+    (multicourse: boolean, course: string, subject: string) => ({
+      groupLink: "",
+      presentationLink: "",
+      async init() {
+        const dataSheetId = (Alpine.store("pageData") as PageDataStore)
+          .dataSheetId;
+        const dataPromises = [];
+        if (!multicourse) {
+          dataPromises.push(getCourseGroupLink(course, dataSheetId));
+        } else {
+          dataPromises.push(getCourseGroupLink(course, dataSheetId, subject));
+        }
+        dataPromises.push(getSubjectPresentation(subject, dataSheetId));
+        const [groupLink, presentationLink] = await Promise.all(dataPromises);
+        this.groupLink = groupLink;
+        this.presentationLink = presentationLink;
+      },
+    })
+  );
 </script>
 <SectionLayout
   name="home"

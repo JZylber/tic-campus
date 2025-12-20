@@ -15,7 +15,4 @@ export default (Alpine: Alpine) => {
   Alpine.store("pageData", pageData());
   Alpine.store("course", courseStore());
   Alpine.store("student", studentStore(Alpine));
-  document.addEventListener("alpine:init", () => {
-    console.log("Alpine initialized");
-  });
 };
