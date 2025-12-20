@@ -10,10 +10,9 @@ const { dataSheetId } = Astro.props;
 
 <script>
   import sectionData from "../scripts/alpine/data/section";
+  import setAlpineData from "../scripts/alpine/setAlpineData";
 
-  document.addEventListener("alpine:init", () => {
-    Alpine.data("sectionData", sectionData);
-  });
+  setAlpineData("sectionData", sectionData);
 </script>
 <html lang="en">
   <head>

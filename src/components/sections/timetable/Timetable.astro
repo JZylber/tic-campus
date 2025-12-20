@@ -12,10 +12,9 @@ const { position, subject } = Astro.props;
 
 <script>
   import timetableData from "../../../scripts/alpine/data/timetable";
+  import setAlpineData from "../../../scripts/alpine/setAlpineData";
 
-  document.addEventListener("alpine:init", () => {
-    Alpine.data("timetableData", timetableData);
-  });
+  setAlpineData("timetableData", timetableData);
 </script>
 <SectionLayout name="horarios" position={position} xData="timetableData()">
   <h1 class="text-[36px] font-bold text-center p-4">

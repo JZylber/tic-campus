@@ -117,6 +117,6 @@
     });
   });
   await Promise.all(loadScripts);
-  window.Alpine.initTree(parent.shadowRoot);
   triggerDOMContentLoaded();
+  window.Alpine.initTree(parent.shadowRoot);
 </script>
