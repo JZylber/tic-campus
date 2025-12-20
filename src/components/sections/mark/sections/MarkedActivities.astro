@@ -1,0 +1,86 @@
+---
+import MarkTable from "../misc/MarkTable.astro";
+import RecoveredChip from "../misc/RecoveredChip.astro";
+---
+
+<template
+  x-data="{courseMarkedActivities: []}"
+  x-effect="courseMarkedActivities = $store.course.activities.filter(act => act.type === 'Trabajo Práctico')"
+  x-if="courseMarkedActivities.length > 0"
+>
+  <div class="flex flex-col gap-y-2 py-4 border-t-2 border-gray-300">
+    <h2 class="text-[20px] md:text-[24px] font-semibold">
+      Actividades con nota
+    </h2>
+    <p class="text-[14px] md:text-[16px] text-gray-600">
+      Todos las actividades/trabajos prácticos que reciben una nota numérica. Se
+      aprueban con una nota mayor o igual a 6.
+    </p>
+    <MarkTable columns="['Actividad', 'Estado']"
+      ><template x-for="markedActivity in courseMarkedActivities">
+        <tr
+          class="border-t border-gray-400"
+          x-data="{activity: undefined}"
+          x-effect="activity = $store.marks.markedActivities.find(act => act.id === markedActivity.id)"
+        >
+          <td class="text-[14px] md:text-[16px] p-2">
+            <span x-text="markedActivity.name"></span>
+          </td>
+          <td class="p-2">
+            <RecoveredChip recovered="activity && activity.madeUp">
+              <div
+                class="rounded-full flex justify-center items-center px-2 py-1 gap-x-2 text-[16px] border"
+                x-bind:class="{
+                      'bg-sh-light-yellow border-sh-medium-yellow  text-sh-yellow': activity && activity.inRevision,
+                      'bg-sh-light-green border-sh-medium-green text-sh-green': activity && activity.mark >= 6 && !activity.inRevision,
+                      'bg-sh-light-red border-sh-medium-red text-sh-red': activity && activity.mark < 6 && !activity.inRevision,
+                      'bg-sh-light-blue border-sh-medium-blue text-sh-blue': !activity && markedActivity.optional,
+                      'bg-sh-light-purple border-sh-purple text-gray-600': !activity && markedActivity.inProgress,
+                      'bg-gray-200 border-gray-400 text-gray-600': !activity && !markedActivity.inProgress
+                    }"
+              >
+                <template x-if="activity && !activity.inRevision">
+                  <span
+                    class="text-[14px] md:text-[16px]"
+                    x-text="activity.mark"></span>
+                </template>
+                <template
+                  x-if="activity && activity.inRevision || !activity && markedActivity.inProgress"
+                >
+                  <span
+                    class="material-symbols-outlined text-[16px]! md:text-[20px]!"
+                    x-text="'more_horiz'"></span>
+                </template>
+                <span
+                  class="text-[14px] md:text-[16px] text-center md:text-left"
+                  x-text="(()=>{
+                          if(!activity && markedActivity.inProgress){
+                            return 'En Progreso'
+                          }
+                          if(!activity && markedActivity.optional){
+                            return 'Opcional'
+                          }
+                          if(!activity && !markedActivity.inProgress){
+                            return 'Sin Calificar'
+                          }
+                          if(activity && activity.inRevision){
+                            return 'En Revisión'
+                          }
+                          if(activity && activity.comment) {
+                            return activity.comment;
+                          } else if(activity && activity.mark >= 6){
+                            return 'Aprobada'
+                          } else {
+                            return 'En Proceso'
+                          }
+                        })()"
+                >
+                </span>
+              </div>
+            </RecoveredChip>
+          </td>
+        </tr>
+      </template>
+    </MarkTable>
+  </div>
+</template>

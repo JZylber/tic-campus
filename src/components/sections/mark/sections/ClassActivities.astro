@@ -1,0 +1,82 @@
+---
+import MarkTable from "../misc/MarkTable.astro";
+import RecoveredChip from "../misc/RecoveredChip.astro";
+---
+
+<template
+  x-data="{courseActivities: []}"
+  x-effect="courseActivities = $store.course.activities.filter(act => act.type === 'Actividad' && !$store.marks.specialActivitiesIds.includes(act.id))"
+  x-if="courseActivities.length > 0"
+>
+  <div class="flex flex-col gap-y-2 py-4 border-t-2 border-gray-300">
+    <h2 class="text-[20px] md:text-[24px] font-semibold">
+      Actividades de clase
+    </h2>
+    <p class="text-[14px] md:text-[16px] text-gray-600">
+      Todos las actividades/trabajos prácticos que se hacen a modo de práctica
+      en clase. No reciben una calificación numérica, pero se consideran hechas
+      si cumplen con lo mínimo esperado para dicha clase.
+    </p>
+    <MarkTable columns="['Actividad', 'Estado']">
+      <template x-for="courseActivity in courseActivities">
+        <tr
+          class="border-t border-gray-400"
+          x-data="{activity: $store.marks.classActivities.find(act => act.id === courseActivity.id)}"
+        >
+          <td class="text-[14px] md:text-[16px] p-2">
+            <span x-text="courseActivity.name"></span>
+          </td>
+          <td class="p-2">
+            <RecoveredChip recovered="activity && activity.madeUp">
+              <div
+                class="rounded-full flex justify-center items-center px-2 py-1 gap-x-2 border"
+                x-bind:class="{
+                      'bg-sh-light-yellow border-sh-medium-yellow text-sh-yellow': activity && activity.inRevision,
+                      'bg-sh-light-green border-sh-medium-green text-sh-green': activity && activity.done && !activity.inRevision,
+                      'bg-sh-light-red border-sh-medium-red text-sh-red': activity && !activity.done && !activity.inRevision,
+                      'bg-sh-light-purple border-sh-purple text-gray-600': !activity && courseActivity.inProgress,
+                      'bg-sh-light-blue border-sh-medium-blue text-sh-blue': !activity && courseActivity.optional,
+                      'bg-gray-200 border-gray-400 text-gray-600': !activity && !courseActivity.inProgress
+                    }"
+              >
+                <template
+                  x-if="activity || !activity && courseActivity.inProgress"
+                >
+                  <span
+                    class="material-symbols-outlined text-[16px]! md:text-[20px]!"
+                    x-text="(activity && activity.inRevision || !activity && courseActivity.inProgress ) ? 'more_horiz' : (activity.done ? 'check' : 'close')"
+                  ></span>
+                </template>
+                <span
+                  class="text-[14px] md:text-[16px] text-center md:text-left"
+                  x-text="(()=>{
+                          if(!activity && courseActivity.inProgress){
+                            return 'En Progreso'
+                          }
+                            else if(!activity && !courseActivity.inProgress && !courseActivity.optional){
+                            return 'Sin Calificar'
+                          }
+                          else if(!activity && courseActivity.optional){
+                            return 'Opcional'
+                          }
+                          else if(activity && activity.inRevision){
+                            return 'En Revisión'
+                          }
+                          else if(activity && activity.comment) {
+                            return activity.comment;
+                          } else if(activity && activity.done){
+                            return 'Hecha'
+                          } else {
+                            return 'Pendiente'
+                          }
+                        })()"
+                >
+                </span>
+              </div>
+            </RecoveredChip>
+          </td>
+        </tr>
+      </template>
+    </MarkTable>
+  </div>
+</template>

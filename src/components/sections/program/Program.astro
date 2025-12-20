@@ -11,12 +11,28 @@ interface Props {
 const { subject, year, position } = Astro.props;
 ---
 
-<SectionLayout name="programa" position={position}>
-  <div
-    x-data="{html: '', loading: true}"
-    x-init={`html = await fetchHTMLData($store.baseURL.dataURL + '/${year}/${subject}/program'); loading = false;`}
-    class="w-full"
-  >
+<script>
+  import type { PageDataStore } from "../../../scripts/alpine/stores/pageData";
+
+  document.addEventListener("alpine:init", () => {
+    Alpine.data("programData", (year: string, subject: string) => ({
+      loading: true,
+      html: "",
+      async init() {
+        const dataURL = (Alpine.store("pageData") as PageDataStore).dataURL;
+        const response = await fetch(dataURL + `/${year}/${subject}/program`);
+        this.html = await response.text();
+        this.loading = false;
+      },
+    }));
+  });
+</script>
+<SectionLayout
+  name="programa"
+  position={position}
+  xData=`programData('${year}','${subject}')`
+>
+  <div class="w-full">
     <h1 class="text-[30px] md:text-[36px] font-bold text-center p-4">
       Programa de la Materia
     </h1>

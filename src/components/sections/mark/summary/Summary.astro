@@ -1,0 +1,118 @@
+---
+import Progress from "./Progress.astro";
+
+const { subject } = Astro.props;
+---
+
+<div
+  class="flex flex-col md:flex-row gap-x-8 pt-4 md:pb-4 justify-center"
+  x-data=`markSummary('${subject}')`
+>
+  <div
+    class="flex flex-col gap-y-2 shrink-0 pb-2 border-b-2 border-gray-300 md:pb-0 md:border-b-0"
+  >
+    <div
+      class="rounded-2xl text-white grow flex flex-col gap-y-1 p-2 justify-center items-center"
+      x-bind:class="{
+          'bg-sh-black': !markData.finalMark,
+          'bg-sh-green': markData.finalMark && markData.finalMark >= 6,
+          'bg-sh-red': markData.finalMark && markData.finalMark < 6
+        }"
+    >
+      <span
+        class="text-[48px] font-bold"
+        x-show="markData.finalMark"
+        x-text="markData.finalMark"></span>
+      <span
+        class="!text-[72px] material-symbols-outlined"
+        x-show="!markData.finalMark">more_horiz</span
+      >
+      <span
+        class="text-[24px] font-semibold"
+        x-text="markData.finalMark ? (markData.finalMark >= 6 ? 'Aprobado' : 'En Proceso'):'Sin Calificar'"
+      ></span>
+    </div>
+    <div class="flex items-center gap-x-2 md:gap-x-4">
+      <span
+        class="material-symbols-outlined"
+        x-text="Math.round(markData.averageMark) >= 6 ? 'check_circle' : 'cancel'"
+        x-bind:class="{
+          'text-sh-green': Math.round(markData.averageMark) >= 6,
+          'text-sh-red': Math.round(markData.averageMark) < 6
+            }"
+      ></span>
+      <span class="text-[14px] md:text-[18px] text-gray-600 shrink-0"
+        >Promedio mayor o igual a 6</span
+      >
+    </div>
+    <div class="flex items-center gap-x-2 md:gap-x-4">
+      <span
+        class="material-symbols-outlined"
+        x-text="allMarkedActivitiesPassed ? 'check_circle' : 'cancel'"
+        x-bind:class="{
+          'text-sh-green':allMarkedActivitiesPassed,
+          'text-sh-red': !allMarkedActivitiesPassed
+            }"
+      ></span>
+      <span class="text-[14px] md:text-[18px] text-gray-600 shrink-0"
+        >Actividades con nota aprobadas</span
+      >
+    </div>
+    <div class="flex items-center gap-x-2 md:gap-x-4">
+      <span
+        class="material-symbols-outlined"
+        x-text="allSpecialActivitiesDone ? 'check_circle' : 'cancel'"
+        x-bind:class="{
+          'text-sh-green': allSpecialActivitiesDone,
+          'text-sh-red': !allSpecialActivitiesDone
+            }"
+      ></span>
+      <span class="text-[14px] md:text-[18px] text-gray-600 shrink-0"
+        >Actividades obligatorias hechas</span
+      >
+    </div>
+  </div>
+  <div class="py-2 flex flex-col justify-around">
+    <div
+      class="flex gap-x-2 justify-between items-center"
+      x-data="{ progress: 1 }"
+      x-effect="progress = regularActivities.total > 0 ? regularActivities.done/regularActivities.total : 1"
+    >
+      <p class="text-[14px] md:text-[18px] text-gray-600">
+        <span class="text-sh-black" x-text="regularActivities.done"></span>
+        de
+        <span class="text-sh-black" x-text="regularActivities.total"></span>
+        actividades de clase hechas
+      </p>
+      <Progress fraction="progress" />
+    </div>
+    <div
+      class="flex gap-x-2 justify-between items-center"
+      x-data="{ progress: 1 }"
+      x-effect="progress = markedActivities.total > 0 ? markedActivities.passed/markedActivities.total : 1"
+    >
+      <p class="text-[14px] md:text-[18px] text-gray-600">
+        <span class="text-sh-black" x-text="markedActivities.passed"></span>
+        de
+        <span class="text-sh-black" x-text="markedActivities.total"></span>
+        actividades con nota aprobadas
+      </p>
+      <Progress fraction="progress" />
+    </div>
+    <div
+      class="flex gap-x-2 justify-between items-center"
+      x-data="{progress: 1}"
+      x-effect="progress = specialActivities.length > 0 ? specialActivities.filter(spAct => spAct.done).length / specialActivities.length : 1"
+    >
+      <p class="text-[14px] md:text-[18px] text-gray-600">
+        <span
+          class="text-sh-black"
+          x-text="specialActivities.filter(spAct => spAct.done).length"></span>
+        de
+        <span class="text-sh-black" x-text="specialActivities.length"></span>
+        actividades obligatorias hechas
+      </p>
+      <Progress fraction="progress" />
+    </div>
+  </div>
+</div>

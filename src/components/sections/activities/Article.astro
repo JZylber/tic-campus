@@ -12,9 +12,118 @@ interface Props {
 const { open, articleURL, content, course } = Astro.props;
 ---
 
+<script>
+  import type { AlpineComponent } from "alpinejs";
+  import setAlpineData from "../../../scripts/alpine/setAlpineData";
+  import type { Content } from "../../../scripts/types";
+
+  const baseURL = "https://jzylber.github.io/";
+
+  setAlpineData(
+    "articleData",
+    () =>
+      ({
+        loading: true,
+        error: false,
+        errorMessage: "",
+        async updateArticle(content: Content, articleURL: string) {
+          if (content !== null) {
+            this.loading = true;
+            try {
+              const response = await fetch(articleURL);
+              if (!response.ok) {
+                let message = "";
+                if (response.status == 404) {
+                  message =
+                    "(404) No se encontró la página para '" +
+                    content.name +
+                    "'";
+                } else if (response.status == 500) {
+                  message = "(500) Error interno del servidor";
+                } else {
+                  message = "(" + response.status + ") Error desconocido";
+                }
+                throw new Error(message);
+              }
+              const rawHTML = await response.text();
+              await this.initArticle(rawHTML);
+              this.error = false;
+            } catch (err) {
+              this.error = true;
+              this.errorMessage = err as string;
+            } finally {
+              this.loading = false;
+            }
+          }
+        },
+        async initArticle(rawHTML: string) {
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(rawHTML, "text/html");
+          // Get all script tags
+          let scripts = [...doc.querySelectorAll("script")];
+          //Remove from doc
+          scripts.forEach((el) => {
+            el.remove();
+          });
+          const element = this.$refs.content as HTMLElement;
+          element.innerHTML += doc.body.innerHTML;
+          const loadScripts = scripts.map((el, index) => {
+            return new Promise((resolve, reject) => {
+              // Check if if the script has inline code
+              if (el.innerText) {
+                // Eval content directly and resolve
+                eval(el.innerText);
+                resolve(true);
+              } else if (!el.src) {
+                // If no src and no inline code, resolve
+                resolve(true);
+              } else {
+                // If has src, create a new script tag and set the src
+                const newScript = document.createElement("script");
+                // Copy all atributtes from the original script tag
+                for (let i = 0; i < el.attributes.length; i++) {
+                  newScript.setAttribute(
+                    el.attributes[i].name,
+                    el.attributes[i].value
+                  );
+                }
+                if (el.src) {
+                  // If the source is a relative path, add the base URL at the front
+                  if (
+                    el.src.startsWith("https://campus.ort.edu.ar/tic-campus")
+                  ) {
+                    newScript.src = el.src.replace(
+                      "https://campus.ort.edu.ar/",
+                      baseURL
+                    );
+                  } else {
+                    newScript.src = el.src;
+                  }
+                }
+                // onload resolve the promise
+                newScript.onload = () => {
+                  resolve(true);
+                };
+                element.appendChild(newScript);
+              }
+            });
+          });
+          await Promise.all(loadScripts);
+          Alpine.initTree(element);
+        },
+      }) as AlpineComponent<{
+        loading: boolean;
+        error: boolean;
+        errorMessage: string;
+        updateArticle: (content: Content, articleURL: string) => Promise<void>;
+        initArticle: (rawHTML: string) => Promise<void>;
+      }>
+  );
+</script>
+
 <article
-  x-show={`$store.section.currentSection === 'actividades' && ${open} && ${content} !== null`}
-  x-data="{ loading: true, error: false, errorMessage: '' }"
+  x-show={`currentSection === 'actividades' && ${open} && ${content} !== null`}
+  x-data="articleData()"
   class="absolute top-0 left-0 w-full h-full max-h-full bg-gray-50 flex flex-col pb-4 px-8 overflow-y-auto scrollbar"
   x-transition:enter="transition ease-in duration-500"
   x-transition:enter-start="translate-x-full border-l border-gray-400"
@@ -22,33 +131,7 @@ const { open, articleURL, content, course } = Astro.props;
   x-transition:leave="transition ease-out duration-500"
   x-transition:leave-start="translate-x-0 border-l border-gray-400"
   x-transition:leave-end="translate-x-full border-l border-gray-400"
-  x-effect={`
-    if(${content} !== null){
-        $refs.content.innerHTML = '';
-        loading = true;
-        try {
-          const response = await fetch(${articleURL});
-          if (!response.ok) {
-            let message = '';
-            if(response.status = 404) {
-              message = '(404) No se encontró la página para "' + ${content}.name + '"';
-            } else if(response.status = 500) {
-              message = '(500) Error interno del servidor';
-            } else {
-              message = '(' + response.status + ') Error desconocido';
-            }
-            throw new Error(message);
-          }
-          $refs.content.innerHTML = await response.text();
-          error = false;
-        } catch (err) {
-          error = true;
-          errorMessage = err
-        } finally {
-          loading = false;
-        }
-      }
-`}
+  x-effect={`updateArticle(${content}, ${articleURL})`}
 >
   <div
     class="flex justify-between w-full items-center py-2 mb-2 border-b-2 border-gray-300 sticky top-0 bg-gray-50 z-10"
@@ -112,13 +195,13 @@ const { open, articleURL, content, course } = Astro.props;
         <template
           x-if={`${content} && $store.student.course === '${course}' &&
               ((${content}.type === 'Actividad' &&
-                $store.marks.activities.find(
+                $store.marks.classActivities.find(
                   (activity) => activity.id === ${content}.id
                 )) ||
                 (${content}.type === 'Trabajo Práctico' &&
-                  ($store.marks.marks.find(
+                  ($store.marks.markedActivities.find(
                     (activity) => activity.id === ${content}.id
-                  )) || $store.marks.activities.find(
+                  )) || $store.marks.classActivities.find(
                     (activity) => activity.id === ${content}.id
                   )))`}
         >
@@ -127,15 +210,15 @@ const { open, articleURL, content, course } = Astro.props;
             x-data="{ passing: false, mark: -1, comment: '', redo: false }"
             x-effect={`
                   if(${content}.type === 'Actividad') {
-                    const activity = $store.marks.activities.find(activity => activity.id === ${content}.id);
+                    const activity = $store.marks.classActivities.find(activity => activity.id === ${content}.id);
                     mark = -1;
                     passing = activity.done;
                     comment = activity.comment;
                     redo = activity.inRevision;
                   }
                   else if(${content}.type === 'Trabajo Práctico') {
-                    const activityMark = $store.marks.marks.find(mark => mark.id === ${content}.id);
-                    const specialActivity = $store.marks.activities.find(activity => activity.id === ${content}.id);
+                    const activityMark = $store.marks.markedActivities.find(mark => mark.id === ${content}.id);
+                    const specialActivity = $store.marks.classActivities.find(activity => activity.id === ${content}.id);
                     if (activityMark) {
                       mark = activityMark.mark;
                       passing = mark >= 6;
@@ -224,7 +307,6 @@ const { open, articleURL, content, course } = Astro.props;
     </div>
     <div
       x-ref="content"
-      x-init="$watch('loading', (value) => {if(!loading){window.Alpine.initTree($el)}})"
       class="content overflow-x-auto flex flex-col [&>h2]:py-2 [&>h2]:text-[32px] [&>h3]:text-[24px] [&>h3]:py-2 [&>p]:py [&>p]:text-gray-600 [&_ul]:py-2 [&>ul]:list-disc [&_ul]:list-inside [&_ul>li]:text-gray-600 [&>ul>li]:list-disc [&_ul>li+li]:mt-1 [&_ol]:py-2 [&_ol]:list-decimal [&_ol]:list-inside [&_ol>li]:text-gray-600 [&_ol>li+li]:mt-1 [&_li>ol]:ml-4 [&_li>ul]:ml-4 [&_li>ul>li]:list-[circle] [&_li>ul]:list-[circle] [&>table]:rounded-xl [&>table]:overflow-hidden [&>table]:my-2 [&>table]:mx-4 [&>table>thead]:bg-sh-black [&>table>thead]:text-white [&>table>thead>tr>th]:p-2 [&>table>tbody]:bg-gray-200 [&>table>tbody>tr>td]:p-2 [&>table>tbody>tr>td]:text-center [&_a]:text-sh-blue"
     >
     </div>

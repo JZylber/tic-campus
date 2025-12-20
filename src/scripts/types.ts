@@ -7,7 +7,7 @@ export enum ContentType {
 }
 
 export interface Content {
-  id: number;
+  id: string;
   name: string;
   topic: string;
   type: ContentType;
@@ -27,27 +27,24 @@ export interface Unit {
 }
 
 export interface Activity {
-  id: number;
   name: string;
+  id: string;
+  madeUp: boolean;
+  comment: string;
+  inRevision: boolean;
+}
+
+export interface ClassActivity extends Activity {
   done: boolean;
-  inRevision: boolean;
-  special: boolean;
-  comment: string;
+  compulsory: boolean;
 }
 
-export interface MarkedActivity {
-  id: number;
-  name: string;
+export interface MarkedActivity extends Activity {
   mark: number;
-  inRevision: boolean;
-  comment: string;
 }
 
-export interface Redo {
-  ids: Array<number>;
-  name: string;
-  mark: number;
-  comment: string;
+export interface RedoActivity extends MarkedActivity {
+  coveredActivities: string[];
 }
 
 export interface Course {
