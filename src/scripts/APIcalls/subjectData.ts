@@ -4,16 +4,63 @@ const backendURL = import.meta.env.DEV
   ? "http://localhost:3000"
   : "https://tic-campus-backend.vercel.app";
 
+type TemplatesResponse = Array<{
+  Materia: string;
+  Curso: string;
+  Año: string;
+  SpreadsheetID: string;
+  "Id Template": string;
+}>;
+
+export async function fetchTemplateSubjects(templateId: string): Promise<
+  Array<{
+    params: { subject: string; course: string; year: number };
+    props: { dataSheetId: string };
+  }>
+> {
+  try {
+    const response = await fetch(
+      `${backendURL}/subjects/${encodeURIComponent(templateId)}`
+    );
+    if (!response.ok) {
+      throw new Error(
+        `Error fetching template subjects: ${response.statusText}`
+      );
+    }
+    const data: TemplatesResponse = await response.json();
+    // Convert to the required format and filter those without any of params
+    const cleanData = data
+      .map((item) => ({
+        params: {
+          subject: item.Materia,
+          course: item.Curso,
+          year: Number(item.Año),
+        },
+        props: { dataSheetId: item.SpreadsheetID },
+      }))
+      .filter(
+        (item) => item.params.subject && item.params.course && item.params.year
+      );
+    return cleanData;
+  } catch (error) {
+    console.error("Failed to fetch template subjects:", error);
+    return [];
+  }
+}
+
 export async function fetchSubjectData(
   subject: string,
   course: string,
-  year: number
+  year: number,
+  dataSheetId?: string
 ): Promise<Unit[]> {
   try {
     const response = await fetch(
       `${backendURL}/articles/${encodeURIComponent(
         subject
-      )}/${encodeURIComponent(course)}/${year}`
+      )}/${encodeURIComponent(course)}/${year}${
+        dataSheetId ? `?dataSheetId=${encodeURIComponent(dataSheetId)}` : ""
+      }`
     );
     if (!response.ok) {
       throw new Error(`Error fetching subject data: ${response.statusText}`);

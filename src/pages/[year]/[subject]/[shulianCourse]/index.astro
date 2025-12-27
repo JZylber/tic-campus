@@ -8,23 +8,27 @@ import Material from "../../../../components/sections/material/Material.astro";
 import Navbar from "../../../../components/navbar/Navbar.astro";
 import Mark from "../../../../components/sections/mark/Mark.astro";
 import Timetable from "../../../../components/sections/timetable/Timetable.astro";
+import { fetchTemplateSubjects } from "../../../../scripts/APIcalls/subjectData";
 
-export function getStaticPaths() {
-  return [
-    {
-      params: { year: 2025, shulianCourse: "NR3A" },
-      props: { dataSheetId: "1VZ_KPk4aZJFPlAgx188y0wW8p3psbbtZgix1L8a-5kE" },
-    },
-    {
-      params: { year: 2025, shulianCourse: "NR3B" },
-      props: { dataSheetId: "1VZ_KPk4aZJFPlAgx188y0wW8p3psbbtZgix1L8a-5kE" },
-    },
-  ];
+export async function getStaticPaths() {
+  const templateId = "SH-2";
+  const paths = await fetchTemplateSubjects(templateId);
+  // Change course to shulianCourse to match param name
+  const cleanPaths = paths.map((path) => {
+    return {
+      ...path,
+      params: {
+        subject: path.params.subject,
+        year: path.params.year,
+        shulianCourse: path.params.course,
+      },
+    };
+  });
+  return cleanPaths;
 }
 
-const { shulianCourse, year } = Astro.params;
+const { shulianCourse, year, subject } = Astro.params;
 const { dataSheetId } = Astro.props;
-const subject = "Tecnologías de la Información";
 
 const items = [
   { name: "home", icon: "home", title: subject },

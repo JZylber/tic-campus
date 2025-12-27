@@ -5,23 +5,25 @@ import Layout from "../../../../layouts/Layout.astro";
 import Material from "../../../../components/sections/material/Material.astro";
 import Navbar from "../../../../components/navbar/Navbar.astro";
 import Timetable from "../../../../components/sections/timetable/Timetable.astro";
+import { fetchTemplateSubjects } from "../../../../scripts/APIcalls/subjectData";
 
-export function getStaticPaths() {
-  return [
-    {
-      params: { year: 2025, luuCourse: "NR3C" },
-      props: { dataSheetId: "1Am9Ynjfoo_bWAsCWts5HJUgoFcx0dRKRLFPk_bN6EqU" },
-    },
-    {
-      params: { year: 2025, luuCourse: "NR3D" },
-      props: { dataSheetId: "1Am9Ynjfoo_bWAsCWts5HJUgoFcx0dRKRLFPk_bN6EqU" },
-    },
-  ];
+export async function getStaticPaths() {
+  const templateId = "LU-1";
+  const paths = await fetchTemplateSubjects(templateId);
+  // Change course to luuCourse to match param name
+  return paths.map((path) => {
+    return {
+      ...path,
+      params: {
+        ...path.params,
+        luuCourse: path.params.course,
+      },
+    };
+  });
 }
 
-const { luuCourse, year } = Astro.params;
+const { luuCourse, year, subject } = Astro.params;
 const { dataSheetId } = Astro.props;
-const subject = "Tecnologías de la Información";
 
 const items = [
   { name: "home", icon: "home", title: subject },

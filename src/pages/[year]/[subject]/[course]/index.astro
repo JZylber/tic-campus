@@ -7,10 +7,12 @@ import Program from "../../../../components/sections/program/Program.astro";
 import Material from "../../../../components/sections/material/Material.astro";
 import Navbar from "../../../../components/navbar/Navbar.astro";
 import Mark from "../../../../components/sections/mark/Mark.astro";
-import courses from "../../../../scripts/courses.json";
+import { fetchTemplateSubjects } from "../../../../scripts/APIcalls/subjectData";
 
-export function getStaticPaths() {
-  return courses;
+export async function getStaticPaths() {
+  const templateId = "SH-1";
+  const paths = await fetchTemplateSubjects(templateId);
+  return paths;
 }
 
 const { subject, course, year } = Astro.params;
