@@ -50,3 +50,28 @@ export async function fetchHomeLinks(
     return { group: "", presentation: "" };
   }
 }
+
+export async function fetchRedoLinks(
+  subject: string,
+  course: string,
+  year: number
+): Promise<{
+  activities: string;
+  markedActivities: string;
+}> {
+  try {
+    const response = await fetch(
+      `${backendURL}/redoLinks/${encodeURIComponent(
+        subject
+      )}/${encodeURIComponent(course)}/${year}`
+    );
+    if (!response.ok) {
+      throw new Error(`Error fetching redo links: ${response.statusText}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Failed to fetch redo links:", error);
+    return { activities: "", markedActivities: "" };
+  }
+}
