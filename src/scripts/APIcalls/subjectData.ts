@@ -1,4 +1,4 @@
-import type { Unit } from "../types";
+import type { Material, Unit } from "../types";
 
 const backendURL = import.meta.env.DEV
   ? "http://localhost:3000"
@@ -120,5 +120,32 @@ export async function fetchRedoLinks(
   } catch (error) {
     console.error("Failed to fetch redo links:", error);
     return { activities: "", markedActivities: "" };
+  }
+}
+
+export async function fetchSubjectMaterial(
+  subject: string,
+  course: string,
+  year: number,
+  dataSheetId?: string
+): Promise<Material[]> {
+  try {
+    const response = await fetch(
+      `${backendURL}/material/${encodeURIComponent(
+        subject
+      )}/${encodeURIComponent(course)}/${year}${
+        dataSheetId ? `?dataSheetId=${encodeURIComponent(dataSheetId)}` : ""
+      }`
+    );
+    if (!response.ok) {
+      throw new Error(
+        `Error fetching subject material: ${response.statusText}`
+      );
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Failed to fetch subject material:", error);
+    return [];
   }
 }
