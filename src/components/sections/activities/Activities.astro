@@ -17,7 +17,6 @@ const { subject, course, year, position } = Astro.props;
   import type { AlpineCourseStore } from "../../../scripts/alpine/stores/course";
   import type { PageDataStore } from "../../../scripts/alpine/stores/pageData";
   import type { AlpineStudentMarkStore } from "../../../scripts/alpine/stores/marks";
-  import { getSubjectData } from "../../../scripts/fetchData";
   import type {
     ClassActivity,
     Content,
@@ -37,8 +36,10 @@ const { subject, course, year, position } = Astro.props;
       articleOpen: false,
       articleURL: "",
       async init() {
+        const dataSheetId = (Alpine.store("pageData") as PageDataStore)
+          .dataSheetId;
         this.unitsData = (
-          await fetchSubjectData(subject, course, year)
+          await fetchSubjectData(subject, course, year, dataSheetId)
         ).reverse();
         const courseStore = Alpine.store("course") as AlpineCourseStore;
         courseStore.setActivities([...this.unitsData]);

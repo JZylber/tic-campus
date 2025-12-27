@@ -8,7 +8,7 @@ type TemplatesResponse = Array<{
   Materia: string;
   Curso: string;
   Año: string;
-  SpreadsheetID: string;
+  "Spreadsheet ID": string;
   "Id Template": string;
 }>;
 
@@ -36,7 +36,7 @@ export async function fetchTemplateSubjects(templateId: string): Promise<
           course: item.Curso,
           year: Number(item.Año),
         },
-        props: { dataSheetId: item.SpreadsheetID },
+        props: { dataSheetId: item["Spreadsheet ID"] },
       }))
       .filter(
         (item) => item.params.subject && item.params.course && item.params.year
