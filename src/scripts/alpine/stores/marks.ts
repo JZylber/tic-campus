@@ -2,11 +2,6 @@ import {
   fetchRevisionRequests,
   fetchStudentMarksAndCriteria,
 } from "../../APIcalls/studentData";
-import {
-  getActivitiesAndMarks,
-  getRedos,
-  getSubjectMarkingCriteria,
-} from "../../fetchData";
 import { Student } from "../data/marks/markCalculations";
 import type { PageDataStore } from "./pageData";
 

@@ -10,11 +10,12 @@ import AverageMark from "./summary/AverageMark.astro";
 
 interface Props {
   subject: string;
+  course: string;
   year: number;
   position: number;
 }
 
-const { position, subject, year } = Astro.props;
+const { position, subject, course, year } = Astro.props;
 ---
 
 <script>
@@ -42,6 +43,6 @@ const { position, subject, year } = Astro.props;
     <CompulsoryActivities />
     <MarkedActivities />
     <ClassActivities />
-    <FixedMarks />
+    <FixedMarks subject={subject} course={course} year={year} />
   </SectionLayout>
 </template>

@@ -1,4 +1,9 @@
-import type { ClassActivity, MarkedActivity, RedoActivity } from "../types";
+import type {
+  ClassActivity,
+  FixedMarks,
+  MarkedActivity,
+  RedoActivity,
+} from "../types";
 import { backendURL } from "./shared";
 
 export async function fetchStudentData(
@@ -116,5 +121,31 @@ export async function fetchRevisionRequests(
   } catch (error) {
     console.error("Failed to fetch revision requests:", error);
     return [];
+  }
+}
+
+export async function fetchFixedMarks(
+  subject: string,
+  course: string,
+  year: number,
+  studentId: string,
+  datasheetId?: string
+): Promise<FixedMarks> {
+  try {
+    const response = await fetch(
+      `${backendURL}/fixedMarks/${encodeURIComponent(
+        subject
+      )}/${encodeURIComponent(course)}/${year}/${encodeURIComponent(
+        studentId
+      )}${datasheetId ? `?datasheetId=${encodeURIComponent(datasheetId)}` : ""}`
+    );
+    if (!response.ok) {
+      throw new Error(`Error fetching fixed marks: ${response.statusText}`);
+    }
+    const data: FixedMarks = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Failed to fetch fixed marks:", error);
+    return { "1B": undefined, "1C": undefined, "3B": undefined, F: undefined };
   }
 }
