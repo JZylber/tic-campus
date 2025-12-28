@@ -1,0 +1,28 @@
+---
+import Layout from "../../../../layouts/Layout.astro";
+import { fetchTemplateSubjects } from "../../../../scripts/APIcalls/subjectData";
+
+export async function getStaticPaths() {
+  const templateId = "CA-1";
+  const paths = await fetchTemplateSubjects(templateId);
+  // Change course to ca1Course to match param name
+  const cleanPaths = paths.map((path) => {
+    return {
+      ...path,
+      params: {
+        subject: path.params.subject,
+        year: path.params.year,
+        ca1Course: path.params.course,
+      },
+    };
+  });
+  return cleanPaths;
+}
+
+const { ca1Course, year, subject } = Astro.params;
+const { dataSheetId } = Astro.props;
+---
+
+<Layout dataSheetId={dataSheetId}>
+  <p>{subject} {ca1Course} {year}</p>
+</Layout>

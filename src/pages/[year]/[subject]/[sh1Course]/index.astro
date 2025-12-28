@@ -7,27 +7,24 @@ import Program from "../../../../components/sections/program/Program.astro";
 import Material from "../../../../components/sections/material/Material.astro";
 import Navbar from "../../../../components/navbar/Navbar.astro";
 import Mark from "../../../../components/sections/mark/Mark.astro";
-import Timetable from "../../../../components/sections/timetable/Timetable.astro";
 import { fetchTemplateSubjects } from "../../../../scripts/APIcalls/subjectData";
 
 export async function getStaticPaths() {
-  const templateId = "SH-2";
+  const templateId = "SH-1";
   const paths = await fetchTemplateSubjects(templateId);
-  // Change course to shulianCourse to match param name
-  const cleanPaths = paths.map((path) => {
+  // Change course to sh1Course to match param name
+  return paths.map((path) => {
     return {
       ...path,
       params: {
-        subject: path.params.subject,
-        year: path.params.year,
-        shulianCourse: path.params.course,
+        ...path.params,
+        sh1Course: path.params.course,
       },
     };
   });
-  return cleanPaths;
 }
 
-const { shulianCourse, year, subject } = Astro.params;
+const { subject, sh1Course, year } = Astro.params;
 const { dataSheetId } = Astro.props;
 
 const items = [
@@ -36,38 +33,26 @@ const items = [
   { name: "reentregas", icon: "refresh", title: "Reentregas" },
   { name: "programa", icon: "event_note", title: "Programa" },
   { name: "material", icon: "construction", title: "Material" },
-  { name: "horarios", icon: "calendar_month", title: "Horarios" },
 ];
 ---
 
 <Layout dataSheetId={dataSheetId}>
-  <Navbar course={shulianCourse} subject={subject} items={items} />
+  <Navbar course={sh1Course} subject={subject} items={items} />
   <main
     class="relative grow bg-gray-50 border-y sm:border-r lg:border-l border-gray-300 sm:rounded-r-xl lg:rounded-l-xl overflow-hidden"
-    x-init={`$store.student.getStudentData('${subject}','${shulianCourse}','${dataSheetId}')`}
+    x-init={`$store.student.getStudentData('${subject}','${sh1Course}','${dataSheetId}')`}
   >
     <Home
       subject={subject}
-      course={shulianCourse}
-      year={year}
+      course={sh1Course}
       position={0}
+      year={year}
       presentation={true}
     />
-    <Activities
-      subject={subject}
-      course={shulianCourse}
-      year={year}
-      position={1}
-    />
-    <Redos subject={subject} year={year} course={shulianCourse} position={2} />
+    <Activities subject={subject} course={sh1Course} year={year} position={1} />
+    <Redos subject={subject} year={year} course={sh1Course} position={2} />
     <Program subject={subject} year={year} position={3} />
-    <Material
-      subject={subject}
-      year={year}
-      course={shulianCourse}
-      position={4}
-    />
-    <Timetable subject={subject} position={5} />
-    <Mark subject={subject} position={6} />
+    <Material subject={subject} course={sh1Course} year={year} position={4} />
+    <Mark subject={subject} position={5} />
   </main>
 </Layout>
