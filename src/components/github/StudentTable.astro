@@ -5,24 +5,19 @@ import Select from "../../components/misc/select/Select.astro";
 ---
 
 <script>
-  import { getStudents } from "../../scripts/fetchData";
+  import { fetchStudents } from "../../scripts/APIcalls/dashboard";
   Alpine.data("studentsPage", () => ({
     loading: true,
-    students: [] as Awaited<ReturnType<typeof getStudents>>,
+    students: [] as Awaited<ReturnType<typeof fetchStudents>>,
     courses: [{ value: "", label: "Todos" }],
-    filter: { course: "", text: "" },
+    years: [{ value: NaN, label: "Todos" }],
+    filter: { course: "", text: "", year: NaN },
     init() {
-      Promise.all([
-        getStudents("1ppAnySYCXVRyJtXem9A-d3uZzujJVYVSTun_lI6yZWo"),
-        getStudents("1Am9Ynjfoo_bWAsCWts5HJUgoFcx0dRKRLFPk_bN6EqU"),
-        getStudents("1VZ_KPk4aZJFPlAgx188y0wW8p3psbbtZgix1L8a-5kE"),
-        getStudents("16t4_OiokJCYG8Qs_4FhxBLR13Rnr8HD3ppiHcJB9zzc"),
-      ]).then(([testStudents, shuliStudents, leanStudents]) => {
-        this.students = [
-          ...testStudents,
-          ...shuliStudents,
-          ...leanStudents,
-        ].sort((a, b) => {
+      fetchStudents().then((students) => {
+        // Sort students by year (des), course (asc), surname (asc)
+        this.students = students.sort((a, b) => {
+          if (a.year > b.year) return -1;
+          if (a.year < b.year) return 1;
           if (a.course < b.course) return -1;
           if (a.course > b.course) return 1;
           if (a.surname < b.surname) return -1;
@@ -39,6 +34,17 @@ import Select from "../../components/misc/select/Select.astro";
             }
           )
         );
+        this.years = this.years.concat(
+          [...new Set(this.students.map((student) => student.year))]
+            .sort((a, b) => b - a)
+            .map((year) => {
+              return {
+                value: year,
+                label: year.toString(),
+              };
+            })
+        );
+        this.filter.year = this.years[0].value;
         this.filter.course = this.courses[0].value;
         this.filter.text = "";
         this.loading = false;
@@ -48,6 +54,7 @@ import Select from "../../components/misc/select/Select.astro";
       return this.students.filter((s) => {
         let courseFilter = true;
         let textFilter = true;
+        let yearFilter = true;
         let normalizedText = this.filter.text
           .toLowerCase()
           .normalize("NFD")
@@ -68,7 +75,10 @@ import Select from "../../components/misc/select/Select.astro";
         if (this.filter.course !== "") {
           courseFilter = s.course === this.filter.course;
         }
-        return textFilter && courseFilter;
+        if (!isNaN(this.filter.year)) {
+          yearFilter = s.year === this.filter.year;
+        }
+        return yearFilter && textFilter && courseFilter;
       });
     },
   }));
@@ -101,7 +111,13 @@ import Select from "../../components/misc/select/Select.astro";
         title="Curso"
         xModel="filter.course"
         options="courses"
-        className="grow"
+        className="min-w-48"
+      />
+      <Select
+        title="Año"
+        xModel="filter.year"
+        options="years"
+        className="min-w-48"
       />
     </div>
     <table class="w-full">
@@ -109,6 +125,7 @@ import Select from "../../components/misc/select/Select.astro";
         <tr>
           <th class="px-4 py-2">Nombre</th>
           <th class="px-4 py-2">Apellido</th>
+          <th class="px-4 py-2">Año</th>
           <th class="px-4 py-2">Curso</th>
         </tr>
       </thead>
@@ -116,10 +133,11 @@ import Select from "../../components/misc/select/Select.astro";
         <template x-for="student in filteredStudents">
           <tr
             class="border-b-2 border-gray-300 hover:bg-gray-300 cursor-pointer"
-            @click="$store.student.setStudent(student.name, student.surname, student.course, student.DNI)"
+            @click="$store.student.setStudent(student.name, student.surname, student.course, student.id)"
           >
             <td class="px-4 py-2" x-text="student.name"></td>
             <td class="px-4 py-2" x-text="student.surname"></td>
+            <td class="px-4 py-2" x-text="student.year"></td>
             <td class="px-4 py-2" x-text="student.course"></td>
           </tr>
         </template>

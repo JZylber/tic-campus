@@ -37,7 +37,7 @@ const items = [
   <Navbar course={lu1Course} subject={subject} items={items} />
   <main
     class="relative grow bg-gray-50 border-y sm:border-r lg:border-l border-gray-300 sm:rounded-r-xl lg:rounded-l-xl overflow-hidden"
-    x-init={`$store.student.getStudentData('${subject}','${lu1Course}','${dataSheetId}')`}
+    x-init={`$store.course.setCourse('${lu1Course}');$store.student.getStudentData('${subject}',${year},'${dataSheetId}')`}
   >
     <Home
       subject={subject}

@@ -15,9 +15,9 @@ const { title, xModel, options, className } = Astro.props;
 ---
 
 <div
-  x-data={`{options: []}`}
+  x-data={`{options: [], selectedOption: null}`}
   class={`flex flex-col items-center md:items-start gap-2 ${className}`}
-  x-effect={`options=${typeof options === "string" ? options : JSON.stringify(options)};if(options.length > 0){${xModel} = options[0].value}`}
+  x-effect={`options=${typeof options === "string" ? options : JSON.stringify(options)};if(options.length > 0){${xModel} = options[0].value; selectedOption = options[0];}`}
 >
   <label
     class="text-center md:text-left text-sh-dark-gray text-[16px] font-semibold"
@@ -30,7 +30,7 @@ const { title, xModel, options, className } = Astro.props;
       class="absolute bg-gray-50 overflow-hidden w-full flex flex-col rounded-xl text-sh-dark-gray text-[16px] border-2 border-sh-gray cursor-pointer"
     >
       <div class="p-2 flex justify-between items-center gap-x-6">
-        <span x-text={xModel}></span>
+        <span x-text="selectedOption ? selectedOption.label : ''"></span>
         <span
           class="material-symbols-outlined text-[24px] transition-transform"
           :class=`{
@@ -46,7 +46,10 @@ const { title, xModel, options, className } = Astro.props;
         class="border-t-2 border-sh-gray divide-y-2 divide-gray-300"
       >
         <template x-for="option in options">
-          <div class="p-2 hover:bg-gray-300" @click=`${xModel} = option.value`>
+          <div
+            class="p-2 hover:bg-gray-300"
+            @click=`${xModel} = option.value; selectedOption = option`
+          >
             <span x-text="option.label"></span>
           </div>
         </template>
