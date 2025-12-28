@@ -2,10 +2,13 @@
 interface Props {
   title: string;
   xModel: string;
-  options: Array<{
-    value: any;
-    label: string;
-  }>;
+  options:
+    | Array<{
+        value: any;
+        label: string;
+        disabled?: boolean;
+      }>
+    | string;
   className?: string;
 }
 
@@ -13,7 +16,8 @@ const { title, xModel, options, className } = Astro.props;
 ---
 
 <div
-  x-data=`{options: ${JSON.stringify(options)}}`
+  x-data=`{options: []}`
+  x-effect=`options=${typeof options === "string" ? options : JSON.stringify(options)};`
   class=`flex flex-col gap-2 ${className}`
 >
   <label
@@ -23,10 +27,11 @@ const { title, xModel, options, className } = Astro.props;
     <div class="flex w-full max-w-[200px] justify-between items-center">
       <template x-for="option in options">
         <div
-          class="w-11 aspect-square flex justify-center items-center border-2 border-sh-gray rounded-xl cursor-pointer"
+          class="w-11 aspect-square flex justify-center items-center border-2 border-sh-gray rounded-xl"
           :class=`{
-        'bg-gray-50': ${xModel} !== option.value,
-        'bg-sh-gray': ${xModel} === option.value
+        'opacity-50 pointer-events-none': option.disabled,
+        'bg-gray-50 cursor-pointer': !option.disabled && ${xModel} !== option.value,
+        'bg-sh-gray cursor-pointer': !option.disabled && ${xModel} === option.value
         }`
           @click=`${xModel} = option.value`
         >

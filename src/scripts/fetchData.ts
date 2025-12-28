@@ -195,7 +195,7 @@ export const getSubjectMarkingCriteria = async (
   let programQuery = getSheetData({
     sheetID,
     sheetName: "Materia",
-    query: `SELECT G,H WHERE B = "${subject}"`,
+    query: `SELECT F,G WHERE B = "${subject}"`,
   });
   const criteriaTable = (await programQuery) as Array<
     Record<string, string | number>

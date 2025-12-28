@@ -5,27 +5,27 @@ import Home from "../../../../components/sections/home/Home.astro";
 import Material from "../../../../components/sections/material/Material.astro";
 import Program from "../../../../components/sections/program/Program.astro";
 import Layout from "../../../../layouts/Layout.astro";
+import { fetchTemplateSubjects } from "../../../../scripts/APIcalls/subjectData";
 
-export function getStaticPaths() {
-  return [
-    {
-      params: { year: 2025, course: "NR5B" },
-      props: { dataSheetId: "1J8PaK3mKThrYYAUnk-ubEYHx1VWHZy9hcp_B7Yi3dNU" },
-    },
-    {
-      params: { year: 2025, course: "NR5E" },
-      props: { dataSheetId: "1J8PaK3mKThrYYAUnk-ubEYHx1VWHZy9hcp_B7Yi3dNU" },
-    },
-    {
-      params: { year: 2025, course: "NR5F" },
-      props: { dataSheetId: "1J8PaK3mKThrYYAUnk-ubEYHx1VWHZy9hcp_B7Yi3dNU" },
-    },
-  ];
+export async function getStaticPaths() {
+  const templateId = "CA-2";
+  const paths = await fetchTemplateSubjects(templateId);
+  // Change course to ca2Course to match param name
+  const cleanPaths = paths.map((path) => {
+    return {
+      ...path,
+      params: {
+        subject: path.params.subject,
+        year: path.params.year,
+        ca2Course: path.params.course,
+      },
+    };
+  });
+  return cleanPaths;
 }
 
 const { dataSheetId } = Astro.props;
-const { course, year } = Astro.params;
-const subject = "Sistemas Operativos";
+const { ca2Course, year, subject } = Astro.params;
 
 const items = [
   { name: "home", icon: "home", title: subject },
@@ -36,20 +36,20 @@ const items = [
 ---
 
 <Layout dataSheetId={dataSheetId}>
-  <Navbar course={course} subject={subject} items={items} />
+  <Navbar course={ca2Course} subject={subject} items={items} />
   <main
     class="relative grow bg-gray-50 border-y sm:border-r lg:border-l border-gray-300 sm:rounded-r-xl lg:rounded-l-xl overflow-hidden"
-    x-init={`$store.student.getStudentData('${subject}','${course}','${dataSheetId}')`}
+    x-init={`$store.course.setCourse('${ca2Course}');$store.student.getStudentData('${subject}',${year},'${dataSheetId}')`}
   >
     <Home
       subject={subject}
-      course={course}
+      course={ca2Course}
+      year={year}
       position={0}
       presentation={false}
-      multiCourse
     />
-    <Activities subject={subject} course={course} year={year} position={1} />
+    <Activities subject={subject} course={ca2Course} year={year} position={1} />
     <Program subject={subject} year={year} position={2} />
-    <Material subject={subject} position={3} />
+    <Material subject={subject} course={ca2Course} year={year} position={3} />
   </main>
 </Layout>

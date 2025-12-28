@@ -3,32 +3,41 @@ import SectionLayout from "../SectionLayout.astro";
 
 interface Props {
   subject: string;
+  course: string;
+  year: number;
   position: number;
 }
 
-const { subject, position } = Astro.props;
+const { subject, course, year, position } = Astro.props;
 ---
 
 <script>
   import setAlpineData from "../../../scripts/alpine/setAlpineData";
   import type { PageDataStore } from "../../../scripts/alpine/stores/pageData";
-  import { getSubjectMaterial } from "../../../scripts/fetchData";
   import type { Material } from "../../../scripts/types";
+  import { fetchSubjectMaterial } from "../../../scripts/APIcalls/subjectData";
 
-  setAlpineData("materialData", (subject: string) => ({
-    materials: [] as Material[],
-    async init() {
-      this.materials = await getSubjectMaterial(
-        subject,
-        (Alpine.store("pageData") as PageDataStore).dataSheetId
-      );
-    },
-  }));
+  setAlpineData(
+    "materialData",
+    (subject: string, course: string, year: number) => ({
+      materials: [] as Material[],
+      async init() {
+        const datasheetId = (Alpine.store("pageData") as PageDataStore)
+          .dataSheetId;
+        this.materials = await fetchSubjectMaterial(
+          subject,
+          course,
+          year,
+          datasheetId
+        );
+      },
+    })
+  );
 </script>
 <SectionLayout
   name="material"
   position={position}
-  xData={`materialData('${subject}')`}
+  xData={`materialData('${subject}', '${course}', ${year})`}
 >
   <div
     class="flex flex-col md:grid gap-2 grid-cols-[repeat(auto-fill,minmax(300px,1fr))] auto-rows-fr"

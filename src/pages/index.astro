@@ -1,193 +1,121 @@
 ---
-import type { Course } from "../scripts/types";
 import Select from "../components/misc/select/Select.astro";
 import Radio from "../components/misc/radio/Radio.astro";
 import GithubLayout from "../layouts/GithubLayout.astro";
+import { fetchSubjects } from "../scripts/APIcalls/dashboard";
 
-const availableCourses: Course[] = [
-  {
-    name: "NR3A",
-    subject: "Tecnologías de la Información",
-    grade: 3,
-    division: "A",
-    year: 2025,
+const availableCourses = await fetchSubjects();
+// Modify available courses so that all divisions of a subject in a year are grouped together
+const availableSubjects = availableCourses.reduce(
+  (acc, course) => {
+    const existingSubject = acc.find(
+      (s) => s.subject === course.name && s.year === course.year
+    );
+    if (existingSubject) {
+      existingSubject.divisions.push({
+        name: course.division,
+        division: course.course,
+      });
+    } else {
+      acc.push({
+        subject: course.name,
+        year: course.year,
+        level: course.level,
+        divisions: [
+          {
+            name: course.division,
+            division: course.course,
+          },
+        ],
+      });
+    }
+    return acc;
   },
-  {
-    name: "NR3B",
-    subject: "Tecnologías de la Información",
-    grade: 3,
-    division: "B",
-    year: 2025,
-  },
-  {
-    name: "NR3C",
-    subject: "Tecnologías de la Información",
-    grade: 3,
-    division: "C",
-    year: 2025,
-  },
-  {
-    name: "NR3D",
-    subject: "Tecnologías de la Información",
-    grade: 3,
-    division: "D",
-    year: 2025,
-  },
-  {
-    name: "NR4C",
-    subject: "Bases de Datos",
-    grade: 4,
-    division: "C",
-    year: 2025,
-  },
-  {
-    name: "NR4E",
-    subject: "Bases de Datos",
-    grade: 4,
-    division: "E",
-    year: 2025,
-  },
-  {
-    name: "NR5A",
-    subject: "Desarrollo de Aplicaciones Informáticas",
-    grade: 5,
-    division: "A",
-    year: 2025,
-  },
-  {
-    name: "NR5B",
-    subject: "Desarrollo de Aplicaciones Informáticas",
-    grade: 5,
-    division: "B",
-    year: 2025,
-  },
-  {
-    name: "NR5C",
-    subject: "Desarrollo de Aplicaciones Informáticas",
-    grade: 5,
-    division: "C",
-    year: 2025,
-  },
-  {
-    name: "NR5D",
-    subject: "Desarrollo de Aplicaciones Informáticas",
-    grade: 5,
-    division: "D",
-    year: 2025,
-  },
-  {
-    name: "NR5E",
-    subject: "Desarrollo de Aplicaciones Informáticas",
-    grade: 5,
-    division: "E",
-    year: 2025,
-  },
-  {
-    name: "NR5F",
-    subject: "Desarrollo de Aplicaciones Informáticas",
-    grade: 5,
-    division: "F",
-    year: 2025,
-  },
-  {
-    name: "NR5B",
-    subject: "Sistemas Operativos",
-    grade: 5,
-    division: "B",
-    year: 2025,
-  },
-  {
-    name: "NR5E",
-    subject: "Sistemas Operativos",
-    grade: 5,
-    division: "E",
-    year: 2025,
-  },
-  {
-    name: "NR5F",
-    subject: "Sistemas Operativos",
-    grade: 5,
-    division: "F",
-    year: 2025,
-  },
-  {
-    name: "NR5B",
-    subject: "Sistemas Embebidos",
-    grade: 5,
-    division: "B",
-    year: 2025,
-  },
-  {
-    name: "NR5D",
-    subject: "Sistemas Embebidos",
-    grade: 5,
-    division: "D",
-    year: 2025,
-  },
-  {
-    name: "NR3",
-    subject: "Proyecto",
-    grade: 3,
-    division: "ABCD",
-    year: 2025,
-  },
-  {
-    name: "NR5Z",
-    subject: "Materia de Prueba",
-    grade: 5,
-    division: "Z",
-    year: 0,
-  },
-];
-
-const years = availableCourses.map((course) => course.year);
-const uniqueYears = [...new Set(years)].map((year) => ({
-  value: year,
-  label: year.toString(),
-}));
-
-interface FilterableCourse {
-  year: number;
-  grade: number;
-  subject: string;
-  divisions: Array<{
-    name: string;
-    division: string;
-  }>;
-}
-
-const filterableCourses = availableCourses.reduce((acc, course) => {
-  const year = course.year;
-  const grade = course.grade;
-  const division = course.division;
-  const subject = course.subject;
-  let selectedCourse = acc.find(
-    (c) => c.year === year && c.grade === grade && c.subject === subject
-  );
-  if (!selectedCourse) {
-    selectedCourse = {
-      year,
-      grade,
-      subject,
-      divisions: [{ name: course.name, division }],
-    };
-    acc.push(selectedCourse);
-  } else {
-    selectedCourse.divisions.push({ name: course.name, division });
-  }
-  return acc;
-}, [] as FilterableCourse[]);
-filterableCourses.forEach((course) => {
-  course.divisions.sort((a, b) => a.division.localeCompare(b.division));
-});
-filterableCourses.sort((a, b) => {
-  return a.subject.localeCompare(b.subject);
-});
+  [] as {
+    subject: string;
+    year: number;
+    level: number;
+    divisions: { name: string; division: string }[];
+  }[]
+);
 ---
+
+<script>
+  type Subject = {
+    subject: string;
+    year: number;
+    level: number;
+    divisions: { name: string; division: string }[];
+  };
+  document.addEventListener("alpine:init", () => {
+    Alpine.data("pagesIndex", (availableSubjects: Subject[]) => ({
+      years: [] as { value: number; label: string }[],
+      filter: {
+        year: NaN,
+        level: NaN,
+      },
+      availableSubjects: availableSubjects,
+      init() {
+        // Get unique years from available subjects
+        const yearsSet = new Set<number>();
+        this.availableSubjects.forEach((subject) => {
+          yearsSet.add(subject.year);
+        });
+        this.years = Array.from(yearsSet)
+          .sort((a, b) => b - a)
+          .map((year) => {
+            return { value: year, label: year.toString() };
+          });
+        // Set default filter values
+        this.filter.year = this.years[0].value;
+        // Watch filter.year changes to reset filter.level
+        this.$watch("filter.year", (value: number, oldValue: number) => {
+          this.filter.level = NaN;
+        });
+      },
+      get filteredSubjects() {
+        return this.availableSubjects.filter((subject) => {
+          let yearFilter = true;
+          let levelFilter = true;
+          if (!isNaN(this.filter.year)) {
+            yearFilter = subject.year === this.filter.year;
+          }
+          if (!isNaN(this.filter.level)) {
+            levelFilter = subject.level === this.filter.level;
+          }
+          return yearFilter && levelFilter;
+        });
+      },
+      get levelOptions() {
+        let options = [
+          { value: 3, label: "3", disabled: true },
+          { value: 4, label: "4", disabled: true },
+          { value: 5, label: "5", disabled: true },
+        ];
+        // Change disabled status of those options that are present in of the current year
+        if (!isNaN(this.filter.year)) {
+          const levelsInYear = new Set<number>();
+          this.availableSubjects.forEach((subject) => {
+            if (subject.year === this.filter.year) {
+              levelsInYear.add(subject.level);
+            }
+          });
+          options = options.map((option) => {
+            if (levelsInYear.has(option.value)) {
+              return { ...option, disabled: false };
+            }
+            return option;
+          });
+        }
+        return options;
+      },
+    }));
+  });
+</script>
 
 <GithubLayout>
   <div
-    x-data={`{ courses: ${JSON.stringify(availableCourses)}}`}
+    x-data={`pagesIndex(${JSON.stringify(availableSubjects)})`}
     class="grow w-full bg-gray-50 z-50 flex flex-col items-center justify-center"
     x-transition:leave="transition ease-out duration-300"
     x-transition:leave-start="opacity-100"
@@ -200,25 +128,17 @@ filterableCourses.sort((a, b) => {
       <h2 class="text-[16px] md:text-[20px] pb-4">
         Estas son las materias disponibles
       </h2>
-      <form
-        x-data={`{year: ${uniqueYears[0].value}, grade: undefined, visibleCourses: []}`}
-        class="flex flex-col gap-y-4 w-full px-8"
-        x-effect=`if(year !== undefined && grade !== undefined){visibleCourses = ${JSON.stringify(filterableCourses)}.filter(course => course.year === year && course.grade === grade)}`
-      >
+      <form class="flex flex-col gap-y-4 w-full px-8">
         <div class="flex flex-col gap-y-4 py-2 md:flex-row md:gap-x-8 w-full">
           <Select
-            options={uniqueYears}
+            options="years"
             title="Año"
-            xModel="year"
+            xModel="filter.year"
             className="w-full md:w-1/4"
           />
           <Radio
-            options={[
-              { value: 3, label: "3" },
-              { value: 4, label: "4" },
-              { value: 5, label: "5" },
-            ]}
-            xModel="grade"
+            options="levelOptions"
+            xModel="filter.level"
             title="Año escolar"
             className="w-full md:w-1/4"
           />
@@ -228,11 +148,11 @@ filterableCourses.sort((a, b) => {
         >
           <span
             class="w-full font-bold text-[20px] text-center"
-            x-show="year === undefined || grade === undefined"
-            >Elegí el año y el año escolar</span
+            x-show="isNaN(filter.year) || isNaN(filter.level)"
+            >Elegí el año y el nivel escolar</span
           >
-          <template x-if="visibleCourses.length > 0">
-            <template x-for="course in visibleCourses">
+          <template x-if="!isNaN(filter.year) && !isNaN(filter.level)">
+            <template x-for="course in filteredSubjects" :key="course.subject">
               <div class="flex flex-col gap-2 w-full">
                 <span
                   class="w-full font-bold text-[20px] text-center md:text-left"
@@ -240,12 +160,12 @@ filterableCourses.sort((a, b) => {
                 <div class="flex gap-2 w-full flex-wrap">
                   <template x-for="division in course.divisions">
                     <a
-                      :href="`${$store.pageData.dataURL}/${course.year}/${course.subject}/${division.name}`"
+                      :href="`${$store.pageData.dataURL}/${course.year}/${course.subject}/${division.division}`"
                       class="flex gap-x-4 py-2 px-4 rounded-xl bg-gray-300 cursor-pointer hover:shadow-lg"
                     >
                       <span
                         class="text-[16px] text-sh-dark-gray"
-                        x-text="course.grade + division.division"></span>
+                        x-text="course.level + division.name"></span>
                     </a>
                   </template>
                 </div>
