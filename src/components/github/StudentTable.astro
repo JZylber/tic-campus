@@ -25,14 +25,18 @@ import Select from "../../components/misc/select/Select.astro";
           return 0;
         });
         this.courses = this.courses.concat(
-          [...new Set(this.students.map((student) => student.course))].map(
-            (course) => {
+          [...new Set(this.students.map((student) => student.course))]
+            .map((course) => {
               return {
                 value: course,
                 label: course,
               };
-            }
-          )
+            })
+            .sort((a, b) => {
+              if (a.label < b.label) return -1;
+              if (a.label > b.label) return 1;
+              return 0;
+            })
         );
         this.years = this.years.concat(
           [...new Set(this.students.map((student) => student.year))]
@@ -51,35 +55,45 @@ import Select from "../../components/misc/select/Select.astro";
       });
     },
     get filteredStudents() {
-      return this.students.filter((s) => {
-        let courseFilter = true;
-        let textFilter = true;
-        let yearFilter = true;
-        let normalizedText = this.filter.text
-          .toLowerCase()
-          .normalize("NFD")
-          .replace(/[\u0300-\u036f]/g, "");
-        if (this.filter.text !== "") {
-          textFilter =
-            s.name
-              .toLowerCase()
-              .normalize("NFD")
-              .replace(/[\u0300-\u036f]/g, "")
-              .includes(normalizedText) ||
-            s.surname
-              .toLowerCase()
-              .normalize("NFD")
-              .replace(/[\u0300-\u036f]/g, "")
-              .includes(normalizedText);
-        }
-        if (this.filter.course !== "") {
-          courseFilter = s.course === this.filter.course;
-        }
-        if (!isNaN(this.filter.year)) {
-          yearFilter = s.year === this.filter.year;
-        }
-        return yearFilter && textFilter && courseFilter;
-      });
+      return this.students
+        .filter((s) => {
+          let courseFilter = true;
+          let textFilter = true;
+          let yearFilter = true;
+          let normalizedText = this.filter.text
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "");
+          if (this.filter.text !== "") {
+            textFilter =
+              s.name
+                .toLowerCase()
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .includes(normalizedText) ||
+              s.surname
+                .toLowerCase()
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .includes(normalizedText);
+          }
+          if (this.filter.course !== "") {
+            courseFilter = s.course === this.filter.course;
+          }
+          if (!isNaN(this.filter.year)) {
+            yearFilter = s.year === this.filter.year;
+          }
+          return yearFilter && textFilter && courseFilter;
+        })
+        .sort((a, b) => {
+          if (a.year > b.year) return -1;
+          if (a.year < b.year) return 1;
+          if (a.course < b.course) return -1;
+          if (a.course > b.course) return 1;
+          if (a.surname < b.surname) return -1;
+          if (a.surname > b.surname) return 1;
+          return 0;
+        });
     },
   }));
 </script>
