@@ -1,4 +1,7 @@
-import { fetchStudentMarksAndCriteria } from "../../APIcalls/studentData";
+import {
+  fetchRevisionRequests,
+  fetchStudentMarksAndCriteria,
+} from "../../APIcalls/studentData";
 import {
   getActivitiesAndMarks,
   getRedos,
@@ -33,7 +36,7 @@ const studentMarkStore = () => ({
       inRevisionIds,
     ] = await Promise.all([
       fetchStudentMarksAndCriteria(subject, course, year, id, dataSheetId),
-      getRedos(level, this.student.name, this.student.surname, dataSheetId),
+      fetchRevisionRequests(name, surname, subject, course, year, dataSheetId),
     ]);
     this.student.setProportion(subject, proportion);
     activities.forEach((activity) => {

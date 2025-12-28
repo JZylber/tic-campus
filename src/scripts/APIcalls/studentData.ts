@@ -86,3 +86,35 @@ export async function fetchStudentMarksAndCriteria(
     };
   }
 }
+
+export async function fetchRevisionRequests(
+  name: string,
+  surname: string,
+  subject: string,
+  course: string,
+  year: number,
+  datasheetId: string
+): Promise<string[]> {
+  try {
+    // URL is subject/course/year and datasheetId, name and surname go as query params
+    const response = await fetch(
+      `${backendURL}/revisionRequests/${encodeURIComponent(
+        subject
+      )}/${encodeURIComponent(course)}/${year}?datasheetId=${encodeURIComponent(
+        datasheetId
+      )}&name=${encodeURIComponent(name)}&surname=${encodeURIComponent(
+        surname
+      )}`
+    );
+    if (!response.ok) {
+      throw new Error(
+        `Error fetching revision requests: ${response.statusText}`
+      );
+    }
+    const data: string[] = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Failed to fetch revision requests:", error);
+    return [];
+  }
+}
