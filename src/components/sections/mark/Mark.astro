@@ -10,10 +10,11 @@ import AverageMark from "./summary/AverageMark.astro";
 
 interface Props {
   subject: string;
+  year: number;
   position: number;
 }
 
-const { position, subject } = Astro.props;
+const { position, subject, year } = Astro.props;
 ---
 
 <script>
@@ -31,7 +32,7 @@ const { position, subject } = Astro.props;
 </script>
 <template
   x-if="!$store.marks.loading"
-  x-effect=`if($store.student.id){$store.marks.start('${subject}',$store.student.name,$store.student.surname,$store.student.course,$store.student.id)}`
+  x-effect=`if($store.student.id){$store.marks.start('${subject}',$store.student.name,$store.student.surname,$store.student.course,${year},$store.student.id)}`
 >
   <SectionLayout name="nota" position={position}>
     <h1 class="text-[36px] font-bold text-center p-4">Nota</h1>
