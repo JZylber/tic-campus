@@ -47,14 +47,6 @@ export interface RedoActivity extends MarkedActivity {
   coveredActivities: string[];
 }
 
-export interface Course {
-  name: string;
-  subject: string;
-  grade: number;
-  division: string;
-  year: number;
-}
-
 export interface Material {
   name: string;
   link: string;
@@ -67,6 +59,7 @@ export enum Term {
   "1B" = "1B",
   "1C" = "1C",
   "3B" = "3B",
+  "Final" = "F",
 }
 
 export interface FixedMark {

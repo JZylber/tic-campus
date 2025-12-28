@@ -1,50 +1,24 @@
 ---
+import { fetchHomeLinks } from "../../../scripts/APIcalls/subjectData";
+import Loader from "../../loader/Loader.astro";
 import SectionLayout from "../SectionLayout.astro";
 interface Props {
   subject: string;
   course: string;
   position: number;
   presentation: boolean;
-  multiCourse?: boolean;
+  year: number;
 }
 
-const { subject, course, position, presentation, multiCourse } = Astro.props;
+const { subject, course, position, presentation, year } = Astro.props;
+const { group: groupLink, presentation: presentationLink } =
+  await fetchHomeLinks(subject, course, year);
 ---
 
-<script>
-  import setAlpineData from "../../../scripts/alpine/setAlpineData";
-  import type { PageDataStore } from "../../../scripts/alpine/stores/pageData";
-  import {
-    getCourseGroupLink,
-    getSubjectPresentation,
-  } from "../../../scripts/fetchData";
-
-  setAlpineData(
-    "homeData",
-    (multicourse: boolean, course: string, subject: string) => ({
-      groupLink: "",
-      presentationLink: "",
-      async init() {
-        const dataSheetId = (Alpine.store("pageData") as PageDataStore)
-          .dataSheetId;
-        const dataPromises = [];
-        if (!multicourse) {
-          dataPromises.push(getCourseGroupLink(course, dataSheetId));
-        } else {
-          dataPromises.push(getCourseGroupLink(course, dataSheetId, subject));
-        }
-        dataPromises.push(getSubjectPresentation(subject, dataSheetId));
-        const [groupLink, presentationLink] = await Promise.all(dataPromises);
-        this.groupLink = groupLink;
-        this.presentationLink = presentationLink;
-      },
-    })
-  );
-</script>
 <SectionLayout
   name="home"
   position={position}
-  xData=`homeData(${multiCourse ?? false},'${course}','${subject}')`
+  xData=`{groupLink: '${groupLink}', presentationLink: '${presentationLink}'}`
 >
   <header
     class="flex flex-col text-center lg:text-left lg:flex-row justify-between gap-4"
@@ -79,7 +53,6 @@ const { subject, course, position, presentation, multiCourse } = Astro.props;
       </a>
     </div>
   </header>
-
   <p class="text-gray-600 indent-8 text-[16px] md:text-[20px] text-justify">
     ¡Bienvenidos! Este es el campus de la materia. Acá vas a encontrar todas las
     actividades, las clases dadas y más material. Además, si sos un estudiante

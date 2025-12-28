@@ -17,7 +17,6 @@ const { subject, course, year, position } = Astro.props;
   import type { AlpineCourseStore } from "../../../scripts/alpine/stores/course";
   import type { PageDataStore } from "../../../scripts/alpine/stores/pageData";
   import type { AlpineStudentMarkStore } from "../../../scripts/alpine/stores/marks";
-  import { getSubjectData } from "../../../scripts/fetchData";
   import type {
     ClassActivity,
     Content,
@@ -26,10 +25,11 @@ const { subject, course, year, position } = Astro.props;
   } from "../../../scripts/types";
   import setAlpineData from "../../../scripts/alpine/setAlpineData";
   import type { AlpineComponent } from "alpinejs";
+  import { fetchSubjectData } from "../../../scripts/APIcalls/subjectData";
 
   setAlpineData(
     "activitiesData",
-    (subject: string, course: string, year: string) => ({
+    (subject: string, course: string, year: number) => ({
       unitsData: [] as Unit[],
       loading: true,
       currentContent: null,
@@ -39,7 +39,7 @@ const { subject, course, year, position } = Astro.props;
         const dataSheetId = (Alpine.store("pageData") as PageDataStore)
           .dataSheetId;
         this.unitsData = (
-          await getSubjectData(course, subject, dataSheetId)
+          await fetchSubjectData(subject, course, year, dataSheetId)
         ).reverse();
         const courseStore = Alpine.store("course") as AlpineCourseStore;
         courseStore.setActivities([...this.unitsData]);
@@ -190,7 +190,7 @@ const { subject, course, year, position } = Astro.props;
   <div
     class="w-full"
     id="activitiesSection"
-    x-data=`activitiesData('${subject}','${course}','${year}')`
+    x-data=`activitiesData('${subject}','${course}',${year})`
     @changedsection.window="articleOpen = false;"
   >
     <div class="w-full">

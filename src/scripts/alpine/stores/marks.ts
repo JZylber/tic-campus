@@ -1,8 +1,7 @@
 import {
-  getActivitiesAndMarks,
-  getRedos,
-  getSubjectMarkingCriteria,
-} from "../../fetchData";
+  fetchRevisionRequests,
+  fetchStudentMarksAndCriteria,
+} from "../../APIcalls/studentData";
 import { Student } from "../data/marks/markCalculations";
 import type { PageDataStore } from "./pageData";
 
@@ -15,20 +14,24 @@ const studentMarkStore = () => ({
     name: string,
     surname: string,
     course: string,
+    year: number,
     id: string
   ) {
     this.subject = subject;
     this.student = new Student(name, surname, id, course, [subject]);
     const dataSheetId = (Alpine.store("pageData") as PageDataStore).dataSheetId;
-    const year = parseInt(this.student.course[2]);
+    const level = parseInt(this.student.course[2]);
     const [
-      { activities, marks, studentRedos },
-      { proportion, specialActivities },
+      {
+        activities,
+        marks,
+        criteria: { proportion, specialActivities },
+        redos: studentRedos,
+      },
       inRevisionIds,
     ] = await Promise.all([
-      getActivitiesAndMarks(parseInt(this.student.id), dataSheetId),
-      getSubjectMarkingCriteria(subject, dataSheetId),
-      getRedos(year, this.student.name, this.student.surname, dataSheetId),
+      fetchStudentMarksAndCriteria(subject, course, year, id, dataSheetId),
+      fetchRevisionRequests(name, surname, subject, course, year, dataSheetId),
     ]);
     this.student.setProportion(subject, proportion);
     activities.forEach((activity) => {

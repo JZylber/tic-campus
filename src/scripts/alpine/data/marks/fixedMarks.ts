@@ -1,10 +1,10 @@
 import type { AlpineComponent } from "alpinejs";
-import { getFixedMarks } from "../../../fetchData";
 import type { PageDataStore } from "../../stores/pageData";
 import type { AlpineStudentStore } from "../../stores/student";
 import type { FixedMarks } from "../../../types";
+import { fetchFixedMarks } from "../../../APIcalls/studentData";
 
-const fixedMarksData = () =>
+const fixedMarksData = (subject: string, course: string, year: number) =>
   ({
     marks: undefined,
     loading: true,
@@ -12,8 +12,15 @@ const fixedMarksData = () =>
       const studentId = (Alpine.store("student") as AlpineStudentStore).id;
       const dataSheetId = (Alpine.store("pageData") as PageDataStore)
         .dataSheetId;
-      if (studentId !== -1) {
-        this.marks = await getFixedMarks(studentId, dataSheetId);
+      if (studentId !== "") {
+        this.marks = await fetchFixedMarks(
+          subject,
+          course,
+          year,
+          studentId,
+          dataSheetId
+        );
+        console.log("Fixed marks fetched:", this.marks);
         this.loading = false;
       }
     },
