@@ -1,8 +1,5 @@
 import type { Material, Unit } from "../types";
-
-const backendURL = import.meta.env.DEV
-  ? "http://localhost:3000"
-  : "https://tic-campus-backend.vercel.app";
+import { backendURL } from "./shared";
 
 type TemplatesResponse = Array<{
   Materia: string;

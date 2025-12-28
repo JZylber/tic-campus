@@ -2,6 +2,7 @@ import type { Alpine } from "alpinejs";
 import { courseRegex } from "./course";
 import type { PageDataStore } from "./pageData";
 import { getStudentData } from "../../fetchData";
+import { fetchStudentData } from "../../APIcalls/studentData";
 
 const studentStore = (Alpine: Alpine) => ({
   name: Alpine.$persist("")
@@ -16,9 +17,9 @@ const studentStore = (Alpine: Alpine) => ({
   subject: Alpine.$persist("")
     .using(sessionStorage)
     .as("student_subject") as unknown as string,
-  id: Alpine.$persist(-1)
+  id: Alpine.$persist("")
     .using(sessionStorage)
-    .as("student_id") as unknown as number,
+    .as("student_id") as unknown as string,
   activities: [],
   marks: [],
   markData: {
@@ -37,14 +38,14 @@ const studentStore = (Alpine: Alpine) => ({
     },
   },
   dataSheetId: "",
-  setStudent(name: string, surname: string, course: string, id: number) {
+  setStudent(name: string, surname: string, course: string, id: string) {
     if (!courseRegex.test(course)) {
       throw new Error(`Invalid course name: ${course}`);
     }
     this.name = name as string;
     this.surname = surname as string;
     this.course = course as string;
-    this.id = id as number;
+    this.id = id as string;
   },
   setSubject(subject: string) {
     this.subject = subject as string;
@@ -52,7 +53,7 @@ const studentStore = (Alpine: Alpine) => ({
   setDataSheetId(dataSheetId: string) {
     this.dataSheetId = dataSheetId as string;
   },
-  async getStudentData(subject: string, course: string, dataSheetId: string) {
+  async getStudentData(subject: string, year: number, dataSheetId: string) {
     this.setSubject(subject);
     this.setDataSheetId(dataSheetId);
     let studentName = null;
@@ -74,19 +75,24 @@ const studentStore = (Alpine: Alpine) => ({
     }
     let student = null;
     if (studentName) {
-      student = await getStudentData(
-        studentName.name,
-        studentName.surname,
-        course,
-        dataSheetId
+      const { course, id } = await fetchStudentData(
+        this.name,
+        this.surname,
+        year
       );
+      student = {
+        name: this.name,
+        surname: this.surname,
+        course,
+        id: id,
+      };
     }
     if (student) {
       this.setStudent(
         student.name,
         student.surname,
         student.course,
-        student.DNI
+        student.id
       );
     }
   },
