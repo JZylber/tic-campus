@@ -68,7 +68,7 @@ const { dataSheetId } = Astro.props;
       class="w-fill flex font-lato relative lg:gap-x-4"
       :class="{ 'h-[calc(100vh-64px-1rem)] sm:w-[95%] max-w-[1280px]': $store.pageData.onCampus,'h-screen': !$store.pageData.onCampus }"
       x-data="sectionData()"
-      x-init=`$store.pageData.setDataSheetId("${dataSheetId??""}"); console.log($data);`
+      x-init=`$store.pageData.setDataSheetId("${dataSheetId??""}")`
     >
       <slot />
     </div>
