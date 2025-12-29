@@ -1,7 +1,6 @@
 import type { Alpine } from "alpinejs";
 import { courseRegex } from "./course";
 import type { PageDataStore } from "./pageData";
-import { getStudentData } from "../../fetchData";
 import { fetchStudentData } from "../../APIcalls/studentData";
 
 const studentStore = (Alpine: Alpine) => ({
