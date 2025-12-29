@@ -20,7 +20,6 @@ const fixedMarksData = (subject: string, course: string, year: number) =>
           studentId,
           dataSheetId
         );
-        console.log("Fixed marks fetched:", this.marks);
         this.loading = false;
       }
     },
