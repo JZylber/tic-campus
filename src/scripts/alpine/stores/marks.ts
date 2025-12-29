@@ -58,24 +58,31 @@ const studentMarkStore = () => ({
     return { ...this.student!.getFinalMarkData(this.subject) };
   },
   get classActivities() {
-    return this.student!.getActivities(this.subject).filter(
-      (activity) => !activity.compulsory
+    return (
+      this.student
+        ?.getActivities(this.subject)
+        .filter((activity) => !activity.compulsory) || []
     );
   },
   get markedActivities() {
-    return this.student!.getMarkedActivities(this.subject);
+    return this.student?.getMarkedActivities(this.subject) || [];
   },
   get redos() {
-    return this.student!.getRedoActivities(this.subject);
+    return this.student?.getRedoActivities(this.subject) || [];
   },
   get specialActivitiesIds() {
-    return this.student!.getActivities(this.subject)
-      .filter((activity) => activity.compulsory)
-      .map((activity) => activity.id);
+    return (
+      this.student
+        ?.getActivities(this.subject)
+        .filter((activity) => activity.compulsory)
+        .map((activity) => activity.id) || []
+    );
   },
   specialActivities() {
-    return this.student!.getActivities(this.subject).filter(
-      (activity) => activity.compulsory
+    return (
+      this.student
+        ?.getActivities(this.subject)
+        .filter((activity) => activity.compulsory) || []
     );
   },
 });
