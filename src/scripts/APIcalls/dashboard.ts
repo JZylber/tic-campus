@@ -16,6 +16,7 @@ type Student = {
   email: string;
   year: number;
   course: string;
+  subjects: string[];
 };
 
 export async function fetchSubjects() {

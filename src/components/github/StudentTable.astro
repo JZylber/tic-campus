@@ -5,13 +5,22 @@ import Select from "../../components/misc/select/Select.astro";
 ---
 
 <script>
+  import type { AlpineStudentStore } from "../../scripts/alpine/stores/student";
   import { fetchStudents } from "../../scripts/APIcalls/dashboard";
+  type Students = Awaited<ReturnType<typeof fetchStudents>>;
+  type Student = Students[number];
+
   Alpine.data("studentsPage", () => ({
     loading: true,
-    students: [] as Awaited<ReturnType<typeof fetchStudents>>,
+    students: [] as Students,
     courses: [{ value: "", label: "Todos" }],
     years: [{ value: NaN, label: "Todos" }],
     filter: { course: "", text: "", year: NaN },
+    selectedStudent: {
+      availableSubjects: [] as string[],
+      year: NaN,
+      course: "",
+    },
     init() {
       fetchStudents().then((students) => {
         // Sort students by year (des), course (asc), surname (asc)
@@ -95,13 +104,50 @@ import Select from "../../components/misc/select/Select.astro";
           return 0;
         });
     },
+    selectStudent(student: Student) {
+      this.selectedStudent.year = student.year;
+      this.selectedStudent.course = student.course;
+      this.selectedStudent.availableSubjects = student.subjects;
+      const studentStore = Alpine.store("student") as AlpineStudentStore;
+      studentStore.setStudent(
+        student.name,
+        student.surname,
+        student.course,
+        student.id
+      );
+      studentStore.setSubject("");
+    },
   }));
 </script>
 <div class="w-full flex justify-center py-4" x-data="studentsPage()">
   <Loader show="loading" />
+  <dialog
+    class="m-auto w-1/2 h-3/4 rounded-2xl border-2 border-gray-300 p-4"
+    x-ref="subjectsDialog"
+  >
+    <div class="flex justify-end">
+      <span
+        class="material-symbols-outlined cursor-pointer"
+        @click="$refs.subjectsDialog.close()">cancel</span
+      >
+    </div>
+    <h2 class="text-2xl font-bold text-center mb-4">Materias Disponibles</h2>
+
+    <div class="overflow-y-scroll flex flex-col gap-4 p-4 items-center">
+      <template x-for="subject in selectedStudent.availableSubjects">
+        <a
+          :href="`${$store.pageData.dataURL}/${selectedStudent.year}/${subject}/${selectedStudent.course}`"
+          class="flex gap-x-4 py-2 px-4 rounded-xl bg-gray-300 cursor-pointer hover:shadow-lg w-fit"
+        >
+          <span class="text-[16px] text-sh-dark-gray" x-text="subject"></span>
+        </a>
+      </template>
+    </div>
+  </dialog>
+
   <div class="w-full flex flex-col gap-y-4" x-show="!loading">
     <div class="flex w-full gap-x-8">
-      <div class={`flex flex-col items-center md:items-start gap-2`}>
+      <div class={`flex flex-col items-center md:items-start gap-2 px-4`}>
         <label
           class="text-center md:text-left text-sh-dark-gray text-[16px] font-semibold"
           >Nombre y Apellido</label
@@ -147,7 +193,7 @@ import Select from "../../components/misc/select/Select.astro";
         <template x-for="student in filteredStudents">
           <tr
             class="border-b-2 border-gray-300 hover:bg-gray-300 cursor-pointer"
-            @click="$store.student.setStudent(student.name, student.surname, student.course, student.id)"
+            @click="selectStudent(student);$refs.subjectsDialog.showModal()"
           >
             <td class="px-4 py-2" x-text="student.name"></td>
             <td class="px-4 py-2" x-text="student.surname"></td>
