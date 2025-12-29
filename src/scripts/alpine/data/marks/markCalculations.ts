@@ -9,6 +9,7 @@ import {
 } from "../../../fetchData";
 import type {
   ClassActivity,
+  FixedMarks,
   MarkedActivity,
   RedoActivity,
 } from "../../../types";
@@ -35,6 +36,7 @@ export class Student {
       classActivities: ClassActivity[];
       markedActivities: MarkedActivity[];
       redoActivities: RedoActivity[];
+      fixedMarks: FixedMarks;
       redos: Record<string, number>;
       finalMark: MarkData;
     }
@@ -59,6 +61,12 @@ export class Student {
         markedActivities: [],
         redoActivities: [],
         redos: {},
+        fixedMarks: {
+          "1B": undefined,
+          "1C": undefined,
+          "3B": undefined,
+          F: undefined,
+        },
         finalMark: {
           averageMark: 0,
           classActivitiesContribution: 0,
@@ -118,6 +126,9 @@ export class Student {
         classActivity.madeUp = true;
       }
     });
+  }
+  setFixedMarks(subject: string, fixedMarks: FixedMarks) {
+    this.subjectData[subject].fixedMarks = fixedMarks;
   }
   setProportion(subject: string, proportion: number) {
     this.subjectData[subject].finalMark.proportion = proportion;
@@ -239,6 +250,9 @@ export class Student {
   }
   getRedoActivities(subject: string) {
     return this.subjectData[subject].redoActivities;
+  }
+  getFixedMarks(subject: string) {
+    return this.subjectData[subject].fixedMarks;
   }
   getSubjects() {
     return Object.keys(this.subjectData);

@@ -21,7 +21,6 @@ const { position, subject, course, year } = Astro.props;
 <script>
   import studentMarkStore from "../../../scripts/alpine/stores/marks";
   import markSummaryData from "../../../scripts/alpine/data/marks/markSummary";
-  import fixedMarksData from "../../../scripts/alpine/data/marks/fixedMarks";
   import redosMarkData from "../../../scripts/alpine/data/marks/redos";
   import setAlpineStore from "../../../scripts/alpine/setAlpineStore";
   import setAlpineData from "../../../scripts/alpine/setAlpineData";
@@ -29,7 +28,6 @@ const { position, subject, course, year } = Astro.props;
   setAlpineStore("marks", studentMarkStore());
   setAlpineData("markSummary", markSummaryData);
   setAlpineData("redoMarkData", redosMarkData);
-  setAlpineData("fixedMarks", fixedMarksData);
 </script>
 <template
   x-if="!$store.marks.loading"
@@ -43,6 +41,6 @@ const { position, subject, course, year } = Astro.props;
     <CompulsoryActivities />
     <MarkedActivities />
     <ClassActivities />
-    <FixedMarks subject={subject} course={course} year={year} />
+    <FixedMarks />
   </SectionLayout>
 </template>

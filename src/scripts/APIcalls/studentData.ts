@@ -45,6 +45,7 @@ export async function fetchStudentMarksAndCriteria(
   marks: Array<MarkedActivity>;
   activities: Array<ClassActivity>;
   redos: Array<RedoActivity>;
+  fixedMarks: FixedMarks;
 }> {
   try {
     const response = await fetch(
@@ -57,8 +58,13 @@ export async function fetchStudentMarksAndCriteria(
     if (!response.ok) {
       throw new Error(`Error fetching student marks: ${response.statusText}`);
     }
-    const { criteria, markedActivities, classActivities, redoActivities } =
-      await response.json();
+    const {
+      criteria,
+      markedActivities,
+      classActivities,
+      redoActivities,
+      fixedMarks,
+    } = await response.json();
     // Make all marks, activities and redos have both madeUp and inRevision set to false
     markedActivities.forEach((mark: MarkedActivity) => {
       mark.madeUp = false;
@@ -80,6 +86,7 @@ export async function fetchStudentMarksAndCriteria(
       marks: markedActivities,
       activities: classActivities,
       redos: redoActivities,
+      fixedMarks,
     };
   } catch (error) {
     console.error("Failed to fetch student marks:", error);
@@ -88,6 +95,12 @@ export async function fetchStudentMarksAndCriteria(
       marks: [],
       activities: [],
       redos: [],
+      fixedMarks: {
+        "1B": undefined,
+        "1C": undefined,
+        "3B": undefined,
+        F: undefined,
+      },
     };
   }
 }
@@ -121,31 +134,5 @@ export async function fetchRevisionRequests(
   } catch (error) {
     console.error("Failed to fetch revision requests:", error);
     return [];
-  }
-}
-
-export async function fetchFixedMarks(
-  subject: string,
-  course: string,
-  year: number,
-  studentId: string,
-  datasheetId?: string
-): Promise<FixedMarks> {
-  try {
-    const response = await fetch(
-      `${backendURL}/fixedMarks/${encodeURIComponent(
-        subject
-      )}/${encodeURIComponent(course)}/${year}/${encodeURIComponent(
-        studentId
-      )}${datasheetId ? `?datasheetId=${encodeURIComponent(datasheetId)}` : ""}`
-    );
-    if (!response.ok) {
-      throw new Error(`Error fetching fixed marks: ${response.statusText}`);
-    }
-    const data: FixedMarks = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Failed to fetch fixed marks:", error);
-    return { "1B": undefined, "1C": undefined, "3B": undefined, F: undefined };
   }
 }

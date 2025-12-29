@@ -20,13 +20,13 @@ const studentMarkStore = () => ({
     this.subject = subject;
     this.student = new Student(name, surname, id, course, [subject]);
     const dataSheetId = (Alpine.store("pageData") as PageDataStore).dataSheetId;
-    const level = parseInt(this.student.course[2]);
     const [
       {
         activities,
         marks,
         criteria: { proportion, specialActivities },
         redos: studentRedos,
+        fixedMarks,
       },
       inRevisionIds,
     ] = await Promise.all([
@@ -34,6 +34,7 @@ const studentMarkStore = () => ({
       fetchRevisionRequests(name, surname, subject, course, year, dataSheetId),
     ]);
     this.student.setProportion(subject, proportion);
+    this.student.setFixedMarks(subject, fixedMarks);
     activities.forEach((activity) => {
       // Check if activity is special
       activity.compulsory = specialActivities.some(
@@ -69,6 +70,9 @@ const studentMarkStore = () => ({
   },
   get redos() {
     return this.student?.getRedoActivities(this.subject) || [];
+  },
+  get fixedMarks() {
+    return this.student?.getFixedMarks(this.subject) || {};
   },
   get specialActivitiesIds() {
     return (
