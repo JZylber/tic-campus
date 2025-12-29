@@ -31,12 +31,15 @@ export async function fetchTemplateSubjects(templateId: string): Promise<
         params: {
           subject: item.Materia,
           course: item.Curso,
-          year: Number(item.Año),
+          year: item.Año !== "" ? Number(item.Año) : NaN,
         },
         props: { dataSheetId: item["Spreadsheet ID"] },
       }))
       .filter(
-        (item) => item.params.subject && item.params.course && item.params.year
+        (item) =>
+          item.params.subject !== "" &&
+          item.params.course !== "" &&
+          !isNaN(item.params.year)
       );
     return cleanData;
   } catch (error) {
