@@ -75,8 +75,8 @@ const studentStore = (Alpine: Alpine) => ({
     let student = null;
     if (studentName) {
       const { course, id } = await fetchStudentData(
-        this.name,
-        this.surname,
+        studentName.name,
+        studentName.surname,
         year
       );
       student = {
