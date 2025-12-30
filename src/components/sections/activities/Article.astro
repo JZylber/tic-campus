@@ -66,6 +66,9 @@ const { open, articleURL, content, course } = Astro.props;
             el.remove();
           });
           const element = this.$refs.content as HTMLElement;
+          // Clear previous content
+          element.innerHTML = "";
+          // Set new content
           element.innerHTML += doc.body.innerHTML;
           const loadScripts = scripts.map((el, index) => {
             return new Promise((resolve, reject) => {
