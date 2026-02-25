@@ -87,7 +87,7 @@ const { open, articleURL, content, course } = Astro.props;
                 for (let i = 0; i < el.attributes.length; i++) {
                   newScript.setAttribute(
                     el.attributes[i].name,
-                    el.attributes[i].value
+                    el.attributes[i].value,
                   );
                 }
                 if (el.src) {
@@ -97,7 +97,7 @@ const { open, articleURL, content, course } = Astro.props;
                   ) {
                     newScript.src = el.src.replace(
                       "https://campus.ort.edu.ar/",
-                      baseURL
+                      baseURL,
                     );
                   } else {
                     newScript.src = el.src;
@@ -120,7 +120,7 @@ const { open, articleURL, content, course } = Astro.props;
         errorMessage: string;
         updateArticle: (content: Content, articleURL: string) => Promise<void>;
         initArticle: (rawHTML: string) => Promise<void>;
-      }>
+      }>,
   );
 </script>
 
@@ -140,7 +140,9 @@ const { open, articleURL, content, course } = Astro.props;
     class="flex justify-between w-full items-center py-2 mb-2 border-b-2 border-gray-300 sticky top-0 bg-gray-50 z-10"
   >
     <div class="flex gap-x-4 self-stretch">
-      <template x-if={`${content} && ${content}.repositoryURL !== ''`}>
+      <template
+        x-if={`${content} && ${content}.repositoryURL && ${content}.repositoryURL !== ''`}
+      >
         <a
           class="bg-sh-purple border-2 border-sh-dark-gray p-1 sm:px-3 sm:py-2 max-sm:aspect-square rounded-xl cursor-pointer flex justify-center gap-x-3 sm:w-36 items-center hover:shadow-md"
           x-bind:href={`${content}.repositoryURL`}
@@ -159,7 +161,9 @@ const { open, articleURL, content, course } = Astro.props;
           </svg>
         </a>
       </template>
-      <template x-if={`${content} && ${content}.handInURL !== ''`}>
+      <template
+        x-if={`${content} && ${content}.handInURL && ${content}.handInURL !== ''`}
+      >
         <a
           class="bg-sh-purple border-2 border-sh-dark-gray p-1 sm:px-3 sm:py-2 max-sm:aspect-square rounded-xl cursor-pointer flex justify-center gap-x-3 sm:w-36 items-center hover:shadow-md"
           x-bind:href={`${content}.handInURL`}
