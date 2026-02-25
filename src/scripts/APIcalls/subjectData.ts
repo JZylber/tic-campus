@@ -2,11 +2,13 @@ import type { Material, Unit } from "../types";
 import { backendURL } from "./shared";
 
 type TemplatesResponse = Array<{
-  Materia: string;
-  Curso: string;
-  Año: string;
-  "Spreadsheet ID": string;
-  "Id Template": string;
+  id: number;
+  name: string;
+  course: string;
+  year: string;
+  spreadsheet: string;
+  templateId: string;
+  marks: boolean;
 }>;
 
 export async function fetchTemplateSubjects(templateId: string): Promise<
@@ -17,11 +19,11 @@ export async function fetchTemplateSubjects(templateId: string): Promise<
 > {
   try {
     const response = await fetch(
-      `${backendURL}/subjects/${encodeURIComponent(templateId)}`
+      `${backendURL}/subjects/${encodeURIComponent(templateId)}`,
     );
     if (!response.ok) {
       throw new Error(
-        `Error fetching template subjects: ${response.statusText}`
+        `Error fetching template subjects: ${response.statusText}`,
       );
     }
     const data: TemplatesResponse = await response.json();
@@ -29,17 +31,17 @@ export async function fetchTemplateSubjects(templateId: string): Promise<
     const cleanData = data
       .map((item) => ({
         params: {
-          subject: item.Materia,
-          course: item.Curso,
-          year: item.Año !== "" ? Number(item.Año) : NaN,
+          subject: item.name,
+          course: item.course,
+          year: item.year !== "" ? Number(item.year) : NaN,
         },
-        props: { dataSheetId: item["Spreadsheet ID"] },
+        props: { dataSheetId: item.spreadsheet !== "" ? item.spreadsheet : "" },
       }))
       .filter(
         (item) =>
           item.params.subject !== "" &&
           item.params.course !== "" &&
-          !isNaN(item.params.year)
+          !isNaN(item.params.year),
       );
     return cleanData;
   } catch (error) {
@@ -52,15 +54,15 @@ export async function fetchSubjectData(
   subject: string,
   course: string,
   year: number,
-  dataSheetId?: string
+  dataSheetId?: string,
 ): Promise<Unit[]> {
   try {
     const response = await fetch(
       `${backendURL}/articles/${encodeURIComponent(
-        subject
+        subject,
       )}/${encodeURIComponent(course)}/${year}${
         dataSheetId ? `?dataSheetId=${encodeURIComponent(dataSheetId)}` : ""
-      }`
+      }`,
     );
     if (!response.ok) {
       throw new Error(`Error fetching subject data: ${response.statusText}`);
@@ -76,7 +78,7 @@ export async function fetchSubjectData(
 export async function fetchHomeLinks(
   subject: string,
   course: string,
-  year: number
+  year: number,
 ): Promise<{
   group: string;
   presentation: string;
@@ -84,8 +86,8 @@ export async function fetchHomeLinks(
   try {
     const response = await fetch(
       `${backendURL}/homeLinks/${encodeURIComponent(
-        subject
-      )}/${encodeURIComponent(course)}/${year}`
+        subject,
+      )}/${encodeURIComponent(course)}/${year}`,
     );
     if (!response.ok) {
       throw new Error(`Error fetching home links: ${response.statusText}`);
@@ -101,7 +103,7 @@ export async function fetchHomeLinks(
 export async function fetchRedoLinks(
   subject: string,
   course: string,
-  year: number
+  year: number,
 ): Promise<{
   activities: string;
   markedActivities: string;
@@ -109,8 +111,8 @@ export async function fetchRedoLinks(
   try {
     const response = await fetch(
       `${backendURL}/redoLinks/${encodeURIComponent(
-        subject
-      )}/${encodeURIComponent(course)}/${year}`
+        subject,
+      )}/${encodeURIComponent(course)}/${year}`,
     );
     if (!response.ok) {
       throw new Error(`Error fetching redo links: ${response.statusText}`);
@@ -127,19 +129,19 @@ export async function fetchSubjectMaterial(
   subject: string,
   course: string,
   year: number,
-  dataSheetId?: string
+  dataSheetId?: string,
 ): Promise<Material[]> {
   try {
     const response = await fetch(
       `${backendURL}/material/${encodeURIComponent(
-        subject
+        subject,
       )}/${encodeURIComponent(course)}/${year}${
         dataSheetId ? `?dataSheetId=${encodeURIComponent(dataSheetId)}` : ""
-      }`
+      }`,
     );
     if (!response.ok) {
       throw new Error(
-        `Error fetching subject material: ${response.statusText}`
+        `Error fetching subject material: ${response.statusText}`,
       );
     }
     const data = await response.json();
