@@ -28,21 +28,33 @@ const filteredCourses = availableCourses.filter((course) => {
 <Layout xData="{division: ''}">
   <template x-if="division === ''">
     <main
-      class="relative grow bg-gray-50 border-y sm:border-r lg:border-l border-gray-300 sm:rounded-r-xl lg:rounded-l-xl overflow-hidden"
+      class="relative grow bg-gray-50 border-y sm:border-r lg:border-l border-gray-300 sm:rounded-r-xl lg:rounded-l-xl overflow-hidden flex flex-col items-center text-center gap-y-8 p-8"
     >
-      <h1 class="text-[30px] font-bold text-center py-8">Grupo</h1>
-      <div class="flex flex-col items-center gap-y-4">
+      <h1 class="text-[40px] md:text-[60px] font-bold m-0 lg:max-w-[75%]">
+        Tecnologías de la Información
+      </h1>
+      <h2 class="text-[20px] md:text-[30px]">Elegí el grupo que querés ver</h2>
+      <div class="flex justify-center gap-y-4 gap-x-10">
         <template
           x-for=`course in ${JSON.stringify(filteredCourses)}`
           :key="course.course"
         >
           <div
+            class="bg-sh-purple text-white rounded-2xl py-4 px-8 cursor-pointer hover:shadow-lg flex items-center justify-center"
             @click="division = course.division;$store.pageData.setDataSheetId(course.spreadsheetId)"
           >
-            <span class="text-[20px]" x-text="course.division"></span>
+            <span
+              class="text-[20px] md:text-[30px] font-bold"
+              x-text="course.division"></span>
           </div>
         </template>
       </div>
+      <p class="lg:max-w-[75%]">
+        Si sos un alumno de 3ero TIC, y estás logueado en el campus, quiere
+        decir que el sistema no te reconoció. Eso hace que te pierdas algunas
+        funcionalidades del Campus. Hablale a Shulian o Luu para que lo
+        arreglen.
+      </p>
     </main>
   </template>
   {
