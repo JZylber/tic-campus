@@ -1,0 +1,82 @@
+---
+import Lu from "../../../components/templates/lu.astro";
+import Shulian3 from "../../../components/templates/shulian3.astro";
+import Layout from "../../../layouts/Layout.astro";
+
+import { fetchSubjects } from "../../../scripts/APIcalls/dashboard";
+
+export async function getStaticPaths() {
+  return [
+    {
+      params: {
+        year: "2026",
+      },
+    },
+  ];
+}
+
+const { year } = Astro.params;
+
+const subjects = ["Tecnologías de la Información"];
+const availableCourses = await fetchSubjects();
+// Keep only courses that match the years and subjects we want
+const filteredCourses = availableCourses.filter((course) => {
+  return course.year === Number(year) && subjects.includes(course.name);
+});
+---
+
+<Layout xData="{division: ''}">
+  <template x-if="division === ''">
+    <main
+      class="relative grow bg-gray-50 border-y sm:border-r lg:border-l border-gray-300 sm:rounded-r-xl lg:rounded-l-xl overflow-hidden"
+    >
+      <h1 class="text-[30px] font-bold text-center py-8">Grupo</h1>
+      <div class="flex flex-col items-center gap-y-4">
+        <template
+          x-for=`course in ${JSON.stringify(filteredCourses)}`
+          :key="course.course"
+        >
+          <div
+            @click="division = course.division;$store.pageData.setDataSheetId(course.spreadsheetId)"
+          >
+            <span class="text-[20px]" x-text="course.division"></span>
+          </div>
+        </template>
+      </div>
+    </main>
+  </template>
+  {
+    filteredCourses
+      .filter((c) => c.template === "SH")
+      .map((div) => (
+        <div
+          class="w-full flex relative lg:gap-x-4"
+          x-show={`division === '${div.division}'`}
+        >
+          <Shulian3
+            subject="Tecnologías de la Información"
+            course={div.course}
+            year={Number(year)}
+            dataSheetId={div.spreadsheetId}
+          />
+        </div>
+      ))
+  }
+  {
+    filteredCourses
+      .filter((c) => c.template === "LU")
+      .map((div) => (
+        <div
+          class="w-full flex relative lg:gap-x-4"
+          x-show={`division === '${div.division}'`}
+        >
+          <Lu
+            subject="Tecnologías de la Información"
+            course={div.course}
+            year={Number(year)}
+            dataSheetId={div.spreadsheetId}
+          />
+        </div>
+      ))
+  }
+</Layout>

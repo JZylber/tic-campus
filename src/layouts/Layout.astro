@@ -3,9 +3,10 @@ import "../styles/global.css";
 
 interface Props {
   dataSheetId?: string;
+  xData?: string;
 }
 
-const { dataSheetId } = Astro.props;
+const { dataSheetId, xData } = Astro.props;
 ---
 
 <script>
@@ -20,7 +21,7 @@ const { dataSheetId } = Astro.props;
     menu: [] as Menu,
     init() {
       let leftovers = document.querySelectorAll(
-        "#leftoverinformation a.breadcrumb"
+        "#leftoverinformation a.breadcrumb",
       ) as NodeListOf<HTMLAnchorElement>;
       if (leftovers.length > 0) {
         leftovers.forEach((el) => {
@@ -28,7 +29,7 @@ const { dataSheetId } = Astro.props;
         });
       }
       let menuLeftoverLinks = document.querySelectorAll(
-        "#leftoverinformation ul a"
+        "#leftoverinformation ul a",
       ) as NodeListOf<HTMLAnchorElement>;
       if (menuLeftoverLinks.length > 0) {
         menuLeftoverLinks.forEach((el) => {
@@ -67,7 +68,7 @@ const { dataSheetId } = Astro.props;
     <div
       class="w-fill flex font-lato relative lg:gap-x-4"
       :class="{ 'h-[calc(100vh-64px-1rem)] sm:w-[95%] max-w-[1280px]': $store.pageData.onCampus,'h-screen': !$store.pageData.onCampus }"
-      x-data="sectionData()"
+      x-data=`{...sectionData(),...${xData ?? {}}}`
       x-init=`$store.pageData.setDataSheetId("${dataSheetId??""}")`
     >
       <slot />

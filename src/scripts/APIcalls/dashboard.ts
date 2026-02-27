@@ -6,6 +6,8 @@ export type Subject = {
   level: number;
   division: string;
   year: number;
+  spreadsheetId: string;
+  template: string;
 };
 
 type Student = {
