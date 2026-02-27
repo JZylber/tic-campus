@@ -1,6 +1,6 @@
 import type { Unit } from "../../types";
 
-export const courseRegex = /NR\d[A-Z]/;
+export const courseRegex = /NR\d[A-Z0-9]/;
 
 interface CourseActivity {
   id: string;

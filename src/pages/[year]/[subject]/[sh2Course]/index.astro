@@ -1,14 +1,7 @@
 ---
-import Home from "../../../../components/sections/home/Home.astro";
-import Activities from "../../../../components/sections/activities/Activities.astro";
 import Layout from "../../../../layouts/Layout.astro";
-import Redos from "../../../../components/sections/redo/Redos.astro";
-import Program from "../../../../components/sections/program/Program.astro";
-import Material from "../../../../components/sections/material/Material.astro";
-import Navbar from "../../../../components/navbar/Navbar.astro";
-import Mark from "../../../../components/sections/mark/Mark.astro";
-import Timetable from "../../../../components/sections/timetable/Timetable.astro";
 import { fetchTemplateSubjects } from "../../../../scripts/APIcalls/subjectData";
+import Shulian3 from "../../../../components/templates/shulian3.astro";
 
 export async function getStaticPaths() {
   const templateId = "SH-2";
@@ -29,35 +22,13 @@ export async function getStaticPaths() {
 
 const { sh2Course, year, subject } = Astro.params;
 const { dataSheetId } = Astro.props;
-
-const items = [
-  { name: "home", icon: "home", title: subject },
-  { name: "actividades", icon: "school", title: "Actividades" },
-  { name: "reentregas", icon: "refresh", title: "Reentregas" },
-  { name: "programa", icon: "event_note", title: "Programa" },
-  { name: "material", icon: "construction", title: "Material" },
-  // { name: "horarios", icon: "calendar_month", title: "Horarios" },
-];
 ---
 
 <Layout dataSheetId={dataSheetId}>
-  <Navbar course={sh2Course} subject={subject} items={items} />
-  <main
-    class="relative grow bg-gray-50 border-y sm:border-r lg:border-l border-gray-300 sm:rounded-r-xl lg:rounded-l-xl overflow-hidden"
-    x-init={`$store.course.setCourse('${sh2Course}');$store.student.getStudentData('${subject}',${year},'${dataSheetId}')`}
-  >
-    <Home
-      subject={subject}
-      course={sh2Course}
-      year={year}
-      position={0}
-      presentation={true}
-    />
-    <Activities subject={subject} course={sh2Course} year={year} position={1} />
-    <Redos subject={subject} year={year} course={sh2Course} position={2} />
-    <Program subject={subject} year={year} position={3} />
-    <Material subject={subject} year={year} course={sh2Course} position={4} />
-    <!-- <Timetable subject={subject} position={5} /> -->
-    <Mark subject={subject} course={sh2Course} year={year} position={5} />
-  </main>
+  <Shulian3
+    subject={subject}
+    course={sh2Course}
+    year={Number(year)}
+    dataSheetId={dataSheetId}
+  />
 </Layout>
