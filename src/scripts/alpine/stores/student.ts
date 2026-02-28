@@ -19,6 +19,7 @@ const studentStore = (Alpine: Alpine) => ({
   id: Alpine.$persist("")
     .using(sessionStorage)
     .as("student_id") as unknown as string,
+  loading: false,
   activities: [],
   marks: [],
   markData: {
@@ -36,7 +37,6 @@ const studentStore = (Alpine: Alpine) => ({
       passed: 0,
     },
   },
-  dataSheetId: "",
   setStudent(name: string, surname: string, course: string, id: string) {
     if (!courseRegex.test(course)) {
       throw new Error(`Invalid course name: ${course}`);
@@ -49,12 +49,9 @@ const studentStore = (Alpine: Alpine) => ({
   setSubject(subject: string) {
     this.subject = subject as string;
   },
-  setDataSheetId(dataSheetId: string) {
-    this.dataSheetId = dataSheetId as string;
-  },
-  async getStudentData(subject: string, year: number, dataSheetId: string) {
+  async getStudentData(subject: string, year: number) {
     this.setSubject(subject);
-    this.setDataSheetId(dataSheetId);
+    this.loading = true;
     let studentName = null;
     const isOnCampus = (Alpine.store("pageData") as PageDataStore).onCampus;
     if (isOnCampus) {
@@ -64,7 +61,7 @@ const studentStore = (Alpine: Alpine) => ({
           headers: {
             accept: "application/json",
           },
-        }
+        },
       ).then((res) => res.json());
       const studentData = data.nombre.split("<br/>");
       studentName = {
@@ -77,7 +74,7 @@ const studentStore = (Alpine: Alpine) => ({
       const { course, id } = await fetchStudentData(
         studentName.name,
         studentName.surname,
-        year
+        year,
       );
       if (id && course) {
         student = {
@@ -93,9 +90,13 @@ const studentStore = (Alpine: Alpine) => ({
         student.name,
         student.surname,
         student.course,
-        student.id
+        student.id,
       );
     }
+    this.loading = false;
+  },
+  isLoading() {
+    return this.loading;
   },
 });
 

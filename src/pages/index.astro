@@ -9,7 +9,7 @@ const availableCourses = await fetchSubjects();
 const availableSubjects = availableCourses.reduce(
   (acc, course) => {
     const existingSubject = acc.find(
-      (s) => s.subject === course.name && s.year === course.year
+      (s) => s.subject === course.name && s.year === course.year,
     );
     if (existingSubject) {
       existingSubject.divisions.push({
@@ -36,7 +36,7 @@ const availableSubjects = availableCourses.reduce(
     year: number;
     level: number;
     divisions: { name: string; division: string }[];
-  }[]
+  }[],
 );
 ---
 

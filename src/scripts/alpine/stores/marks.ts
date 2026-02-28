@@ -15,7 +15,7 @@ const studentMarkStore = () => ({
     surname: string,
     course: string,
     year: number,
-    id: string
+    id: string,
   ) {
     this.subject = subject;
     this.student = new Student(name, surname, id, course, [subject]);
@@ -38,7 +38,7 @@ const studentMarkStore = () => ({
     activities.forEach((activity) => {
       // Check if activity is special
       activity.compulsory = specialActivities.some(
-        (spAct) => spAct === activity.id
+        (spAct) => spAct === activity.id,
       );
       this.student!.setClassActivity(subject, activity);
     });

@@ -45,7 +45,7 @@ import Select from "../../components/misc/select/Select.astro";
               if (a.label < b.label) return -1;
               if (a.label > b.label) return 1;
               return 0;
-            })
+            }),
         );
         this.years = this.years.concat(
           [...new Set(this.students.map((student) => student.year))]
@@ -55,7 +55,7 @@ import Select from "../../components/misc/select/Select.astro";
                 value: year,
                 label: year.toString(),
               };
-            })
+            }),
         );
         this.filter.year = this.years[0].value;
         this.filter.course = this.courses[0].value;
@@ -113,7 +113,7 @@ import Select from "../../components/misc/select/Select.astro";
         student.name,
         student.surname,
         student.course,
-        student.id
+        student.id,
       );
       studentStore.setSubject("");
     },

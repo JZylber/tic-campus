@@ -6,13 +6,12 @@ import Navbar from "../navbar/Navbar.astro";
 import Timetable from "../sections/timetable/Timetable.astro";
 
 interface Props {
-  dataSheetId?: string;
   subject: string;
   course: string;
   year: number;
 }
 
-const { subject, course, year, dataSheetId } = Astro.props;
+const { subject, course, year } = Astro.props;
 
 const items = [
   { name: "home", icon: "home", title: subject },
@@ -25,7 +24,7 @@ const items = [
 <Navbar course={course} subject={subject} items={items} />
 <main
   class="relative grow bg-gray-50 border-y sm:border-r lg:border-l border-gray-300 sm:rounded-r-xl lg:rounded-l-xl overflow-hidden"
-  x-init={`$store.course.setCourse('${course}');$store.student.getStudentData('${subject}',${year},'${dataSheetId}')`}
+  x-init={`$store.course.setCourse('${course}');$store.student.getStudentData('${subject}',${year})`}
 >
   <Home
     subject={subject}

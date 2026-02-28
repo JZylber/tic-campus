@@ -25,10 +25,5 @@ const { dataSheetId } = Astro.props;
 ---
 
 <Layout dataSheetId={dataSheetId}>
-  <Shulian3
-    subject={subject}
-    course={sh2Course}
-    year={Number(year)}
-    dataSheetId={dataSheetId}
-  />
+  <Shulian3 subject={subject} course={sh2Course} year={Number(year)} />
 </Layout>

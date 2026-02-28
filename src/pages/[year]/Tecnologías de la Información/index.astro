@@ -1,4 +1,5 @@
 ---
+import Loader from "../../../components/loader/Loader.astro";
 import Lu from "../../../components/templates/Lu.astro";
 import Shulian3 from "../../../components/templates/Shulian3.astro";
 import Layout from "../../../layouts/Layout.astro";
@@ -26,9 +27,16 @@ const filteredCourses = availableCourses.filter((course) => {
 ---
 
 <Layout xData="{division: ''}">
-  <template x-if="division === ''">
+  <Loader show="division === '' && $store.student.loading" />
+  <template x-if="division === '' && !$store.student.loading">
     <main
       class="relative grow bg-gray-50 border-y sm:border-r lg:border-l border-gray-300 sm:rounded-r-xl lg:rounded-l-xl overflow-hidden flex flex-col items-center text-center gap-y-8 p-8"
+      x-init="$store.student.getStudentData('Tecnologías de la Información',2026)"
+      x-effect="if($store.student.course[2] === '3')division = $store.student.course[3];$watch('$store.student.course', (course) => {
+        if (course[2] === 3) {
+          division = course[3];
+        }
+      })"
     >
       <h1 class="text-[40px] md:text-[60px] font-bold m-0 lg:max-w-[75%]">
         Tecnologías de la Información
@@ -69,7 +77,6 @@ const filteredCourses = availableCourses.filter((course) => {
             subject="Tecnologías de la Información"
             course={div.course}
             year={Number(year)}
-            dataSheetId={div.spreadsheetId}
           />
         </div>
       ))
@@ -86,7 +93,6 @@ const filteredCourses = availableCourses.filter((course) => {
             subject="Tecnologías de la Información"
             course={div.course}
             year={Number(year)}
-            dataSheetId={div.spreadsheetId}
           />
         </div>
       ))

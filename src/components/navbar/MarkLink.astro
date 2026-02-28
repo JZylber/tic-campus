@@ -10,7 +10,7 @@ const { course, minimized, open, placement } = Astro.props;
 ---
 
 <template
-  x-if={`$store.student.course === '${course}' && !$store.marks.loading`}
+  x-if={`$store.student.course === '${course}' && $store.marks && !$store.marks.loading`}
 >
   <div
     class="grow flex flex-col justify-end"
