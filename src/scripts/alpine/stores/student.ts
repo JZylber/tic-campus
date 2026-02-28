@@ -38,9 +38,9 @@ const studentStore = (Alpine: Alpine) => ({
     },
   },
   setStudent(name: string, surname: string, course: string, id: string) {
-    if (!courseRegex.test(course)) {
+    /*if (!courseRegex.test(course)) {
       throw new Error(`Invalid course name: ${course}`);
-    }
+    }*/
     this.name = name as string;
     this.surname = surname as string;
     this.course = course as string;
@@ -82,6 +82,13 @@ const studentStore = (Alpine: Alpine) => ({
           surname: studentName.surname,
           course,
           id: id,
+        };
+      } else {
+        student = {
+          name: "",
+          surname: "",
+          course: "",
+          id: "",
         };
       }
     }
