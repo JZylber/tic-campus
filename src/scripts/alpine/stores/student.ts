@@ -78,8 +78,8 @@ const studentStore = (Alpine: Alpine) => ({
       );
       if (id && course) {
         student = {
-          name: this.name,
-          surname: this.surname,
+          name: studentName.name,
+          surname: studentName.surname,
           course,
           id: id,
         };
