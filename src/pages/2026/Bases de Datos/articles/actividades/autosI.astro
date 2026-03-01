@@ -1,0 +1,78 @@
+---
+import ImportantBox from "../../../../../components/articles/alertbox/ImportantBox.astro";
+import ImageButton from "../../../../../components/articles/image-button/Image-Button.astro";
+---
+
+<h2>Consigna</h2>
+<p>
+  Juntarse en grupos de 3 personas. Pedirle al profe que te de alguno de las 5
+  personalidades y problemas. Luego, usando su intuición y preguntándole al
+  chatbot, respondan las siguientes preguntas en un word/docs/txt o cualquier
+  otro archivo de texto. Pueden, y se recomienda, hacer diagramas. No pueden
+  usar IA fuera del chatbot asignado.
+</p>
+<ol>
+  <li>
+    ¿Qué información se necesita saber de los autos? ¿Hay otros objetos
+    involucrados en lo pedido por quienes nos contratan? Si hay otros objetos,
+    ¿Qué información se necesita saber de ellos? ¿Hay información de los autos
+    que no es importante para el problema?
+  </li>
+  <li>
+    Si tuvieran que pensar a cada característica de los autos/otros objetos como
+    un tipo de dato (texto, números, fechas, etc), ¿cual se imaginan que
+    corresponde a cada uno?
+  </li>
+  <li>
+    (Pregunta manija, es opcional) ¿Cómo creen que se guardan todos los datos en
+    su conjunto? Pueden imaginarse cómo se verían en papel, o digitalmente.
+    ¡Pueden pensar JSON para los que hicieron Backend el año pasado!
+  </li>
+</ol>
+<ImportantBox>
+  <p>
+    Esta actividad usa chatbots de IA pre-prompteados qué actúan un rol. Tienen
+    información de los docentes para responder a sus preguntas acorde a la
+    consigna. Pero siempre cuando se trata de LLMs pueden haber alucinaciones.
+    Esta actividad tiene un margen de interpretación alto, y no hay
+    necesariamente respuestas cerradas, asi que estas alucinaciones no son un
+    problema.
+  </p>
+</ImportantBox>
+<h2>Clientes</h2>
+<div class="flex gap-4 justify-center flex-wrap">
+  <ImageButton
+    link="https://gemini.google.com/gem/10Th6GRX4T4L6gFz4xzrsyrgPmiJkQ5g3?usp=sharing"
+    imageSrc="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9eUa4xVdaK2005rQjLH_O7pGuOn1tCjw_CA&s"
+    title="María Elena"
+    subtitle="CTO de una aplicación de rideshare"
+  />
+
+  <ImageButton
+    link="https://gemini.google.com/gem/1pMk972b20Nm9_rV44IypCW542zpADqpC?usp=sharing"
+    imageSrc="https://www.clarin.com/2022/01/20/GWR2-6fo__360x240__1.jpg"
+    title="Pepe"
+    subtitle="Gerente de compra y venta de autos usados"
+  />
+
+  <ImageButton
+    link="https://gemini.google.com/gem/1vtgqk1ipc12-5bK0DFFLBDduCVijFJYf?usp=sharing"
+    imageSrc="https://imagenes.montevideo.com.uy/imgnoticias/201904/_W933_80/689812.jpg"
+    title="Mónica"
+    subtitle="CTO alquiler de autos"
+  />
+
+  <ImageButton
+    link="https://gemini.google.com/gem/1sb9R6ib9ddFEbUNMc1R-qFnnjzFIlg7J?usp=sharing"
+    imageSrc="https://www.infobae.com/resizer/v2/UW2BJ5JN2FABBCHI35R4X2EJKU.JPG?auth=90070f79b809a6e0a9ed68ee03460f6b9e083ea96779354baacd1ccfe2aa242f&smart=true&width=1024&height=512&quality=85"
+    title="Dardo"
+    subtitle="Presidente TC2000"
+  />
+
+  <ImageButton
+    link="https://gemini.google.com/gem/1AK52lyfKauW_8ZJTZzPLYMwN7k9MIwN9?usp=sharing"
+    imageSrc="https://media.lmneuquen.com/p/a6af9dcb3fbb3e3706ba22e9dedb2f5e/adjuntos/195/imagenes/000/775/0000775995/.jpg"
+    title="Paola"
+    subtitle="Dueña de un estacionamiento"
+  />
+</div>

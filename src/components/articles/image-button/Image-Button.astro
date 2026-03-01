@@ -1,0 +1,27 @@
+---
+interface Props {
+  link: string;
+  imageSrc: string;
+  title: string;
+  subtitle: string;
+}
+
+const { link, imageSrc, title, subtitle } = Astro.props;
+---
+
+<div class="flex items-center justify-center">
+  <a
+    href={link}
+    class="flex gap-x-4 rounded-full bg-sh-purple p-3 hover:shadow-lg cursor-pointer w-80"
+  >
+    <img
+      src={imageSrc}
+      alt=""
+      class="rounded-full w-20 aspect-square object-cover overflow-hidden shrink-0"
+    />
+    <div class="flex flex-col justify-center">
+      <span class="text-[24px] text-sh-black">{title}</span>
+      <span class="text-sh-black">{subtitle}</span>
+    </div>
+  </a>
+</div>
