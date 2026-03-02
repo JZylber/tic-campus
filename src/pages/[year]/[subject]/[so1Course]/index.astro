@@ -1,0 +1,29 @@
+---
+import Layout from "../../../../layouts/Layout.astro";
+import { fetchTemplateSubjects } from "../../../../scripts/APIcalls/subjectData";
+import Sofi from "../../../../components/templates/Sofi.astro";
+
+export async function getStaticPaths() {
+  const templateId = "SO-1";
+  const paths = await fetchTemplateSubjects(templateId);
+  // Change course to so1Course to match param name
+  const cleanPaths = paths.map((path) => {
+    return {
+      ...path,
+      params: {
+        subject: path.params.subject,
+        year: path.params.year,
+        so1Course: path.params.course,
+      },
+    };
+  });
+  return cleanPaths;
+}
+
+const { so1Course, year, subject } = Astro.params;
+const { dataSheetId } = Astro.props;
+---
+
+<Layout dataSheetId={dataSheetId}>
+  <Sofi subject={subject} course={so1Course} year={Number(year)} />
+</Layout>
