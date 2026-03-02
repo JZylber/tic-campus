@@ -1,0 +1,77 @@
+---
+import Loader from "../../../components/loader/Loader.astro";
+import Sofi from "../../../components/templates/Sofi.astro";
+import Layout from "../../../layouts/Layout.astro";
+
+import { fetchSubjects } from "../../../scripts/APIcalls/dashboard";
+
+export async function getStaticPaths() {
+  return [
+    {
+      params: {
+        year: "2026",
+      },
+    },
+  ];
+}
+
+const { year } = Astro.params;
+
+const subjects = ["Tecnologías de la Información"];
+const availableCourses = await fetchSubjects();
+// Keep only courses that match the years and subjects we want
+const filteredCourses = availableCourses.filter((course) => {
+  return course.year === Number(year) && subjects.includes(course.name);
+});
+---
+
+<Layout xData="{division: ''}">
+  <Loader show="division === '' && $store.student.loading" />
+  <template x-if="division === '' && !$store.student.loading">
+    <main
+      class="relative grow bg-gray-50 border-y sm:border-r lg:border-l border-gray-300 sm:rounded-r-xl lg:rounded-l-xl overflow-hidden flex flex-col items-center text-center gap-y-8 p-8"
+      x-init="$store.student.getStudentData('Tecnologías de la Información',2026)"
+      x-effect="if($store.student.course[2] === '3')division = $store.student.course[3];$watch('$store.student.course', (course) => {
+        if (course[2] === 3) {
+          division = course[3];
+        }
+      })"
+    >
+      <h1 class="text-[40px] md:text-[60px] font-bold m-0 lg:max-w-[75%]">
+        Hardware
+      </h1>
+      <h2 class="text-[20px] md:text-[30px]">Elegí el grupo que querés ver</h2>
+      <div class="flex justify-center gap-y-4 gap-x-10">
+        <template
+          x-for=`course in ${JSON.stringify(filteredCourses)}`
+          :key="course.course"
+        >
+          <div
+            class="bg-sh-purple text-white rounded-2xl py-4 px-8 cursor-pointer hover:shadow-lg flex items-center justify-center"
+            @click="division = course.division;$store.pageData.setDataSheetId(course.spreadsheetId)"
+          >
+            <span
+              class="text-[20px] md:text-[30px] font-bold"
+              x-text="course.division"></span>
+          </div>
+        </template>
+      </div>
+      <p class="lg:max-w-[75%]">
+        Si sos un alumno de 3ero TIC, y estás logueado en el campus, quiere
+        decir que el sistema no te reconoció. Eso hace que te pierdas algunas
+        funcionalidades del Campus. Hablale a Shulian o Luu para que lo
+        arreglen.
+      </p>
+    </main>
+  </template>
+  {
+    filteredCourses.map((div) => (
+      <div
+        class="w-full flex relative lg:gap-x-4"
+        x-show={`division === '${div.division}'`}
+      >
+        <Sofi subject="Hardware" course={div.course} year={Number(year)} />
+      </div>
+    ))
+  }
+</Layout>
