@@ -1,0 +1,58 @@
+---
+import { fetchHomeLinks } from "../../../scripts/APIcalls/subjectData";
+import SectionLayout from "../SectionLayout.astro";
+interface Props {
+  subject: string;
+  course: string;
+  position: number;
+  presentation: boolean;
+  year: number;
+}
+
+const { subject, course, position, presentation, year } = Astro.props;
+const { group: groupLink, presentation: presentationLink } =
+  await fetchHomeLinks(subject, course, year);
+---
+
+<SectionLayout
+  name="home"
+  position={position}
+  xData=`{groupLink: '${groupLink}', presentationLink: '${presentationLink}'}`
+>
+  <header
+    class="flex flex-col text-center lg:text-left lg:flex-row justify-between gap-4"
+  >
+    <h1
+      class="text-[40px] md:text-[60px] font-bold m-0 lg:max-w-[75%]"
+      x-text={`'${subject}'`}
+    >
+    </h1>
+    <div
+      class="self-stretch flex flex-col items-center justify-center gap-x-4 gap-y-4 lg:min-w-[175px] lg:w-[250px]"
+    >
+      <a
+        class="w-full max-w-[200px] md:max-w-[250px] rounded-xl bg-sh-purple p-2 flex justify-center items-center gap-x-4 hover:shadow-lg cursor-pointer"
+        :href="groupLink"
+      >
+        <span class="max-md:hidden flex items-center justify-center"
+          ><span class="material-symbols-outlined text-[28px]">groups</span
+          ></span
+        >
+        <span class="text-[20px]">Grupo</span>
+      </a>
+    </div>
+  </header>
+  <p class="text-gray-600 indent-8 text-[16px] md:text-[20px] text-justify">
+    ¡Bienvenidos! Este es el campus de la materia. Acá vas a encontrar todas las
+    actividades, las clases dadas y más material. Además, si sos un estudiante
+    de este curso, podés ver tus notas y tu progreso en la materia. ¡Explorá el
+    menú del costado para ver más!
+  </p>
+  <div class="w-full self-center max-sm:hidden" x-show={presentation}>
+    <iframe
+      src="https://docs.google.com/presentation/d/e/2PACX-1vTzft7eyzwr4uoTqFEWxVVReHb58plL77Cv4pqHApTEFmmk97rhSqAp_4F3eFeqHvyf_j_n2MKtguM9/pubembed?start=false&loop=false&delayms=3000"
+      frameborder="0"
+      class="w-full aspect-video"
+      allowfullscreen="true"></iframe>
+  </div>
+</SectionLayout>
