@@ -6,7 +6,6 @@ import Redos from "../../../../components/sections/redo/Redos.astro";
 import Program from "../../../../components/sections/program/Program.astro";
 import Material from "../../../../components/sections/material/Material.astro";
 import Navbar from "../../../../components/navbar/Navbar.astro";
-import Mark from "../../../../components/sections/mark/Mark.astro";
 import { fetchTemplateSubjects } from "../../../../scripts/APIcalls/subjectData";
 
 export async function getStaticPaths() {
@@ -49,11 +48,9 @@ const items = [
       position={0}
       presentation={true}
     />
-
     <Activities subject={subject} course={ez1Course} year={year} position={1} />
     <Redos subject={subject} year={year} course={ez1Course} position={2} />
     <Program subject={subject} year={year} position={3} />
     <Material subject={subject} course={ez1Course} year={year} position={4} />
-    <Mark subject={subject} course={ez1Course} year={year} position={5} />
   </main>
 </Layout>
