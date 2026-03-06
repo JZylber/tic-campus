@@ -42,14 +42,14 @@
           x1="30"
           y1="30"
           y2="30"
-          x-bind:x2="40*$store.marks.markData.classActivitiesContribution + 10"
+          x-bind:x2="40*$store.marks.markData.markedActivitiesContribution + 10"
           stroke-linecap="round"
           class="stroke-sh-purple stroke-[20]"></line>
         <line
           x-show="$store.marks.markData.classActivitiesContribution >= 0.5"
           y1="30"
           y2="30"
-          x-bind:x1="40*$store.marks.markData.classActivitiesContribution + 30"
+          x-bind:x1="40*$store.marks.markData.markedActivitiesContribution + 30"
           x-bind:x2="40*($store.marks.markData.classActivitiesContribution + $store.marks.markData.markedActivitiesContribution) + 10"
           stroke-linecap="round"
           class="stroke-sh-blue stroke-[20]"></line>
