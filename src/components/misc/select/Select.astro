@@ -22,12 +22,13 @@ const { title, xModel, options, className } = Astro.props;
   <label
     class="text-center md:text-left text-sh-dark-gray text-[16px] font-semibold"
     x-text={`'${title}'`}></label>
-  <div class="relative w-full max-w-[200px] h-[44px]">
+  <div class="relative w-full h-[44px]">
     <div
       x-data="{ open: false }"
       @click.stop="open = !open"
       @click.outside="open = false"
       class="absolute bg-gray-50 overflow-hidden w-full flex flex-col rounded-xl text-sh-dark-gray text-[16px] border-2 border-sh-gray cursor-pointer"
+      :class=`{'z-10': open}`
     >
       <div class="p-2 flex justify-between items-center gap-x-6">
         <span x-text="selectedOption ? selectedOption.label : ''"></span>
