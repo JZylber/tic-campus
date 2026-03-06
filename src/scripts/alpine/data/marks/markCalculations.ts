@@ -1,12 +1,3 @@
-import {
-  getAllActivities,
-  getAllMarks,
-  getStudents,
-  getSubjectMarkingCriteria,
-  getAllRedos,
-  getAllCourses,
-  getSubjectIds,
-} from "../../../fetchData";
 import type {
   ClassActivity,
   FixedMarks,
@@ -271,7 +262,7 @@ export class Student {
 export const round = (num: number, decimals: number) => {
   return Math.round(num * Math.pow(10, decimals)) / Math.pow(10, decimals);
 };
-export default () =>
+/*export default () =>
   ({
     students: [],
     loading: true,
@@ -408,4 +399,4 @@ export default () =>
     students: Student[];
     loading: boolean;
     init: () => Promise<void>;
-  };
+  };*/
