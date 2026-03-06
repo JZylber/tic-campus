@@ -151,3 +151,35 @@ export async function fetchSubjectMaterial(
     return [];
   }
 }
+
+export async function fetchSubjectStudents(
+  subject: string,
+  course: string,
+  year: number,
+): Promise<
+  Array<{
+    name: string;
+    surname: string;
+    id: string;
+    course: string;
+    year: number;
+  }>
+> {
+  try {
+    const response = await fetch(
+      `${backendURL}/students/${encodeURIComponent(
+        subject,
+      )}/${encodeURIComponent(course)}/${year}`,
+    );
+    if (!response.ok) {
+      throw new Error(
+        `Error fetching subject students: ${response.statusText}`,
+      );
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Failed to fetch subject students:", error);
+    return [];
+  }
+}
