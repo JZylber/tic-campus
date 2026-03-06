@@ -40,6 +40,13 @@ const courseStore = () => ({
     });
     this.activities = activitiesArray;
   },
+  getRedoableActivities() {
+    //Return only activities that are of type 'Trabajo Práctico' or 'Actividad'
+    return this.activities.filter(
+      (activity) =>
+        activity.type === "Trabajo Práctico" || activity.type === "Actividad",
+    );
+  },
 });
 
 export type AlpineCourseStore = ReturnType<typeof courseStore>;
