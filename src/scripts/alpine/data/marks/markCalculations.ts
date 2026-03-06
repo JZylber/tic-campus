@@ -48,37 +48,40 @@ export class Student {
     id: string,
     course: string,
     subjects: string[],
-    withRevisions: boolean = false
+    withRevisions: boolean = false,
   ) {
     this.name = name;
     this.surname = surname;
     this.id = id;
     this.course = course;
     this.withRevisions = withRevisions;
-    this.subjectData = subjects.reduce((acc, subject) => {
-      acc[subject] = {
-        classActivities: [],
-        markedActivities: [],
-        redoActivities: [],
-        redos: {},
-        fixedMarks: {
-          "1B": undefined,
-          "1C": undefined,
-          "3B": undefined,
-          F: undefined,
-        },
-        finalMark: {
-          averageMark: 0,
-          classActivitiesContribution: 0,
-          markedActivitiesContribution: 0,
-          proportion: 0.7,
-          allMarkedActivitiesPassed: true,
-          allCompulsoryClassActivitiesDone: true,
-          finalMark: 0,
-        },
-      };
-      return acc;
-    }, {} as Student["subjectData"]);
+    this.subjectData = subjects.reduce(
+      (acc, subject) => {
+        acc[subject] = {
+          classActivities: [],
+          markedActivities: [],
+          redoActivities: [],
+          redos: {},
+          fixedMarks: {
+            "1B": undefined,
+            "1C": undefined,
+            "3B": undefined,
+            F: undefined,
+          },
+          finalMark: {
+            averageMark: 0,
+            classActivitiesContribution: 0,
+            markedActivitiesContribution: 0,
+            proportion: 0.7,
+            allMarkedActivitiesPassed: true,
+            allCompulsoryClassActivitiesDone: true,
+            finalMark: 0,
+          },
+        };
+        return acc;
+      },
+      {} as Student["subjectData"],
+    );
   }
   setClassActivity(subject: string, activity: ClassActivity) {
     this.subjectData[subject].classActivities.push(activity);
@@ -86,10 +89,10 @@ export class Student {
   setClassActivityAsCompulsory(
     subject: string,
     activityId: string,
-    compulsory: boolean
+    compulsory: boolean,
   ) {
     const activity = this.subjectData[subject].classActivities.find(
-      (a) => a.id === activityId
+      (a) => a.id === activityId,
     );
     if (activity) activity.compulsory = compulsory;
   }
@@ -98,11 +101,11 @@ export class Student {
   }
   setInRevision(subject: string, activityId: string) {
     const classActivity = this.subjectData[subject].classActivities.find(
-      (a) => a.id === activityId
+      (a) => a.id === activityId,
     );
     if (classActivity) classActivity.inRevision = true;
     const markedActivity = this.subjectData[subject].markedActivities.find(
-      (a) => a.id === activityId
+      (a) => a.id === activityId,
     );
     if (markedActivity) markedActivity.inRevision = true;
   }
@@ -112,14 +115,14 @@ export class Student {
     // For each covered activity, find in markedActivities and classActivities and set madeUp to true
     coveredActivities.forEach((activityId) => {
       const markedActivity = this.subjectData[subject].markedActivities.find(
-        (a) => a.id === activityId
+        (a) => a.id === activityId,
       );
       if (markedActivity && activity.mark >= 6) {
         markedActivity.madeUp = true;
         this.subjectData[subject].redos[activityId] = activity.mark;
       }
       const classActivity = this.subjectData[subject].classActivities.find(
-        (a) => a.id === activityId
+        (a) => a.id === activityId,
       );
       if (classActivity) {
         classActivity.madeUp = true;
@@ -141,7 +144,7 @@ export class Student {
       subject
     ].classActivities.filter(
       (activity) =>
-        !activity.compulsory && (!this.withRevisions || !activity.inRevision)
+        !activity.compulsory && (!this.withRevisions || !activity.inRevision),
     );
 
     const classActivitiesTotalContribution = nonCompulsoryActivities.reduce(
@@ -154,7 +157,7 @@ export class Student {
         if (activity.done) acc += 1;
         return acc;
       },
-      0
+      0,
     );
     // Count ALL non-compulsory activities, even if not done
     const amountOfClassActivities = nonCompulsoryActivities.length;
@@ -172,9 +175,11 @@ export class Student {
     // Average of all marked activities, each out of 10, multiplied by proportion. Made up activities count as their mark.
     // If withRevisions is true, filter out activities in revision
     const markedActivities = this.subjectData[subject].markedActivities.filter(
-      (activity) => !this.withRevisions || !activity.inRevision
+      (activity) => !this.withRevisions || !activity.inRevision,
     );
-    if (markedActivities.length === 0) return 0;
+    const proportion = this.subjectData[subject].finalMark.proportion;
+    // Return (proportion) * 10 if there are no marked activities
+    if (markedActivities.length === 0) return proportion * 10;
     const totalMarks = markedActivities.reduce((acc, activity) => {
       const madeUp = this.subjectData[subject].redos[activity.id];
       if (madeUp !== undefined) {
@@ -189,8 +194,8 @@ export class Student {
       acc += activity.mark;
       return acc;
     }, 0);
+
     const averageMark = totalMarks / markedActivities.length;
-    const proportion = this.subjectData[subject].finalMark.proportion;
     return averageMark * proportion;
   }
   calculateFinalMark(subject: string) {
@@ -200,11 +205,11 @@ export class Student {
     // Set contributions in finalMark rounded to 2 decimal places
     this.subjectData[subject].finalMark.markedActivitiesContribution = round(
       markedActivitiesContribution,
-      2
+      2,
     );
     this.subjectData[subject].finalMark.classActivitiesContribution = round(
       classActivitiesContribution,
-      2
+      2,
     );
     // Calculate averageMark adding classActivitiesContribution and markedActivitiesContribution and rounding to 2 decimal places
     const averageMark =
@@ -216,7 +221,7 @@ export class Student {
       subject
     ].classActivities.filter(
       (activity) =>
-        activity.compulsory && (!this.withRevisions || !activity.inRevision)
+        activity.compulsory && (!this.withRevisions || !activity.inRevision),
     );
     const allCompulsoryDone = compulsoryActivities.every((activity) => {
       const madeUp = this.subjectData[subject].redos[activity.id];
@@ -286,27 +291,38 @@ export default () =>
         getAllMarks(sheetId),
         getAllRedos(sheetId),
         await Promise.all(
-          subjects.map((subject) => getSubjectMarkingCriteria(subject, sheetId))
+          subjects.map((subject) =>
+            getSubjectMarkingCriteria(subject, sheetId),
+          ),
         ),
         getSubjectIds(sheetId),
         getAllCourses(sheetId),
       ]);
       // Map subjectData to an object with subject name as key
-      const subjectDataMap = subjects.reduce((acc, subject, index) => {
-        acc[subject] = subjectData[index];
-        return acc;
-      }, {} as Record<string, Awaited<ReturnType<typeof getSubjectMarkingCriteria>>>);
+      const subjectDataMap = subjects.reduce(
+        (acc, subject, index) => {
+          acc[subject] = subjectData[index];
+          return acc;
+        },
+        {} as Record<
+          string,
+          Awaited<ReturnType<typeof getSubjectMarkingCriteria>>
+        >,
+      );
       // Create students and map them by student DNI
-      const studentMap = students.reduce((acc, student) => {
-        acc[student.DNI] = new Student(
-          student.name,
-          student.surname,
-          student.DNI.toString(),
-          student.course,
-          [coursesData.find((c) => c.id === student.course)?.subject || ""]
-        );
-        return acc;
-      }, {} as Record<string, Student>);
+      const studentMap = students.reduce(
+        (acc, student) => {
+          acc[student.DNI] = new Student(
+            student.name,
+            student.surname,
+            student.DNI.toString(),
+            student.course,
+            [coursesData.find((c) => c.id === student.course)?.subject || ""],
+          );
+          return acc;
+        },
+        {} as Record<string, Student>,
+      );
       // Cast all activities to ClassActivity and add them to the corresponding student
       classActivities.forEach((activity) => {
         // Find if activity is compulsory if is in some special activities list of subjectData
@@ -325,7 +341,7 @@ export default () =>
         };
         studentMap[activity.studentId].setClassActivity(
           activitySubject,
-          classActivity
+          classActivity,
         );
       });
       // Cast all marked activities to MarkedActivity and add them to the corresponding student
@@ -341,7 +357,7 @@ export default () =>
         };
         studentMap[activity.studentId].setMarkedActivity(
           activitySubject,
-          markedActivity
+          markedActivity,
         );
       });
       // Cast all redo activities to RedoActivity and add them to the corresponding student
@@ -356,7 +372,7 @@ export default () =>
           comment: activity.comment || "",
           mark: activity.mark,
           coveredActivities: activity.coveredActivities.map((id) =>
-            id.toString()
+            id.toString(),
           ),
           inRevision: false,
         };
@@ -384,8 +400,8 @@ export default () =>
       });
       this.loading = false;
     },
-  } as {
+  }) as {
     students: Student[];
     loading: boolean;
     init: () => Promise<void>;
-  });
+  };
