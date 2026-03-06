@@ -4,6 +4,7 @@ export enum ContentType {
   finalActivity = "Trabajo Práctico",
   survey = "Encuesta",
   makeup = "Recuperatorio",
+  instruction = "Consigna",
 }
 
 export interface Content {

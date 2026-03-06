@@ -111,6 +111,8 @@ const { subject, course, year, position } = Astro.props;
               return "refresh";
             case "Actividad":
               return "shovel";
+            case "Consigna":
+              return "work";
             default:
               return "description";
           }
@@ -125,6 +127,8 @@ const { subject, course, year, position } = Astro.props;
               return "Recuperatorio";
             case "Actividad":
               return "Actividad";
+            case "Consigna":
+              return "Consigna";
             default:
               return "Artículo";
           }
