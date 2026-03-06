@@ -178,8 +178,12 @@ export class Student {
       (activity) => !this.withRevisions || !activity.inRevision,
     );
     const proportion = this.subjectData[subject].finalMark.proportion;
-    // Return (proportion) * 10 if there are no marked activities
-    if (markedActivities.length === 0) return proportion * 10;
+    // Return classActivitiesContribution if there are no marked activities. Else, proportion * 10
+    if (markedActivities.length === 0) {
+      return (
+        (this.activitiesContribution(subject) * proportion) / (1 - proportion)
+      );
+    }
     const totalMarks = markedActivities.reduce((acc, activity) => {
       const madeUp = this.subjectData[subject].redos[activity.id];
       if (madeUp !== undefined) {
