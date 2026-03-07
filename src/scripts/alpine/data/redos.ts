@@ -17,6 +17,9 @@ type AlpineRedoData = AlpineComponent<{
   comment: string;
   remainingStudents: Array<Student>;
   selectedStudents: Array<Student>;
+  sendingRequest: boolean;
+  reset: () => void;
+  requestRedo: () => void;
 }>;
 
 const redoData = (students: Array<Student>) => {
@@ -43,6 +46,11 @@ const redoData = (students: Array<Student>) => {
       this.reason = "";
       this.bonusTask = "";
       this.comment = "";
+    },
+    requestRedo() {
+      this.sendingRequest = true;
+      this.reset();
+      this.sendingRequest = false;
     },
   } as AlpineRedoData;
 };
