@@ -31,7 +31,7 @@ const studentMarkStore = () => ({
       inRevisionIds,
     ] = await Promise.all([
       fetchStudentMarksAndCriteria(subject, course, year, id, dataSheetId),
-      fetchRevisionRequests(name, surname, subject, course, year, dataSheetId),
+      fetchRevisionRequests(subject, course, year, id),
     ]);
     this.student.setProportion(subject, proportion);
     this.student.setFixedMarks(subject, fixedMarks);

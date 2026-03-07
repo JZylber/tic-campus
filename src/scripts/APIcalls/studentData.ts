@@ -9,7 +9,7 @@ import { backendURL } from "./shared";
 export async function fetchStudentData(
   name: string,
   surname: string,
-  year: number
+  year: number,
 ): Promise<{
   course: string;
   id: string;
@@ -39,7 +39,7 @@ export async function fetchStudentMarksAndCriteria(
   course: string,
   year: number,
   studentId: string,
-  datasheetId?: string
+  datasheetId?: string,
 ): Promise<{
   criteria: { proportion: number; specialActivities: string[] };
   marks: Array<MarkedActivity>;
@@ -50,10 +50,10 @@ export async function fetchStudentMarksAndCriteria(
   try {
     const response = await fetch(
       `${backendURL}/marks/${encodeURIComponent(subject)}/${encodeURIComponent(
-        course
+        course,
       )}/${year}/${encodeURIComponent(studentId)}${
         datasheetId ? `?datasheetId=${encodeURIComponent(datasheetId)}` : ""
-      }`
+      }`,
     );
     if (!response.ok) {
       throw new Error(`Error fetching student marks: ${response.statusText}`);
@@ -106,27 +106,21 @@ export async function fetchStudentMarksAndCriteria(
 }
 
 export async function fetchRevisionRequests(
-  name: string,
-  surname: string,
   subject: string,
   course: string,
   year: number,
-  datasheetId: string
+  id: string,
 ): Promise<string[]> {
   try {
     // URL is subject/course/year and datasheetId, name and surname go as query params
     const response = await fetch(
       `${backendURL}/revisionRequests/${encodeURIComponent(
-        subject
-      )}/${encodeURIComponent(course)}/${year}?datasheetId=${encodeURIComponent(
-        datasheetId
-      )}&name=${encodeURIComponent(name)}&surname=${encodeURIComponent(
-        surname
-      )}`
+        subject,
+      )}/${encodeURIComponent(course)}/${year}/${encodeURIComponent(id)}`,
     );
     if (!response.ok) {
       throw new Error(
-        `Error fetching revision requests: ${response.statusText}`
+        `Error fetching revision requests: ${response.statusText}`,
       );
     }
     const data: string[] = await response.json();
@@ -134,5 +128,61 @@ export async function fetchRevisionRequests(
   } catch (error) {
     console.error("Failed to fetch revision requests:", error);
     return [];
+  }
+}
+
+type RevisionResponse = {
+  success: boolean;
+  message: string;
+};
+
+export async function submitRevisionRequest(
+  subject: string,
+  course: string,
+  year: number,
+  studentIds: string[],
+  activityId: string,
+  reason: string,
+  bonusTasks: string,
+  comment: string,
+): Promise<RevisionResponse> {
+  try {
+    // URL is subject/course/year and datasheetId, name and surname go as query params
+    const response = await fetch(`${backendURL}/redoRequest`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        subject,
+        course,
+        year,
+        studentIds,
+        activityId,
+        reason,
+        bonusTasks,
+        comment,
+      }),
+    });
+    if (!response.ok) {
+      const errorBody = (await response.json()) || {
+        message: "Error al enviar el pedido de revisión",
+      };
+      return {
+        success: false,
+        message: `${errorBody.message! || "Error al enviar el pedido de revisión"}`,
+      };
+    }
+    return {
+      success: true,
+      message: "¡Pedido de revisión enviado con éxito!",
+    };
+  } catch (error) {
+    console.error("Failed to fetch revision requests:", error);
+    return {
+      success: false,
+      message:
+        "Error al enviar el pedido de revisión. Por favor, inténtalo de nuevo.",
+    };
   }
 }

@@ -1,7 +1,6 @@
 ---
 import SectionLayout from "../SectionLayout.astro";
-import { fetchSubjectStudents } from "../../../scripts/APIcalls/subjectData";
-import Select from "../../misc/select/Select.astro";
+import Dialog from "./Dialog.astro";
 
 interface Props {
   position: number;
@@ -11,25 +10,7 @@ interface Props {
 }
 
 const { subject, position, course, year } = Astro.props;
-// Fetch students for the subject, course, and year. Sort them by surname  and then by name for better display in the form.
-const students = (await fetchSubjectStudents(subject, course, year)).sort(
-  (a, b) => a.surname.localeCompare(b.surname) || a.name.localeCompare(b.name),
-);
-
-const redoReasons = [
-  { value: "", label: "Seleccioná un motivo" },
-  { value: "Estaba sin hacer", label: "Estaba sin hacer" },
-  { value: "Quedó incompleto", label: "Quedó incompleto" },
-  { value: "Para aprobar", label: "Para aprobar" },
-  { value: "Otro", label: "Otro" },
-];
 ---
-
-<script>
-  import setAlpineData from "../../../scripts/alpine/setAlpineData";
-  import redoData from "../../../scripts/alpine/data/redos";
-  setAlpineData("redoData", redoData);
-</script>
 
 <SectionLayout name="reentregas" position={position}>
   <div
@@ -43,6 +24,7 @@ const redoReasons = [
     }
   "
   >
+    <Dialog course={course} subject={subject} year={year} />
     <h1 class="text-[30px] md:text-[36px] font-bold text-center p-4">
       Reentregas
     </h1>
@@ -122,98 +104,5 @@ const redoReasons = [
         >
       </div>
     </div>
-    <dialog
-      x-ref="form"
-      class="w-screen h-screen m-auto md:w-3/4 md:h-5/6 rounded-lg border-2 border-sh-black"
-    >
-      <div
-        class="flex flex-col w-full h-full overflow-y-scroll p-4"
-        x-data=`redoData(${JSON.stringify(students)})`
-      >
-        <div class="flex justify-end">
-          <div
-            @click="formOpen = false"
-            class="material-symbols-outlined text-[24px] text-sh-black cursor-pointer"
-          >
-            cancel
-          </div>
-        </div>
-        <h2 class="font-semibold text-[20px] md:text-[24px] text-center">
-          Formulario de Reentrega
-        </h2>
-        <p class="text-gray-600 text-[14px] md:text-[16px] text-justify">
-          Completá el siguiente formulario para reentregar una actividad de
-          clase o un trabajo práctico. Se tiene que completar una vez <strong
-            >por actividad</strong
-          > y <strong>por grupo/estudiante</strong> (dependiendo si el trabajo es
-          individual o en grupo).
-        </p>
-        <div class="mt-4">
-          <h3 class="font-semibold text-[18px] md:text-[20px]">Estudiantes</h3>
-          <div class="flex gap-2 flex-wrap">
-            <template x-for={`student in selectedStudents`} :key="student.id">
-              <div
-                class="rounded-full bg-sh-purple flex items-center gap-x-2 px-4 py text-sh-black"
-              >
-                <span x-text="student.surname + ', ' + student.name"></span>
-                <span
-                  class="material-symbols-outlined !text-[16px] cursor-pointer"
-                  @click="studentIds = studentIds.filter(id => id !== student.id)"
-                  >close</span
-                >
-              </div>
-            </template>
-          </div>
-          <div
-            class="flex flex-col overflow-y-scroll rounded-xl border-2 border-sh-black max-h-[200px] mt-2"
-          >
-            <template x-for={`student in remainingStudents`} :key="student.id">
-              <div
-                class="flex items-center px-4 py-2 cursor-pointer even:bg-gray-200"
-                @click="studentIds = [...studentIds, student.id]"
-              >
-                <span x-text="student.surname + ', ' + student.name"></span>
-              </div>
-            </template>
-          </div>
-        </div>
-        <div class="mt-4">
-          <Select
-            title="Actividad/Trabajo Práctico"
-            xModel="activityId"
-            options="[{value: '', label: 'Seleccioná una actividad'}].concat($store.course.getRedoableActivities().map(activity => {return {value: activity.id, label: activity.name}}))"
-            className="max-w-96"
-          />
-        </div>
-        <div class="mt-4">
-          <Select
-            title="Motivo de Reentrega"
-            xModel="reason"
-            options={redoReasons}
-            className="max-w-96"
-          />
-        </div>
-        <div class="mt-4">
-          <h3 class="font-semibold text-[16px] md:text-[18px]">
-            Extras (si corresponde)
-          </h3>
-          <textarea
-            x-model="bonusTask"
-            placeholder="Si agregaron extras especifiquen cuales. No los corrijo sino"
-            class="w-full h-24 border-2 border-sh-gray rounded-xl p-2 resize-none focus:outline-sh-purple"
-          ></textarea>
-        </div>
-        <div class="mt-4">
-          <h3 class="font-semibold !text-[16px] md:!text-[18px]">
-            Comentarios
-          </h3>
-          <textarea
-            x-model="comment"
-            placeholder="(opcional)"
-            class="w-full h-24 border-2 border-sh-gray rounded-xl p-2 resize-none focus:outline-sh-purple"
-          ></textarea>
-        </div>
-      </div>
-    </dialog>
   </div>
 </SectionLayout>
