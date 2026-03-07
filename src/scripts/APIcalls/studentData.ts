@@ -148,7 +148,7 @@ export async function submitRevisionRequest(
 ): Promise<RevisionResponse> {
   try {
     // URL is subject/course/year and datasheetId, name and surname go as query params
-    const response = await fetch(`${backendURL}/student`, {
+    const response = await fetch(`${backendURL}/redoRequest`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -165,9 +165,12 @@ export async function submitRevisionRequest(
       }),
     });
     if (!response.ok) {
+      const errorBody = (await response.json()) || {
+        message: "Error al enviar el pedido de revisión",
+      };
       return {
         success: false,
-        message: `${response.statusText}`,
+        message: `${errorBody.message! || "Error al enviar el pedido de revisión"}`,
       };
     }
     return {
