@@ -130,3 +130,56 @@ export async function fetchRevisionRequests(
     return [];
   }
 }
+
+type RevisionResponse = {
+  success: boolean;
+  message: string;
+};
+
+export async function submitRevisionRequest(
+  subject: string,
+  course: string,
+  year: number,
+  studentIds: string[],
+  activityId: string,
+  reason: string,
+  bonusTasks: string,
+  comment: string,
+): Promise<RevisionResponse> {
+  try {
+    // URL is subject/course/year and datasheetId, name and surname go as query params
+    const response = await fetch(`${backendURL}/student`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        subject,
+        course,
+        year,
+        studentIds,
+        activityId,
+        reason,
+        bonusTasks,
+        comment,
+      }),
+    });
+    if (!response.ok) {
+      return {
+        success: false,
+        message: `${response.statusText}`,
+      };
+    }
+    return {
+      success: true,
+      message: "¡Pedido de revisión enviado con éxito!",
+    };
+  } catch (error) {
+    console.error("Failed to fetch revision requests:", error);
+    return {
+      success: false,
+      message:
+        "Error al enviar el pedido de revisión. Por favor, inténtalo de nuevo.",
+    };
+  }
+}
