@@ -17,6 +17,9 @@ type AlpineRedoData = AlpineComponent<{
   comment: string;
   remainingStudents: Array<Student>;
   selectedStudents: Array<Student>;
+  sendingRequest: boolean;
+  reset: () => void;
+  requestRedo: () => void;
 }>;
 
 const redoData = (students: Array<Student>) => {
@@ -36,6 +39,18 @@ const redoData = (students: Array<Student>) => {
       return this.students.filter(
         (student) => !this.studentIds.includes(student.id),
       );
+    },
+    reset() {
+      this.studentIds = [];
+      this.activityId = "";
+      this.reason = "";
+      this.bonusTask = "";
+      this.comment = "";
+    },
+    requestRedo() {
+      this.sendingRequest = true;
+      this.reset();
+      this.sendingRequest = false;
     },
   } as AlpineRedoData;
 };
