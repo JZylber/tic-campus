@@ -1,0 +1,28 @@
+---
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<div
+  class="border-2 border-sh-gray rounded-xl p-4 cursor-pointer"
+  x-data="{
+  open: false
+}"
+  @click="open = !open"
+>
+  <div class="flex justify-between items-center" :class="{ 'pb-4': open }">
+    <h3 class="font-semibold text-[20px] md:text-[24px]">{title}</h3>
+    <span
+      class="material-symbols-outlined transition-transform !tex"
+      :class="{ 'rotate-90': open }"
+    >
+      arrow_forward_ios
+    </span>
+  </div>
+  <div x-show="open" x-collapse>
+    <slot />
+  </div>
+</div>

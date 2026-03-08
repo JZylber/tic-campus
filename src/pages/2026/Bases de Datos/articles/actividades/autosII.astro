@@ -1,0 +1,277 @@
+---
+import Collapsable from "../../../../../components/misc/collapsable/Collapsable.astro";
+
+export const partial = true;
+---
+
+<h2>Consigna</h2>
+<p>
+  Con el mismo grupo que hicieron la consigna pasada, construir el DER de la
+  aplicación del cliente que se les asignó. No tienen que preguntarle más nada a
+  los chatbots, sino que cuentan con una serie de preguntas e información que su
+  DER tiene que poder responder, es decir, tiene que tener las entidades,
+  atributos y relaciones necesarias para que la información necesaria para
+  reflejar la información pedida y responder las preguntas esté.
+</p>
+<p>
+  Pueden hacerlo en papel, en drawio.io, o cualquier otra aplicación onlines que
+  haga diagramas
+</p>
+<h3>Antes de empezar</h3>
+<ul>
+  <li>
+    Leer todos los ítems y preguntas. No hay un orden, y es importante tener un
+    panorama general.
+  </li>
+  <li>
+    Recuerden que tienen que armar un DER que pueda reflejar la información y
+    responder a las preguntas, no dar datos concretos.
+  </li>
+  <li>
+    Las preguntas están sutilmente cambiadas respecto a los clientes. Puede que
+    haya algunas entidades que el cliente les pidió que no tengan mucho sentido
+    ahora. Especialmente Pepe que flasheó concesionaria en vez de página web de
+    usados. ¡No hay vendedores!
+  </li>
+</ul>
+<div class="flex flex-col gap-y-4">
+  <Collapsable title="María Elena (rideshare)">
+    <div class="flex flex-col gap-y-2">
+      <h4 class="font-medium text-[18px] md:text-[20px]">Autos</h4>
+      <ul class="list-disc indent-2">
+        <li>Ubicación geográfica</li>
+        <li>Color</li>
+        <li>Marca</li>
+        <li>Modelo</li>
+        <li>Choferes</li>
+      </ul>
+      <p>¿Está en viaje, disponible, o fuera de servicio?</p>
+      <h4 class="font-medium text-[18px] md:text-[20px]">Choferes</h4>
+      <ul class="list-disc indent-2">
+        <li>Nombre</li>
+        <li>Apellido</li>
+        <li>Puntaje</li>
+        <li>Autos</li>
+      </ul>
+      <h4 class="font-medium text-[18px] md:text-[20px]">Usuarios</h4>
+      <ul class="list-disc indent-2">
+        <li>Nombre</li>
+        <li>Apellido</li>
+        <li>Puntaje</li>
+        <li>Ubicación geográfica</li>
+      </ul>
+      <p>¿Están esperando un viaje, en viaje, o ninguna de las anteriores?</p>
+      <h4 class="font-medium text-[18px] md:text-[20px]">Viajes</h4>
+      <ul class="list-disc indent-2">
+        <li>Origen: ubicación, fecha y hora</li>
+        <li>Destino: ubicación, fecha y hora</li>
+        <li>Precio</li>
+        <li>Usuario</li>
+        <li>Chofer</li>
+        <li>Auto</li>
+      </ul>
+      <h4 class="font-medium text-[18px] md:text-[20px]">Consigna manija</h4>
+      <p>
+        ¿Su DER puede responder la pregunta: <em
+          >“¿Cuántos puntos tiene cada equipo?”</em
+        >?
+      </p>
+    </div>
+  </Collapsable>
+  <Collapsable title="Dardo (TC2000)">
+    <div class="flex flex-col gap-y-2">
+      <h4 class="font-medium text-[18px] md:text-[20px]">Choferes</h4>
+      <ul class="list-disc indent-2">
+        <li>Nombre</li>
+        <li>Apellido</li>
+        <li>Nacionalidad</li>
+        <li>Número</li>
+        <li>Equipo</li>
+      </ul>
+      <h4 class="font-medium text-[18px] md:text-[20px]">Equipos</h4>
+      <ul class="list-disc indent-2">
+        <li>Nombre</li>
+        <li>Director</li>
+        <li>Sponsors</li>
+        <li>Autos</li>
+        <li>Choferes</li>
+      </ul>
+      <h4 class="font-medium text-[18px] md:text-[20px]">Autos</h4>
+      <ul class="list-disc indent-2">
+        <li>Modelo</li>
+        <li>Marca</li>
+        <li>Motor (potencia y cilindros)</li>
+        <li>Equipo</li>
+      </ul>
+      <h4 class="font-medium text-[18px] md:text-[20px]">Carreras</h4>
+      <ul class="list-disc indent-2">
+        <li>Circuito</li>
+        <li>Provincia/lugar</li>
+      </ul>
+      <h4 class="font-medium text-[18px] md:text-[20px]">Resultados</h4>
+      <ul class="list-disc indent-2">
+        <li>Carrera</li>
+        <li>Equipo</li>
+        <li>Chofer</li>
+        <li>Auto</li>
+        <li>Posición</li>
+        <li>Puntos</li>
+      </ul>
+      <h4 class="font-medium text-[18px] md:text-[20px]">Consigna manija</h4>
+      <p>
+        ¿Su DER puede responder la pregunta: <em
+          >“¿Cuántos puntos tiene cada equipo?”</em
+        >?
+      </p>
+    </div>
+  </Collapsable>
+  <Collapsable title="Pepe (Usados)">
+    <div class="flex flex-col gap-y-2">
+      <h4 class="font-medium text-[18px] md:text-[20px]">Usuarios</h4>
+      <ul class="list-disc indent-2">
+        <li>Nombre</li>
+        <li>Apellido</li>
+        <li>Datos de contacto</li>
+      </ul>
+      <h4 class="font-medium text-[18px] md:text-[20px]">Publicaciones</h4>
+      <ul class="list-disc indent-2">
+        <li>Modelo</li>
+        <li>Marca</li>
+        <li>Color</li>
+        <li>Patente</li>
+        <li>Km</li>
+        <li>Precio estimado</li>
+        <li>Descripción de estado</li>
+      </ul>
+      <p>¿Está disponible?</p>
+      <h4 class="font-medium text-[18px] md:text-[20px]">Ventas</h4>
+      <ul class="list-disc indent-2">
+        <li>Usuario comprador</li>
+        <li>Usuario vendedor</li>
+        <li>Precio Final</li>
+        <li>Fecha de venta</li>
+      </ul>
+      <h4 class="font-medium text-[18px] md:text-[20px]">Comentarios</h4>
+      <ul class="list-disc indent-2">
+        <li>Usuario</li>
+        <li>Fecha/hora</li>
+        <li>Contenido</li>
+        <li>Publicación</li>
+      </ul>
+      <h4 class="font-medium text-[18px] md:text-[20px]">Consigna manija</h4>
+      <p>
+        ¿Su DER puede permitir que haya comentarios que son respuestas a otros?
+        Modificar el DER para permitirlo.
+      </p>
+    </div>
+  </Collapsable>
+  <Collapsable title="Mónica (Alquiler)">
+    <div class="flex flex-col gap-y-2">
+      <h4 class="font-medium text-[18px] md:text-[20px]">Usuarios</h4>
+      <ul class="list-disc indent-2">
+        <li>Nombre</li>
+        <li>Apellido</li>
+        <li>DNI/Pasaporte</li>
+        <li>Nacionalidad</li>
+        <li>Datos de contacto</li>
+      </ul>
+      <h4 class="font-medium text-[18px] md:text-[20px]">Autos</h4>
+      <ul class="list-disc indent-2">
+        <li>Modelo</li>
+        <li>Marca</li>
+        <li>Color</li>
+        <li>Patente</li>
+        <li>Km</li>
+        <li>Garaje de origen</li>
+      </ul>
+      <p>
+        ¿Están disponibles, alquilados o en reparación? ¿Están en alguno de los
+        garajes de la empresa?
+      </p>
+      <h4 class="font-medium text-[18px] md:text-[20px]">Alquileres</h4>
+      <ul class="list-disc indent-2">
+        <li>Usuario</li>
+        <li>Auto</li>
+        <li>Fecha de inicio</li>
+        <li>Fecha de devolución</li>
+        <li>Garaje de retiro</li>
+        <li>Garaje de devolución (si es que se devolvió)</li>
+        <li>Costo</li>
+      </ul>
+      <h4 class="font-medium text-[18px] md:text-[20px]">
+        Servicios Mecánicos
+      </h4>
+      <ul class="list-disc indent-2">
+        <li>Auto</li>
+        <li>Fecha de inicio</li>
+        <li>Fecha de finalización</li>
+        <li>Descripción del servicio</li>
+        <li>Costo</li>
+      </ul>
+      <p>Asuman que no hay cambio de garajes en los servicios mecánicos.</p>
+      <h4 class="font-medium text-[18px] md:text-[20px]">Garajes</h4>
+      <ul class="list-disc indent-2">
+        <li>Lugar</li>
+        <li>
+          Autos que se originaron en esta garaje (antes de cualquier alquiler o
+          service)
+        </li>
+      </ul>
+      <h4 class="font-medium text-[18px] md:text-[20px]">Consigna manija</h4>
+      <p>
+        ¿Su DER puede permitir armar el historial de garajes de cada auto? ¿Es
+        necesario un atributo para el estado de un auto (alquilado, en
+        reparación, etc)?
+      </p>
+    </div>
+  </Collapsable>
+  <Collapsable title="Paola (Estacionamiento)
+">
+    <div class="flex flex-col gap-y-2">
+      <h4 class="font-medium text-[18px] md:text-[20px]">Autos</h4>
+      <ul>
+        <li>Patente</li>
+        <li>Color</li>
+        <li>Marca</li>
+        <li>Modelo</li>
+      </ul>
+      <h4 class="font-medium text-[18px] md:text-[20px]">Cocheras</h4>
+      <ul>
+        <li>Piso</li>
+        <li>Fila</li>
+        <li>Columna</li>
+      </ul>
+      <h4 class="font-medium text-[18px] md:text-[20px]">Dueños</h4>
+      <ul>
+        <li>Datos de contacto</li>
+        <li>Alquileres de cocheras</li>
+      </ul>
+      <h4 class="font-medium text-[18px] md:text-[20px]">Alquileres</h4>
+      <ul>
+        <li>Auto</li>
+        <li>Dueño</li>
+        <li>Cochera</li>
+        <li>Costo</li>
+        <li>Fecha de inicio</li>
+        <li>Fecha fin</li>
+      </ul>
+      <h4 class="font-medium text-[18px] md:text-[20px]">Ingresos</h4>
+      <ul>
+        <li>Fecha/hora de entrada</li>
+        <li>Fecha/hora de salida (si salió)</li>
+        <li>Cochera</li>
+        <li>Auto</li>
+        <li>
+          Pago ya sea porque se pagó la hora, o porque es un alquiler permanente
+        </li>
+      </ul>
+      <h4 class="font-medium text-[18px] md:text-[20px]">Consigna manija</h4>
+      <p>
+        ¿Su DER puede calcular el total de plata recaudada? Asuman que para las
+        cocheras no alquiladas, el costo de hora es fijo (¡Qué lindo que no haya
+        inflación!) ¿Se imaginan como hacer si el costo por hora puede variar
+        con el tiempo? Modifiquen el DER.
+      </p>
+    </div>
+  </Collapsable>
+</div>
