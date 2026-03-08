@@ -1,5 +1,60 @@
 ---
+import CodeBlock from "../../../../../components/articles/code-block/CodeBlock.astro";
+import InlineCodeBlock from "../../../../../components/articles/code-block/InlineCodeBlock.astro";
+
 export const partial = true;
 ---
 
-<p>Proximamente...</p>
+<h1>Cifrado César</h1>
+<p>
+  El cifrado césar es una de las primeras técnicas de encriptación de mensajes.
+  Pueden leer más acá:
+  <a href="https://es.wikipedia.org/wiki/Cifrado_C%C3%A9sar"
+    >https://es.wikipedia.org/wiki/Cifrado_C%C3%A9sar</a
+  >
+</p>
+<p>
+  Cuentan con la función <code
+    >cifrar_letra(letra: str, desplazamiento: int)</code
+  > que recibe una letra (mayúscula o minúscula) y un número de desplazamiento, y
+  devuelve la letra cifrada según el cifrado césar.
+</p>
+<p>
+  Para instalar las librerías necesarias, pueden usar el siguiente comando en su
+  terminal:
+</p>
+<CodeBlock lang="bash" code="pip install -r requirements.txt" />
+<h2>Consigna</h2>
+<ol>
+  <li>Hacer una nueva celda de notebook.</li>
+  <li>
+    Tomar 2 inputs del usuario: una oración y un número de desplazamiento.
+  </li>
+  <li>
+    Hacer un programa que cifre cada letra de la oración usando la función <InlineCodeBlock
+      code="cifrar_letra"
+      lang="python"
+    /> y el número de desplazamiento dado por el usuario.
+  </li>
+  <li>Imprimir la oración cifrada.</li>
+</ol>
+<h2>Consigna Manija</h2>
+<ol>
+  <li>
+    En una nueva celda de notebook, hacer una función que descifre una oración
+    cifrada con el cifrado césar, tomando como input la oración cifrada y el
+    número de desplazamiento.
+  </li>
+  <li>
+    En otra celda de notebook, hacer un programa que permita descifrar una
+    oración cifrada, <strong>sin saber el número de desplazamiento</strong>. <strong
+      >TIP:</strong
+    > No hay tantas combinaciones posibles, se empiezan a repetir después de cierto
+    número de desplazamiento.
+  </li>
+</ol>
+<p>
+  Cuando lo tengan, descifren el siguiente mensaje: <em
+    >zjqo kdzks rs ajbwqv is smigocoadh</em
+  >. ¿Con qué clave fue cifrado?
+</p>
