@@ -137,21 +137,22 @@ const { open, articleURL, content, course } = Astro.props;
   x-effect={`updateArticle(${content}, ${articleURL})`}
 >
   <div
-    class="flex w-full items-center py-2 mb-2 border-b-2 border-gray-300 sticky top-0 bg-gray-50 z-10 gap-x-4"
+    class="flex w-full items-center py-4 mb-4 border-b-2 border-gray-300 sticky top-0 bg-gray-50 z-10 gap-x-4"
   >
     <div
       x-on:click={`${open} = false`}
-      class="border-gray-400 border-2 p-2 rounded-xl cursor-pointer flex justify-center items-center hover:shadow-md"
+      class="border-gray-400 border-2 p-2 rounded-xl cursor-pointer flex justify-center items-center gap-x-3 hover:shadow-md"
     >
       <span
         x-text="'arrow_back'"
         class="material-symbols-outlined text-[20px]! sm:text-[24px]!"></span>
+      <span class="max-sm:hidden">Volver</span>
     </div>
     <template
       x-if={`${content} && ${content}.repositoryURL && ${content}.repositoryURL !== ''`}
     >
       <a
-        class="bg-sh-purple border-2 border-sh-dark-gray p-1 sm:px-3 sm:py-2 max-sm:aspect-square rounded-xl cursor-pointer flex justify-center gap-x-3 sm:w-36 items-center hover:shadow-md"
+        class="bg-sh-purple border-2 border-sh-dark-gray p-2 max-sm:aspect-square rounded-xl cursor-pointer flex justify-center gap-x-3 sm:w-36 items-center hover:shadow-md"
         x-bind:href={`${content}.repositoryURL`}
         target="_blank"
       >
@@ -172,7 +173,7 @@ const { open, articleURL, content, course } = Astro.props;
       x-if={`${content} && ${content}.handInURL && ${content}.handInURL !== ''`}
     >
       <a
-        class="bg-sh-purple border-2 border-sh-dark-gray p-1 sm:px-3 sm:py-2 max-sm:aspect-square rounded-xl cursor-pointer flex justify-center gap-x-3 sm:w-36 items-center hover:shadow-md"
+        class="bg-sh-purple border-2 border-sh-dark-gray p-2 max-sm:aspect-square rounded-xl cursor-pointer flex justify-center gap-x-3 sm:w-36 items-center hover:shadow-md"
         x-bind:href={`${content}.handInURL`}
         target="_blank"
       >
@@ -188,10 +189,19 @@ const { open, articleURL, content, course } = Astro.props;
     <Error message="errorMessage" />
   </template>
   <div x-show="!(loading || error)" class="flex flex-col gap-y-4">
-    <div class="flex flex-col md:flex-row justify-between items-center">
-      <div
-        class="order-2 md:order-1 self-stretch flex flex-col justify-center gap-y-2"
+    <div class="flex flex-col md:flex-row gap-x-4 items-center">
+      <template
+        x-data="{imageLink: undefined}"
+        x-if="imageLink"
+        x-effect={`imageLink = (${content} && ${content}.imgURL)?? undefined`}
       >
+        <img
+          x-bind:src={`${content} !== null?${content}.imgURL:''`}
+          alt="imagen actividad"
+          class="rounded-xl overflow-hidden aspect-square w-36 md:w-40 object-cover border-2 border-sh-black"
+        />
+      </template>
+      <div class="self-stretch flex flex-col justify-center gap-y-2">
         <h1
           x-text={`${content} ? ${content}.name : ''`}
           class="text-center md:text-left text-[36px] md:text-[40px] lg:text-[48px] font-bold"
@@ -298,17 +308,6 @@ const { open, articleURL, content, course } = Astro.props;
           </div>
         </template>
       </div>
-      <template
-        x-data="{imageLink: undefined}"
-        x-if="imageLink"
-        x-effect={`imageLink = (${content} && ${content}.imgURL)?? undefined`}
-      >
-        <img
-          x-bind:src={`${content} !== null?${content}.imgURL:''`}
-          alt="imagen actividad"
-          class="order-1 md:order-2 rounded-xl overflow-hidden aspect-square w-36 md:w-40 object-cover"
-        />
-      </template>
     </div>
     <div
       x-ref="content"
