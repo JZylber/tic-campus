@@ -250,14 +250,14 @@ const { open, articleURL, content, course } = Astro.props;
                 `}
           >
             <div
-              class="p-2 md:px-4 py-2 rounded-full flex justify-center items-center gap-x-4 text-[16px] md:text-[20px]"
+              class="py-2 px-3 rounded-full flex justify-center items-center gap-x-2 text-[16px] border"
               x-bind:class="{
-                  'bg-sh-light-yellow text-sh-yellow': redo,
-                  'bg-sh-light-green text-sh-green ': passing && !redo,
-                  'bg-sh-light-red text-sh-red': !passing && !redo,
+                  'bg-sh-light-yellow text-sh-yellow border-sh-medium-yellow': redo,
+                  'bg-sh-light-green text-sh-green border-sh-medium-green ': passing && !redo,
+                  'bg-sh-light-red text-sh-red border-sh-medium-red': !passing && !redo,
                 }"
             >
-              <span
+              <!-- <span
                 x-bind:class="{
                   'material-symbols-outlined text-[20px]! md:text-[24px]!': redo || mark === -1,
                 }"
@@ -276,7 +276,7 @@ const { open, articleURL, content, course } = Astro.props;
                             return mark;
                           }
                         })()"
-              ></span>
+              ></span> -->
               <span
                 x-text={`(() => {
                     if(redo) {
