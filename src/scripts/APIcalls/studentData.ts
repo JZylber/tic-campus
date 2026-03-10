@@ -148,7 +148,7 @@ export async function submitRevisionRequest(
 ): Promise<RevisionResponse> {
   try {
     // URL is subject/course/year and datasheetId, name and surname go as query params
-    const response = await fetch(`${backendURL}/redoRequest`, {
+    const response = await fetch(`${backendURL}/revisionRequest`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
