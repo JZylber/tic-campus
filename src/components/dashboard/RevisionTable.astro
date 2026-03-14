@@ -1,0 +1,12 @@
+---
+import Loader from "../loader/Loader.astro";
+---
+
+<script>
+  Alpine.data("revision", () => ({
+    loading: true,
+  }));
+</script>
+<div class="w-full flex justify-center py-4" x-data="revision()">
+  <Loader show="loading" />
+</div>
