@@ -25,7 +25,10 @@ import Loader from "../loader/Loader.astro";
 </script>
 <div class="w-full flex justify-center py-4" x-data="revision()">
   <Loader show="loading" />
-  <div x-show="!loading">
+  <div x-show="!loading && requests.length === 0">
+    <p class="text-gray-500 text-lg">No hay pedidos de revisión.</p>
+  </div>
+  <div x-show="!loading && requests.length > 0">
     <table class="w-full">
       <thead class="bg-sh-black text-gray-50 text-lg font-semibold">
         <tr>
