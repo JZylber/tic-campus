@@ -1,0 +1,66 @@
+---
+import Loader from "../loader/Loader.astro";
+---
+
+<script>
+  import { fetchRevisionsByTeacher } from "../../scripts/APIcalls/dashboard";
+  Alpine.data("revision", () => ({
+    loading: true,
+    requests: [] as Awaited<ReturnType<typeof fetchRevisionsByTeacher>>,
+    init() {
+      const currentYear = new Date().getFullYear();
+      fetchRevisionsByTeacher("1", currentYear)
+        .then((data) => {
+          this.requests = data;
+          // Process the data as needed
+        })
+        .catch((error) => {
+          console.error("Error fetching revisions:", error);
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    },
+  }));
+</script>
+<div class="w-full flex justify-center py-4" x-data="revision()">
+  <Loader show="loading" />
+  <div x-show="!loading && requests.length === 0">
+    <p class="text-gray-500 text-lg">No hay pedidos de revisión.</p>
+  </div>
+  <div x-show="!loading && requests.length > 0">
+    <table class="w-full">
+      <thead class="bg-sh-black text-gray-50 text-lg font-semibold">
+        <tr>
+          <th class="px-4 py-2">#</th>
+          <th class="px-4 py-2">Nombre</th>
+          <th class="px-4 py-2">Apellido</th>
+          <th class="px-4 py-2">Curso</th>
+          <th class="px-4 py-2">Materia</th>
+          <th class="px-4 py-2">Actividad</th>
+          <th class="px-4 py-2">Fecha</th>
+          <th class="px-4 py-2">Motivo</th>
+          <th class="px-4 py-2">Extras</th>
+          <th class="px-4 py-2">Comentarios</th>
+        </tr>
+      </thead>
+      <tbody>
+        <template x-for="request in requests" :key="request.revisionRequestId">
+          <tr>
+            <td class="px-4 py-2" x-text="request.revisionRequestId"></td>
+            <td class="px-4 py-2" x-text="request.studentName"></td>
+            <td class="px-4 py-2" x-text="request.studentSurname"></td>
+            <td class="px-4 py-2" x-text="request.courseName"></td>
+            <td class="px-4 py-2" x-text="request.subjectName"></td>
+            <td class="px-4 py-2" x-text="request.activityId"></td>
+            <td class="px-4 py-2" x-text="request.date.toLocaleDateString()"
+            ></td>
+            <td class="px-4 py-2" x-text="request.reason"></td>
+            <td class="px-4 py-2" x-text="request.bonusTasks || 'N/A'"></td>
+            <td class="px-4 py-2" x-text="request.comment || 'N/A'"></td>
+          </tr>
+        </template>
+      </tbody>
+    </table>
+  </div>
+</div>
