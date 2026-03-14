@@ -1,0 +1,16 @@
+---
+import GithubLayout from "../layouts/GithubLayout.astro";
+import RevisionTable from "../components/dashboard/RevisionTable.astro";
+---
+
+<GithubLayout>
+  <div class="w-full h-full flex flex-col items-center overflow-y-scroll">
+    <h1 class="text-[30px] md:text-[36px] font-bold pt-4 pb-2">
+      Pedidos de Revisión
+    </h1>
+    <h2 class="text-[16px] md:text-[20px] pb-4">
+      En esta página se encuentran los pedidos de revisión.
+    </h2>
+    <RevisionTable />
+  </div>
+</GithubLayout>

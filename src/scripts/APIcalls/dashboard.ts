@@ -48,3 +48,48 @@ export async function fetchStudents() {
     return [];
   }
 }
+
+type RevisionRequest = {
+  revisionRequestId: string;
+  activityId: string;
+  bonusTasks: string | null;
+  comment: string | null;
+  courseName: string;
+  courseYear: number;
+  date: Date;
+  reason: string;
+  reviewed: boolean;
+  studentId: string;
+  studentName: string;
+  studentSurname: string;
+  subjectName: string;
+};
+
+export async function fetchRevisionsByTeacher(teacherId: string, year: number) {
+  // For now, stuck at 1
+  try {
+    const response = await fetch(
+      `${backendURL}/revisionRequests/teacher/${year}/${teacherId}`,
+    );
+    if (!response.ok) {
+      throw new Error(
+        `Error fetching revision requests: ${response.statusText}`,
+      );
+    }
+    const data: RevisionRequest[] = await response.json().then((requests) =>
+      requests
+        .map((request: any) => ({
+          ...request,
+          date: new Date(request.date),
+        }))
+        .sort(
+          (a: RevisionRequest, b: RevisionRequest) =>
+            a.date.getTime() - b.date.getTime(),
+        ),
+    );
+    return data;
+  } catch (error) {
+    console.error("Failed to fetch revision requests:", error);
+    return [];
+  }
+}
