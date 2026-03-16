@@ -137,63 +137,71 @@ const { open, articleURL, content, course } = Astro.props;
   x-effect={`updateArticle(${content}, ${articleURL})`}
 >
   <div
-    class="flex justify-between w-full items-center py-2 mb-2 border-b-2 border-gray-300 sticky top-0 bg-gray-50 z-10"
+    class="flex w-full items-center py-4 mb-4 border-b-2 border-gray-300 sticky top-0 bg-gray-50 z-10 gap-x-4"
   >
-    <div class="flex gap-x-4 self-stretch">
-      <template
-        x-if={`${content} && ${content}.repositoryURL && ${content}.repositoryURL !== ''`}
-      >
-        <a
-          class="bg-sh-purple border-2 border-sh-dark-gray p-1 sm:px-3 sm:py-2 max-sm:aspect-square rounded-xl cursor-pointer flex justify-center gap-x-3 sm:w-36 items-center hover:shadow-md"
-          x-bind:href={`${content}.repositoryURL`}
-          target="_blank"
-        >
-          <span class="max-sm:hidden">Repositorio</span>
-          <svg
-            class="w-[20px] h-[20px] sm:w-[24px] sm:h-[24px]"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="currentColor"
-          >
-            <path
-              d="M2.5 18.5C2.5 20.43 4.07 22 6 22s3.5-1.57 3.5-3.5c0-1.58-1.06-2.903-2.5-3.337v-3.488c.244.273.509.527.813.744 1.18.844 2.617 1.098 3.918 1.098.966 0 1.853-.14 2.506-.281a3.5 3.5 0 0 0 3.264 2.265c1.93 0 3.5-1.57 3.5-3.5s-1.57-3.5-3.5-3.5a3.5 3.5 0 0 0-3.404 2.718c-1.297.321-3.664.616-5.119-.426-.666-.477-1.09-1.239-1.306-2.236C8.755 7.96 9.5 6.821 9.5 5.5 9.5 3.57 7.93 2 6 2S2.5 3.57 2.5 5.5c0 1.58 1.06 2.903 2.5 3.337v6.326c-1.44.434-2.5 1.757-2.5 3.337zm15-8c.827 0 1.5.673 1.5 1.5s-.673 1.5-1.5 1.5S16 12.827 16 12s.673-1.5 1.5-1.5zm-10 8c0 .827-.673 1.5-1.5 1.5s-1.5-.673-1.5-1.5S5.173 17 6 17s1.5.673 1.5 1.5zm-3-13C4.5 4.673 5.173 4 6 4s1.5.673 1.5 1.5S6.827 7 6 7s-1.5-.673-1.5-1.5z"
-            ></path>
-          </svg>
-        </a>
-      </template>
-      <template
-        x-if={`${content} && ${content}.handInURL && ${content}.handInURL !== ''`}
-      >
-        <a
-          class="bg-sh-purple border-2 border-sh-dark-gray p-1 sm:px-3 sm:py-2 max-sm:aspect-square rounded-xl cursor-pointer flex justify-center gap-x-3 sm:w-36 items-center hover:shadow-md"
-          x-bind:href={`${content}.handInURL`}
-          target="_blank"
-        >
-          <span class="max-sm:hidden">Entrega</span>
-          <span class="material-symbols-outlined text-[20px]! sm:text-[24px]!">
-            move_to_inbox
-          </span>
-        </a>
-      </template>
-    </div>
     <div
       x-on:click={`${open} = false`}
-      class="border-gray-400 border-2 p-2 rounded-xl cursor-pointer flex justify-center items-center hover:shadow-md"
+      class="border-gray-400 border-2 p-2 rounded-xl cursor-pointer flex justify-center items-center gap-x-3 hover:shadow-md"
     >
       <span
-        x-text="'close'"
+        x-text="'arrow_back'"
         class="material-symbols-outlined text-[20px]! sm:text-[24px]!"></span>
+      <span class="max-sm:hidden">Volver</span>
     </div>
+    <template
+      x-if={`${content} && ${content}.repositoryURL && ${content}.repositoryURL !== ''`}
+    >
+      <a
+        class="bg-sh-purple border-2 border-sh-dark-gray p-2 max-sm:aspect-square rounded-xl cursor-pointer flex justify-center gap-x-3 sm:w-36 items-center hover:shadow-md"
+        x-bind:href={`${content}.repositoryURL`}
+        target="_blank"
+      >
+        <span class="max-sm:hidden">Repositorio</span>
+        <svg
+          class="w-[20px] h-[20px] sm:w-[24px] sm:h-[24px]"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="currentColor"
+        >
+          <path
+            d="M2.5 18.5C2.5 20.43 4.07 22 6 22s3.5-1.57 3.5-3.5c0-1.58-1.06-2.903-2.5-3.337v-3.488c.244.273.509.527.813.744 1.18.844 2.617 1.098 3.918 1.098.966 0 1.853-.14 2.506-.281a3.5 3.5 0 0 0 3.264 2.265c1.93 0 3.5-1.57 3.5-3.5s-1.57-3.5-3.5-3.5a3.5 3.5 0 0 0-3.404 2.718c-1.297.321-3.664.616-5.119-.426-.666-.477-1.09-1.239-1.306-2.236C8.755 7.96 9.5 6.821 9.5 5.5 9.5 3.57 7.93 2 6 2S2.5 3.57 2.5 5.5c0 1.58 1.06 2.903 2.5 3.337v6.326c-1.44.434-2.5 1.757-2.5 3.337zm15-8c.827 0 1.5.673 1.5 1.5s-.673 1.5-1.5 1.5S16 12.827 16 12s.673-1.5 1.5-1.5zm-10 8c0 .827-.673 1.5-1.5 1.5s-1.5-.673-1.5-1.5S5.173 17 6 17s1.5.673 1.5 1.5zm-3-13C4.5 4.673 5.173 4 6 4s1.5.673 1.5 1.5S6.827 7 6 7s-1.5-.673-1.5-1.5z"
+          ></path>
+        </svg>
+      </a>
+    </template>
+    <template
+      x-if={`${content} && ${content}.handInURL && ${content}.handInURL !== ''`}
+    >
+      <a
+        class="bg-sh-purple border-2 border-sh-dark-gray p-2 max-sm:aspect-square rounded-xl cursor-pointer flex justify-center gap-x-3 sm:w-36 items-center hover:shadow-md"
+        x-bind:href={`${content}.handInURL`}
+        target="_blank"
+      >
+        <span class="max-sm:hidden">Entrega</span>
+        <span class="material-symbols-outlined text-[20px]! sm:text-[24px]!">
+          move_to_inbox
+        </span>
+      </a>
+    </template>
   </div>
   <Loader show="loading" />
   <template x-if="error">
     <Error message="errorMessage" />
   </template>
   <div x-show="!(loading || error)" class="flex flex-col gap-y-4">
-    <div class="flex flex-col md:flex-row justify-between items-center">
-      <div
-        class="order-2 md:order-1 self-stretch flex flex-col justify-center gap-y-2"
+    <div class="flex flex-col md:flex-row gap-x-4 items-center">
+      <template
+        x-data="{imageLink: undefined}"
+        x-if="imageLink"
+        x-effect={`imageLink = (${content} && ${content}.imgURL)?? undefined`}
       >
+        <img
+          x-bind:src={`${content} !== null?${content}.imgURL:''`}
+          alt="imagen actividad"
+          class="rounded-xl overflow-hidden aspect-square w-36 md:w-40 object-cover border-2 border-sh-black"
+        />
+      </template>
+      <div class="self-stretch flex flex-col justify-center gap-y-2">
         <h1
           x-text={`${content} ? ${content}.name : ''`}
           class="text-center md:text-left text-[36px] md:text-[40px] lg:text-[48px] font-bold"
@@ -242,14 +250,14 @@ const { open, articleURL, content, course } = Astro.props;
                 `}
           >
             <div
-              class="p-2 md:px-4 py-2 rounded-full flex justify-center items-center gap-x-4 text-[16px] md:text-[20px]"
+              class="py-2 px-3 rounded-full flex justify-center items-center gap-x-2 text-[16px] border"
               x-bind:class="{
-                  'bg-sh-light-yellow text-sh-yellow': redo,
-                  'bg-sh-light-green text-sh-green ': passing && !redo,
-                  'bg-sh-light-red text-sh-red': !passing && !redo,
+                  'bg-sh-light-yellow text-sh-yellow border-sh-medium-yellow': redo,
+                  'bg-sh-light-green text-sh-green border-sh-medium-green ': passing && !redo,
+                  'bg-sh-light-red text-sh-red border-sh-medium-red': !passing && !redo,
                 }"
             >
-              <span
+              <!-- <span
                 x-bind:class="{
                   'material-symbols-outlined text-[20px]! md:text-[24px]!': redo || mark === -1,
                 }"
@@ -268,7 +276,7 @@ const { open, articleURL, content, course } = Astro.props;
                             return mark;
                           }
                         })()"
-              ></span>
+              ></span> -->
               <span
                 x-text={`(() => {
                     if(redo) {
@@ -300,17 +308,6 @@ const { open, articleURL, content, course } = Astro.props;
           </div>
         </template>
       </div>
-      <template
-        x-data="{imageLink: undefined}"
-        x-if="imageLink"
-        x-effect={`imageLink = (${content} && ${content}.imgURL)?? undefined`}
-      >
-        <img
-          x-bind:src={`${content} !== null?${content}.imgURL:''`}
-          alt="imagen actividad"
-          class="order-1 md:order-2 rounded-xl overflow-hidden aspect-square w-36 md:w-40 object-cover"
-        />
-      </template>
     </div>
     <div
       x-ref="content"
