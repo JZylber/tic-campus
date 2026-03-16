@@ -1,5 +1,20 @@
 ---
+import CodeBlock from "../../../../../components/articles/code-block/CodeBlock.astro";
+
 export const partial = true;
 ---
 
-<p>Proximamente...</p>
+<p>Código de la clase</p>
+<CodeBlock
+  lang="python"
+  code={`def contar_letra(palabra,letra_a_contar):
+    cantidad = 0
+    for letra in palabra:
+        if letra == letra_a_contar:
+            cantidad = cantidad + 1
+    return cantidad
+palabra = input("Que palabra contás")
+letra_a_contar = input("Letra")
+print(contar_letra(palabra,letra_a_contar))
+`}
+/>
