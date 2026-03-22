@@ -98,10 +98,24 @@ export const partial = true;
     <strong>Panel de Control:</strong> Clic en el icono de los tres circulitos unidos
     (Control de código fuente) en la barra lateral izquierda.
   </li>
+  <div class="flex justify-center my-2">
+    <img
+      class="max-h-64 aspect-auto"
+      :src="$store.pageData.publicURL('diagrams/vscode/SourceControl.png')"
+      alt="source control icon"
+    />
+  </div>
   <li>
     <strong>Preparar (+):</strong> Al lado de los archivos que cambiaste, dale al
     símbolo <strong>+</strong>. Eso es "meter las cosas en la caja".
   </li>
+  <div class="flex justify-center my-2">
+    <img
+      class="max-h-64 aspect-auto"
+      :src="$store.pageData.publicURL('diagrams/vscode/Stage.png')"
+      alt="stage changes buttons"
+    />
+  </div>
   <li>
     <strong>El Mensaje (Obligatorio):</strong> Arriba hay un recuadro que dice "Mensaje".
     Si no escribís nada ahí, el botón de "Confirmar" no va a funcionar. <strong
@@ -113,11 +127,25 @@ export const partial = true;
       >Confirmar</strong
     >. Tu caja ya está cerrada con su etiqueta.
   </li>
+  <div class="flex justify-center my-2">
+    <img
+      class="max-h-64 aspect-auto"
+      :src="$store.pageData.publicURL('diagrams/vscode/Commit.png')"
+      alt="commit message box"
+    />
+  </div>
   <li>
     <strong>Sincronizar (Push):</strong> Dale al botón de <strong
       >Sincronizar cambios</strong
     > para que el paquete vuele a GitHub.
   </li>
+  <div class="flex justify-center my-2">
+    <img
+      class="max-h-64 aspect-auto"
+      :src="$store.pageData.publicURL('diagrams/vscode/Push.png')"
+      alt="push button"
+    />
+  </div>
 </ol>
 
 <h2>Tips</h2>
