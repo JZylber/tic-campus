@@ -1,5 +1,141 @@
 ---
+import ImportantBox from "../../../../../../components/articles/alertbox/ImportantBox.astro";
+import InlineCodeBlock from "../../../../../../components/articles/code-block/InlineCodeBlock.astro";
+
 export const partial = true;
 ---
 
-<p>Proximamente...</p>
+<h2>Introducción a Git y GitHub</h2>
+
+<p>
+  Si alguna vez borraste un archivo por error o terminaste con carpetas tipo <strong
+    >proyecto_final</strong
+  >, <strong>proyecto_final_v2</strong>, <strong>proyecto_final_este_si</strong
+  >, Git los va a salvar. Es la herramienta que usan los programadores
+  profesionales para no volverse locos en proyectos chicos, medianos y grandes.
+</p>
+
+<ul>
+  <li>
+    <strong>Git:</strong> Es el programa que instalás en tu compu para controlar las
+    versiones de tus archivos. Es como una máquina del tiempo para tu código.
+  </li>
+  <li>
+    <strong>GitHub:</strong> Es la nube (como un Google Drive de código) donde subís
+    todo para que no se pierda y para laburar en equipo.
+  </li>
+</ul>
+
+<hr />
+
+<h2>¿Cómo funciona un "Commit"?</h2>
+
+<p>
+  Para entender cómo Git guarda tus cambios, imaginate que tenés que mandar un
+  paquete por correo. El proceso tiene tres pasos que no te podés saltar:
+</p>
+
+<h3>1. Los objetos en la mesa (Working Directory)</h3>
+<p>
+  Estás en tu escritorio con todas las cosas que querés mandar: el código, las
+  imágenes, los estilos. Podés cambiar cosas, borrar otras... es tu zona de
+  trabajo. Git ve que hay movimiento, pero todavía no "empaquetó" nada.
+</p>
+
+<h3>
+  2. Armar la caja (Staging Area - <InlineCodeBlock
+    lang="bash"
+    code="git add"
+  />)
+</h3>
+<p>
+  Decidís qué cosas están listas para ser guardadas. Es como agarrar una caja de
+  cartón y empezar a meter los archivos adentro. Estás preparando el paquete,
+  pero la caja todavía está abierta.
+</p>
+
+<h3>
+  3. Cerrar y Etiquetar (Commit - <InlineCodeBlock
+    lang="bash"
+    code="git commit"
+  />)
+</h3>
+<p>
+  Ahora cerrás la caja con cinta de embalar. <strong>¡Ojo acá!</strong> El correo
+  tiene una regla estricta: <strong
+    >no te acepta el paquete si no tiene una etiqueta que diga qué hay adentro.</strong
+  >
+</p>
+
+<ImportantBox>
+  En Git, el <strong>mensaje de commit es obligatorio</strong>. No podés guardar
+  un cambio sin explicar qué hiciste. Si intentás hacer un commit sin mensaje,
+  Git te frena.
+</ImportantBox>
+
+<p>
+  La etiqueta (el mensaje) tiene que ser descriptiva. <em
+    >"Agregué el logo en el encabezado"</em
+  > va; escribir <em>"asdasd"</em> hace que tus compañeros de proyecto te quieran
+  matar.
+</p>
+
+<p>
+  <strong>El Push:</strong> Sería cuando pasa el camión del correo (GitHub u otro
+  servicio en la nube) y se lleva tu caja cerrada y etiquetada a la central para que
+  otros la vean.
+</p>
+
+<h2>Usando Git en VS Code (Fácil y rápido)</h2>
+
+<p>
+  VS Code te resuelve todo visualmente para que no tengas que escribir comandos
+  raros al principio:
+</p>
+
+<ol>
+  <li>
+    <strong>Panel de Control:</strong> Clic en el icono de los tres circulitos unidos
+    (Control de código fuente) en la barra lateral izquierda.
+  </li>
+  <li>
+    <strong>Preparar (+):</strong> Al lado de los archivos que cambiaste, dale al
+    símbolo <strong>+</strong>. Eso es "meter las cosas en la caja".
+  </li>
+  <li>
+    <strong>El Mensaje (Obligatorio):</strong> Arriba hay un recuadro que dice "Mensaje".
+    Si no escribís nada ahí, el botón de "Confirmar" no va a funcionar. <strong
+      >Escribí qué cambiaste de forma clara.</strong
+    >
+  </li>
+  <li>
+    <strong>Confirmar (Commit):</strong> Dale al botón azul que dice <strong
+      >Confirmar</strong
+    >. Tu caja ya está cerrada con su etiqueta.
+  </li>
+  <li>
+    <strong>Sincronizar (Push):</strong> Dale al botón de <strong
+      >Sincronizar cambios</strong
+    > para que el paquete vuele a GitHub.
+  </li>
+</ol>
+
+<hr />
+
+<h2>💡 Un consejo de onda</h2>
+
+<p>
+  No esperen a terminar todo el sitio web para hacer un commit. Hagan "paquetes"
+  chiquitos. Si terminaste el menú, hacé un commit. Si arreglaste un error en un
+  botón, hacé un commit.
+</p>
+
+<p>
+  Es mucho más fácil encontrar un paquete que diga <em
+    >"Arreglé el botón rojo"</em
+  > que uno gigante que diga <em
+    >"Hice todo el proyecto de nuevo porque no funcionaba"</em
+  >.
+</p>
+
+<p><strong>¿Se animan a probar su primer commit hoy?</strong></p>
