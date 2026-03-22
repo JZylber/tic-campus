@@ -183,6 +183,20 @@ const { open, articleURL, content, course } = Astro.props;
         </span>
       </a>
     </template>
+    <template
+      x-if={`${content} && ${content}.tutorURL && ${content}.tutorURL !== ''`}
+    >
+      <a
+        class="bg-sh-purple border-2 border-sh-dark-gray p-2 max-sm:aspect-square rounded-xl cursor-pointer flex justify-center gap-x-3 sm:w-36 items-center hover:shadow-md"
+        x-bind:href={`${content}.tutorURL`}
+        target="_blank"
+      >
+        <span class="max-sm:hidden">Tutor IA</span>
+        <span class="material-symbols-outlined text-[20px]! sm:text-[24px]!">
+          robot
+        </span>
+      </a>
+    </template>
   </div>
   <Loader show="loading" />
   <template x-if="error">
