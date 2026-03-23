@@ -1,0 +1,20 @@
+---
+interface Props {
+  file: string;
+  name: string;
+}
+
+const { file, name } = Astro.props;
+const fileName = file.split("/").slice(-1)[0];
+---
+
+<div class="flex justify-center" x-data=`{ file: '${file}' }`>
+  <a
+    :href="$store.pageData.publicURL(file)"
+    class="flex rounded-full gap-x-4 px-8 py-4 text-[24px] items-center bg-sh-purple !text-sh-black hover:bg-sh-light-purple hover:shadow transition-colors"
+    download={fileName}
+  >
+    <span class="material-symbols-outlined !text-[36px]">download</span>
+    <span>Descargar {name}</span></a
+  >
+</div>
