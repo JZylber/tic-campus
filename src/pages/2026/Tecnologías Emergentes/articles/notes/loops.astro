@@ -1,20 +1,50 @@
 ---
 import CodeBlock from "../../../../../components/articles/code-block/CodeBlock.astro";
+import Download from "../../../../../components/articles/download/Download.astro";
 
 export const partial = true;
 ---
 
-<p>Código de la clase</p>
+<Download file="files/nb/ciclos.ipynb" name="Notebook" />
+<p>
+  Para aprender ciclos en python, vamos a hacer un programa que cuente la
+  cantidad de una determinada letra en una palabra
+</p>
+<h2>While</h2>
 <CodeBlock
   lang="python"
-  code={`def contar_letra(palabra,letra_a_contar):
-    cantidad = 0
-    for letra in palabra:
-        if letra == letra_a_contar:
-            cantidad = cantidad + 1
-    return cantidad
-palabra = input("Que palabra contás")
-letra_a_contar = input("Letra")
-print(contar_letra(palabra,letra_a_contar))
+  code={`palabra = "inconvenience"
+letra = 'i'
+indice = 0
+cantidad = 0
+while indice < len(palabra):
+    if palabra[indice] == letra:
+        cantidad += 1
+    indice += 1
+print(f"La letra '{letra}' aparece {cantidad} veces en la palabra '{palabra}'")
+`}
+/>
+<h2>For (por índices)</h2>
+<CodeBlock
+  lang="python"
+  code={`palabra = "inconvenience"
+letra = 'i'
+cantidad = 0
+for indice in range(0, len(palabra)):
+    if palabra[indice] == letra:
+        cantidad += 1
+print(f"La letra '{letra}' aparece {cantidad} veces en la palabra '{palabra}'")
+`}
+/>
+<h2>For (for each o de iteradores)</h2>
+<CodeBlock
+  lang="python"
+  code={`palabra = "inconvenience"
+letra = 'i'
+cantidad = 0
+for letra_palabra in palabra:
+    if letra_palabra == letra:
+        cantidad += 1
+print(f"La letra '{letra}' aparece {cantidad} veces en la palabra '{palabra}'")
 `}
 />
