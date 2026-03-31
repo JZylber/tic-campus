@@ -63,9 +63,11 @@ html {
     "opsz" 24;
 }
 
-#campus-insertion {
-  display: flex;
-  justify-content: center;
+@media screen and (min-width: 640px) {
+  #campus-insertion {
+    display: flex;
+    justify-content: center;
+  }
 }
 
 @keyframes l7 {
