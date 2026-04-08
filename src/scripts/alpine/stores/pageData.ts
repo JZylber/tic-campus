@@ -23,6 +23,36 @@ const pageData = () => {
     publicURL(url: string) {
       return `${this.dataURL}/${url}`;
     },
+    downloadFileHandler(filePath: string) {
+      return async (event: MouseEvent) => {
+        // Prevent default anchor behavior if used on an <a> tag
+        event.preventDefault();
+        try {
+          const response = await fetch(this.publicURL(filePath), {
+            method: "GET",
+            mode: "cors",
+          });
+
+          if (!response.ok) throw new Error("Resource fetch failed");
+
+          const blob = await response.blob();
+          const blobUrl = window.URL.createObjectURL(blob);
+
+          const link = document.createElement("a");
+          link.href = blobUrl;
+          link.download = filePath.split("/").pop() || "archivo";
+          document.body.appendChild(link);
+          link.click();
+
+          // Cleanup
+          link.remove();
+          window.URL.revokeObjectURL(blobUrl);
+        } catch (error) {
+          console.error("Download failed:", error);
+          alert("Could not download file. Check CORS settings.");
+        }
+      };
+    },
   };
 };
 export default pageData;
