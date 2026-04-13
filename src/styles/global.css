@@ -39,8 +39,8 @@ html {
   aspect-ratio: 1;
   color: theme("colors.sh.purple");
   position: relative;
-  background: conic-gradient(from 134deg at top, currentColor 92deg, #0000 0)
-      top,
+  background:
+    conic-gradient(from 134deg at top, currentColor 92deg, #0000 0) top,
     conic-gradient(from -46deg at bottom, currentColor 92deg, #0000 0) bottom;
   background-size: 100% 50%;
   background-repeat: no-repeat;
@@ -50,13 +50,24 @@ html {
   position: absolute;
   inset: 0;
   --g: currentColor 14.5px, #0000 0 calc(100% - 14.5px), currentColor 0;
-  background: linear-gradient(45deg, var(--g)),
-    linear-gradient(-45deg, var(--g));
+  background:
+    linear-gradient(45deg, var(--g)), linear-gradient(-45deg, var(--g));
   animation: l7 1.5s infinite cubic-bezier(0.3, 1, 0, 1);
 }
 
 .material-symbols-outlined {
-  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+  font-variation-settings:
+    "FILL" 0,
+    "wght" 400,
+    "GRAD" 0,
+    "opsz" 24;
+}
+
+@media screen and (min-width: 640px) {
+  #campus-insertion {
+    display: flex;
+    justify-content: center;
+  }
 }
 
 @keyframes l7 {

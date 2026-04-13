@@ -1,0 +1,61 @@
+---
+import CodeBlock from "../../../../../components/articles/code-block/CodeBlock.astro";
+import InlineCodeBlock from "../../../../../components/articles/code-block/InlineCodeBlock.astro";
+
+export const partial = true;
+---
+
+<p>
+  En estos meses, se hizo viral el siguiente challange:
+  <a href="https://www.youtube.com/shorts/9YF4HZSPedc"
+    >https://www.youtube.com/shorts/9YF4HZSPedc</a
+  >
+</p>
+<p>¡Vamos a replicarlo en Python!</p>
+<h2>Consigna base</h2>
+<p>
+  Hacer la función <InlineCodeBlock
+    code="botellas_correctas(superior: list[str], inferior: list[str]) -> int"
+    lang="python"
+  /> que recibe dos listas de botellas de colores, una superior (que acomoda el participante)
+  y otra inferior (solo visible para el jurado), y devuelve el número de botellas
+  que coinciden.
+</p>
+<p>
+  Prueben la función con listas que inventen ustedes, y luego con las
+  siguientes:
+</p>
+<CodeBlock
+  lang="python"
+  code={`botellas_correctas(["rojo", "verde", "azul"], ["rojo", "verde", "azul"]) # Devuelve 3
+botellas_correctas(["rojo", "verde", "azul"], ["rojo", "azul", "verde"]) # Devuelve 1
+botellas_correctas(["rojo", "verde", "azul"], ["azul", "rojo", "verde"]) # Devuelve 0
+`}
+/>
+<p>Más información en el notebook.</p>
+<h2>Consigna Manija</h2>
+<p>
+  Hacer la función <InlineCodeBlock code="swap(lista, i, j)" lang="python" /> que
+  recibe una lista y dos posiciones
+  <em>i</em> y <em>j</em>, e intercambia los elementos en esas posiciones. <strong
+    >IMPORTANTE:</strong
+  > No retorna una lista nueva, sino que modifica la lista original.
+</p>
+<p>Por ejemplo:</p>
+<CodeBlock
+  lang="python"
+  code={`lst = ["rojo", "verde", "azul"]
+swap(lst, 0, 2)
+print(lst) # Imprime ["azul", "verde", "rojo"]
+`}
+/>
+<p>
+  Hacer la función <InlineCodeBlock
+    code="botellas_interactivo(n: int)"
+    lang="python"
+  /> que recibe un número <em>n</em> y permite jugar al challange de las botellas
+  de colores con <em>n</em> botellas. El programa debe generar una combinación aleatoria
+  de botellas, pedirle al usuario que ingrese su combinación, mostrarle cuántas botellas
+  tiene correctas, y repetir el proceso hasta que el usuario adivine la combinación
+  correcta.
+</p>
