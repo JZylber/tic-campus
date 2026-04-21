@@ -1,0 +1,65 @@
+---
+import Download from "../../../../../components/articles/download/Download.astro";
+
+export const partial = true;
+---
+
+<h2>Introducción</h2>
+<p>
+  La Mona Jiménez tiene una pregunta ¿Quién se ha tomado todo el vino? Para
+  responderla, vamos a usar los datos de producción de vinos argentinos del
+  2025.
+  <ul>
+    <li>
+      ¿Quién se ha tomado todo el vino?: <a
+        href="https://youtu.be/0elimz3-3jg?si=PnoD602mgPhYv7O8"
+        >https://youtu.be/0elimz3-3jg?si=PnoD602mgPhYv7O8</a
+      >.
+    </li>
+    <li>
+      Datos originales: <a
+        href="https://datos.gob.ar/dataset/agroindustria-inv---elaboracion-mostos-vino"
+        >https://datos.gob.ar/dataset/agroindustria-inv---elaboracion-mostos-vino</a
+      >
+    </li>
+  </ul>
+</p>
+<h2>Replicando la base de datos</h2>
+<p>Para poder recrear la base de datos, sigan los siguientes pasos:</p>
+<ol>
+  <li>Crear en Neon una tabla nueva</li>
+  <li>
+    Conectar a la base de datos desde pgadmin (NO ANDA DESDE EL NAVEGADOR)
+  </li>
+  <li>Descargar el archivo sql</li>
+  <li>Abrir el query tool en pgadmin</li>
+  <li>Cargar el archivo .sql y ejecutarlo</li>
+  <li>¡Listo! Tienen su base de datos</li>
+</ol>
+<Download file="files/vinos.sql" name=".sql" />
+<h2>Consigna</h2>
+<p>Hacer queries para responder las siguientes preguntas:</p>
+<ol>
+  <li>
+    ¿Qué provincias producen vino? (Osea, todas las que hay, no hace falta
+    sobrecomplicarla).
+  </li>
+  <li>
+    Mostrar los nombres de todos las localidades que su nombre tiene una 'ñ'.
+  </li>
+  <li>Mostrar la cantidad de vino producido de cada color</li>
+  <li>
+    ¿Cuánto vino se ha producido por departamento? Incluir el nombre de la
+    provincia de dicho departamento.
+  </li>
+  <li>Mostrar el vino producido de cada color por provincia</li>
+  <li>Insertar la Ciudad Autónoma de Buenos Aires como provincia</li>
+  <li>
+    Mostrar la cantidad de departamentos productores de vinos por provincia.
+    Tienen que aparecer las provincias sin departamentos, como CABA.
+  </li>
+</ol>
+<p>
+  Guardar <strong>TODOS</strong> los queries en un archivo .sql o .txt y subir al
+  repositorio.
+</p>
