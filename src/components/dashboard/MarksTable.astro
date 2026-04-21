@@ -5,6 +5,7 @@ import Select from "../../components/misc/select/Select.astro";
 ---
 
 <script>
+  import { Student } from "../../scripts/alpine/data/marks/markCalculations";
   import {
     fetchSubjectMarks,
     fetchTeacherSubjects,
@@ -25,6 +26,7 @@ import Select from "../../components/misc/select/Select.astro";
       year: 0,
       dataSheetId: undefined,
     },
+    markedStudents: [] as Student[],
     init() {
       const teacherId = "1";
       // Fetch subjects for the dropdown
@@ -32,22 +34,42 @@ import Select from "../../components/misc/select/Select.astro";
       fetchTeacherSubjects(teacherId).then((subjects) => {
         this.subjects = subjects;
         this.loadingSubjects = false;
-        console.log(this.subjects);
       });
     },
-    loadMarksForSelectedSubject() {
+    async loadMarksForSelectedSubject() {
       if (!this.selectedSubject.name) return;
       this.loadingMarks = true;
-      fetchSubjectMarks(
-        this.selectedSubject.name,
+      this.markedStudents = [];
+      const subjectName = this.selectedSubject.name;
+      const marksData = await fetchSubjectMarks(
+        subjectName,
         this.selectedSubject.year,
         this.selectedSubject.course,
         this.selectedSubject.dataSheetId,
-      ).then((marksData) => {
-        // Process marksData as needed
-        console.log(marksData);
-        this.loadingMarks = false;
-      });
+      );
+      // Process marksData as needed
+      const { marksByStudent, criteria } = marksData;
+      for (const studentId in marksByStudent) {
+        const studentMarks = marksByStudent[studentId];
+        const student = new Student(
+          studentMarks.name,
+          studentMarks.surname,
+          studentId,
+          this.selectedSubject.course,
+          [this.selectedSubject.name],
+        )
+          .setClassActivities(subjectName, studentMarks.classActivities)
+          .setMarkedActivities(subjectName, studentMarks.markedActivities)
+          .setRedos(subjectName, studentMarks.redoActivities)
+          .setCriteria(
+            subjectName,
+            criteria.proportion,
+            criteria.specialActivities,
+          );
+        student.calculateFinalMark(subjectName);
+        this.markedStudents.push(student);
+      }
+      this.loadingMarks = false;
     },
     get years() {
       return [...new Set(this.subjects.map((s) => s.year))];
@@ -80,13 +102,26 @@ import Select from "../../components/misc/select/Select.astro";
       this.selectedSubject.year = year;
       this.selectedSubject.name = "";
       this.selectedSubject.course = "";
+      this.markedStudents = [];
     },
     selectSubject(name: string) {
       this.selectedSubject.name = name;
       this.selectedSubject.course = "";
+      this.markedStudents = [];
     },
     selectCourse(course: string) {
       this.selectedSubject.course = course;
+      this.markedStudents = [];
+    },
+    get students() {
+      // Sort by surname ascending, then by name ascending
+      this.markedStudents.sort((a, b) => {
+        if (a.surname === b.surname) {
+          return a.name.localeCompare(b.name);
+        }
+        return a.surname.localeCompare(b.surname);
+      });
+      return this.markedStudents;
     },
   }));
 </script>
@@ -124,14 +159,81 @@ import Select from "../../components/misc/select/Select.astro";
     </div>
     <div class="flex grow relative">
       <Loader show="loadingMarks" />
-      <div x-show="!loadingMarks">
-        <!-- Aquí iría la tabla de notas una vez que se carguen -->
-        <p>Tabla de notas para la materia seleccionada aparecerá aquí.</p>
-      </div>
-    </div>
-  </div>
-  {
-    /* <template x-if="false">
+      <template x-if="!loadingMarks && students.length > 0">
+        <div class="w-full">
+          <table class="w-full">
+            <thead class="bg-sh-black text-gray-50 text-lg font-semibold">
+              <tr>
+                <th class="px-4 py-2">Nombre</th>
+                <th class="px-4 py-2">Apellido</th>
+                <th class="px-4 py-2">Curso</th>
+                <th class="px-4 py-2">Ac. Clase</th>
+                <th class="px-4 py-2">Ac. Nota</th>
+                <th class="px-4 py-2">Promedio</th>
+                <th class="px-4 py-2">Nota Ap</th>
+                <th class="px-4 py-2">Especiales</th>
+                <th class="px-4 py-2">Final</th>
+              </tr>
+            </thead>
+            <tbody>
+              <template x-for="student in students" :key="student.id">
+                <tr>
+                  <td class="px-4 py-2" x-text="student.name"></td>
+                  <td class="px-4 py-2" x-text="student.surname"></td>
+                  <td class="px-4 py-2 text-center" x-text="student.course"
+                  ></td>
+                  <td
+                    class="px-4 py-2 text-right"
+                    x-text="student.getFinalMarkData(selectedSubject.name).classActivitiesContribution"
+                  ></td>
+                  <td
+                    class="px-4 py-2 text-right"
+                    x-text="student.getFinalMarkData(selectedSubject.name).markedActivitiesContribution"
+                  ></td>
+                  <td
+                    class="px-4 py-2 text-right"
+                    x-text="student.getFinalMarkData(selectedSubject.name).averageMark"
+                  ></td>
+                  <td class="px-4 py-2">
+                    <div class="flex justify-center items-center">
+                      <span
+                        class="material-symbols-outlined"
+                        x-text="student.getFinalMarkData(selectedSubject.name).allMarkedActivitiesPassed ? 'check_circle' : 'cancel'"
+                        x-bind:class="{
+                      'text-sh-green':student.getFinalMarkData(selectedSubject.name).allMarkedActivitiesPassed,
+                      'text-sh-red': !student.getFinalMarkData(selectedSubject.name).allMarkedActivitiesPassed
+                    }"
+                      ></span>
+                    </div></td
+                  >
+                  <td class="px-4 py-2">
+                    <div class="flex justify-center items-center">
+                      <span
+                        class="material-symbols-outlined"
+                        x-text="student.getFinalMarkData(selectedSubject.name).allCompulsoryClassActivitiesDone ? 'check_circle' : 'cancel'"
+                        x-bind:class="{
+                      'text-sh-green':student.getFinalMarkData(selectedSubject.name).allCompulsoryClassActivitiesDone,
+                      'text-sh-red': !student.getFinalMarkData(selectedSubject.name).allCompulsoryClassActivitiesDone
+                    }"
+                      ></span>
+                    </div></td
+                  >
+                  <td
+                    class="px-4 py-2 text-right"
+                    x-text="student.getFinalMarkData(selectedSubject.name).finalMark"
+                    x-bind:class="{
+                      'text-sh-green':student.getFinalMarkData(selectedSubject.name).finalMark >= 6,
+                      'text-sh-red': student.getFinalMarkData(selectedSubject.name).finalMark < 6
+                    }"
+                  ></td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </div>
+      </template>
+      {
+        /* <template x-if="false">
   <div
     x-data="{marks: markCalculations(),filter: {course: '', text: ''}, filteredStudents: []}"
     x-effect="filteredStudents = marks.students.filter(s => {
@@ -262,5 +364,7 @@ import Select from "../../components/misc/select/Select.astro";
     </div>
   </div>
 </template>*/
-  }
+      }
+    </div>
+  </div>
 </div>

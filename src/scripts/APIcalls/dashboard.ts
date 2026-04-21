@@ -118,6 +118,8 @@ type SubjectMarks = {
       classActivities: Array<ClassActivity>;
       markedActivities: Array<MarkedActivity>;
       redoActivities: Array<RedoActivity>;
+      name: string;
+      surname: string;
     }
   >;
   criteria: { proportion: number; specialActivities: string[] };
