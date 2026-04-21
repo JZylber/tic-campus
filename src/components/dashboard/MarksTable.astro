@@ -4,9 +4,134 @@ import Loader from "../loader/Loader.astro";
 import Select from "../../components/misc/select/Select.astro";
 ---
 
-<p class="text-red-600 text-2xl uppercase">Página en reparación</p>
-{
-  /* <template x-if="false">
+<script>
+  import {
+    fetchSubjectMarks,
+    fetchTeacherSubjects,
+  } from "../../scripts/APIcalls/dashboard";
+
+  Alpine.data("subjectMarksPage", () => ({
+    loadingSubjects: false,
+    loadingMarks: false,
+    subjects: [] as {
+      name: string;
+      course: string;
+      year: number;
+      dataSheetId?: string;
+    }[],
+    selectedSubject: {
+      name: "",
+      course: "",
+      year: 0,
+      dataSheetId: undefined,
+    },
+    init() {
+      const teacherId = "1";
+      // Fetch subjects for the dropdown
+      this.loadingSubjects = true;
+      fetchTeacherSubjects(teacherId).then((subjects) => {
+        this.subjects = subjects;
+        this.loadingSubjects = false;
+        console.log(this.subjects);
+      });
+    },
+    loadMarksForSelectedSubject() {
+      if (!this.selectedSubject.name) return;
+      this.loadingMarks = true;
+      fetchSubjectMarks(
+        this.selectedSubject.name,
+        this.selectedSubject.year,
+        this.selectedSubject.course,
+        this.selectedSubject.dataSheetId,
+      ).then((marksData) => {
+        // Process marksData as needed
+        console.log(marksData);
+        this.loadingMarks = false;
+      });
+    },
+    get years() {
+      return [...new Set(this.subjects.map((s) => s.year))];
+    },
+    get subjectNames() {
+      // Get unique subject names for the selected year
+      return [
+        ...new Set(
+          this.subjects
+            .filter((s) => s.year === this.selectedSubject.year)
+            .map((s) => s.name),
+        ),
+      ];
+    },
+    get courseNames() {
+      // Filter by selected subject name to get the course names for that subject and year
+      return [
+        ...new Set(
+          this.subjects
+            .filter(
+              (s) =>
+                s.name === this.selectedSubject.name &&
+                s.year === this.selectedSubject.year,
+            )
+            .map((s) => s.course),
+        ),
+      ];
+    },
+    selectYear(year: number) {
+      this.selectedSubject.year = year;
+      this.selectedSubject.name = "";
+      this.selectedSubject.course = "";
+    },
+    selectSubject(name: string) {
+      this.selectedSubject.name = name;
+      this.selectedSubject.course = "";
+    },
+    selectCourse(course: string) {
+      this.selectedSubject.course = course;
+    },
+  }));
+</script>
+<div
+  class="grow w-full flex justify-center py-4 relative"
+  x-data="subjectMarksPage()"
+>
+  <Loader show="loadingSubjects" />
+  <div class="grow flex flex-col w-full max-w-7xl" x-show="!loadingSubjects">
+    <div class="flex gap-x-4 border-b-2 border-gray-300 pb-4 mb-4 items-end">
+      <Select
+        title="Año"
+        xModel="selectedSubject.year"
+        options="years.map(year => ({ value: year, label: year }))"
+        className="w-32"
+      />
+      <Select
+        title="Materia"
+        xModel="selectedSubject.name"
+        options="subjectNames.map(name => ({ value: name, label: name }))"
+        className="w-72"
+      />
+      <Select
+        title="Curso"
+        xModel="selectedSubject.course"
+        options="courseNames.map(course => ({ value: course, label: course }))"
+        className="w-32"
+      />
+      <div
+        class="flex h-[44px] items-center ml-4 px-4 py-2 bg-sh-blue text-white rounded-lg cursor-pointer"
+        @click="loadMarksForSelectedSubject()"
+      >
+        <span>Obtener notas</span>
+      </div>
+    </div>
+    <div class="flex grow relative">
+      <Loader show="loadingMarks" />
+      <div x-show="!loadingMarks">
+        <!-- Aquí iría la tabla de notas una vez que se carguen -->
+        <p>Tabla de notas para la materia seleccionada aparecerá aquí.</p>
+      </div>
+    </div>
+  </div>
+  {
+    /* <template x-if="false">
   <div
     x-data="{marks: markCalculations(),filter: {course: '', text: ''}, filteredStudents: []}"
     x-effect="filteredStudents = marks.students.filter(s => {
@@ -137,4 +262,5 @@ import Select from "../../components/misc/select/Select.astro";
     </div>
   </div>
 </template>*/
-}
+  }
+</div>

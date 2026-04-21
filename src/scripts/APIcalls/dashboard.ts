@@ -127,11 +127,12 @@ export async function fetchSubjectMarks(
   subject: string,
   year: number,
   course: string,
+  dataSheetId?: string,
 ) {
   try {
     // "/marks/:subject/:course/:year"
     const response = await fetch(
-      `${backendURL}/marks/${subject}/${course}/${year}`,
+      `${backendURL}/marks/${subject}/${course}/${year}${dataSheetId ? `?dataSheetId=${encodeURIComponent(dataSheetId)}` : ""}`,
     );
     if (!response.ok) {
       throw new Error(`Error fetching subject marks: ${response.statusText}`);
