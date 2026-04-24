@@ -18,61 +18,45 @@ export const partial = true;
   registrada o no, determine el valor del boleto de colectivo en la ciudad de
   buenos aires. No nos importa la tarifa social.
 </p>
+<p>
+  Ya cuentan con un formulario armado para esto. Un <InlineCodeBlock
+    lang="html"
+    code="<select>"
+  /> para elegir si la sube está registrada o no, y un <InlineCodeBlock
+    lang="html"
+    code="<input type='number'>"
+  /> para ingresar los kilómetros a viajar. El resultado tiene que aparecer escrito
+  en un párrafo de id "tarifa".
+</p>
 <ol>
   <li>
-    Declarar 2 variables que representan los datos recibidos, y tomar sus
-    valores con <code class="language-javascript">prompt</code>
-    <ul>
-      <li>Los km a recorrer (número de 0 a 27)</li>
-      <li>Algún texto que represente si la sube está registrada o no</li>
-    </ul>
+    Declarar 2 variables tomando los valores del select y el input. Para eso,
+    pueden tomarlos de la variable <InlineCodeBlock
+      code="registrada.value"
+      lang="javascript"
+    /> y <InlineCodeBlock code="distancia.value" lang="javascript" />
+    respectivamente.
   </li>
-  <li>Imprimir por consola el valor del boleto</li>
+  <li>Calcular el valor del boleto según los datos ingresados</li>
+  <li>
+    Escribir el resultado en el párrafo de id "tarifa". Para eso, pueden usar la
+    variable
+    <InlineCodeBlock lang="javascript" code="tarifa.innerText" />
+  </li>
 </ol>
 <h2>Consigna Manija</h2>
-<h3>Número del 1 al 10</h3>
 <p>
-  No es tán fácil generar aleatoriedad en la computadora. En muchos casos, nos
-  conformamos con pseudo aleatoriedad, osea, no son del todo al azar, pero para
-  la gran mayoría de los usos nos alcanza. No me voy a meter en como se hace
-  esto último, pero es suficientemente común que muchos lenguajes proveen
-  funciones nativas que lo hagan. Javascript tiene una forma de generar números
-  al azar, que es <InlineCodeBlock lang="javascript" code="Math.random()" /> , que
-  devuelve números al azar entre 0 y 1.
-</p>
-<p>
-  ¿Pero y si quiero generar números en otro intervalo? Bueno, puedo aprovechar
-  los números entre 0 y 1 generados al azar, y usarlos para generar en cualquier
-  intervalo. Por ejemplo, si quiero generar números enteros del 1 al 10, puedo
-  adaptar los resultados del
-  <InlineCodeBlock lang="javascript" code="Math.random()" />. Divido el
-  intervalo en 10, y en base a donde "cae" el número, el número que le toca.
+  ¡Completen el formulario con la información oficial! (Al menos para
+  colectivos). Es decir:
 </p>
 <ul>
+  <li>Agreguen la opción de "tarifa social" al tipo de sube</li>
   <li>
-    Si el resultado de <InlineCodeBlock
-      lang="javascript"
-      code="Math.random()"
-    /> es menor a 0.1, es 1
-  </li>
-  <li>
-    Si el resultado de <InlineCodeBlock
-      lang="javascript"
-      code="Math.random()"
-    /> es mayor a 0.1 pero menor a 0.2, es 2
-  </li>
-  <li>
-    Si el resultado de <InlineCodeBlock
-      lang="javascript"
-      code="Math.random()"
-    /> es mayor a 0.2 pero menor a 0.2, es 3
-  </li>
-  <li>etc ...</li>
-  <li>
-    Si el resultado de <InlineCodeBlock
-      lang="javascript"
-      code="Math.random()"
-    /> es mayor a 0.9, es 10
+    Hacer un nuevo select que permita distinguir entre colectivos nacionales,
+    provincia de buenos aires y CABA
   </li>
 </ul>
-<p>Crear un programa que devuelva un número entero al azar entre 1 y 10</p>
+<p>
+  Obviamente, modifiquen el cálculo de tarifa para reflejar los datos oficiales
+  con las nuevas opciones.
+</p>
