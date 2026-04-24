@@ -16,7 +16,7 @@ export async function getStaticPaths() {
       ...path,
       params: {
         subject: path.params.subject,
-        year: path.params.year,
+        year: path.params.year.toString(),
         ca2Course: path.params.course,
       },
     };
@@ -44,12 +44,22 @@ const items = [
     <Home
       subject={subject}
       course={ca2Course}
-      year={year}
+      year={parseInt(year)}
       position={0}
       presentation={false}
     />
-    <Activities subject={subject} course={ca2Course} year={year} position={1} />
-    <Program subject={subject} year={year} position={2} />
-    <Material subject={subject} course={ca2Course} year={year} position={3} />
+    <Activities
+      subject={subject}
+      course={ca2Course}
+      year={parseInt(year)}
+      position={1}
+    />
+    <Program subject={subject} year={parseInt(year)} position={2} />
+    <Material
+      subject={subject}
+      course={ca2Course}
+      year={parseInt(year)}
+      position={3}
+    />
   </main>
 </Layout>

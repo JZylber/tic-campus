@@ -12,7 +12,7 @@ export async function getStaticPaths() {
       ...path,
       params: {
         subject: path.params.subject,
-        year: path.params.year,
+        year: path.params.year.toString(),
         sh2Course: path.params.course,
       },
     };
@@ -25,5 +25,5 @@ const { dataSheetId } = Astro.props;
 ---
 
 <Layout dataSheetId={dataSheetId}>
-  <Shulian3 subject={subject} course={sh2Course} year={Number(year)} />
+  <Shulian3 subject={subject} course={sh2Course} year={parseInt(year)} />
 </Layout>

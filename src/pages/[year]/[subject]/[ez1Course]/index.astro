@@ -17,6 +17,7 @@ export async function getStaticPaths() {
       ...path,
       params: {
         ...path.params,
+        year: path.params.year.toString(),
         ez1Course: path.params.course,
       },
     };
@@ -44,13 +45,25 @@ const items = [
     <InfoHome
       subject={subject}
       course={ez1Course}
-      year={year}
+      year={parseInt(year)}
       position={0}
       presentation={true}
     />
-    <Activities subject={subject} course={ez1Course} year={year} position={1} />
-    {/* <Redos subject={subject} year={year} course={ez1Course} position={2} /> */}
-    <Program subject={subject} year={year} position={2} />
-    <Material subject={subject} course={ez1Course} year={year} position={3} />
+    <Activities
+      subject={subject}
+      course={ez1Course}
+      year={parseInt(year)}
+      position={1}
+    />
+    {
+      /* <Redos subject={subject} year={year} course={ez1Course} position={2} /> */
+    }
+    <Program subject={subject} year={parseInt(year)} position={2} />
+    <Material
+      subject={subject}
+      course={ez1Course}
+      year={parseInt(year)}
+      position={3}
+    />
   </main>
 </Layout>
