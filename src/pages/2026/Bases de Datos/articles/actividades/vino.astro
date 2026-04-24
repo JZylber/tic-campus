@@ -25,12 +25,13 @@ export const partial = true;
   </ul>
 </p>
 <h2>Replicando la base de datos</h2>
-<p>Para poder recrear la base de datos, sigan los siguientes pasos:</p>
+<p>Para poder recrear la base de datos, tienen 2 opciones:</p>
+
+<h3>Opcion 1: Creando una nueva Base de Datos en Neon</h3>
+<p>Si o si es con pgadmin, no se puede hacer usando Neon del navegador.</p>
 <ol>
-  <li>Crear en Neon una tabla nueva</li>
-  <li>
-    Conectar a la base de datos desde pgadmin (NO ANDA DESDE EL NAVEGADOR)
-  </li>
+  <li>Crear en Neon una Base de Datos nueva</li>
+  <li>Conectar a la base de datos desde pgadmin</li>
   <li>Descargar el archivo sql</li>
   <li>Abrir el query tool en pgadmin</li>
   <li>Cargar el archivo .sql y ejecutarlo</li>
@@ -38,16 +39,19 @@ export const partial = true;
 </ol>
 <Download file="files/vinos.sql" name=".sql" />
 
-<h2>Opcion 2: Conectándonos a una BD existente en neon </h2>
+<h3>Opcion 2: Conectándonos a una BD existente en neon</h3>
 <strong>Parámetros:</strong>
-  <ul>
-    <li> Host name: ep-blue-feather-a4ve7rp2-pooler.us-east-1.aws.neon.tech </li>
-    <li> Database: vinos </li>
-    <li> Username: alumno </li>
-    <li> Password: Ort2026TIC! </li>
-  </ul>
+<ul>
+  <li>Host name: ep-blue-feather-a4ve7rp2-pooler.us-east-1.aws.neon.tech</li>
+  <li>Database: vinos</li>
+  <li>Username: alumno</li>
+  <li>Password: Ort2026TIC!</li>
+</ul>
 
-Aclaración: La BD es read-only, en esta base ya fue insertada Ciudad Autónoma de Buenos Aires como provincia
+<p>
+  Aclaración: La BD es read-only, en esta base ya fue insertada Ciudad Autónoma
+  de Buenos Aires como provincia
+</p>
 
 <h2>Consigna</h2>
 <p>Hacer queries para responder las siguientes preguntas:</p>
