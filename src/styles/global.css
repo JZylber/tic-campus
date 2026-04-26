@@ -32,6 +32,21 @@ html {
   .scrollbar {
     @apply [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-200 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-sh-gray;
   }
+  .data-table {
+    @apply border-collapse rounded-xl overflow-hidden my-2 mx-4;
+  }
+  .data-table thead {
+    @apply bg-sh-black text-white;
+  }
+  .data-table thead tr th {
+    @apply p-2 text-center;
+  }
+  .data-table tbody {
+    @apply bg-gray-200;
+  }
+  .data-table tbody tr td {
+    @apply p-2 text-center;
+  }
 }
 
 .loader {

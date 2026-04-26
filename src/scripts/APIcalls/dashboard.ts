@@ -1,3 +1,4 @@
+import type { ClassActivity, MarkedActivity, RedoActivity } from "../types";
 import { backendURL } from "./shared";
 
 export type Subject = {
@@ -91,5 +92,60 @@ export async function fetchRevisionsByTeacher(teacherId: string, year: number) {
   } catch (error) {
     console.error("Failed to fetch revision requests:", error);
     return [];
+  }
+}
+
+export async function fetchTeacherSubjects(teacherId: string) {
+  try {
+    const response = await fetch(`${backendURL}/subjects/teacher/${teacherId}`);
+    if (!response.ok) {
+      throw new Error(
+        `Error fetching teacher subjects: ${response.statusText}`,
+      );
+    }
+    const data: Subject[] = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Failed to fetch teacher subjects:", error);
+    return [];
+  }
+}
+
+type SubjectMarks = {
+  marksByStudent: Record<
+    string,
+    {
+      classActivities: Array<ClassActivity>;
+      markedActivities: Array<MarkedActivity>;
+      redoActivities: Array<RedoActivity>;
+      name: string;
+      surname: string;
+    }
+  >;
+  criteria: { proportion: number; specialActivities: string[] };
+};
+
+export async function fetchSubjectMarks(
+  subject: string,
+  year: number,
+  course: string,
+  dataSheetId?: string,
+) {
+  try {
+    // "/marks/:subject/:course/:year"
+    const response = await fetch(
+      `${backendURL}/marks/${subject}/${course}/${year}${dataSheetId ? `?dataSheetId=${encodeURIComponent(dataSheetId)}` : ""}`,
+    );
+    if (!response.ok) {
+      throw new Error(`Error fetching subject marks: ${response.statusText}`);
+    }
+    const data: SubjectMarks = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Failed to fetch subject marks:", error);
+    return {
+      marksByStudent: {},
+      criteria: { proportion: 0, specialActivities: [] },
+    };
   }
 }

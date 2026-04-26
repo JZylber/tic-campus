@@ -1,0 +1,62 @@
+---
+import InlineCodeBlock from "../../../../../../components/articles/code-block/InlineCodeBlock.astro";
+
+export const partial = true;
+---
+
+<h2>Consigna Base</h2>
+<p>
+  La tarifa de transporte varía dependiendo si la sube está registrada o no.
+  Pueden encontrar el cuadro tarifario en este link:
+  <a
+    href="https://www.argentina.gob.ar/redsube/tarifas-de-transporte-publico-amba"
+    >https://www.argentina.gob.ar/redsube/tarifas-de-transporte-publico-amba</a
+  >. En particular, nos interesa la primera tabla: Tarifas para colectivos de la
+  Ciudad de Buenos Aires.
+</p><p>
+  Vamos a armar un programa que, dado los kilómetros a viajar y si la sube está
+  registrada o no, determine el valor del boleto de colectivo en la ciudad de
+  buenos aires. No nos importa la tarifa social.
+</p>
+<p>
+  Ya cuentan con un formulario armado para esto. Un <InlineCodeBlock
+    lang="html"
+    code="<select>"
+  /> para elegir si la sube está registrada o no, y un <InlineCodeBlock
+    lang="html"
+    code="<input type='number'>"
+  /> para ingresar los kilómetros a viajar. El resultado tiene que aparecer escrito
+  en un párrafo de id "tarifa".
+</p>
+<ol>
+  <li>
+    Declarar 2 variables tomando los valores del select y el input. Para eso,
+    pueden tomarlos de la variable <InlineCodeBlock
+      code="registrada.value"
+      lang="javascript"
+    /> y <InlineCodeBlock code="distancia.value" lang="javascript" />
+    respectivamente.
+  </li>
+  <li>Calcular el valor del boleto según los datos ingresados</li>
+  <li>
+    Escribir el resultado en el párrafo de id "tarifa". Para eso, pueden usar la
+    variable
+    <InlineCodeBlock lang="javascript" code="tarifa.innerText" />
+  </li>
+</ol>
+<h2>Consigna Manija</h2>
+<p>
+  ¡Completen el formulario con la información oficial! (Al menos para
+  colectivos). Es decir:
+</p>
+<ul>
+  <li>Agreguen la opción de "tarifa social" al tipo de sube</li>
+  <li>
+    Hacer un nuevo select que permita distinguir entre colectivos nacionales,
+    provincia de buenos aires y CABA
+  </li>
+</ul>
+<p>
+  Obviamente, modifiquen el cálculo de tarifa para reflejar los datos oficiales
+  con las nuevas opciones.
+</p>

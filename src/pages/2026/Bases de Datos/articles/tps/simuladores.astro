@@ -1,0 +1,116 @@
+<h2>Archivos</h2>
+<p>
+  La base de datos para realizar este trabajo práctico se encuentra en este
+  repositorio.
+</p>
+
+<h2>Grupos</h2>
+<p>
+  El trabajo se realiza en grupos de mínimo 2 integrantes y máximo 3
+  integrantes.
+</p>
+
+<h2>Consignas</h2>
+<p>
+  Para cada uno de los siguientes puntos, escribir una (o varias donde se
+  indica) consulta(s) en SQL que realice(n) la acción indicada. Luego de
+  realizada, guardar cada una de las consultas en algún archivo de texto (.txt),
+  o aún mejor, en un archivo de SQL (.sql) y subirlo al repositorio del tp. Para
+  cada punto, escribir un comentario con el número del punto al que corresponde
+  la consulta. Además, se recomienda escribir un comentario con una breve
+  explicación de lo que hace la consulta. Se pueden realizar las consultas en el
+  orden que se desee, pero se recomienda seguir el orden dado para guiarse
+  mejor. Para cada punto, se puede realizar más de una consulta si se considera
+  necesario para resolverlo (por ejemplo, para agregar un nuevo empleado,
+  primero se puede agregar su información personal y luego asignarlo a un
+  sector). Se recomienda probar las consultas en pgAdmin a medida que se
+  realizan para guiarse y mirar las tablas para conocer su composición y los
+  datos que contienen:
+</p>
+
+<ol>
+  <li>
+    Santos quiere tener una lista completa de todos los empleados de la empresa,
+    entonces necesita una consulta que devuelva el dni, nombre y apellido de
+    todos los empleados junto con el nombre del sector en el que trabajan (no
+    quiere la información de los empleados que no tienen un sector).
+  </li>
+  <li>
+    Lampone necesita saber cuáles son las 3 salas más grandes de la empresa para
+    llamar a una empresa de limpieza y pedirle cotización (necesita el id y la
+    superficie de las 3 salas).
+  </li>
+  <li>
+    Medina tiene que poder llamar a los empleados de su sector, para eso pidió
+    una lista de sus nombres, apellidos y números de teléfono. Si alguno tiene
+    más de un teléfono Medina pidió tener todos.
+  </li>
+  <li>
+    Hay que agrandar el equipo de caracterización, para eso Ravenna pidió
+    agregar a una persona a su sector. Los datos de esta nueva persona son los
+    siguientes:
+    <ul>
+      <li>a. DNI: 90.326.283</li>
+      <li>b. Nombre: Roberto</li>
+      <li>c. Apellido: Ávalos</li>
+      <li>d. Email: avalosroberto28@hotmail.com</li>
+    </ul>
+  </li>
+  <li>
+    Ahora Lampone quiere saber la información completa de las salas que tiene
+    cada sector, incluyendo el nombre del sector al que pertenece y el apellido
+    de su jefe. Además, si existe alguna sala sin un sector específico, requiere
+    su información igualmente.
+  </li>
+  <li>
+    Una política nueva de la empresa dice que los jefes de cada sector deben
+    tener un mail de la empresa que sea su inicial, luego su apellido y finaliza
+    con "@simuladores.com.ar". (Para este punto se necesitarán 4 queries
+    separadas y no es necesario automatizarlas).
+  </li>
+  <li>
+    José Feller se va a jubilar, por lo que hay que sacarlo de la base de datos.
+    (Ser lo más específico posible a la hora de borrarlo). (Requiere 2 queries)
+  </li>
+  <li>
+    Como queda un cupo vacante en el sector de planificación, Matías Miguens lo
+    va a ocupar.
+  </li>
+  <li>
+    Se descubrió que Fernando Laguzzi estaba envuelto en actividades ilícitas,
+    entonces Santos pidió que se le brindara toda su información, incluido el
+    sector en el que trabaja, el apellido y el número de teléfono de su jefe.
+  </li>
+  <li>
+    Fernando Laguzzi se desvincula de la empresa, porque va a ir a la cárcel.
+    Además, deben contratar un nuevo empleado para cubrir su puesto en el mismo
+    sector. Este empleado deberá tener un número de teléfono asignado. (Para
+    este punto se necesitan varias queries). Los datos del empleado nuevo son
+    los siguientes:
+    <ul>
+      <li>a. DNI: 28.423.988</li>
+      <li>b. Nombre: Alicia</li>
+      <li>c. Apellido: Corsiglia</li>
+      <li>d. Email: corsiglia_odontologia@gmail.com</li>
+    </ul>
+  </li>
+</ol>
+<h2>Ejercicios bonus</h2>
+<p>
+  Los siguientes ejercicios son opcionales, pueden realizarlos para mejorar la
+  nota en caso de equivocarse en alguno de los anteriores.
+</p>
+
+<p>
+  <strong>Bonus 1:</strong><br />
+  Santos quiere permitir que los empleados tengan más de un mail de contacto. Modificar
+  la base de datos para que esto sea posible y luego explicar en qué se basa esta
+  modificación (no es necesario utilizar consultas para modificar la estructura).
+</p>
+
+<p>
+  <strong>Bonus 2 (investigación):</strong><br />
+  Realizar una consulta en SQL que devuelva la superficie total del edificio de la
+  empresa. Para este punto deberán investigar las sentencias SQL en internet y encontrar
+  alguna que permita realizar esta tarea.
+</p>

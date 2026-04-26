@@ -1,0 +1,125 @@
+---
+import CodeBlock from "../../../../../components/articles/code-block/CodeBlock.astro";
+import InlineCodeBlock from "../../../../../components/articles/code-block/InlineCodeBlock.astro";
+
+export const partial = true;
+---
+
+<p>
+  Las librerías en Python son conjuntos de código hecho por otras personas que
+  se pueden utilizar para hacer cosas específicas, como manipular datos,
+  realizar cálculos matemáticos o estadísticos, visualizar gráficos, entre
+  otros. Las librerías se escriben en Python (o en el caso de numpy, en C
+  conectado a Python) y se pueden instalar utilizando herramientas como pip.
+</p>
+
+<h2>Instalación de librerías</h2>
+
+<p>Para instalar una librería, desde la terminal tenés que correr:</p>
+
+<CodeBlock lang="bash" code="pip install nombre_de_la_libreria" />
+
+<p>Por ejemplo, para instalar la librería numpy:</p>
+
+<CodeBlock lang="bash" code="pip install numpy" />
+
+<h2>Importación de librerías</h2>
+
+<p>
+  Una vez instalada la librería, podés importarla en tu código de Python
+  utilizando el comando `import`. Hay tres formas de hacerlo:
+</p>
+
+<ul>
+  <li>
+    <strong>Importar todo:</strong>
+    <InlineCodeBlock code="import nombre_de_la_libreria" lang="python" /> hace que
+    todos los módulos y funciones de la librería estén disponibles con su nombre completo.
+  </li>
+  <li>
+    <strong>Importar con alias:</strong>
+    <InlineCodeBlock
+      code="import nombre_de_la_libreria as alias"
+      lang="python"
+    /> permite utilizar el alias en lugar del nombre completo para acceder a las funcionalidades
+    de la librería. Por ejemplo, <InlineCodeBlock
+      code="import numpy as np"
+      lang="python"
+    />.
+  </li>
+  <li>
+    <strong>Importar funciones específicas:</strong>
+    <InlineCodeBlock
+      code="from nombre_de_la_libreria import función1, función2"
+      lang="python"
+    /> importa solo las funciones especificadas y las hace disponibles directamente.
+  </li>
+</ul>
+
+<h2>Ejemplos con numpy</h2>
+
+<p>
+  numpy es una de las librerías más usadas en Python y ofrece una gran variedad
+  de funciones para trabajar con arrays, matemáticas y estadística. Algunos
+  ejemplos:
+</p>
+
+<h3>Arrays</h3>
+
+<ul>
+  <li>
+    <strong>Crear un array:</strong>
+    <InlineCodeBlock code="np.array([1, 2, 3])" lang="python" /> crea el array '[1,
+    2, 3]'.
+  </li>
+  <li>
+    <strong>Acceder a elementos de un array:</strong>
+    <InlineCodeBlock
+      code="arr = np.array([1, 2, 3]); print(arr[0])"
+      lang="python"
+    /> imprime '1'.
+  </li>
+  <li>
+    <strong>Modificar elementos de un array:</strong>
+    <InlineCodeBlock
+      code="arr = np.array([1, 2, 3]); arr[0] = 10; print(arr)"
+      lang="python"
+    /> imprime '[10, 2, 3]'.
+  </li>
+</ul>
+
+<h3>Matemáticas</h3>
+
+<ul>
+  <li>
+    <strong>Suma y resta de arrays:</strong>
+    <InlineCodeBlock
+      code="np.add(np.array([1, 2]), np.array([3, 4]))"
+      lang="python"
+    /> devuelve el array '[4, 6]'.
+  </li>
+  <li>
+    <strong>Multiplicación de arrays:</strong>
+    <InlineCodeBlock
+      code="np.multiply(np.array([1, 2]), np.array([3, 4]))"
+      lang="python"
+    /> devuelve el array '[3, 8]'.
+  </li>
+</ul>
+
+<h3>Estadística</h3>
+
+<ul>
+  <li>
+    <strong>Media de un array:</strong>
+    <InlineCodeBlock code="np.mean(np.array([1, 2, 3, 4, 5]))" lang="python" /> devuelve
+    '3'.
+  </li>
+  <li>
+    <strong>Mediana de un array:</strong>
+    <InlineCodeBlock
+      code="np.median(np.array([1, 2, 3, 4, 5]))"
+      lang="python"
+    /> devuelve '3'.
+  </li>
+</ul>

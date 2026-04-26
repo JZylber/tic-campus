@@ -1,0 +1,116 @@
+---
+import InlineCodeBlock from "../../../../../components/articles/code-block/InlineCodeBlock.astro";
+
+export const partial = true;
+---
+
+<h2>Introducción</h2>
+<p>
+  En la película Un Cuento Chino, el personaje de Ricardo Darín es un ferretero.
+  Como toda ferretería, hay un montón de clientes un poco pesados. Les dejo un
+  compilado de fragmentos de la película: <a
+    href="https://www.youtube.com/watch?v=zfAz8Qx8uw0"
+    class="uppercase underline text-sh-blue">Video</a
+  >
+</p>
+<h2>Consigna</h2>
+
+<p>
+  Estamos ayudando a Darín en la ferretería, cubriéndolo algunos días. Contamos
+  con el listado de productos y sus precios. Los precios están dados en una
+  moneda ficticia, el <em>Patacón</em>.
+</p>
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Producto</th>
+      <th>Precio</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>alicate</td>
+      <td>1000p</td>
+    </tr>
+    <tr>
+      <td>destornillador</td>
+      <td>1000p</td>
+    </tr>
+    <tr>
+      <td>tornillo</td>
+      <td>0.5p</td>
+    </tr>
+    <tr>
+      <td>arandela</td>
+      <td>0.75p</td>
+    </tr>
+    <tr>
+      <td>tarugo</td>
+      <td>1.1p</td>
+    </tr>
+  </tbody>
+</table>
+<p>
+  Armar un programa que, dado un pedido del cliente, diga el costo del producto.
+  Por ejemplo, si el cliente pide un "alicate" se debe decir 1000p. El pedido
+  del cliente se ingresa usando el <InlineCodeBlock
+    code="<select>"
+    lang="html"
+  /> de id='producto', osea, está en la variable producto.value. El resultado debe
+  devolverse modificando la variable resultado.textContent.
+</p>
+<p>
+  <strong>Pueden ignorar el resto del formulario. Es sólo para extras.</strong>
+</p>
+<h2>Extras</h2>
+<p>
+  La máxima nota en caso de haber completado el TP es 7. Para conseguir mas
+  nota, se pueden hacer algunos de los siguientes extras.
+</p>
+<ul>
+  <li>
+    <strong>(1 punto)</strong> Tomar en cuenta la cantidad además del tipo de producto.
+    Esta cantidad se encuentra en la variable cantidad.value. Modificar el programa
+    para que de el precio correcto (valor unitario x cantidad).
+  </li>
+  <li>
+    <strong>(1 punto)</strong> Tomar en cuenta también código de descuento y tomarlo
+    en cuenta para el cálculo del precio final. Este se encuentra en descuento.value.
+    Si no se ingresa nada o un código de descuento inválido, no se aplica ningún descuento.
+    Los códigos de descuento son:
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Código de descuento</th>
+          <th>Descuento</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>DARIN10</td>
+          <td>10% de descuento</td>
+        </tr>
+        <tr>
+          <td>DARIN20</td>
+          <td>20% de descuento</td>
+        </tr>
+        <tr>
+          <td>DARIO</td>
+          <td>50% de descuento</td>
+        </tr>
+      </tbody>
+    </table>
+    <li>
+      <strong>(1 punto)</strong> Existen dos tipos de destornillador: los pala y los
+      philips, que valen 1000p y 1500p respectivamente. Cuando el usuario pide un
+      destonillador, aparece un <InlineCodeBlock code="<select>" lang="html" /> para
+      decidir entre ambos tipos, y la elección aparece en la variable tipo_destornillador.value.
+      Tomar en cuenta el tipo de destonillador para el cálculo final del precio.
+    </li>
+  </li>
+  <h2>Entrega</h2>
+  <p>
+    La entrega se hace simplemente realizando un commit y un push al repo
+    otorgado.
+  </p>
+</ul>

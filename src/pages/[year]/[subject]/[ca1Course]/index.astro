@@ -11,7 +11,7 @@ export async function getStaticPaths() {
       ...path,
       params: {
         subject: path.params.subject,
-        year: path.params.year,
+        year: path.params.year.toString(),
         ca1Course: path.params.course,
       },
     };

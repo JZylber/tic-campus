@@ -77,6 +77,10 @@ export class Student {
   setClassActivity(subject: string, activity: ClassActivity) {
     this.subjectData[subject].classActivities.push(activity);
   }
+  setClassActivities(subject: string, activities: ClassActivity[]) {
+    this.subjectData[subject].classActivities = activities;
+    return this;
+  }
   setClassActivityAsCompulsory(
     subject: string,
     activityId: string,
@@ -89,6 +93,10 @@ export class Student {
   }
   setMarkedActivity(subject: string, activity: MarkedActivity) {
     this.subjectData[subject].markedActivities.push(activity);
+  }
+  setMarkedActivities(subject: string, activities: MarkedActivity[]) {
+    this.subjectData[subject].markedActivities = activities;
+    return this;
   }
   setInRevision(subject: string, activityId: string) {
     const classActivity = this.subjectData[subject].classActivities.find(
@@ -121,11 +129,28 @@ export class Student {
       }
     });
   }
+  setRedos(subject: string, redos: RedoActivity[]) {
+    for (const redo of redos) {
+      this.setRedo(subject, redo);
+    }
+    return this;
+  }
   setFixedMarks(subject: string, fixedMarks: FixedMarks) {
     this.subjectData[subject].fixedMarks = fixedMarks;
   }
   setProportion(subject: string, proportion: number) {
     this.subjectData[subject].finalMark.proportion = proportion;
+  }
+  setCriteria(
+    subject: string,
+    proportion: number,
+    specialActivities: string[],
+  ) {
+    this.subjectData[subject].finalMark.proportion = proportion;
+    specialActivities.forEach((activityId) => {
+      this.setClassActivityAsCompulsory(subject, activityId, true);
+    });
+    return this;
   }
   private activitiesContribution(subject: string) {
     // 1 for each activity done, 1*mark/10 for each made up activity, compulsory activities are excluded
