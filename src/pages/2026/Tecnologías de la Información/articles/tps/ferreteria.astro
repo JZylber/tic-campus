@@ -53,30 +53,31 @@ export const partial = true;
 <p>
   Armar un programa que, dado un pedido del cliente, diga el costo del producto.
   Por ejemplo, si el cliente pide un "alicate" se debe decir 1000p. El pedido
-  del cliente debe ingresarse por <InlineCodeBlock
-    code="prompt()"
-    lang="javascript"
-  /> y el resultado debe devolverse por
-  <InlineCodeBlock code="alert()" lang="javascript" />.
+  del cliente se ingresa usando el <InlineCodeBlock
+    code="<select>"
+    lang="html"
+  /> de id='producto', osea, está en la variable producto.value. El resultado debe
+  devolverse modificando la variable resultado.textContent.
+</p>
+<p>
+  <strong>Pueden ignorar el resto del formulario. Es sólo para extras.</strong>
 </p>
 <h2>Extras</h2>
 <p>
   La máxima nota en caso de haber completado el TP es 7. Para conseguir mas
   nota, se pueden hacer algunos de los siguientes extras.
-  <strong
-    >Para que el punto extra sea corregido, se debe detallar en el HTML que
-    punto extra hicieron, de lo contrario no cuenta.</strong
-  >
 </p>
 <ul>
   <li>
-    <strong>(1 punto)</strong> Permitir no solo decir el producto, sino también la
-    cantidad de dicho producto, y dar el precio correcto (valor unitario x cantidad).
+    <strong>(1 punto)</strong> Tomar en cuenta la cantidad además del tipo de producto.
+    Esta cantidad se encuentra en la variable cantidad.value. Modificar el programa
+    para que de el precio correcto (valor unitario x cantidad).
   </li>
   <li>
-    <strong>(1 punto)</strong> Permitir no solo decir el producto, sino también un
-    código de descuento. Si no se ingresa nada o un código de descuento inválido,
-    no se aplica ningún descuento. Los códigos de descuento son:
+    <strong>(1 punto)</strong> Tomar en cuenta también código de descuento y tomarlo
+    en cuenta para el cálculo del precio final. Este se encuentra en descuento.value.
+    Si no se ingresa nada o un código de descuento inválido, no se aplica ningún descuento.
+    Los códigos de descuento son:
     <table class="data-table">
       <thead>
         <tr>
@@ -100,10 +101,11 @@ export const partial = true;
       </tbody>
     </table>
     <li>
-      <strong>(1 punto)</strong> Existen dos tipos de destornillador, los planos o
-      de pala, y los philips o estrella, que valen 1000p y 1500p respectivamente.
-      Si el usuario pide un destornillador, pedirle la aclaración entre "plano","pala","philips","estrella"
-      para darle el precio correcto.
+      <strong>(1 punto)</strong> Existen dos tipos de destornillador: los pala y los
+      philips, que valen 1000p y 1500p respectivamente. Cuando el usuario pide un
+      destonillador, aparece un <InlineCodeBlock code="<select>" lang="html" /> para
+      decidir entre ambos tipos, y la elección aparece en la variable tipo_destornillador.value.
+      Tomar en cuenta el tipo de destonillador para el cálculo final del precio.
     </li>
   </li>
   <h2>Entrega</h2>
