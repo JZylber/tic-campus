@@ -1,0 +1,35 @@
+---
+import SectionLayout from "../SectionLayout.astro";
+interface Props {
+  position: number;
+}
+
+const { position } = Astro.props;
+---
+
+<SectionLayout name="home" position={position}>
+  <h1 class="text-[40px] md:text-[60px] font-bold m-0 lg:max-w-[75%]">
+    Clases de consulta
+  </h1>
+  <p class="text-gray-600 text-[14px] md:text-[16px] text-justify">
+    En caso de que hayan leido los apuntes, intentado los ejercicios, googleado,
+    chatGPTeado (ayudando a resolver, no que te explique una respuesta) y siguen
+    perdidísimos con esta materia, pueden pedir clases de consulta.
+  </p>
+  <p class="text-gray-600 text-[14px] md:text-[16px] text-justify">
+    Son al medidodía, y el día depende de la materia. <strong
+      >¡No pueden ir sin inscribirse!</strong
+    >
+  </p>
+  <div class="flex items-center justify-center pt-4">
+    <a
+      href="https://forms.gle/wH61rWiExDqMdJ9e8"
+      class="w-full md:w-1/2 flex justify-center items-center rounded-xl gap-x-4 bg-sh-purple px-4 py-2 cursor-pointer hover:shadow-lg"
+    >
+      <span class="max-md:hidden material-symbols-outlined !text-[30px]"
+        >calendar_add_on</span
+      >
+      <span class="text-[24px]">Inscribirse</span>
+    </a>
+  </div>
+</SectionLayout>
