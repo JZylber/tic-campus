@@ -6,16 +6,11 @@
     `https://jzylber.github.io/tic-campus/${year}/${subject}/${course}`
   );
   const baseURL = "https://jzylber.github.io/";
-  const fetchTagContent = (url) => {
-    return fetch(url).then((response) => {
-      return response.text();
-    });
-  };
   // Create a div tag with the id "leftoverinformation", display none and append all breadcrumbs and menu to it
   let leftoverDiv = document.createElement("div");
   leftoverDiv.style.display = "none";
   leftoverDiv.id = "leftoverinformation";
-  let breadcrumbs = document.querySelectorAll("a.breadcrumb").forEach((el) => {
+  document.querySelectorAll("a.breadcrumb").forEach((el) => {
     leftoverDiv.innerHTML += el.outerHTML;
   });
   // Get the div with classes col and s1 and add to the template
@@ -23,7 +18,7 @@
   if (menu) {
     leftoverDiv.innerHTML += menu.outerHTML;
   }
-  body.appendChild(leftoverDiv);
+  document.body.appendChild(leftoverDiv);
   let campusHTML = await fetch(campusLink).then((response) => {
     return response.text();
   });
@@ -37,34 +32,33 @@
   // Add classes max-width: 1280px, width 100% and margin 0 auto
   parent.style.margin = "0 auto";
   parent.style.maxWidth = "1280px";
-  parent.style.width = "100%";
   //Add media query so on width > 40 rem, the width is 95%
   let mediaQuery = window.matchMedia("(min-width: 40rem)");
-  mediaQuery.addEventListener("change", (e) => {
-    if (e.matches) {
-      parent.style.width = "95%";
-    } else {
-      parent.style.width = "100%";
-    }
-  });
+  const applyWidth = (matches) => {
+    parent.style.width = matches ? "95%" : "100%";
+  };
+  applyWidth(mediaQuery.matches);
+  mediaQuery.addEventListener("change", (e) => applyWidth(e.matches));
   parent.innerHTML = "";
   const shadow = parent.attachShadow({ mode: "open" });
   const parser = new DOMParser();
   const doc = parser.parseFromString(campusHTML, "text/html");
-  // Append all link and style tags to head
-  const linkTags = [...doc.querySelectorAll("link, style")].map((el) => {
-    // All link tags with href that starts with /tic-campus should be added the base URL at the front
+  // Append all link and style tags to shadow and mirror link tags to document head.
+  // Collect added links so we can await their load before initializing Alpine.
+  const addedLinks = [];
+  [...doc.querySelectorAll("link, style")].forEach((el) => {
     if (el.href && el.href.startsWith("https://campus.ort.edu.ar/tic-campus")) {
       el.href = el.href.replace("https://campus.ort.edu.ar/", baseURL);
       const newLink = el.cloneNode();
       newLink.href = el.href;
       document.head.appendChild(newLink);
+      addedLinks.push(newLink);
     } else {
       if (el.tagName === "LINK") {
-        // Clone element and append it to head
         const newLink = el.cloneNode();
         newLink.href = el.href;
         document.head.appendChild(newLink);
+        addedLinks.push(newLink);
       }
     }
     shadow.appendChild(el);
@@ -83,9 +77,9 @@
   const loadScripts = scripts.map((el, index) => {
     return new Promise((resolve, reject) => {
       // Check if if the script has inline code
-      if (el.innerText) {
+      if (el.textContent) {
         // Eval content directly and resolve
-        eval(el.innerText);
+        eval(el.textContent);
         resolve();
       } else if (!el.src) {
         // If no src and no inline code, resolve
@@ -97,26 +91,25 @@
         for (let i = 0; i < el.attributes.length; i++) {
           newScript.setAttribute(el.attributes[i].name, el.attributes[i].value);
         }
-        if (el.src) {
-          // If the source is a relative path, add the base URL at the front
-          if (el.src.startsWith("https://campus.ort.edu.ar/tic-campus")) {
-            newScript.src = el.src.replace(
-              "https://campus.ort.edu.ar/",
-              baseURL
-            );
-          } else {
-            newScript.src = el.src;
-          }
+        if (el.src.startsWith("https://campus.ort.edu.ar/tic-campus")) {
+          newScript.src = el.src.replace("https://campus.ort.edu.ar/", baseURL);
+        } else {
+          newScript.src = el.src;
         }
-        // onload resolve the promise
-        newScript.onload = () => {
-          resolve();
-        };
+        newScript.onload = () => resolve();
+        newScript.onerror = () => reject(new Error(`Failed to load script: ${newScript.src}`));
         shadow.appendChild(newScript);
       }
     });
   });
   await Promise.all(loadScripts);
+  // Wait for all stylesheets added to document.head to load before initializing
+  // Alpine, so CSS custom properties (e.g. --breakpoint-lg) are readable.
+  await Promise.all(
+    addedLinks.map(
+      (link) => new Promise((resolve) => { link.onload = resolve; link.onerror = resolve; })
+    )
+  );
   triggerDOMContentLoaded();
   window.Alpine.initTree(parent.shadowRoot);
 </script>
