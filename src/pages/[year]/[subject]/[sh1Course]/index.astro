@@ -8,6 +8,7 @@ import Material from "../../../../components/sections/material/Material.astro";
 import Navbar from "../../../../components/navbar/Navbar.astro";
 import Mark from "../../../../components/sections/mark/Mark.astro";
 import { fetchTemplateSubjects } from "../../../../scripts/APIcalls/subjectData";
+import Queries from "../../../../components/sections/queries/Queries.astro";
 
 export async function getStaticPaths() {
   const templateId = "SH-1";
@@ -69,11 +70,12 @@ const items = [
       year={parseInt(year)}
       position={4}
     />
+    <Queries position={5} />
     <Mark
       subject={subject}
       course={sh1Course}
       year={parseInt(year)}
-      position={5}
+      position={6}
     />
   </main>
 </Layout>
