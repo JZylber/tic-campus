@@ -6,6 +6,16 @@ html {
   height: 100%;
 }
 
+/* Breakpoints as runtime CSS variables — Tailwind v4 @theme does not emit --breakpoint-* at runtime,
+   so these are defined here for JS access. Tailwind's built-in defaults match these values. */
+:root {
+  --breakpoint-sm: 40rem;
+  --breakpoint-md: 48rem;
+  --breakpoint-lg: 64rem;
+  --breakpoint-xl: 80rem;
+  --breakpoint-2xl: 96rem;
+}
+
 @theme {
   --font-sans: "Lato", sans-serif;
   --font-special-elite: "Special Elite", serif;
