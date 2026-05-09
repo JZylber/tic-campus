@@ -1,0 +1,22 @@
+---
+import Layout from "../../layouts/Layout.astro";
+---
+
+<Layout>
+  <div class="flex flex-col items-center justify-center grow gap-y-4">
+    <span
+      class="material-symbols-outlined !text-[150px] md:!text-[200px] text-sh-red"
+      >lock</span
+    >
+    <h2 class="text-[30px] font-bold">Sin Autorización</h2>
+    <p class="text-[16px] md:text-[20px] text-center">
+      No tenés permiso para acceder a esta página.
+    </p>
+    <a
+      href="/tic-campus/dashboard/login"
+      class="flex rounded-lg px-4 py-2 text-[16px] sm:text-[20px] items-center bg-sh-purple !text-sh-black hover:bg-sh-light-purple hover:shadow transition-colors cursor-pointer"
+    >
+      Volver al inicio
+    </a>
+  </div>
+</Layout>

@@ -10,6 +10,7 @@ import Select from "../../components/misc/select/Select.astro";
     fetchSubjectMarks,
     fetchTeacherSubjects,
   } from "../../scripts/APIcalls/dashboard";
+  import { fetchCurrentUser } from "../../scripts/auth";
 
   Alpine.data("subjectMarksPage", () => ({
     loadingSubjects: false,
@@ -27,11 +28,11 @@ import Select from "../../components/misc/select/Select.astro";
       dataSheetId: undefined,
     },
     markedStudents: [] as Student[],
-    init() {
-      const teacherId = "1";
-      // Fetch subjects for the dropdown
+    async init() {
       this.loadingSubjects = true;
-      fetchTeacherSubjects(teacherId).then((subjects) => {
+      const user = await fetchCurrentUser();
+      if (!user) return;
+      fetchTeacherSubjects(String(user.id)).then((subjects) => {
         this.subjects = subjects;
         this.loadingSubjects = false;
       });

@@ -4,15 +4,20 @@ import Loader from "../loader/Loader.astro";
 
 <script>
   import { fetchRevisionsByTeacher } from "../../scripts/APIcalls/dashboard";
+  import { fetchCurrentUser } from "../../scripts/auth";
   Alpine.data("revision", () => ({
     loading: true,
     requests: [] as Awaited<ReturnType<typeof fetchRevisionsByTeacher>>,
-    init() {
+    async init() {
       const currentYear = new Date().getFullYear();
-      fetchRevisionsByTeacher("1", currentYear)
+      const user = await fetchCurrentUser();
+      if (!user) {
+        this.loading = false;
+        return;
+      }
+      fetchRevisionsByTeacher(String(user.id), currentYear)
         .then((data) => {
           this.requests = data;
-          // Process the data as needed
         })
         .catch((error) => {
           console.error("Error fetching revisions:", error);
