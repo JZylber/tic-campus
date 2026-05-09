@@ -38,7 +38,9 @@ export async function fetchSubjects() {
 
 export async function fetchStudents() {
   try {
-    const response = await fetch(`${backendURL}/students`);
+    const response = await fetch(`${backendURL}/students`, {
+      credentials: "include",
+    });
     if (!response.ok) {
       throw new Error(`Error fetching students: ${response.statusText}`);
     }
@@ -71,6 +73,7 @@ export async function fetchRevisionsByTeacher(teacherId: string, year: number) {
   try {
     const response = await fetch(
       `${backendURL}/revisionRequests/teacher/${year}/${teacherId}`,
+      { credentials: "include" },
     );
     if (!response.ok) {
       throw new Error(
@@ -97,7 +100,9 @@ export async function fetchRevisionsByTeacher(teacherId: string, year: number) {
 
 export async function fetchTeacherSubjects(teacherId: string) {
   try {
-    const response = await fetch(`${backendURL}/subjects/teacher/${teacherId}`);
+    const response = await fetch(`${backendURL}/subjects/teacher/${teacherId}`, {
+      credentials: "include",
+    });
     if (!response.ok) {
       throw new Error(
         `Error fetching teacher subjects: ${response.statusText}`,
@@ -135,6 +140,7 @@ export async function fetchSubjectMarks(
     // "/marks/:subject/:course/:year"
     const response = await fetch(
       `${backendURL}/marks/${subject}/${course}/${year}${dataSheetId ? `?dataSheetId=${encodeURIComponent(dataSheetId)}` : ""}`,
+      { credentials: "include" },
     );
     if (!response.ok) {
       throw new Error(`Error fetching subject marks: ${response.statusText}`);
