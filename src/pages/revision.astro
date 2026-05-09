@@ -3,6 +3,11 @@ import GithubLayout from "../layouts/GithubLayout.astro";
 import RevisionTable from "../components/dashboard/RevisionTable.astro";
 ---
 
+<script>
+  import { requireAuth } from "../scripts/auth";
+  requireAuth();
+</script>
+
 <GithubLayout>
   <div class="w-full h-full flex flex-col items-center overflow-y-scroll">
     <h1 class="text-[30px] md:text-[36px] font-bold pt-4 pb-2">
