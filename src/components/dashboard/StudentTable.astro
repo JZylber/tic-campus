@@ -9,6 +9,7 @@ import Select from "../../components/misc/select/Select.astro";
   import { fetchStudents } from "../../scripts/APIcalls/dashboard";
   type Students = Awaited<ReturnType<typeof fetchStudents>>;
   type Student = Students[number];
+  type CourseEnrollment = Student["courses"][number];
 
   Alpine.data("studentsPage", () => ({
     loading: true,
@@ -17,45 +18,45 @@ import Select from "../../components/misc/select/Select.astro";
     years: [{ value: NaN, label: "Todos" }],
     filter: { course: "", text: "", year: NaN },
     selectedStudent: {
-      availableSubjects: [] as string[],
-      year: NaN,
-      course: "",
+      student: null as Student | null,
+      selectedCourse: null as CourseEnrollment | null,
+      get subjectsForCourse() {
+        if (!this.student || !this.selectedCourse) return [];
+        const courseId = this.selectedCourse.courseId;
+        return this.student.subjects.filter((s) => s.id_course === courseId);
+      },
     },
     init() {
       fetchStudents().then((students) => {
-        // Sort students by year (des), course (asc), surname (asc)
         this.students = students.sort((a, b) => {
-          if (a.year > b.year) return -1;
-          if (a.year < b.year) return 1;
-          if (a.course < b.course) return -1;
-          if (a.course > b.course) return 1;
+          const aMaxYear = a.courses.length
+            ? Math.max(...a.courses.map((c) => c.year))
+            : 0;
+          const bMaxYear = b.courses.length
+            ? Math.max(...b.courses.map((c) => c.year))
+            : 0;
+          if (aMaxYear !== bMaxYear) return bMaxYear - aMaxYear;
           if (a.surname < b.surname) return -1;
           if (a.surname > b.surname) return 1;
           return 0;
         });
-        this.courses = this.courses.concat(
-          [...new Set(this.students.map((student) => student.course))]
-            .map((course) => {
-              return {
-                value: course,
-                label: course,
-              };
-            })
-            .sort((a, b) => {
-              if (a.label < b.label) return -1;
-              if (a.label > b.label) return 1;
-              return 0;
-            }),
+        this.courses = [{ value: "", label: "Todos" }].concat(
+          [
+            ...new Set(
+              this.students.flatMap((s) => s.courses.map((c) => c.course)),
+            ),
+          ]
+            .sort()
+            .map((course) => ({ value: course, label: course })),
         );
-        this.years = this.years.concat(
-          [...new Set(this.students.map((student) => student.year))]
+        this.years = [{ value: NaN, label: "Todos" }].concat(
+          [
+            ...new Set(
+              this.students.flatMap((s) => s.courses.map((c) => c.year)),
+            ),
+          ]
             .sort((a, b) => b - a)
-            .map((year) => {
-              return {
-                value: year,
-                label: year.toString(),
-              };
-            }),
+            .map((year) => ({ value: year, label: year.toString() })),
         );
         this.filter.year = this.years[0].value;
         this.filter.course = this.courses[0].value;
@@ -69,53 +70,58 @@ import Select from "../../components/misc/select/Select.astro";
           let courseFilter = true;
           let textFilter = true;
           let yearFilter = true;
-          let normalizedText = this.filter.text
+          const normalizedText = this.filter.text
             .toLowerCase()
             .normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, "");
+            .replace(/[̀-ͯ]/g, "");
           if (this.filter.text !== "") {
             textFilter =
               s.name
                 .toLowerCase()
                 .normalize("NFD")
-                .replace(/[\u0300-\u036f]/g, "")
+                .replace(/[̀-ͯ]/g, "")
                 .includes(normalizedText) ||
               s.surname
                 .toLowerCase()
                 .normalize("NFD")
-                .replace(/[\u0300-\u036f]/g, "")
+                .replace(/[̀-ͯ]/g, "")
                 .includes(normalizedText);
           }
           if (this.filter.course !== "") {
-            courseFilter = s.course === this.filter.course;
+            courseFilter = s.courses.some((c) => c.course === this.filter.course);
           }
           if (!isNaN(this.filter.year)) {
-            yearFilter = s.year === this.filter.year;
+            yearFilter = s.courses.some((c) => c.year === this.filter.year);
           }
           return yearFilter && textFilter && courseFilter;
         })
         .sort((a, b) => {
-          if (a.year > b.year) return -1;
-          if (a.year < b.year) return 1;
-          if (a.course < b.course) return -1;
-          if (a.course > b.course) return 1;
+          const aMaxYear = a.courses.length
+            ? Math.max(...a.courses.map((c) => c.year))
+            : 0;
+          const bMaxYear = b.courses.length
+            ? Math.max(...b.courses.map((c) => c.year))
+            : 0;
+          if (aMaxYear !== bMaxYear) return bMaxYear - aMaxYear;
           if (a.surname < b.surname) return -1;
           if (a.surname > b.surname) return 1;
           return 0;
         });
     },
     selectStudent(student: Student) {
-      this.selectedStudent.year = student.year;
-      this.selectedStudent.course = student.course;
-      this.selectedStudent.availableSubjects = student.subjects;
+      this.selectedStudent.student = student;
+      this.selectedStudent.selectedCourse = null;
+    },
+    selectCourse(course: CourseEnrollment) {
       const studentStore = Alpine.store("student") as AlpineStudentStore;
       studentStore.setStudent(
-        student.name,
-        student.surname,
-        student.course,
-        student.id,
+        this.selectedStudent.student!.name,
+        this.selectedStudent.student!.surname,
+        course.course,
+        this.selectedStudent.student!.id,
       );
       studentStore.setSubject("");
+      this.selectedStudent.selectedCourse = course;
     },
   }));
 </script>
@@ -131,17 +137,49 @@ import Select from "../../components/misc/select/Select.astro";
         @click="$refs.subjectsDialog.close()">cancel</span
       >
     </div>
-    <h2 class="text-2xl font-bold text-center mb-4">Materias Disponibles</h2>
 
-    <div class="overflow-y-scroll flex flex-col gap-4 p-4 items-center">
-      <template x-for="subject in selectedStudent.availableSubjects">
-        <a
-          :href="`${$store.pageData.dataURL}/${selectedStudent.year}/${subject}/${selectedStudent.course}`"
-          class="flex gap-x-4 py-2 px-4 rounded-xl bg-gray-300 cursor-pointer hover:shadow-lg w-fit"
+    <!-- State A: course list -->
+    <div x-show="!selectedStudent.selectedCourse" class="flex flex-col h-[calc(100%-2rem)]">
+      <h2 class="text-2xl font-bold text-center mb-4">
+        Cursos de
+        <span x-text="selectedStudent.student?.name"></span>
+        <span x-text="selectedStudent.student?.surname"></span>
+      </h2>
+      <div class="overflow-y-scroll flex flex-col gap-4 p-4 items-center">
+        <template x-for="course in (selectedStudent.student?.courses ?? [])">
+          <button
+            @click="selectCourse(course)"
+            class="flex gap-x-4 py-2 px-6 rounded-xl bg-gray-300 cursor-pointer hover:shadow-lg w-fit text-[16px] text-sh-dark-gray"
+          >
+            <span x-text="`${course.course} - ${course.year}`"></span>
+          </button>
+        </template>
+      </div>
+    </div>
+
+    <!-- State B: subject list -->
+    <div x-show="selectedStudent.selectedCourse" class="flex flex-col h-[calc(100%-2rem)]">
+      <div class="flex items-center mb-4 gap-2">
+        <span
+          class="material-symbols-outlined cursor-pointer"
+          @click="selectedStudent.selectedCourse = null">arrow_back</span
         >
-          <span class="text-[16px] text-sh-dark-gray" x-text="subject"></span>
-        </a>
-      </template>
+        <h2 class="text-2xl font-bold text-center flex-1">
+          Materias —
+          <span x-text="selectedStudent.selectedCourse?.course"></span>
+          (<span x-text="selectedStudent.selectedCourse?.year"></span>)
+        </h2>
+      </div>
+      <div class="overflow-y-scroll flex flex-col gap-4 p-4 items-center">
+        <template x-for="subject in selectedStudent.subjectsForCourse">
+          <a
+            :href="`${$store.pageData.dataURL}/${selectedStudent.selectedCourse?.year}/${subject.subject}/${selectedStudent.selectedCourse?.course}`"
+            class="flex gap-x-4 py-2 px-4 rounded-xl bg-gray-300 cursor-pointer hover:shadow-lg w-fit"
+          >
+            <span class="text-[16px] text-sh-dark-gray" x-text="subject.subject"></span>
+          </a>
+        </template>
+      </div>
     </div>
   </dialog>
 
@@ -185,20 +223,27 @@ import Select from "../../components/misc/select/Select.astro";
         <tr>
           <th class="px-4 py-2">Nombre</th>
           <th class="px-4 py-2">Apellido</th>
-          <th class="px-4 py-2">Año</th>
-          <th class="px-4 py-2">Curso</th>
+          <th class="px-4 py-2">DNI</th>
+          <th class="px-4 py-2">Email</th>
+          <th class="px-4 py-2">Editar</th>
         </tr>
       </thead>
       <tbody>
         <template x-for="student in filteredStudents">
           <tr
             class="border-b-2 border-gray-300 hover:bg-gray-300 cursor-pointer"
-            @click="selectStudent(student);$refs.subjectsDialog.showModal()"
+            @click="selectStudent(student); $refs.subjectsDialog.showModal()"
           >
             <td class="px-4 py-2" x-text="student.name"></td>
             <td class="px-4 py-2" x-text="student.surname"></td>
-            <td class="px-4 py-2" x-text="student.year"></td>
-            <td class="px-4 py-2" x-text="student.course"></td>
+            <td class="px-4 py-2" x-text="student.dni"></td>
+            <td class="px-4 py-2" x-text="student.email"></td>
+            <td class="px-4 py-2 text-center">
+              <button
+                @click.stop=""
+                class="material-symbols-outlined text-[20px] text-sh-dark-gray hover:text-black"
+              >edit</button>
+            </td>
           </tr>
         </template>
       </tbody>

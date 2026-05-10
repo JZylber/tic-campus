@@ -11,15 +11,26 @@ export type Subject = {
   template: string;
 };
 
+type CourseEnrollment = {
+  courseId: number;
+  course: string;
+  year: number;
+};
+
+type StudentSubject = {
+  subject: string;
+  id_subject: string;
+  id_course: number;
+};
+
 type Student = {
   id: string;
   name: string;
   surname: string;
   dni: string;
   email: string;
-  year: number;
-  course: string;
-  subjects: string[];
+  courses: CourseEnrollment[];
+  subjects: StudentSubject[];
 };
 
 export async function fetchSubjects() {
