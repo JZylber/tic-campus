@@ -1,18 +1,32 @@
 ---
 import Loader from "../loader/Loader.astro";
+import Select from "../misc/select/Select.astro";
 ---
 
 <script>
-  import { fetchRevisionsByTeacher } from "../../scripts/APIcalls/dashboard";
+  import {
+    fetchRevisionsByTeacher,
+    toggleRevisionReviewed,
+  } from "../../scripts/APIcalls/dashboard";
+  import { fetchCurrentUser } from "../../scripts/auth";
   Alpine.data("revision", () => ({
     loading: true,
     requests: [] as Awaited<ReturnType<typeof fetchRevisionsByTeacher>>,
-    init() {
+    filter: {
+      pendingOnly: true,
+      subject: "",
+      course: "",
+    },
+    async init() {
       const currentYear = new Date().getFullYear();
-      fetchRevisionsByTeacher("1", currentYear)
+      const user = await fetchCurrentUser();
+      if (!user) {
+        this.loading = false;
+        return;
+      }
+      fetchRevisionsByTeacher(String(user.id), currentYear)
         .then((data) => {
           this.requests = data;
-          // Process the data as needed
         })
         .catch((error) => {
           console.error("Error fetching revisions:", error);
@@ -21,6 +35,51 @@ import Loader from "../loader/Loader.astro";
           this.loading = false;
         });
     },
+    get subjectOptions() {
+      const subjects = [
+        ...new Set(this.requests.map((r: any) => r.subjectName)),
+      ].sort() as string[];
+      return [
+        { value: "", label: "Todas" },
+        ...subjects.map((s) => ({ value: s, label: s })),
+      ];
+    },
+    get courseOptions() {
+      const source =
+        this.filter.subject === ""
+          ? this.requests
+          : this.requests.filter(
+              (r: any) => r.subjectName === this.filter.subject,
+            );
+      const courses = [
+        ...new Set(source.map((r: any) => r.courseName)),
+      ].sort() as string[];
+      return [
+        { value: "", label: "Todos" },
+        ...courses.map((c) => ({ value: c, label: c })),
+      ];
+    },
+    get filteredRequests() {
+      return this.requests.filter((r: any) => {
+        if (this.filter.pendingOnly && r.reviewed) return false;
+        if (this.filter.subject !== "" && r.subjectName !== this.filter.subject)
+          return false;
+        if (this.filter.course !== "" && r.courseName !== this.filter.course)
+          return false;
+        return true;
+      });
+    },
+    async toggleReviewed(request: any) {
+      const newReviewed = !request.reviewed;
+      request.reviewed = newReviewed;
+      const result = await toggleRevisionReviewed(
+        request.revisionRequestId,
+        newReviewed,
+      );
+      if (!result) {
+        request.reviewed = !newReviewed;
+      }
+    },
   }));
 </script>
 <div class="w-full flex justify-center py-4" x-data="revision()">
@@ -28,39 +87,89 @@ import Loader from "../loader/Loader.astro";
   <div x-show="!loading && requests.length === 0">
     <p class="text-gray-500 text-lg">No hay pedidos de revisión.</p>
   </div>
-  <div x-show="!loading && requests.length > 0">
-    <table class="w-full">
-      <thead class="bg-sh-black text-gray-50 text-lg font-semibold">
-        <tr>
-          <th class="px-4 py-2">#</th>
-          <th class="px-4 py-2">Nombre</th>
-          <th class="px-4 py-2">Apellido</th>
-          <th class="px-4 py-2">Curso</th>
-          <th class="px-4 py-2">Materia</th>
-          <th class="px-4 py-2">Actividad</th>
-          <th class="px-4 py-2">Fecha</th>
-          <th class="px-4 py-2">Motivo</th>
-          <th class="px-4 py-2">Extras</th>
-          <th class="px-4 py-2">Comentarios</th>
-        </tr>
-      </thead>
-      <tbody>
-        <template x-for="request in requests" :key="request.revisionRequestId">
+  <div class="w-full flex flex-col gap-y-4" x-show="!loading && requests.length > 0">
+    <div class="flex w-full gap-x-8 items-end flex-wrap gap-y-4">
+      <div class="flex flex-col items-center md:items-start gap-2 px-4">
+        <label
+          class="text-center md:text-left text-sh-dark-gray text-[16px] font-semibold"
+          >Pendientes</label
+        >
+        <div class="flex items-center h-[44px] gap-x-2">
+          <input
+            type="checkbox"
+            x-model="filter.pendingOnly"
+            id="pendingOnlyCheck"
+            class="w-5 h-5 cursor-pointer accent-sh-purple"
+          />
+          <label
+            for="pendingOnlyCheck"
+            class="text-sh-dark-gray text-[16px] cursor-pointer"
+            >Solo mostrar pendientes</label
+          >
+        </div>
+      </div>
+      <Select
+        title="Materia"
+        xModel="filter.subject"
+        options="subjectOptions"
+        className="min-w-80"
+      />
+      <Select
+        title="Curso"
+        xModel="filter.course"
+        options="courseOptions"
+        className="min-w-48"
+      />
+    </div>
+    <div x-show="filteredRequests.length === 0">
+      <p class="text-gray-500 text-lg">
+        No hay pedidos que coincidan con los filtros.
+      </p>
+    </div>
+    <div x-show="filteredRequests.length > 0">
+      <table class="w-full">
+        <thead class="bg-sh-black text-gray-50 text-lg font-semibold">
           <tr>
-            <td class="px-4 py-2" x-text="request.revisionRequestId"></td>
-            <td class="px-4 py-2" x-text="request.studentName"></td>
-            <td class="px-4 py-2" x-text="request.studentSurname"></td>
-            <td class="px-4 py-2" x-text="request.courseName"></td>
-            <td class="px-4 py-2" x-text="request.subjectName"></td>
-            <td class="px-4 py-2" x-text="request.activityId"></td>
-            <td class="px-4 py-2" x-text="request.date.toLocaleDateString()"
-            ></td>
-            <td class="px-4 py-2" x-text="request.reason"></td>
-            <td class="px-4 py-2" x-text="request.bonusTasks || 'N/A'"></td>
-            <td class="px-4 py-2" x-text="request.comment || 'N/A'"></td>
+            <th class="px-4 py-2">#</th>
+            <th class="px-4 py-2">Nombre</th>
+            <th class="px-4 py-2">Apellido</th>
+            <th class="px-4 py-2">Curso</th>
+            <th class="px-4 py-2">Materia</th>
+            <th class="px-4 py-2">Actividad</th>
+            <th class="px-4 py-2">Fecha</th>
+            <th class="px-4 py-2">Motivo</th>
+            <th class="px-4 py-2">Extras</th>
+            <th class="px-4 py-2">Comentarios</th>
+            <th class="px-4 py-2">Revisado</th>
           </tr>
-        </template>
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          <template x-for="request in filteredRequests" :key="request.revisionRequestId">
+            <tr class="border-b-2 border-gray-300">
+              <td class="px-4 py-2" x-text="request.revisionRequestId"></td>
+              <td class="px-4 py-2" x-text="request.studentName"></td>
+              <td class="px-4 py-2" x-text="request.studentSurname"></td>
+              <td class="px-4 py-2" x-text="request.courseName"></td>
+              <td class="px-4 py-2" x-text="request.subjectName"></td>
+              <td class="px-4 py-2" x-text="request.activityId"></td>
+              <td class="px-4 py-2" x-text="request.date.toLocaleDateString()"></td>
+              <td class="px-4 py-2" x-text="request.reason"></td>
+              <td class="px-4 py-2" x-text="request.bonusTasks || 'N/A'"></td>
+              <td class="px-4 py-2" x-text="request.comment || 'N/A'"></td>
+              <td class="px-4 py-2">
+                <div class="flex justify-center items-center">
+                  <input
+                    type="checkbox"
+                    :checked="request.reviewed"
+                    @change="toggleReviewed(request)"
+                    class="w-5 h-5 cursor-pointer accent-sh-purple"
+                  />
+                </div>
+              </td>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>

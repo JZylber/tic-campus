@@ -6,6 +6,7 @@ import swipeDirective from "./scripts/alpine/directives/swipe";
 import pageData from "./scripts/alpine/stores/pageData";
 import courseStore from "./scripts/alpine/stores/course";
 import studentStore from "./scripts/alpine/stores/student";
+import currentUserStore from "./scripts/alpine/stores/currentUser";
 
 export default (Alpine: Alpine) => {
   Alpine.plugin(collapse);
@@ -15,4 +16,5 @@ export default (Alpine: Alpine) => {
   Alpine.store("pageData", pageData());
   Alpine.store("course", courseStore());
   Alpine.store("student", studentStore(Alpine));
+  Alpine.store("currentUser", currentUserStore());
 };

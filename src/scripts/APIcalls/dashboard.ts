@@ -98,6 +98,29 @@ export async function fetchRevisionsByTeacher(teacherId: string, year: number) {
   }
 }
 
+export async function toggleRevisionReviewed(id: string, reviewed: boolean) {
+  try {
+    const response = await fetch(
+      `${backendURL}/revisionRequests/${id}/reviewed`,
+      {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ reviewed }),
+      },
+    );
+    if (!response.ok) {
+      throw new Error(
+        `Error toggling revision reviewed: ${response.statusText}`,
+      );
+    }
+    return (await response.json()) as { id: number; reviewed: boolean };
+  } catch (error) {
+    console.error("Failed to toggle revision reviewed:", error);
+    return null;
+  }
+}
+
 export async function fetchTeacherSubjects(teacherId: string) {
   try {
     const response = await fetch(`${backendURL}/subjects/teacher/${teacherId}`, {

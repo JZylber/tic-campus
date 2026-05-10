@@ -1,26 +1,41 @@
+---
+interface Props {
+  role: "teacher" | "admin";
+}
+const { role } = Astro.props;
+---
+
 <nav class="w-full bg-gray-50 border-b-2 border-gray-300 flex items-stretch">
+  {
+    role === "teacher" && (
+      <>
+        <a
+          href="/tic-campus/dashboard/teacher"
+          class="py-4 flex items-center justify-center w-40 hover:bg-gray-300 uppercase font-bold text-gray-700"
+        >
+          Notas
+        </a>
+        <a
+          href="/tic-campus/dashboard/teacher/revision"
+          class="py-4 flex items-center justify-center w-40 hover:bg-gray-300 uppercase font-bold text-gray-700"
+        >
+          Revisiones
+        </a>
+      </>
+    )
+  }
+  {
+    role === "admin" && (
+      <a
+        href="/tic-campus/dashboard/admin"
+        class="py-4 flex items-center justify-center w-40 hover:bg-gray-300 uppercase font-bold text-gray-700"
+      >
+        Estudiantes
+      </a>
+    )
+  }
   <a
-    href="/tic-campus/"
-    class="py-4 flex items-center justify-center w-40 hover:bg-gray-300 uppercase font-bold text-gray-700"
-    >Materias</a
-  >
-  <a
-    href="/tic-campus/student"
-    class="py-4 flex items-center justify-center w-40 hover:bg-gray-300 uppercase font-bold text-gray-700"
-    >Estudiantes</a
-  >
-  <a
-    href="/tic-campus/revision"
-    class="py-4 flex items-center justify-center w-40 hover:bg-gray-300 uppercase font-bold text-gray-700"
-    >Revisiones</a
-  >
-  <a
-    href="/tic-campus/marks"
-    class="py-4 flex items-center justify-center w-40 hover:bg-gray-300 uppercase font-bold text-gray-700"
-    >Notas</a
-  >
-  <a
-    href="/tic-campus/student"
+    href="/tic-campus/dashboard/login"
     class="ml-auto flex items-center justify-end gap-x-4 pl-4 border-l-2 border-gray-300"
   >
     <span

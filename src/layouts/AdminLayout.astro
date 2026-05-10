@@ -1,0 +1,11 @@
+---
+import GNavbar from "../components/dashboard/GNavbar.astro";
+import Layout from "./Layout.astro";
+---
+
+<Layout>
+  <div class="flex flex-col w-full max-h-full">
+    <GNavbar role="admin" />
+    <slot />
+  </div>
+</Layout>
