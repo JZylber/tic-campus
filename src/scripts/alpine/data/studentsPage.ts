@@ -1,27 +1,22 @@
----
-import Loader from "../loader/Loader.astro";
-import Select from "../../components/misc/select/Select.astro";
-import StudentViewerDialog from "./StudentViewerDialog.astro";
-import StudentEditDialog from "./StudentEditDialog.astro";
----
+import type { AlpineComponent } from "alpinejs";
+import type { AlpineStudentStore } from "../stores/student";
+import {
+  fetchStudents,
+  fetchCourses,
+  updateStudent,
+  enrollStudentInCourse,
+  moveStudentCourse,
+  removeStudentFromCourse,
+} from "../../APIcalls/dashboard";
 
-<script>
-  import type { AlpineStudentStore } from "../../scripts/alpine/stores/student";
-  import {
-    fetchStudents,
-    fetchCourses,
-    updateStudent,
-    enrollStudentInCourse,
-    moveStudentCourse,
-    removeStudentFromCourse,
-  } from "../../scripts/APIcalls/dashboard";
-  type Students = Awaited<ReturnType<typeof fetchStudents>>;
-  type Student = Students[number];
-  type CourseEnrollment = Student["courses"][number];
-  type Courses = Awaited<ReturnType<typeof fetchCourses>>;
-  type Course = Courses[number];
+type Students = Awaited<ReturnType<typeof fetchStudents>>;
+type Student = Students[number];
+type CourseEnrollment = Student["courses"][number];
+type Courses = Awaited<ReturnType<typeof fetchCourses>>;
+type Course = Courses[number];
 
-  Alpine.data("studentsPage", () => ({
+const studentsPageData = () =>
+  ({
     loading: true,
     students: [] as Students,
     allCourses: [] as Courses,
@@ -256,77 +251,6 @@ import StudentEditDialog from "./StudentEditDialog.astro";
         this.editStudent.student = this.students[idx];
       }
     },
-  }));
-</script>
-<div class="w-full flex justify-center py-4" x-data="studentsPage()">
-  <Loader show="loading" />
-  <StudentViewerDialog />
-  <StudentEditDialog />
+  }) as AlpineComponent<any>;
 
-  <div class="w-full flex flex-col gap-y-4" x-show="!loading">
-    <div class="flex w-full gap-x-8">
-      <div class={`flex flex-col items-center md:items-start gap-2 px-4`}>
-        <label
-          class="text-center md:text-left text-sh-dark-gray text-[16px] font-semibold"
-          >Nombre y Apellido</label
-        >
-        <div
-          class="flex justify-between items-stretch w-full max-w-[200px] h-[44px] rounded-xl text-sh-dark-gray text-[16px] border-2 border-sh-gray"
-        >
-          <div class="flex items-center basis-0 grow px-2">
-            <input class="w-full focus:outline-0" x-model="filter.text" />
-          </div>
-          <div class="flex items-center">
-            <span
-              class="material-symbols-outlined text-[24px] text-sh-dark-gray px-2"
-            >
-              search
-            </span>
-          </div>
-        </div>
-      </div>
-      <Select
-        title="Año"
-        xModel="filter.year"
-        options="yearFilterOptions"
-        className="min-w-48"
-      />
-      <Select
-        title="Curso"
-        xModel="filter.courseId"
-        options="courseFilterOptions"
-        className="min-w-48"
-      />
-    </div>
-    <table class="w-full">
-      <thead class="bg-sh-black text-gray-50 text-lg font-semibold">
-        <tr>
-          <th class="px-4 py-2">Nombre</th>
-          <th class="px-4 py-2">Apellido</th>
-          <th class="px-4 py-2">DNI</th>
-          <th class="px-4 py-2">Email</th>
-          <th class="px-4 py-2">Editar</th>
-        </tr>
-      </thead>
-      <tbody>
-        <template x-for="student in filteredStudents">
-          <tr
-            class="border-b-2 border-gray-300 hover:bg-gray-300 cursor-pointer"
-            @click="selectStudent(student); $refs.subjectsDialog.showModal()"
-          >
-            <td class="px-4 py-2" x-text="student.name"></td>
-            <td class="px-4 py-2" x-text="student.surname"></td>
-            <td class="px-4 py-2" x-text="student.dni"></td>
-            <td class="px-4 py-2" x-text="student.email"></td>
-            <td class="px-4 py-2 text-center">
-              <button
-                @click.stop="openEdit(student); $refs.editDialog.showModal()"
-                class="material-symbols-outlined text-[20px] text-sh-dark-gray hover:text-black"
-              >edit</button>
-            </td>
-          </tr>
-        </template>
-      </tbody>
-    </table>
-  </div>
-</div>
+export default studentsPageData;
