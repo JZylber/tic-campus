@@ -29,11 +29,14 @@ import StudentEditDialog from "./StudentEditDialog.astro";
     selectedStudent: {
       student: null as Student | null,
       selectedCourse: null as CourseEnrollment | null,
-      get subjectsForCourse() {
-        if (!this.student || !this.selectedCourse) return [];
-        const courseId = this.selectedCourse.courseId;
-        return this.student.subjects.filter((s) => s.id_course === courseId);
-      },
+    },
+    get subjectsForCourse() {
+      const { student, selectedCourse } = this.selectedStudent;
+      if (!student || !selectedCourse) return [];
+      const courseId = selectedCourse.courseId;
+      return student.subjects.filter(
+        (s: Student["subjects"][number]) => s.id_course === courseId,
+      );
     },
     editStudent: {
       student: null as Student | null,
