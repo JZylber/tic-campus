@@ -7,7 +7,9 @@ import Dialog from "../../misc/dialog/Dialog.astro";
 
   <!-- Personal data -->
   <div class="flex flex-col gap-4 mb-8">
-    <h3 class="text-lg font-semibold border-b border-gray-200 pb-1">Datos personales</h3>
+    <h3 class="text-lg font-semibold border-b border-gray-200 pb-1">
+      Datos personales
+    </h3>
     <div class="grid grid-cols-2 gap-3">
       <input
         x-model="editStudent.form.name"
@@ -34,30 +36,35 @@ import Dialog from "../../misc/dialog/Dialog.astro";
       <span
         class="text-red-500 text-sm"
         x-text="editStudent.error ?? ''"
-        x-show="editStudent.error && editStudent.courseAction === null"
-      ></span>
+        x-show="editStudent.error && editStudent.courseAction === null"></span>
       <button
         @click="savePersonalData()"
-        class="ml-auto px-4 py-2 bg-sh-black text-white rounded-xl hover:opacity-80 disabled:opacity-40"
-        :disabled="editStudent.saving"
-      >Guardar</button>
+        class="ml-auto px-4 py-2 bg-sh-black text-white rounded-xl hover:opacity-80 disabled:opacity-40 cursor-pointer"
+        :disabled="editStudent.saving">Guardar</button
+      >
     </div>
   </div>
 
   <!-- Courses -->
   <div class="flex flex-col gap-2">
-    <h3 class="text-lg font-semibold border-b border-gray-200 pb-1 mb-2">Cursos</h3>
+    <h3 class="text-lg font-semibold border-b border-gray-200 pb-1 mb-2">
+      Cursos
+    </h3>
     <template x-for="course in (editStudent.student?.courses ?? [])">
       <div class="flex items-center gap-2 py-1">
-        <span class="flex-1 text-[16px]" x-text="`${course.course} - ${course.year}`"></span>
+        <span
+          class="flex-1 text-[16px]"
+          x-text="`${course.course} - ${course.year}`"></span>
         <button
           @click="editStudent.courseAction = { type: 'change', oldCourseId: course.courseId }; editStudent.courseActionId = NaN; editStudent.error = null"
-          class="material-symbols-outlined text-[20px] text-sh-dark-gray hover:text-black"
-        >edit</button>
+          class="material-symbols-outlined text-[20px] text-sh-dark-gray hover:text-black cursor-pointer"
+          >edit</button
+        >
         <button
           @click="removeCourse(course.courseId)"
-          class="material-symbols-outlined text-[20px] text-red-400 hover:text-red-600"
-        >delete</button>
+          class="material-symbols-outlined text-[20px] text-red-400 hover:text-red-600 cursor-pointer"
+          >delete</button
+        >
       </div>
     </template>
 
@@ -81,24 +88,25 @@ import Dialog from "../../misc/dialog/Dialog.astro";
       </select>
       <button
         @click="confirmCourseAction()"
-        class="px-3 py-1 bg-sh-black text-white rounded-xl hover:opacity-80 disabled:opacity-40 text-sm"
+        class="px-3 py-1 bg-sh-black text-white rounded-xl hover:opacity-80 disabled:opacity-40 text-sm cursor-pointer disabled:cursor-not-allowed"
         :disabled="isNaN(editStudent.courseActionId) || editStudent.saving"
-      >Confirmar</button>
+        >Confirmar</button
+      >
       <button
         @click="editStudent.courseAction = null; editStudent.courseActionId = NaN; editStudent.error = null"
-        class="px-3 py-1 border-2 border-sh-gray rounded-xl hover:bg-gray-200 text-sm"
-      >Cancelar</button>
+        class="px-3 py-1 border-2 border-sh-gray rounded-xl hover:bg-gray-200 text-sm cursor-pointer"
+        >Cancelar</button
+      >
       <span
         class="w-full text-red-500 text-sm"
         x-text="editStudent.error ?? ''"
-        x-show="editStudent.error && editStudent.courseAction !== null"
-      ></span>
+        x-show="editStudent.error && editStudent.courseAction !== null"></span>
     </div>
 
     <button
       x-show="editStudent.courseAction === null"
       @click="editStudent.courseAction = { type: 'add' }; editStudent.courseActionId = NaN; editStudent.error = null"
-      class="mt-2 flex items-center gap-1 text-sh-dark-gray hover:text-black w-fit text-[15px]"
+      class="mt-2 flex items-center gap-1 text-sh-dark-gray hover:text-black w-fit text-[15px] cursor-pointer"
     >
       <span class="material-symbols-outlined text-[20px]">add</span>
       Agregar curso
