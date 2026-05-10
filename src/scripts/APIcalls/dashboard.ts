@@ -11,15 +11,33 @@ export type Subject = {
   template: string;
 };
 
-type Student = {
+export type Course = {
+  id: number;
+  name: string;
+  specialty: string;
+  year: number;
+};
+
+export type CourseEnrollment = {
+  courseId: number;
+  course: string;
+  year: number;
+};
+
+type StudentSubject = {
+  subject: string;
+  id_subject: string;
+  id_course: number;
+};
+
+export type Student = {
   id: string;
   name: string;
   surname: string;
   dni: string;
   email: string;
-  year: number;
-  course: string;
-  subjects: string[];
+  courses: CourseEnrollment[];
+  subjects: StudentSubject[];
 };
 
 export async function fetchSubjects() {
@@ -152,6 +170,113 @@ type SubjectMarks = {
   >;
   criteria: { proportion: number; specialActivities: string[] };
 };
+
+export async function fetchCourses(): Promise<Course[]> {
+  try {
+    const response = await fetch(`${backendURL}/courses`, {
+      credentials: "include",
+    });
+    if (!response.ok) {
+      throw new Error(`Error fetching courses: ${response.statusText}`);
+    }
+    return (await response.json()) as Course[];
+  } catch (error) {
+    console.error("Failed to fetch courses:", error);
+    return [];
+  }
+}
+
+export async function updateStudent(
+  studentId: string,
+  data: Partial<{ name: string; surname: string; email: string; dni: string }>,
+): Promise<Student | null> {
+  try {
+    const response = await fetch(`${backendURL}/students/${studentId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) {
+      throw new Error(`Error updating student: ${response.statusText}`);
+    }
+    return (await response.json()) as Student;
+  } catch (error) {
+    console.error("Failed to update student:", error);
+    return null;
+  }
+}
+
+export async function enrollStudentInCourse(
+  studentId: string,
+  courseId: number,
+): Promise<CourseEnrollment | null> {
+  try {
+    const response = await fetch(
+      `${backendURL}/students/${studentId}/course`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ courseId }),
+      },
+    );
+    if (!response.ok) {
+      throw new Error(`Error enrolling student in course: ${response.statusText}`);
+    }
+    return (await response.json()) as CourseEnrollment;
+  } catch (error) {
+    console.error("Failed to enroll student in course:", error);
+    return null;
+  }
+}
+
+export async function moveStudentCourse(
+  studentId: string,
+  oldCourseId: number,
+  newCourseId: number,
+): Promise<CourseEnrollment | null> {
+  try {
+    const response = await fetch(
+      `${backendURL}/students/${studentId}/course`,
+      {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ oldCourseId, newCourseId }),
+      },
+    );
+    if (!response.ok) {
+      throw new Error(`Error moving student course: ${response.statusText}`);
+    }
+    return (await response.json()) as CourseEnrollment;
+  } catch (error) {
+    console.error("Failed to move student course:", error);
+    return null;
+  }
+}
+
+export async function removeStudentFromCourse(
+  studentId: string,
+  courseId: number,
+): Promise<boolean> {
+  try {
+    const response = await fetch(
+      `${backendURL}/students/${studentId}/course/${courseId}`,
+      {
+        method: "DELETE",
+        credentials: "include",
+      },
+    );
+    if (!response.ok) {
+      throw new Error(`Error removing student from course: ${response.statusText}`);
+    }
+    return true;
+  } catch (error) {
+    console.error("Failed to remove student from course:", error);
+    return false;
+  }
+}
 
 export async function fetchSubjectMarks(
   subject: string,

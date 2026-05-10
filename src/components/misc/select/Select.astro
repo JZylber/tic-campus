@@ -23,9 +23,12 @@ const { title, xModel, options, className } = Astro.props;
     class="text-center md:text-left text-sh-dark-gray text-[16px] font-semibold"
     x-text={`'${title}'`}></label>
   <div class="relative w-full h-[44px]">
+    <!-- WARNING: Do not add @click.stop to the div below. Alpine's @click.outside relies on the click
+         bubbling to the document. Stopping propagation prevents sibling Selects from closing when this
+         one opens. If an ancestor has a @click handler that conflicts, coordinate at that level instead. -->
     <div
       x-data="{ open: false }"
-      @click.stop="open = !open"
+      @click="open = !open"
       @click.outside="open = false"
       class="absolute bg-gray-50 overflow-hidden w-full flex flex-col rounded-xl text-sh-dark-gray text-[16px] border-2 border-sh-gray cursor-pointer"
       :class=`{'z-10': open}`
