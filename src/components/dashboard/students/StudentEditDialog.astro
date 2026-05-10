@@ -1,0 +1,107 @@
+---
+import Dialog from "../../misc/dialog/Dialog.astro";
+---
+
+<Dialog xRef="editDialog" className="w-1/2 p-6 overflow-y-auto max-h-[75vh]">
+  <h2 class="text-2xl font-bold mb-6">Editar alumno</h2>
+
+  <!-- Personal data -->
+  <div class="flex flex-col gap-4 mb-8">
+    <h3 class="text-lg font-semibold border-b border-gray-200 pb-1">Datos personales</h3>
+    <div class="grid grid-cols-2 gap-3">
+      <input
+        x-model="editStudent.form.name"
+        placeholder="Nombre"
+        class="border-2 border-sh-gray rounded-xl px-3 py-2 focus:outline-sh-purple"
+      />
+      <input
+        x-model="editStudent.form.surname"
+        placeholder="Apellido"
+        class="border-2 border-sh-gray rounded-xl px-3 py-2 focus:outline-sh-purple"
+      />
+      <input
+        x-model="editStudent.form.dni"
+        placeholder="DNI"
+        class="border-2 border-sh-gray rounded-xl px-3 py-2 focus:outline-sh-purple"
+      />
+      <input
+        x-model="editStudent.form.email"
+        placeholder="Email"
+        class="border-2 border-sh-gray rounded-xl px-3 py-2 focus:outline-sh-purple"
+      />
+    </div>
+    <div class="flex justify-between items-center">
+      <span
+        class="text-red-500 text-sm"
+        x-text="editStudent.error ?? ''"
+        x-show="editStudent.error && editStudent.courseAction === null"
+      ></span>
+      <button
+        @click="savePersonalData()"
+        class="ml-auto px-4 py-2 bg-sh-black text-white rounded-xl hover:opacity-80 disabled:opacity-40"
+        :disabled="editStudent.saving"
+      >Guardar</button>
+    </div>
+  </div>
+
+  <!-- Courses -->
+  <div class="flex flex-col gap-2">
+    <h3 class="text-lg font-semibold border-b border-gray-200 pb-1 mb-2">Cursos</h3>
+    <template x-for="course in (editStudent.student?.courses ?? [])">
+      <div class="flex items-center gap-2 py-1">
+        <span class="flex-1 text-[16px]" x-text="`${course.course} - ${course.year}`"></span>
+        <button
+          @click="editStudent.courseAction = { type: 'change', oldCourseId: course.courseId }; editStudent.courseActionId = NaN; editStudent.error = null"
+          class="material-symbols-outlined text-[20px] text-sh-dark-gray hover:text-black"
+        >edit</button>
+        <button
+          @click="removeCourse(course.courseId)"
+          class="material-symbols-outlined text-[20px] text-red-400 hover:text-red-600"
+        >delete</button>
+      </div>
+    </template>
+
+    <!-- Course action panel -->
+    <div
+      x-show="editStudent.courseAction !== null"
+      class="flex flex-wrap items-center gap-2 mt-3 p-3 bg-gray-100 rounded-xl"
+    >
+      <span
+        class="text-sm font-medium text-sh-dark-gray"
+        x-text="editStudent.courseAction?.type === 'add' ? 'Agregar:' : 'Cambiar por:'"
+      ></span>
+      <select
+        x-model.number="editStudent.courseActionId"
+        class="border-2 border-sh-gray rounded-xl px-2 py-1 flex-1 min-w-0 focus:outline-sh-purple text-[15px]"
+      >
+        <option :value="NaN" disabled selected>Seleccioná un curso</option>
+        <template x-for="c in availableCoursesForAction">
+          <option :value="c.id" x-text="`${c.name} - ${c.year}`"></option>
+        </template>
+      </select>
+      <button
+        @click="confirmCourseAction()"
+        class="px-3 py-1 bg-sh-black text-white rounded-xl hover:opacity-80 disabled:opacity-40 text-sm"
+        :disabled="isNaN(editStudent.courseActionId) || editStudent.saving"
+      >Confirmar</button>
+      <button
+        @click="editStudent.courseAction = null; editStudent.courseActionId = NaN; editStudent.error = null"
+        class="px-3 py-1 border-2 border-sh-gray rounded-xl hover:bg-gray-200 text-sm"
+      >Cancelar</button>
+      <span
+        class="w-full text-red-500 text-sm"
+        x-text="editStudent.error ?? ''"
+        x-show="editStudent.error && editStudent.courseAction !== null"
+      ></span>
+    </div>
+
+    <button
+      x-show="editStudent.courseAction === null"
+      @click="editStudent.courseAction = { type: 'add' }; editStudent.courseActionId = NaN; editStudent.error = null"
+      class="mt-2 flex items-center gap-1 text-sh-dark-gray hover:text-black w-fit text-[15px]"
+    >
+      <span class="material-symbols-outlined text-[20px]">add</span>
+      Agregar curso
+    </button>
+  </div>
+</Dialog>

@@ -1,0 +1,49 @@
+---
+import Dialog from "../../misc/dialog/Dialog.astro";
+---
+
+<Dialog xRef="subjectsDialog" className="w-1/2 h-3/4 p-2">
+  <!-- State A: course list -->
+  <div x-show="!selectedStudent.selectedCourse" class="flex flex-col h-[calc(100%-3rem)] p-2">
+    <h2 class="text-2xl font-bold text-center mb-4">
+      Cursos de
+      <span x-text="selectedStudent.student?.name"></span>
+      <span x-text="selectedStudent.student?.surname"></span>
+    </h2>
+    <div class="overflow-y-scroll flex flex-col gap-4 p-4 items-center">
+      <template x-for="course in (selectedStudent.student?.courses ?? [])">
+        <button
+          @click="selectCourse(course)"
+          class="flex gap-x-4 py-2 px-6 rounded-xl bg-gray-300 cursor-pointer hover:shadow-lg w-fit text-[16px] text-sh-dark-gray"
+        >
+          <span x-text="`${course.course} - ${course.year}`"></span>
+        </button>
+      </template>
+    </div>
+  </div>
+
+  <!-- State B: subject list -->
+  <div x-show="selectedStudent.selectedCourse" class="flex flex-col h-[calc(100%-3rem)] p-2">
+    <div class="flex items-center mb-4 gap-2">
+      <span
+        class="material-symbols-outlined cursor-pointer"
+        @click="selectedStudent.selectedCourse = null">arrow_back</span
+      >
+      <h2 class="text-2xl font-bold text-center flex-1">
+        Materias —
+        <span x-text="selectedStudent.selectedCourse?.course"></span>
+        (<span x-text="selectedStudent.selectedCourse?.year"></span>)
+      </h2>
+    </div>
+    <div class="overflow-y-scroll flex flex-col gap-4 p-4 items-center">
+      <template x-for="subject in subjectsForCourse">
+        <a
+          :href="`${$store.pageData.dataURL}/${selectedStudent.selectedCourse?.year}/${subject.subject}/${selectedStudent.selectedCourse?.course}`"
+          class="flex gap-x-4 py-2 px-4 rounded-xl bg-gray-300 cursor-pointer hover:shadow-lg w-fit"
+        >
+          <span class="text-[16px] text-sh-dark-gray" x-text="subject.subject"></span>
+        </a>
+      </template>
+    </div>
+  </div>
+</Dialog>
