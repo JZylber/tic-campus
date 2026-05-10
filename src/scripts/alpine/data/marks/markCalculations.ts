@@ -279,6 +279,29 @@ export class Student {
   getFixedMarks(subject: string) {
     return this.subjectData[subject].fixedMarks;
   }
+  addSubject(subject: string): this {
+    if (this.subjectData[subject]) return this;
+    this.subjectData[subject] = {
+      classActivities: [],
+      markedActivities: [],
+      redoActivities: [],
+      redos: {},
+      fixedMarks: { "1B": undefined, "1C": undefined, "3B": undefined, F: undefined },
+      finalMark: {
+        averageMark: 0,
+        classActivitiesContribution: 0,
+        markedActivitiesContribution: 0,
+        proportion: 0.7,
+        allMarkedActivitiesPassed: true,
+        allCompulsoryClassActivitiesDone: true,
+        finalMark: 0,
+      },
+    };
+    return this;
+  }
+  hasSubject(subject: string): boolean {
+    return !!this.subjectData[subject];
+  }
   getSubjects() {
     return Object.keys(this.subjectData);
   }
