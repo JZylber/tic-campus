@@ -26,11 +26,13 @@ const { title, xModel, options, className } = Astro.props;
     <!-- NOTE: @click.stop is on the options list (x-show="open"), not the toggle container.
          This contains option-selection clicks within the Select component (preventing them
          from reaching ancestor @click handlers) while still letting the toggle container's
-         clicks bubble to the document — which Alpine's @click.outside on sibling Selects depends on. -->
+         clicks bubble to the window — which the @click.window close handler on sibling Selects depends on.
+         @click.window with composedPath() is used instead of @click.outside so that this works inside shadow DOMs,
+         where event retargeting breaks element.contains(event.target). -->
     <div
       x-data="{ open: false }"
       @click="open = !open"
-      @click.outside="open = false"
+      @click.window="if(!$event.composedPath().includes($el)) open = false"
       class="absolute bg-gray-50 overflow-hidden w-full flex flex-col rounded-xl text-sh-dark-gray text-[16px] border-2 border-sh-gray cursor-pointer"
       :class=`{'z-10': open}`
     >
