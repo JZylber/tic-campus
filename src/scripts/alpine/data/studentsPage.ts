@@ -92,7 +92,7 @@ const studentsPageData = () =>
     },
     get filteredStudents() {
       return this.students
-        .filter((s) => {
+        .filter((s: Student) => {
           let courseFilter = true;
           let textFilter = true;
           let yearFilter = true;
@@ -114,19 +114,19 @@ const studentsPageData = () =>
                 .includes(normalizedText);
           }
           if (!isNaN(this.filter.courseId)) {
-            courseFilter = s.courses.some((c) => c.courseId === this.filter.courseId);
+            courseFilter = s.courses.some((c: CourseEnrollment) => c.courseId === this.filter.courseId);
           }
           if (!isNaN(this.filter.year)) {
-            yearFilter = s.courses.some((c) => c.year === this.filter.year);
+            yearFilter = s.courses.some((c: CourseEnrollment) => c.year === this.filter.year);
           }
           return yearFilter && textFilter && courseFilter;
         })
-        .sort((a, b) => {
+        .sort((a: Student, b: Student) => {
           const aMaxYear = a.courses.length
-            ? Math.max(...a.courses.map((c) => c.year))
+            ? Math.max(...a.courses.map((c: CourseEnrollment) => c.year))
             : 0;
           const bMaxYear = b.courses.length
-            ? Math.max(...b.courses.map((c) => c.year))
+            ? Math.max(...b.courses.map((c: CourseEnrollment) => c.year))
             : 0;
           if (aMaxYear !== bMaxYear) return bMaxYear - aMaxYear;
           if (a.surname < b.surname) return -1;
