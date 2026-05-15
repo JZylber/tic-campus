@@ -1,0 +1,174 @@
+---
+import CodeBlock from "../../../../../../components/articles/code-block/CodeBlock.astro";
+import InlineCodeBlock from "../../../../../../components/articles/code-block/InlineCodeBlock.astro";
+
+export const partial = true;
+---
+
+<h2>¿Qué es TypeScript?</h2>
+<p>
+  TypeScript es un <strong>lenguaje de programación</strong> creado por Microsoft
+  que extiende JavaScript agregándole <strong>tipos estáticos</strong>.
+</p>
+<p>
+  En otras palabras, TypeScript es JavaScript con la posibilidad de decirle al
+  código qué tipo de datos (números, textos, etc.) puede tener cada variable.
+  Por eso se lo llama un <strong>superset</strong> de JavaScript: todo JavaScript
+  válido también es TypeScript válido.
+</p>
+<p>
+  Antes de ejecutarse, el código TypeScript se <strong>compila</strong> a
+  JavaScript. Esto significa que el navegador o Node.js nunca ve TypeScript
+  directamente, sino el JavaScript resultante. El compilador es quien detecta
+  los errores de tipos <em>antes</em> de que el programa corra.
+</p>
+<h2>¿Por qué usar TypeScript?</h2>
+<p>
+  En JavaScript, muchos errores aparecen recién cuando ejecutamos el programa.
+  Por ejemplo, si le pasamos un texto a una operación que espera un número, el
+  error lo vemos en ejecución. Con TypeScript, ese error aparece en el editor
+  <em>mientras escribimos el código</em>.
+</p>
+<p>Esto nos da varias ventajas:</p>
+<ul>
+  <li>
+    <strong>Detectar errores antes de ejecutar</strong>: el compilador avisa si
+    usamos un tipo incorrecto.
+  </li>
+  <li>
+    <strong>Mejor autocompletado</strong>: el editor sabe qué métodos y
+    propiedades tiene cada variable.
+  </li>
+  <li>
+    <strong>Código más claro</strong>: al leer el código se entiende qué tipo de
+    dato se espera en cada lugar.
+  </li>
+</ul>
+<h2>Tipos básicos</h2>
+<p>
+  Para indicar el tipo de una variable, se usa <InlineCodeBlock
+    code=": tipo"
+    lang="ts"
+  /> después del nombre de la variable. Los tipos más comunes son:
+</p>
+<ul>
+  <li>
+    <InlineCodeBlock code="string" lang="ts" /> — textos: <InlineCodeBlock
+      code='"hola"'
+      lang="ts"
+    />, <InlineCodeBlock code='"Juan"' lang="ts" />, <InlineCodeBlock
+      code='"42"'
+      lang="ts"
+    />
+  </li>
+  <li>
+    <InlineCodeBlock code="number" lang="ts" /> — números: <InlineCodeBlock
+      code="42"
+      lang="ts"
+    />, <InlineCodeBlock code="3.14" lang="ts" />, <InlineCodeBlock
+      code="-7"
+      lang="ts"
+    />
+  </li>
+  <li>
+    <InlineCodeBlock code="boolean" lang="ts" /> — verdadero o falso: <InlineCodeBlock
+      code="true"
+      lang="ts"
+    />, <InlineCodeBlock code="false" lang="ts" />
+  </li>
+</ul>
+<p>Ejemplos de declaración con tipos:</p>
+<CodeBlock
+  lang="ts"
+  code={`const nombre: string = "Ana";
+const edad: number = 17;
+const esMayor: boolean = false;`}
+/>
+<p>
+  Si intentamos asignar un valor del tipo incorrecto, TypeScript nos avisa con
+  un error:
+</p>
+<CodeBlock
+  lang="ts"
+  code={`const precio: number = "caro"; // Error: Type 'string' is not assignable to type 'number'`}
+/>
+<p>
+  Este error aparece <strong>en el editor</strong>, antes de ejecutar el
+  programa.
+</p>
+<h2>Conversión de tipos</h2>
+<p>
+  A veces tenemos un valor de un tipo y necesitamos convertirlo a otro. Por
+  ejemplo, cuando leemos datos del usuario siempre llegan como
+  <InlineCodeBlock code="string" lang="ts" />, aunque el usuario haya escrito un
+  número.
+</p>
+<p>
+  Para convertir un texto a número usamos <InlineCodeBlock
+    code="Number()"
+    lang="ts"
+  />:
+</p>
+<CodeBlock
+  lang="ts"
+  code={`const textoEdad: string = "17";
+const edad: number = Number(textoEdad);
+console.log(edad + 1); // 18`}
+/>
+<p>
+  Y para convertir un número a texto usamos <InlineCodeBlock
+    code="String()"
+    lang="ts"
+  />:
+</p>
+<CodeBlock
+  lang="ts"
+  code={`const precio: number = 1500;
+const mensaje: string = "El precio es: " + String(precio);
+console.log(mensaje); // El precio es: 1500`}
+/>
+<h2>Instalación y ejecución</h2>
+<p>
+  <strong
+    >Esto solo es necesario si están usando una computadora personal. Las del
+    colegio ya tienen TypeScript instalado.</strong
+  >
+</p>
+<p>Para instalar TypeScript y <em>tsx</em> (la herramienta para ejecutarlo):</p>
+<CodeBlock lang="bash" code="npm install -D typescript tsx" />
+<p>
+  Una vez instalado, podemos ejecutar un archivo TypeScript directamente con:
+</p>
+<CodeBlock lang="bash" code="npx tsx index.ts" />
+<p>
+  También podemos agregar un script en el <em>package.json</em> para no tener
+  que escribir el comando completo cada vez:
+</p>
+<CodeBlock
+  lang="json"
+  code={`{
+  "scripts": {
+    "start": "npx tsx index.ts"
+  }
+}`}
+/>
+<p>Y ejecutarlo con:</p>
+<CodeBlock lang="bash" code="npm start" />
+<h2>Resumen</h2>
+<ul>
+  <li>
+    TypeScript es un superset de JavaScript que agrega <strong
+      >tipos estáticos</strong
+    >.
+  </li>
+  <li>
+    Permite detectar errores <strong>antes de ejecutar</strong> el programa, mientras
+    escribimos el código.
+  </li>
+  <li>
+    Los tipos básicos son <em>string</em>, <em>number</em> y <em>boolean</em>.
+  </li>
+  <li>
+    Podemos convertir entre tipos con <em>Number()</em> y <em>String()</em>.
+  </li>
+</ul>
