@@ -1,5 +1,134 @@
 ---
+import CodeBlock from "../../../../../../components/articles/code-block/CodeBlock.astro";
+import InlineCodeBlock from "../../../../../../components/articles/code-block/InlineCodeBlock.astro";
+
 export const partial = true;
 ---
 
-<p>Proximamente...</p>
+<h2>¿Qué es la terminal?</h2>
+<p>
+  La terminal (o consola) es una interfaz de texto que permite interactuar con
+  el sistema operativo escribiendo comandos. A diferencia del explorador de
+  archivos, donde hacemos click para navegar carpetas y abrir archivos, en la
+  terminal escribimos instrucciones directamente. Es una herramienta muy
+  poderosa que usan desarrolladores para automatizar tareas, gestionar archivos
+  y ejecutar programas de forma eficiente.
+</p>
+<p>
+  En Windows, la terminal más utilizada es <strong>PowerShell</strong>. Al
+  abrirla, nos encontramos en una ubicación del sistema de archivos (el
+  "directorio actual") y podemos movernos, crear, eliminar y listar archivos y
+  carpetas usando comandos.
+</p>
+<h2>Comandos Básicos</h2>
+<p>
+  A continuación, los comandos más útiles para manipular archivos y carpetas en
+  PowerShell. También pueden consultar la{" "}
+  <a href="https://cheatsheets-nachovigilante.vercel.app/">cheatsheet</a> para
+  más referencia.
+</p>
+<table>
+  <thead>
+    <tr>
+      <th>Comando</th>
+      <th>Descripción</th>
+      <th>Ejemplo</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><InlineCodeBlock lang="bash" code="pwd" /></td>
+      <td>Muestra la ruta del directorio actual.</td>
+      <td><InlineCodeBlock lang="bash" code="pwd" /></td>
+    </tr>
+    <tr>
+      <td><InlineCodeBlock lang="bash" code="ls" /></td>
+      <td>Lista los archivos y carpetas del directorio actual. También se puede usar <InlineCodeBlock lang="bash" code="dir" />.</td>
+      <td><InlineCodeBlock lang="bash" code="ls" /></td>
+    </tr>
+    <tr>
+      <td><InlineCodeBlock lang="bash" code="cd" /></td>
+      <td>
+        Cambia el directorio actual. Usar <InlineCodeBlock
+          lang="bash"
+          code="cd .."
+        /> para subir un nivel.
+      </td>
+      <td><InlineCodeBlock lang="bash" code="cd Documentos" /></td>
+    </tr>
+    <tr>
+      <td><InlineCodeBlock lang="bash" code="mkdir" /></td>
+      <td>Crea una nueva carpeta.</td>
+      <td><InlineCodeBlock lang="bash" code="mkdir MiCarpeta" /></td>
+    </tr>
+    <tr>
+      <td><InlineCodeBlock lang="bash" code="New-Item" /></td>
+      <td>Crea un nuevo archivo.</td>
+      <td
+        ><InlineCodeBlock lang="bash" code="New-Item archivo.txt" /></td
+      >
+    </tr>
+    <tr>
+      <td><InlineCodeBlock lang="bash" code="Remove-Item" /></td>
+      <td>Elimina un archivo o carpeta.</td>
+      <td><InlineCodeBlock lang="bash" code="Remove-Item archivo.txt" /></td>
+    </tr>
+    <tr>
+      <td><InlineCodeBlock lang="bash" code="Move-Item" /></td>
+      <td>Mueve o renombra un archivo o carpeta.</td>
+      <td
+        ><InlineCodeBlock
+          lang="bash"
+          code="Move-Item viejo.txt nuevo.txt"
+        /></td
+      >
+    </tr>
+    <tr>
+      <td><InlineCodeBlock lang="bash" code="Copy-Item" /></td>
+      <td>Copia un archivo o carpeta.</td>
+      <td
+        ><InlineCodeBlock
+          lang="bash"
+          code="Copy-Item archivo.txt copia.txt"
+        /></td
+      >
+    </tr>
+  </tbody>
+</table>
+<h2>Navegación en el sistema de archivos</h2>
+<p>
+  Cuando abrimos PowerShell, nos encontramos en un directorio inicial. Podemos
+  pensar en la terminal como si estuviéramos "parados" en una carpeta. Para
+  movernos, usamos <InlineCodeBlock lang="bash" code="cd" /> seguido del nombre
+  de la carpeta a la que queremos ir.
+</p>
+<CodeBlock
+  lang="bash"
+  code={`# Ver dónde estamos
+pwd
+
+# Listar contenido
+ls
+
+# Entrar a la carpeta Documentos
+cd Documentos
+
+# Subir un nivel (volver a la carpeta anterior)
+cd ..`}
+/>
+<h2>Creación de archivos y carpetas</h2>
+<p>
+  Para crear una carpeta usamos <InlineCodeBlock lang="bash" code="mkdir" /> y
+  para crear un archivo usamos <InlineCodeBlock lang="bash" code="New-Item" />.
+</p>
+<CodeBlock
+  lang="bash"
+  code={`# Crear una carpeta llamada "Proyecto"
+mkdir Proyecto
+
+# Entrar a esa carpeta
+cd Proyecto
+
+# Crear un archivo index.html dentro
+New-Item index.html`}
+/>
