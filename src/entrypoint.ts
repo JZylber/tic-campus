@@ -7,6 +7,9 @@ import pageData from "./scripts/alpine/stores/pageData";
 import courseStore from "./scripts/alpine/stores/course";
 import studentStore from "./scripts/alpine/stores/student";
 import currentUserStore from "./scripts/alpine/stores/currentUser";
+import { captureTokenFromHash } from "./scripts/APIcalls/authToken";
+
+captureTokenFromHash();
 
 export default (Alpine: Alpine) => {
   Alpine.plugin(collapse);

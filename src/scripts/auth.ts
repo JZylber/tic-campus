@@ -1,4 +1,5 @@
 import { backendURL } from "./APIcalls/shared";
+import { authFetch } from "./APIcalls/authToken";
 import type { CurrentUserStore } from "./alpine/stores/currentUser";
 
 type UserInfo = {
@@ -10,9 +11,7 @@ type UserInfo = {
 
 export async function fetchCurrentUser(): Promise<UserInfo | null> {
   try {
-    const response = await fetch(`${backendURL}/user/info`, {
-      credentials: "include",
-    });
+    const response = await authFetch(`${backendURL}/user/info`);
     if (!response.ok) return null;
     return await response.json();
   } catch {
@@ -22,9 +21,7 @@ export async function fetchCurrentUser(): Promise<UserInfo | null> {
 
 export async function requireAuth() {
   try {
-    const response = await fetch(`${backendURL}/user/info`, {
-      credentials: "include",
-    });
+    const response = await authFetch(`${backendURL}/user/info`);
     if (!response.ok) {
       window.location.href = `${backendURL}/auth/google?returnTo=${encodeURIComponent(window.location.href)}`;
       return;
@@ -40,9 +37,7 @@ export async function requireAuth() {
 
 export async function requireTeacherAuth() {
   try {
-    const response = await fetch(`${backendURL}/user/info`, {
-      credentials: "include",
-    });
+    const response = await authFetch(`${backendURL}/user/info`);
     if (!response.ok) {
       window.location.href = `${backendURL}/auth/google?returnTo=${encodeURIComponent(window.location.href)}`;
       return;
@@ -60,9 +55,7 @@ export async function requireTeacherAuth() {
 
 export async function requireAdminAuth() {
   try {
-    const response = await fetch(`${backendURL}/user/info`, {
-      credentials: "include",
-    });
+    const response = await authFetch(`${backendURL}/user/info`);
     if (!response.ok) {
       window.location.href = `${backendURL}/auth/google?returnTo=${encodeURIComponent(window.location.href)}`;
       return;
