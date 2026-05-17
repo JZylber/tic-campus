@@ -125,7 +125,7 @@ export class Student {
       );
       if (classActivity) {
         classActivity.madeUp = true;
-        classActivity.madeUp = true;
+        this.subjectData[subject].redos[activityId] = activity.mark;
       }
     });
   }
@@ -162,7 +162,6 @@ export class Student {
       (activity) =>
         !activity.compulsory && (!this.withRevisions || !activity.inRevision),
     );
-
     const classActivitiesTotalContribution = nonCompulsoryActivities.reduce(
       (acc, activity) => {
         const madeUp = this.subjectData[subject].redos[activity.id];
@@ -286,7 +285,12 @@ export class Student {
       markedActivities: [],
       redoActivities: [],
       redos: {},
-      fixedMarks: { "1B": undefined, "1C": undefined, "3B": undefined, F: undefined },
+      fixedMarks: {
+        "1B": undefined,
+        "1C": undefined,
+        "3B": undefined,
+        F: undefined,
+      },
       finalMark: {
         averageMark: 0,
         classActivitiesContribution: 0,
