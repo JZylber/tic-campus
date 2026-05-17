@@ -50,6 +50,28 @@ const { dataSheetId, xData } = Astro.props;
 </script>
 <html lang="en">
   <head>
+    <script is:inline>
+      (function () {
+        var hash = window.location.hash;
+        if (hash.length < 2) return;
+        var params = new URLSearchParams(hash.slice(1));
+        var token = params.get("token");
+        if (!token) return;
+        try {
+          localStorage.setItem("ticCampusAccessToken", token);
+        } catch (e) {
+          console.error("Could not persist auth token:", e);
+          return;
+        }
+        params.delete("token");
+        var remaining = params.toString();
+        var cleanUrl =
+          window.location.pathname +
+          window.location.search +
+          (remaining ? "#" + remaining : "");
+        history.replaceState({}, "", cleanUrl);
+      })();
+    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />

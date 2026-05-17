@@ -1,24 +1,5 @@
 const STORAGE_KEY = "ticCampusAccessToken";
 
-export function captureTokenFromHash(): void {
-  if (typeof window === "undefined") return;
-  const hash = window.location.hash;
-  if (hash.length < 2) return;
-
-  const params = new URLSearchParams(hash.slice(1));
-  const token = params.get("token");
-  if (!token) return;
-
-  localStorage.setItem(STORAGE_KEY, token);
-  params.delete("token");
-  const remaining = params.toString();
-  const cleanUrl =
-    window.location.pathname +
-    window.location.search +
-    (remaining ? `#${remaining}` : "");
-  history.replaceState({}, "", cleanUrl);
-}
-
 export function getAuthToken(): string | null {
   if (typeof window === "undefined") return null;
   return localStorage.getItem(STORAGE_KEY);
