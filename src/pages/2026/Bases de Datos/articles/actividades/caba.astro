@@ -1,0 +1,101 @@
+---
+import CodeBlock from "../../../../../components/articles/code-block/CodeBlock.astro";
+import InlineCodeBlock from "../../../../../components/articles/code-block/InlineCodeBlock.astro";
+
+export const partial = true;
+---
+
+<h2>Eventos Masivos — CRUD</h2>
+<p>
+  Hay una base de datos de todos los eventos masivos de la ciudad de Buenos
+  Aires desde 2024 - 2026. ¿La exploramos?
+</p>
+
+<h2>Instalación</h2>
+<CodeBlock lang="bash" code="npm install" />
+
+<h2>Ejecutar la aplicación</h2>
+<CodeBlock lang="bash" code="npm start" />
+
+<hr />
+
+<h2>Consigna base</h2>
+<p>
+  Implementar las siguientes funciones en <InlineCodeBlock
+    code="menus/funciones.js"
+    lang="js"
+  />:
+</p>
+<ul>
+  <li>
+    <strong
+      ><InlineCodeBlock
+        code="filtrarEventos(eventos, keyword, barrioId)"
+        lang="js"
+      /></strong
+    > — Por ahora solo filtrá por <InlineCodeBlock code="barrioId" lang="js" />.
+    Si <InlineCodeBlock code="barrioId" lang="js" /> es <InlineCodeBlock
+      code="null"
+      lang="js"
+    />, devolvé todos los eventos. Si no, devolvé solo los que coincidan con ese
+    id.
+  </li>
+  <li>
+    <strong
+      ><InlineCodeBlock code="crearEvento(eventos, campos)" lang="js" /></strong
+    > — Creá un nuevo evento con un <InlineCodeBlock code="id" lang="js" /> automático.
+    Puede ser cualquier cosa, pero recomiendo agarrar el máximo + 1. ¡Ojo si no
+    hay eventos! Devolvé el nuevo objeto evento.
+  </li>
+  <li>
+    <strong
+      ><InlineCodeBlock
+        code="actualizarEvento(eventos, id, campos, barrios)"
+        lang="js"
+      /></strong
+    > — Reemplazá los campos del evento con el <InlineCodeBlock
+      code="id"
+      lang="js"
+    /> indicado. Devolvé <InlineCodeBlock
+      code="{ eventos, barrios }"
+      lang="js"
+    />.
+  </li>
+  <li>
+    <strong
+      ><InlineCodeBlock
+        code="eliminarEvento(eventos, id, barrios)"
+        lang="js"
+      /></strong
+    > — Eliminá el evento con el <InlineCodeBlock code="id" lang="js" /> indicado.
+    Devolvé <InlineCodeBlock code="{ eventos, barrios }" lang="js" />.
+  </li>
+</ul>
+
+<h3>Correr los tests de la consigna base</h3>
+<CodeBlock lang="bash" code="npm run test-base" />
+
+<hr />
+
+<h2>Consigna manija</h2>
+<p>
+  Completar el filtrado por palabra clave en <InlineCodeBlock
+    code="filtrarEventos"
+    lang="js"
+  />. Cuando <InlineCodeBlock code="keyword" lang="js" /> no esté vacío, la función
+  debe devolver solo los eventos cuyo campo <InlineCodeBlock
+    code="evento"
+    lang="js"
+  />, <InlineCodeBlock code="lugar" lang="js" /> o <InlineCodeBlock
+    code="modalidad"
+    lang="js"
+  /> contenga la palabra clave (sin distinguir mayúsculas/minúsculas).
+</p>
+
+<h3>Correr los tests de la consigna manija</h3>
+<CodeBlock lang="bash" code="npm run test-manija" />
+
+<hr />
+
+<h2>Correr todos los tests</h2>
+<CodeBlock lang="bash" code="npm test" />
