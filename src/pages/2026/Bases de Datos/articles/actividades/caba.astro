@@ -48,30 +48,32 @@ export const partial = true;
       ><InlineCodeBlock code="crearEvento(eventos, campos)" lang="js" /></strong
     > — Creá un nuevo evento con un <InlineCodeBlock code="id" lang="js" /> automático.
     Puede ser cualquier cosa, pero recomiendo agarrar el máximo + 1. ¡Ojo si no
-    hay eventos! Devolvé el nuevo objeto evento.
+    hay eventos! Agregalo a <InlineCodeBlock code="eventos" lang="js" /> y devolvé
+    el nuevo objeto evento.
   </li>
   <li>
     <strong
       ><InlineCodeBlock
-        code="actualizarEvento(eventos, id, campos, barrios)"
+        code="actualizarEvento(eventos, id, campos)"
         lang="js"
       /></strong
     > — Reemplazá los campos del evento con el <InlineCodeBlock
       code="id"
       lang="js"
-    /> indicado. Devolvé <InlineCodeBlock
-      code="{ eventos, barrios }"
+    /> indicado directamente en el array <InlineCodeBlock
+      code="eventos"
       lang="js"
-    />.
+    />. No devuelve nada.
   </li>
   <li>
     <strong
       ><InlineCodeBlock
-        code="eliminarEvento(eventos, id, barrios)"
+        code="eliminarEvento(eventos, id)"
         lang="js"
       /></strong
-    > — Eliminá el evento con el <InlineCodeBlock code="id" lang="js" /> indicado.
-    Devolvé <InlineCodeBlock code="{ eventos, barrios }" lang="js" />.
+    > — Eliminá el evento con el <InlineCodeBlock code="id" lang="js" /> indicado
+    directamente del array <InlineCodeBlock code="eventos" lang="js" />. No devuelve
+    nada.
   </li>
 </ul>
 
