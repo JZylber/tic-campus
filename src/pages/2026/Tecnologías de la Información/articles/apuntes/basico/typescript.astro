@@ -17,10 +17,11 @@ export const partial = true;
   válido también es TypeScript válido.
 </p>
 <p>
-  Antes de ejecutarse, el código TypeScript se <strong>compila</strong> a
-  JavaScript. Esto significa que el navegador o Node.js nunca ve TypeScript
-  directamente, sino el JavaScript resultante. El compilador es quien detecta
-  los errores de tipos <em>antes</em> de que el programa corra.
+  Antes de ejecutarse, el código TypeScript se <strong>compila</strong> a JavaScript.
+  Esto significa que el navegador o Node.js nunca ve TypeScript directamente, sino
+  el JavaScript resultante. El compilador es quien detecta los errores de tipos <em
+    >antes</em
+  > de que el programa corra.
 </p>
 <h2>¿Por qué usar TypeScript?</h2>
 <p>
@@ -80,9 +81,9 @@ export const partial = true;
 <p>Ejemplos de declaración con tipos:</p>
 <CodeBlock
   lang="ts"
-  code={`const nombre: string = "Ana";
-const edad: number = 17;
-const esMayor: boolean = false;`}
+  code={`let nombre: string = "Ana";
+let edad: number = 17;
+let esMayor: boolean = false;`}
 />
 <p>
   Si intentamos asignar un valor del tipo incorrecto, TypeScript nos avisa con
@@ -90,7 +91,7 @@ const esMayor: boolean = false;`}
 </p>
 <CodeBlock
   lang="ts"
-  code={`const precio: number = "caro"; // Error: Type 'string' is not assignable to type 'number'`}
+  code={`let precio: number = "caro"; // Error: Type 'string' is not assignable to type 'number'`}
 />
 <p>
   Este error aparece <strong>en el editor</strong>, antes de ejecutar el
@@ -111,8 +112,8 @@ const esMayor: boolean = false;`}
 </p>
 <CodeBlock
   lang="ts"
-  code={`const textoEdad: string = "17";
-const edad: number = Number(textoEdad);
+  code={`let textoEdad: string = "17";
+let edad: number = Number(textoEdad);
 console.log(edad + 1); // 18`}
 />
 <p>
@@ -123,8 +124,8 @@ console.log(edad + 1); // 18`}
 </p>
 <CodeBlock
   lang="ts"
-  code={`const precio: number = 1500;
-const mensaje: string = "El precio es: " + String(precio);
+  code={`let precio: number = 1500;
+let mensaje: string = "El precio es: " + String(precio);
 console.log(mensaje); // El precio es: 1500`}
 />
 <h2>Instalación y ejecución</h2>
@@ -141,8 +142,8 @@ console.log(mensaje); // El precio es: 1500`}
 </p>
 <CodeBlock lang="bash" code="npx tsx index.ts" />
 <p>
-  También podemos agregar un script en el <em>package.json</em> para no tener
-  que escribir el comando completo cada vez:
+  También podemos agregar un script en el <em>package.json</em> para no tener que
+  escribir el comando completo cada vez:
 </p>
 <CodeBlock
   lang="json"
