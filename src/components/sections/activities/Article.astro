@@ -271,7 +271,7 @@ const { open, articleURL, content, course } = Astro.props;
                   'bg-sh-light-red text-sh-red border-sh-medium-red': !passing && !redo,
                 }"
             >
-              <!-- <span
+              <span
                 x-bind:class="{
                   'material-symbols-outlined text-[20px]! md:text-[24px]!': redo || mark === -1,
                 }"
@@ -290,7 +290,7 @@ const { open, articleURL, content, course } = Astro.props;
                             return mark;
                           }
                         })()"
-              ></span> -->
+              ></span>
               <span
                 x-text={`(() => {
                     if(redo) {
