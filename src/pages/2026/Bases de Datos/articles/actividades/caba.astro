@@ -3,6 +3,29 @@ import CodeBlock from "../../../../../components/articles/code-block/CodeBlock.a
 import InlineCodeBlock from "../../../../../components/articles/code-block/InlineCodeBlock.astro";
 
 export const partial = true;
+
+const der = `erDiagram
+    barrios {
+        int id PK
+        varchar nombre
+    }
+    modalidades {
+        int id PK
+        varchar nombre
+    }
+    eventos_masivos {
+        int id PK
+        date fecha
+        text evento
+        text lugar
+        int modalidad_id FK
+        timestamp apertura
+        timestamp cierre
+        int aforo
+        int barrio_id FK
+    }
+    modalidades ||--o{ eventos_masivos : "modalidad_id"
+    barrios ||--o{ eventos_masivos : "barrio_id"`;
 ---
 
 <p>
@@ -12,30 +35,7 @@ export const partial = true;
 </p>
 
 <h2>DER</h2>
-<div class="mermaid">
-  erDiagram
-      barrios {
-          int id PK
-          varchar nombre
-      }
-      modalidades {
-          int id PK
-          varchar nombre
-      }
-      eventos_masivos {
-          int id PK
-          date fecha
-          text evento
-          text lugar
-          int modalidad_id FK
-          timestamp apertura
-          timestamp cierre
-          int aforo
-          int barrio_id FK
-      }
-      modalidades ||--o{ eventos_masivos : "modalidad_id"
-      barrios ||--o{ eventos_masivos : "barrio_id"
-</div>
+<div class="mermaid" set:html={der} />
 
 <h2>Consigna</h2>
 <ol>

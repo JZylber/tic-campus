@@ -16,6 +16,8 @@ const { open, articleURL, content, course } = Astro.props;
   import type { AlpineComponent } from "alpinejs";
   import setAlpineData from "../../../scripts/alpine/setAlpineData";
   import type { Content } from "../../../scripts/types";
+  import mermaid from "mermaid";
+  mermaid.initialize({ startOnLoad: false });
 
   const baseURL = "https://jzylber.github.io/";
 
@@ -113,6 +115,10 @@ const { open, articleURL, content, course } = Astro.props;
           });
           await Promise.all(loadScripts);
           Alpine.initTree(element);
+          const mermaidNodes = element.querySelectorAll(".mermaid");
+          if (mermaidNodes.length > 0) {
+            mermaid.run({ nodes: mermaidNodes as unknown as NodeList });
+          }
         },
       }) as AlpineComponent<{
         loading: boolean;
