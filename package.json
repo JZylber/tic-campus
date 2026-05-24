@@ -18,6 +18,7 @@
     "alpinejs": "^3.14.8",
     "astro": "^6.1.9",
     "fuse.js": "^7.1.0",
+    "mermaid": "^11.15.0",
     "pnpm": "^10.6.5"
   },
   "devDependencies": {
@@ -30,6 +31,9 @@
     "tailwindcss": "^4.2.4"
   },
   "pnpm": {
-    "onlyBuiltDependencies": ["esbuild", "sharp"]
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "sharp"
+    ]
   }
 }
