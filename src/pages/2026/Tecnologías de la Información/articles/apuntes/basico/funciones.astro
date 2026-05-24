@@ -55,10 +55,7 @@ export const partial = true;
   >.
 </p>
 <h2>¿Cómo se llama (ejecuta) una función?</h2>
-<CodeBlock
-  lang="ts"
-  code={`ensamblarRobot(); // Muestra "Robot ensamblado"`}
-/>
+<CodeBlock lang="ts" code={`ensamblarRobot(); // Muestra "Robot ensamblado"`} />
 <p>
   Es como apretar el botón de "encendido" de tu máquina ensambladora. Se llama a
   una función escribiendo su nombre seguido de paréntesis ().
@@ -81,11 +78,13 @@ ensamblarRobot("cabeza de peluche", "cuerpo de cartón");
 />
 <p>En este caso, cabeza y cuerpo son los parámetros que la función utiliza.</p>
 <p>
-  En TypeScript, cada parámetro puede tener un <strong>tipo</strong> indicado
-  con <InlineCodeBlock lang="ts" code=": tipo" /> después de su nombre. Por ejemplo,{" "}
+  En TypeScript, cada parámetro puede tener un <strong>tipo</strong> indicado con
+  <InlineCodeBlock lang="ts" code=": tipo" /> después de su nombre. Por ejemplo,{
+    " "
+  }
   <InlineCodeBlock lang="ts" code="cabeza: string" /> significa que{" "}
-  <InlineCodeBlock lang="ts" code="cabeza" /> debe ser un texto. Esto ayuda a
-  detectar errores antes de ejecutar el programa.
+  <InlineCodeBlock lang="ts" code="cabeza" /> debe ser un texto. Esto ayuda a detectar
+  errores antes de ejecutar el programa.
 </p>
 <h2>¿Qué es el valor de retorno?</h2>
 <p>
@@ -103,21 +102,21 @@ console.log(robot1); // Muestra: "🤖 Robot modelo: RX-99"`}
 />
 <p>
   <InlineCodeBlock lang="ts" code="return" /> es como la cinta transportadora que
-  entrega el producto final de la máquina. Ese resultado se puede guardar o usar
-  en otra parte del programa.
+  entrega el producto final de la máquina. Ese resultado se puede guardar o usar en
+  otra parte del programa.
 </p>
 <p>
   El <InlineCodeBlock lang="ts" code=": string" /> después de los paréntesis indica
-  el <strong>tipo de retorno</strong> — lo que la función va a devolver. Si la
-  función no devuelve nada, se usa <InlineCodeBlock lang="ts" code=": void" />.
+  el <strong>tipo de retorno</strong> — lo que la función va a devolver. Si la función
+  no devuelve nada, se usa <InlineCodeBlock lang="ts" code=": void" />.
 </p>
 <h2>Resumen</h2>
 <p>
   Para declarar una función, usás la palabra clave <InlineCodeBlock
     lang="ts"
     code="function"
-  /> seguida del nombre de la función, los tipos de cada parámetro, el tipo de
-  retorno, y el cuerpo entre llaves:
+  /> seguida del nombre de la función, los tipos de cada parámetro, el tipo de retorno,
+  y el cuerpo entre llaves:
 </p>
 <CodeBlock
   lang="ts"
@@ -136,7 +135,7 @@ console.log(robot1); // Muestra: "🤖 Robot modelo: RX-99"`}
   lang="ts"
   code={`nombreDeLaFuncion(argumento1, argumento2,..., argumentoN);`}
 />
-<table>
+<table class="data-table">
   <thead>
     <tr>
       <th>Concepto</th>
