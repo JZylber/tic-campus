@@ -117,7 +117,7 @@ const { open, articleURL, content, course } = Astro.props;
           Alpine.initTree(element);
           const mermaidNodes = element.querySelectorAll(".mermaid");
           if (mermaidNodes.length > 0) {
-            mermaid.run({ nodes: mermaidNodes as unknown as NodeList });
+            mermaid.run({ nodes: mermaidNodes as unknown as ArrayLike<HTMLElement> });
           }
         },
       }) as AlpineComponent<{
