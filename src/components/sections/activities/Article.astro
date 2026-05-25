@@ -76,8 +76,9 @@ const { open, articleURL, content, course } = Astro.props;
             return new Promise((resolve, reject) => {
               // Check if if the script has inline code
               if (el.textContent) {
-                // Eval content directly and resolve
-                eval(el.textContent);
+                const inlineScript = document.createElement("script");
+                inlineScript.textContent = el.textContent;
+                document.head.appendChild(inlineScript);
                 resolve(true);
               } else if (!el.src) {
                 // If no src and no inline code, resolve
