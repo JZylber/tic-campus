@@ -75,9 +75,9 @@ const { open, articleURL, content, course } = Astro.props;
           const loadScripts = scripts.map((el, index) => {
             return new Promise((resolve, reject) => {
               // Check if if the script has inline code
-              if (el.innerText) {
+              if (el.textContent) {
                 // Eval content directly and resolve
-                eval(el.innerText);
+                eval(el.textContent);
                 resolve(true);
               } else if (!el.src) {
                 // If no src and no inline code, resolve
@@ -115,9 +115,19 @@ const { open, articleURL, content, course } = Astro.props;
           });
           await Promise.all(loadScripts);
           Alpine.initTree(element);
-          const mermaidNodes = element.querySelectorAll(".mermaid");
-          if (mermaidNodes.length > 0) {
-            mermaid.run({ nodes: mermaidNodes as unknown as ArrayLike<HTMLElement> });
+          const mermaidNodes =
+            element.querySelectorAll<HTMLElement>(".mermaid");
+          for (const node of mermaidNodes) {
+            const source = node.textContent ?? "";
+            if (!source.trim()) continue;
+            const id = "mermaid-" + Math.random().toString(36).slice(2);
+            const { svg } = await mermaid.render(id, source);
+            node.innerHTML = svg;
+            const svgEl = node.querySelector("svg");
+            if (svgEl) {
+              svgEl.style.display = "block";
+              svgEl.style.height = "auto";
+            }
           }
         },
       }) as AlpineComponent<{
@@ -331,7 +341,7 @@ const { open, articleURL, content, course } = Astro.props;
     </div>
     <div
       x-ref="content"
-      class="content overflow-x-auto flex flex-col [&>h2]:py-2 [&>h2]:text-[32px] [&>h3]:text-[24px] [&>h3]:py-2 [&>p]:py [&>p]:text-gray-600 [&_ul]:py-2 [&>ul]:list-disc [&_ul]:list-inside [&_ul>li]:text-gray-600 [&>ul>li]:list-disc [&_ul>li+li]:mt-1 [&_ol]:py-2 [&_ol]:list-decimal [&_ol]:list-inside [&_ol>li]:text-gray-600 [&_ol>li+li]:mt-1 [&_li>ol]:ml-4 [&_li>ul]:ml-4 [&_li>ul>li]:list-[circle] [&_li>ul]:list-[circle] [&_a]:text-sh-blue"
+      class="content overflow-x-auto overflow-y-hidden flex flex-col [&>h2]:py-2 [&>h2]:text-[32px] [&>h3]:text-[24px] [&>h3]:py-2 [&>p]:py [&>p]:text-gray-600 [&_ul]:py-2 [&>ul]:list-disc [&_ul]:list-inside [&_ul>li]:text-gray-600 [&>ul>li]:list-disc [&_ul>li+li]:mt-1 [&_ol]:py-2 [&_ol]:list-decimal [&_ol]:list-inside [&_ol>li]:text-gray-600 [&_ol>li+li]:mt-1 [&_li>ol]:ml-4 [&_li>ul]:ml-4 [&_li>ul>li]:list-[circle] [&_li>ul]:list-[circle] [&_a]:text-sh-blue"
     >
     </div>
   </div>
