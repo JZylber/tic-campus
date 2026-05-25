@@ -56,8 +56,8 @@ import InlineCodeBlock from "../../../../../../components/articles/code-block/In
     forEach</em
   >. Y yo les que digo <em>sí</em>, pero cada vez es mejor: a medida que tenemos
   programas más complejos, <strong>abstraer</strong> los ciclos nos permite escribir
-  código más breve, más claro y más fácil de mantener. Además, es menos propenso
-  a errores.
+  código más breve, más claro y más fácil de mantener. Además, es menos propenso a
+  errores.
 </p>
 <p>
   Para explicar voy a dar ejemplos, que van a ser todos sobre el siguiente array
@@ -294,27 +294,23 @@ import InlineCodeBlock from "../../../../../../components/articles/code-block/In
   del año 2013, usar
   <code class="language-javascript">reduce</code> para armar un objeto que guarde
   la cantidad de vacas por año. Es decir, el objeto debería tener la forma
-  <InlineCodeBlock
+  <InlineCodeBlock lang="js" code={`{2008: number, 2009: number, ...}`} />
+  <strong>TIP: piensen el tipo y valor inicial del acumulador... </strong>
+  <h2>Encadenamiento de funciones</h2>
+  <p>
+    La sintaxis (como se escribe el código) de las funciones de alto orden nos
+    permite hacer algo muy copado: encadenar las funciones. Como muchas pueden
+    devolver arrays, puedo llamar una inmediatamente al terminar la otra, sin
+    pasar por variables intermedias.
+  </p>
+  <p>
+    Supongamos el siguiente ejemplo. Quiero quedarme con el nombre más largo (en
+    cantidad de letras) de los estudiantes de 3ero. Usando nuestros viejos
+    modos:
+  </p>
+  <CodeBlock
     lang="js"
-    code={`{2008: number, 2009: number, ...}`}
-    .
-    <strong>TIP:</InlineCodeBlock
-  > piensen el tipo y valor inicial del acumulador...
-</p>
-<h2>Encadenamiento de funciones</h2>
-<p>
-  La sintaxis (como se escribe el código) de las funciones de alto orden nos
-  permite hacer algo muy copado: encadenar las funciones. Como muchas pueden
-  devolver arrays, puedo llamar una inmediatamente al terminar la otra, sin
-  pasar por variables intermedias.
-</p>
-<p>
-  Supongamos el siguiente ejemplo. Quiero quedarme con el nombre más largo (en
-  cantidad de letras) de los estudiantes de 3ero. Usando nuestros viejos modos:
-</p>
-<CodeBlock
-  lang="js"
-  code={`
+    code={`
         // Estudiantes de 3ero
         let tercero = [];
         for (let i = 0; i < estudiantes.length; i++) {
@@ -335,14 +331,14 @@ import InlineCodeBlock from "../../../../../../components/articles/code-block/In
           }
         }
         console.log(nombreMásLargo);// "Lucía"`}
-/>
+  />
 
-<p>
-  Ahora, usando <em>map, filter</em> y <em>reduce</em> una después de la otra...
-</p>
-<CodeBlock
-  lang="js"
-  code={` let nombreMásLargo = estudiantes
+  <p>
+    Ahora, usando <em>map, filter</em> y <em>reduce</em> una después de la otra...
+  </p>
+  <CodeBlock
+    lang="js"
+    code={` let nombreMásLargo = estudiantes
         .filter((estudiante) => {return estudiante.año === 3})
         .map((estudiante) => {return estudiante.nombre})
         .reduce((acumulador, nombre) => {
@@ -353,83 +349,87 @@ import InlineCodeBlock from "../../../../../../components/articles/code-block/In
           }
         }, "");
       console.log(nombreMásLargo);// "Lucía"`}
-/>
-<p><em>Biutiful</em>.</p>
-<h2>Cuadro comparativo</h2>
-<p>A continuación un cuadro comparativo entre las 3 funciones:</p>
-<table class="data-table">
-  <thead>
-    <tr>
-      <th>Función</th>
-      <th>Uso</th>
-      <th>Parámetros</th>
-      <th>Resultado</th>
-      <th>Parámetros del callback</th>
-      <th>Resultado del callback</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Map</td>
-      <td>Hacer una operación a cada elemento de un array</td>
-      <td>Una función <strong>callback</strong></td>
-      <td>Un array con todos los resultados de la operación a cada elemento</td>
-      <td>Un elemento del array</td>
-      <td>El resultado de hacer la operación deseada al elemento del array</td>
-    </tr>
-    <tr>
-      <td>Filter</td>
-      <td>
-        Obtener aquellos elementos del array que cumplen con alguna condición
-      </td>
-      <td>Una función <strong>callback</strong></td>
-      <td>Un array con los elementos que cumplen la condición</td>
-      <td>Un elemento del array</td>
-      <td>
-        <code class="language-javascript">true</code> o
-        <code class="language-javascript">false</code>
-      </td>
-    </tr>
-    <tr>
-      <td>Reduce</td>
-      <td>Reducir un array a un único valor</td>
-      <td>
-        Una función <strong>callback</strong> y un valor inicial del acumulador
-      </td>
-      <td>Un único valor</td>
-      <td>El acumulador y un elemento del array</td>
-      <td>El valor del acumulador luego de procesar el elemento</td>
-    </tr>
-  </tbody>
-</table>
-<h2>Antes de que se vayan...</h2>
-<p>
-  ¿Y que pása si necesito los índices? ¿Y si en algún paso intermedio de
-  encadenar funciones de alto orden necesito propiedades de todo el array, como
-  su longitud?
-</p>
-<p>
-  Bueno, yo les di información incompleta. En todos los casos, los
-  <strong>callback</strong>, luego del parámetro del elemento (el primero para
-  map y filter, el segundo para reduce) pueden tomar
-  <strong>opcionalmente</strong> 2 parámetros más: el índice del elemento y el array
-  completo.
-</p>
-<p>
-  Supongamos que de nuestra lista de estudiantes queremos armar dos grupos, y
-  los vamos a armar dependiendo de la posición en la lista: pares por un lado,
-  impares por el otro. Usando <em>filter</em>...
-</p>
-<CodeBlock
-  lang="js"
-  code={` 
+  />
+  <p><em>Biutiful</em>.</p>
+  <h2>Cuadro comparativo</h2>
+  <p>A continuación un cuadro comparativo entre las 3 funciones:</p>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Función</th>
+        <th>Uso</th>
+        <th>Parámetros</th>
+        <th>Resultado</th>
+        <th>Parámetros del callback</th>
+        <th>Resultado del callback</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Map</td>
+        <td>Hacer una operación a cada elemento de un array</td>
+        <td>Una función <strong>callback</strong></td>
+        <td
+          >Un array con todos los resultados de la operación a cada elemento</td
+        >
+        <td>Un elemento del array</td>
+        <td>El resultado de hacer la operación deseada al elemento del array</td
+        >
+      </tr>
+      <tr>
+        <td>Filter</td>
+        <td>
+          Obtener aquellos elementos del array que cumplen con alguna condición
+        </td>
+        <td>Una función <strong>callback</strong></td>
+        <td>Un array con los elementos que cumplen la condición</td>
+        <td>Un elemento del array</td>
+        <td>
+          <code class="language-javascript">true</code> o
+          <code class="language-javascript">false</code>
+        </td>
+      </tr>
+      <tr>
+        <td>Reduce</td>
+        <td>Reducir un array a un único valor</td>
+        <td>
+          Una función <strong>callback</strong> y un valor inicial del acumulador
+        </td>
+        <td>Un único valor</td>
+        <td>El acumulador y un elemento del array</td>
+        <td>El valor del acumulador luego de procesar el elemento</td>
+      </tr>
+    </tbody>
+  </table>
+  <h2>Antes de que se vayan...</h2>
+  <p>
+    ¿Y que pása si necesito los índices? ¿Y si en algún paso intermedio de
+    encadenar funciones de alto orden necesito propiedades de todo el array,
+    como su longitud?
+  </p>
+  <p>
+    Bueno, yo les di información incompleta. En todos los casos, los
+    <strong>callback</strong>, luego del parámetro del elemento (el primero para
+    map y filter, el segundo para reduce) pueden tomar
+    <strong>opcionalmente</strong> 2 parámetros más: el índice del elemento y el array
+    completo.
+  </p>
+  <p>
+    Supongamos que de nuestra lista de estudiantes queremos armar dos grupos, y
+    los vamos a armar dependiendo de la posición en la lista: pares por un lado,
+    impares por el otro. Usando <em>filter</em>...
+  </p>
+  <CodeBlock
+    lang="js"
+    code={` 
         let grupoPar = estudiantes.filter((estudiante, i) => {return i % 2 === 0});
         // grupoPar = [{ nombre: "Ivo", apellido: "Degange", edad: 15, año: 3 }, { nombre: "Lucía", apellido: "Parrondo", edad: 15, año: 3 }, { nombre: "Darío", apellido: "Mischener", edad: 16, año: 4 }]
         let grupoImpar = estudiantes.filter((estudiante, i) => {return i % 2 === 1});
         // grupoImpar = [{ nombre: "Carolina", apellido: "Kupcevich", edad: 16, año: 4 }, { nombre: "Paula", apellido: "Sapochnik", edad: 18, año: 5 }, { nombre: "Julián", apellido: "Zylber", edad: 17, año: 5 }]
         `}
-/>
-<p>
-  Basta para mí basta para todos. ¡Usénlas de ahora en más! Si las saben, chau
-  for y forEach.
+  />
+  <p>
+    Basta para mí basta para todos. ¡Usénlas de ahora en más! Si las saben, chau
+    for y forEach.
+  </p>
 </p>
