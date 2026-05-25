@@ -1,0 +1,216 @@
+---
+import CodeBlock from "../../../../../../components/articles/code-block/CodeBlock.astro";
+import InlineCodeBlock from "../../../../../../components/articles/code-block/InlineCodeBlock.astro";
+
+export const partial = true;
+---
+
+<h2>Consigna</h2>
+<p>
+  Implementá la función <InlineCodeBlock
+    code="calcularTotal"
+    lang="typescript"
+  /> en <InlineCodeBlock code="src/index.ts" lang="plaintext" />. La función recibe
+  el id de un artista, la cantidad de entradas y un código de descuento, y tiene
+  que devolver el precio total a pagar.
+</p>
+<p>Los precios por entrada son:</p>
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>ID artista</th>
+      <th>Precio (patacones)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><InlineCodeBlock code="sabrina" lang="plaintext" /></td>
+      <td>1000</td>
+    </tr>
+    <tr>
+      <td><InlineCodeBlock code="kgatlw" lang="plaintext" /></td>
+      <td>700</td>
+    </tr>
+    <tr>
+      <td><InlineCodeBlock code="lali" lang="plaintext" /></td>
+      <td>500</td>
+    </tr>
+    <tr>
+      <td><InlineCodeBlock code="magdalena" lang="plaintext" /></td>
+      <td>600</td>
+    </tr>
+    <tr>
+      <td><InlineCodeBlock code="viagra" lang="plaintext" /></td>
+      <td>400</td>
+    </tr>
+    <tr>
+      <td><InlineCodeBlock code="dillom" lang="plaintext" /></td>
+      <td>350</td>
+    </tr>
+    <tr>
+      <td><InlineCodeBlock code="marilina" lang="plaintext" /></td>
+      <td>200</td>
+    </tr>
+    <tr>
+      <td><InlineCodeBlock code="mugre" lang="plaintext" /></td>
+      <td>150</td>
+    </tr>
+  </tbody>
+</table>
+<p>Los códigos de descuento son:</p>
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Código</th>
+      <th>Descuento</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><InlineCodeBlock code="TIC10" lang="plaintext" /></td>
+      <td>10%</td>
+    </tr>
+    <tr>
+      <td><InlineCodeBlock code="TIC20" lang="plaintext" /></td>
+      <td>20%</td>
+    </tr>
+    <tr>
+      <td><InlineCodeBlock code="DARIO" lang="plaintext" /></td>
+      <td>50%</td>
+    </tr>
+  </tbody>
+</table>
+<p>
+  Si el id no corresponde a ningún artista conocido, el precio base es <InlineCodeBlock
+    code="0"
+    lang="plaintext"
+  />. Si el código no es válido, no se aplica descuento.
+</p>
+<h3>Ejemplo</h3>
+<p>
+  3 entradas para <InlineCodeBlock code="dillom" lang="plaintext" /> con código
+  <InlineCodeBlock code="TIC20" lang="plaintext" />:
+</p>
+<CodeBlock lang="text" code="calcularTotal('dillom', 3, 'TIC20') → 840" />
+<p>(350 × 3 × 0.80 = 840)</p>
+
+<h2>¿Qué hay que editar?</h2>
+<p>
+  Solo <InlineCodeBlock code="src/index.ts" lang="plaintext" /> y <InlineCodeBlock
+    code="src/manija.ts"
+    lang="plaintext"
+  />. Los archivos en <InlineCodeBlock code="src/lib/" lang="plaintext" /> ya están
+  completos y no hay que tocarlos.
+</p>
+
+<h2>Primeros pasos</h2>
+<CodeBlock lang="bash" code="npm install" />
+
+<h2>Cómo correr el programa</h2>
+<p>
+  Este ejercicio usa una interfaz web. A diferencia de los ejercicios anteriores
+  donde <InlineCodeBlock code="npm run start" lang="bash" /> mostraba resultados
+  en la terminal, acá <strong>abre automáticamente una página en el navegador</strong>.
+  Esa página es la interfaz con la que interactuás con el programa.
+</p>
+<CodeBlock lang="bash" code="npm run start" />
+<p>Para la consigna manija:</p>
+<CodeBlock lang="bash" code="npx tsx src/manija.ts" />
+
+<h2>Tests</h2>
+<CodeBlock
+  lang="bash"
+  code={`npm run test-base    # tests de la consigna base
+npm run test-manija  # tests de la consigna manija
+npm test             # todos los tests`}
+/>
+
+<h2>Consigna manija: Lorem Ipsum</h2>
+<p>
+  <strong
+    >Este ejercicio es bastante complicado conceptualmente: enter at your own
+    risk.</strong
+  >
+</p>
+<p>
+  Lorem ipsum es el texto que se usa habitualmente en diseño gráfico en
+  demostraciones de tipografías o de borradores de diseño para probar el diseño
+  visual antes de insertar el texto. Es esencialmente un texto largo de prueba,
+  y lo podemos hacer tan largo como necesitemos. Vamos a hacer una función
+  generadora de lorem ipsum, pero para eso, tenemos que entender el concepto de
+  <strong>recursión</strong>.
+</p>
+<h3>Recursión</h3>
+<p>
+  La recursión es el acto de <strong>funciones que se llaman a sí mismas</strong
+  >. Es útil para hacer una misma operación muchas veces. Cada vez que la
+  función se llama a sí misma, lo hace con una versión más simple del problema,
+  y hay un punto en que deja de llamarse: eso se llama <strong>caso base</strong
+  >.
+</p>
+<p>
+  Veamos un ejemplo para que se entienda mejor: el <strong>factorial</strong>.
+  El factorial de un número n (escrito como n!) es el producto de todos los
+  números enteros desde n hasta 1. Por ejemplo: 5! = 5 × 4 × 3 × 2 × 1 = 120.
+  Esto se puede escribir de forma recursiva:
+</p>
+<CodeBlock
+  lang="typescript"
+  code={`function factorial(n: number): number {
+  if (n === 1) {
+    return 1; // caso base
+  } else {
+    return n * factorial(n - 1); // llamada recursiva
+  }
+}`}
+/>
+<p>
+  ¿Por qué funciona? El paso a paso de <InlineCodeBlock
+    code="factorial(3)"
+    lang="typescript"
+  />:
+</p>
+<img
+  :src="$store.pageData.publicURL('diagrams/factorial.svg')"
+  alt="factorial(3) paso a paso"
+  class="max-w-full my-4"
+/>
+<p>
+  En recursión siempre hay dos etapas: el <strong>paso recursivo</strong> (la
+  función se llama a sí misma con un problema más chico) y el <strong
+    >caso base</strong
+  > (el que corta la cadena de llamadas).
+</p>
+<h3>Lo que hay que hacer</h3>
+<p>
+  Usando recursión (no vale <InlineCodeBlock code="while" lang="typescript" />,
+  <InlineCodeBlock code="for" lang="typescript" />, <InlineCodeBlock
+    code="forEach"
+    lang="typescript"
+  />, <InlineCodeBlock code="map" lang="typescript" /> ni <InlineCodeBlock
+    code="reduce"
+    lang="typescript"
+  />), implementá la función <InlineCodeBlock
+    code="generarLorem"
+    lang="typescript"
+  /> en <InlineCodeBlock code="src/manija.ts" lang="plaintext" />. La función toma
+  un número <InlineCodeBlock code="n" lang="typescript" /> y devuelve un string con
+  el texto <InlineCodeBlock code='"Lorem Ipsum"' lang="plaintext" /> repetido <InlineCodeBlock
+    code="n"
+    lang="typescript"
+  /> veces, terminando con un punto.
+</p>
+<CodeBlock
+  lang="text"
+  code="generarLorem(5) → 'Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum.'"
+/>
+<p>
+  No te olvidés del punto final. <strong>Tip:</strong> tiene que ver con el caso
+  base.
+</p>
+<p>
+  La función tiene que estar exportada: <InlineCodeBlock
+    code="export function generarLorem"
+    lang="typescript"
+  />.
+</p>
