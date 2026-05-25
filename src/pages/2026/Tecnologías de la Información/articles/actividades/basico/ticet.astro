@@ -3,6 +3,14 @@ import CodeBlock from "../../../../../../components/articles/code-block/CodeBloc
 import InlineCodeBlock from "../../../../../../components/articles/code-block/InlineCodeBlock.astro";
 
 export const partial = true;
+
+const factorialDiagram = `flowchart LR
+    A["factorial(3)"] --> B["3 × factorial(2)"]
+    B --> C["2 × factorial(1)"]
+    C --> D["factorial(1)"]
+    D -->|"1"| C
+    C -->|"2×1=2"| B
+    B -->|"3×2=6"| A`;
 ---
 
 <h2>Consigna</h2>
@@ -170,11 +178,7 @@ npm test             # todos los tests`}
     lang="typescript"
   />:
 </p>
-<img
-  :src="$store.pageData.publicURL('diagrams/factorial.svg')"
-  alt="factorial(3) paso a paso"
-  class="max-w-full my-4"
-/>
+<div class="mermaid my-4" set:html={factorialDiagram} />
 <p>
   En recursión siempre hay dos etapas: el <strong>paso recursivo</strong> (la
   función se llama a sí misma con un problema más chico) y el <strong
