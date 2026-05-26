@@ -1,0 +1,206 @@
+---
+import CodeBlock from "../../../../../../components/articles/code-block/CodeBlock.astro";
+import InlineCodeBlock from "../../../../../../components/articles/code-block/InlineCodeBlock.astro";
+
+export const partial = true;
+---
+
+<h2>Consigna</h2>
+<p>
+  El cifrado César es una de las primeras técnicas de encriptación de mensajes.
+  Pueden leer más en <a
+    href="https://es.wikipedia.org/wiki/Cifrado_C%C3%A9sar"
+    target="_blank">Wikipedia</a
+  >.
+</p>
+<p>Para hacerlo, ya cuentan con dos funciones hechas:</p>
+<ul>
+  <li>
+    <InlineCodeBlock code="cifrar" lang="typescript" />: recibe una palabra (string)
+    y una clave (number), y devuelve la palabra cifrada.
+  </li>
+  <li>
+    <InlineCodeBlock code="descifrar" lang="typescript" />: recibe una palabra cifrada
+    (string) y una clave (number), y devuelve la palabra descifrada.
+  </li>
+</ul>
+<p>
+  Las funciones están en <InlineCodeBlock
+    code="src/lib/funcionesCriptográficas.ts"
+    lang="plaintext"
+  /> y ya están importadas en <InlineCodeBlock
+    code="src/index.ts"
+    lang="plaintext"
+  />. Tienen código con algunas cosas que no vimos, pero no se preocupen —
+  ustedes tienen que usarlas solamente.
+</p>
+<p>
+  Completar el programa para que tome 3 inputs del usuario con <InlineCodeBlock
+    code="preguntar"
+    lang="typescript"
+  />:
+</p>
+<ol>
+  <li>Una palabra</li>
+  <li>Una clave (un número)</li>
+  <li>
+    Una acción a realizar: <InlineCodeBlock code="cifrar" lang="plaintext" /> o <InlineCodeBlock
+      code="descifrar"
+      lang="plaintext"
+    />
+  </li>
+</ol>
+<p>
+  Y luego imprima el resultado con <InlineCodeBlock
+    code="console.log"
+    lang="typescript"
+  />.
+</p>
+<h3>Ejemplo</h3>
+<CodeBlock
+  lang="plaintext"
+  code={`Ingresá una palabra: hola
+Ingresá la clave: 3
+¿Qué querés hacer? (cifrar/descifrar): cifrar
+krñd`}
+/>
+<h3>Mensajes para descifrar</h3>
+<p>
+  Una vez que tengan el programa funcionando, descifren estos mensajes (pueden
+  buscar a qué están haciendo referencia googleándolas):
+</p>
+<ul>
+  <li>
+    <InlineCodeBlock code={"¿fmxntpy fg, ndgfa?"} lang="plaintext" /> con clave <InlineCodeBlock
+      code="-15"
+      lang="plaintext"
+    />
+  </li>
+  <li>
+    <InlineCodeBlock
+      code="sz hsbiwrd rs zo kwro, sz jbwksghd n idrd zd rsaoh"
+      lang="plaintext"
+    /> con clave <InlineCodeBlock code="42" lang="plaintext" />
+  </li>
+</ul>
+
+<h2>¿Qué hay que editar?</h2>
+<p>Para la consigna base:</p>
+<CodeBlock lang="plaintext" code="src/index.ts" />
+<p>Para la consigna manija:</p>
+<CodeBlock lang="plaintext" code="src/manija.ts" />
+<p>
+  Los archivos <InlineCodeBlock
+    code="src/lib/consola.ts"
+    lang="plaintext"
+  /> y <InlineCodeBlock
+    code="src/lib/funcionesCriptográficas.ts"
+    lang="plaintext"
+  /> ya están completos y no hace falta tocarlos.
+</p>
+
+<h2>Primeros pasos</h2>
+<p>
+  Antes de poder correr el programa, hay que instalar las dependencias del
+  proyecto. Esto se hace <strong>una sola vez</strong> con:
+</p>
+<CodeBlock lang="bash" code="npm install" />
+
+<h2>Cómo correr el programa</h2>
+<CodeBlock lang="bash" code="npm run start" />
+<p>Para correr la manija:</p>
+<CodeBlock lang="bash" code="npx tsx src/manija.ts" />
+
+<h2>Tests</h2>
+<p>
+  El proyecto incluye tests automáticos que se usan para la corrección. No hace
+  falta entenderlos ni modificarlos:
+</p>
+<CodeBlock
+  lang="bash"
+  code={`npm run test-base    # tests de la consigna base
+npm run test-manija  # tests de la consigna manija
+npm test             # ambos`}
+/>
+
+<h2>Consigna manija</h2>
+<h3>Tarjetas de crédito</h3>
+<p>
+  La validación de tarjetas de crédito depende de muchos factores. En
+  particular, los primeros dígitos suelen corresponder a la red a la que
+  pertenece. Vamos a hacer un programa que, dado un número de tarjeta de
+  crédito, determine a qué red pertenece.
+</p>
+<p>Nos vamos a concentrar en las 3 redes más usadas en Argentina:</p>
+<ul>
+  <li>
+    <strong>AMEX</strong>: comienza con <InlineCodeBlock
+      code="34"
+      lang="plaintext"
+    /> o <InlineCodeBlock code="37" lang="plaintext" />
+  </li>
+  <li>
+    <strong>VISA</strong>: comienza con <InlineCodeBlock
+      code="4"
+      lang="plaintext"
+    />
+  </li>
+  <li>
+    <strong>MASTERCARD</strong>: comienza con <InlineCodeBlock
+      code="51"
+      lang="plaintext"
+    />, <InlineCodeBlock code="52" lang="plaintext" />, <InlineCodeBlock
+      code="53"
+      lang="plaintext"
+    />, <InlineCodeBlock code="54" lang="plaintext" /> o <InlineCodeBlock
+      code="55"
+      lang="plaintext"
+    />
+  </li>
+</ul>
+<p>
+  Si la tarjeta no pertenece a ninguna de estas redes, mostrar <InlineCodeBlock
+    code="Desconocida"
+    lang="plaintext"
+  />.
+</p>
+<p>
+  Para hacernos la vida un poco más sencilla, crear una función <InlineCodeBlock
+    code="obtenerPrefijo"
+    lang="typescript"
+  /> que, dado un número y el tamaño del prefijo, devuelva el prefijo. Por ejemplo,
+  <InlineCodeBlock
+    code="obtenerPrefijo(4567890100755987, 2)"
+    lang="typescript"
+  /> devuelve <InlineCodeBlock code="45" lang="plaintext" />.
+</p>
+<p><strong>Tips importantes:</strong></p>
+<ul>
+  <li>
+    En <InlineCodeBlock code="obtenerPrefijo" lang="typescript" />, la potencia
+    de 10 por la cual hay que dividir es <InlineCodeBlock
+      code="longitudNumero - longitudPrefijo"
+      lang="plaintext"
+    />. Para simplificar, todas las tarjetas son de 16 dígitos, por lo tanto
+    <InlineCodeBlock code="longitudNumero = 16" lang="plaintext" />.
+  </li>
+  <li>
+    JavaScript no tiene división entera, pero pueden lograr el mismo efecto
+    redondeando para abajo con <InlineCodeBlock
+      code="Math.floor"
+      lang="typescript"
+    />.
+  </li>
+</ul>
+<p>
+  El programa va en <InlineCodeBlock
+    code="src/manija.ts"
+    lang="plaintext"
+  />. Toma el número de tarjeta por <InlineCodeBlock
+    code="preguntar"
+    lang="typescript"
+  /> e imprime el resultado con <InlineCodeBlock
+    code="console.log"
+    lang="typescript"
+  />.
+</p>
