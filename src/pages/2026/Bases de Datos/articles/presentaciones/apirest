@@ -1,9 +1,0 @@
----
-export const partial = true;
----
-
-<iframe
-  src="https://docs.google.com/presentation/d/e/2PACX-1vTWXcty7SwuA5b8mW9F9ioY0UTu52iCl3I8IWil78UeqoS42BWwdEkzEWENoxi39k0aevAFNtRLebIC/pubembed?start=false&loop=false"
-  frameborder="0"
-  class="w-full aspect-16/10"
-  allowfullscreen="true"></iframe>
