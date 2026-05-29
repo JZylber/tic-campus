@@ -1,0 +1,34 @@
+---
+import CodeBlock from "../../../../../components/articles/code-block/CodeBlock.astro";
+import InlineCodeBlock from "../../../../../components/articles/code-block/InlineCodeBlock.astro";
+
+export const partial = true;
+---
+
+<p>
+  ¿Y si hacemos las base de datos de eventos masivos de la ciudad de Buenos
+  Aires en una API? Usando el mismo repositorio de la vez pasada, hacer las
+  siguientes modificaciones:
+</p>
+<ol>
+  <li>Instalar express</li>
+  <li>Exportar las funciones asociadas al punto 1 y 3</li>
+  <li>Hacer un nuevo archivo Javascript</li>
+  <li>Importar las funciones del punto 1 y 3</li>
+  <li>Crear un servidor express</li>
+  <li>
+    Hacer que las funciones respondan a los siguientes endpoints:
+    <ul>
+      <li>
+        GET <InlineCodeBlock code="/eventos-del-dia/:fecha" lang="js" />:
+        Devuelve todos los eventos del día especificado en la ruta.
+      </li>
+      <li>
+        PUT <InlineCodeBlock code="/modificar-aforo/" lang="js" />: Toma un JSON
+        con el nombre del evento y el nuevo aforo, y actualiza el aforo del
+        evento.
+      </li>
+    </ul>
+  </li>
+  <li>Probar los endpoints usando Postman o Insomnia.</li>
+</ol>
