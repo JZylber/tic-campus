@@ -1,0 +1,121 @@
+---
+import InlineCodeBlock from "../../../../../../components/articles/code-block/InlineCodeBlock.astro";
+import CodeBlock from "../../../../../../components/articles/code-block/CodeBlock.astro";
+
+export const partial = true;
+---
+
+<h2>Consigna</h2>
+<p>
+  Dibujá figuras geométricas en la consola usando caracteres y ciclos.
+</p>
+<p>
+  Escribí un programa que dibuje un <strong>cuadrado relleno</strong> en la consola.
+</p>
+<ol>
+  <li>Preguntar con qué carácter se va a dibujar el cuadrado.</li>
+  <li>Preguntar el tamaño del cuadrado.</li>
+  <li>
+    Imprimir el cuadrado: <InlineCodeBlock code="tamaño" lang="plaintext" /> filas,
+    cada una con el carácter repetido <InlineCodeBlock code="tamaño" lang="plaintext" /> veces.
+  </li>
+</ol>
+<p>
+  La función <InlineCodeBlock code="repetirLetra(letra: string, cantidad: number): string" lang="typescript" /> recibe un carácter y un número, y devuelve ese carácter repetido esa cantidad de veces. Hay que implementarla usando un ciclo <InlineCodeBlock code="while" lang="typescript" />.
+</p>
+<h3>Ejemplos</h3>
+<CodeBlock
+  code={`¿Con que caracter vas a dibujar el cuadrado? *
+¿De qué tamaño? 4
+****
+****
+****
+****`}
+  lang="plaintext"
+/>
+<CodeBlock
+  code={`¿Con que caracter vas a dibujar el cuadrado? #
+¿De qué tamaño? 3
+###
+###
+###`}
+  lang="plaintext"
+/>
+<h2>¿Qué hay que editar?</h2>
+<p>
+  Para la consigna base, el único archivo a modificar es <InlineCodeBlock
+    code="src/index.ts"
+    lang="plaintext"
+  />. El archivo <InlineCodeBlock code="src/lib/consola.ts" lang="plaintext" /> ya
+  está completo y no hace falta tocarlo.
+</p>
+<h2>Primeros pasos</h2>
+<p>
+  Antes de poder correr el programa, hay que instalar las dependencias del
+  proyecto. Esto se hace <strong>una sola vez</strong> con:
+</p>
+<p><InlineCodeBlock code="npm install" lang="bash" /></p>
+<h2>Cómo correr el programa</h2>
+<p><InlineCodeBlock code="npm run start" lang="bash" /></p>
+<h2>Tests</h2>
+<p>
+  El proyecto incluye tests automáticos que se usan para la corrección. No hace
+  falta entenderlos ni modificarlos:
+</p>
+<p><InlineCodeBlock code="npm run test-base" lang="bash" /></p>
+<h2>Consigna manija</h2>
+<p>
+  Escribí un programa en <InlineCodeBlock code="src/manija.ts" lang="plaintext" /> que dibuje un <strong>triángulo</strong> en la consola.
+</p>
+<ol>
+  <li>Preguntar con qué carácter se va a dibujar el triángulo.</li>
+  <li>Preguntar el tamaño del triángulo.</li>
+  <li>
+    Preguntar el tipo de triángulo: <InlineCodeBlock code="isoceles" lang="plaintext" /> o <InlineCodeBlock code="rectangulo" lang="plaintext" />.
+  </li>
+  <li>Imprimir el triángulo correspondiente.</li>
+</ol>
+<h3>Triángulo rectángulo</h3>
+<p>La fila <InlineCodeBlock code="j" lang="plaintext" /> (empezando en 0) tiene <InlineCodeBlock code="j + 1" lang="plaintext" /> caracteres, sin espacios.</p>
+<CodeBlock
+  code={`¿Con que caracter vas a dibujar el triángulo? *
+¿De qué tamaño? 4
+¿Qué tipo de triángulo? (isoceles, rectangulo) rectangulo
+*
+**
+***
+****`}
+  lang="plaintext"
+/>
+<h3>Triángulo isóceles</h3>
+<p>
+  Cada fila <InlineCodeBlock code="j" lang="plaintext" /> (empezando en 0) tiene <InlineCodeBlock code="2*j + 1" lang="plaintext" /> caracteres centrados con espacios a ambos lados.
+</p>
+<p>
+  La función <InlineCodeBlock code="filaTrianguloIsoceles(letra: string, fila: number, tamaño: number): string" lang="typescript" /> construye una fila del triángulo. Hay que implementarla.
+</p>
+<CodeBlock
+  code={`¿Con que caracter vas a dibujar el triángulo? *
+¿De qué tamaño? 3
+¿Qué tipo de triángulo? (isoceles, rectangulo) isoceles
+   *
+  ***
+ ***** `}
+  lang="plaintext"
+/>
+<CodeBlock
+  code={`¿Con que caracter vas a dibujar el triángulo? #
+¿De qué tamaño? 4
+¿Qué tipo de triángulo? (isoceles, rectangulo) isoceles
+    #
+   ###
+  #####
+ ####### `}
+  lang="plaintext"
+/>
+<p>
+  Para correr la manija: <InlineCodeBlock code="npx tsx src/manija.ts" lang="bash" />
+</p>
+<p>
+  Para correr los tests de la manija: <InlineCodeBlock code="npm run test-manija" lang="bash" />
+</p>
