@@ -1,0 +1,237 @@
+---
+import CodeBlock from "../../../../../../components/articles/code-block/CodeBlock.astro";
+import InlineCodeBlock from "../../../../../../components/articles/code-block/InlineCodeBlock.astro";
+
+export const partial = true;
+---
+
+<h2>¿Qué es un array?</h2>
+<p>
+  Un <strong>array</strong> (o lista) es un tipo de dato que sirve para guardar <strong
+  >
+    un conjunto de cosas
+  </strong>. En TypeScript, tenés que especificar el <strong
+    >tipo de los elementos</strong
+  > que va a contener el array. Por ejemplo, <InlineCodeBlock
+    lang="typescript"
+    code="string[]"
+  /> para textos o <InlineCodeBlock lang="typescript" code="number[]" /> para números.
+</p>
+<CodeBlock
+  lang="typescript"
+  code={`let frutas: string[] = ["manzana", "banana", "naranja"];
+let edades: number[] = [15, 18, 20, 22];`}
+/>
+<p>
+  En estos ejemplos, TypeScript sabe que <InlineCodeBlock
+    lang="typescript"
+    code="frutas"
+  /> solo puede contener strings y <InlineCodeBlock
+    lang="typescript"
+    code="edades"
+  /> solo números. Si intentás meter un número en <InlineCodeBlock
+    lang="typescript"
+    code="frutas"
+  />, el compilador te va a avisar.
+</p>
+<p>
+  También podés escribir el tipo usando la forma genérica <InlineCodeBlock
+    lang="typescript"
+    code="Array<T>"
+  />:
+</p>
+<CodeBlock
+  lang="typescript"
+  code={`let frutas: Array<string> = ["manzana", "banana", "naranja"];
+let edades: Array<number> = [15, 18, 20, 22];`}
+/>
+<p>
+  Ambas formas son equivalentes. La primera (<InlineCodeBlock
+    lang="typescript"
+    code="string[]"
+  />) es más común y compacta.
+</p>
+<h2>Índices: empezamos a contar desde cero</h2>
+<p>
+  Los arrays usan índices que arrancan en 0. ¿Qué? ¿Se volvieron locos? ¿Quién
+  cuenta <strong>desde 0</strong>? Tiene que ver con razones históricas, así que
+  no lloren. Eso quiere decir que:
+</p>
+<CodeBlock
+  lang="typescript"
+  code={`let frutas: string[] = ["manzana", "banana", "naranja"];
+
+console.log(frutas[0]); // "manzana"
+console.log(frutas[1]); // "banana"
+console.log(frutas[2]); // "naranja"`}
+/>
+<p>
+  <strong>OJO:</strong>
+  <InlineCodeBlock code="frutas[3]" lang="typescript" /> en este caso da undefined
+  porque no hay un cuarto elemento.
+</p>
+<p>También podés modificar un elemento directamente usando el índice:</p>
+<CodeBlock
+  lang="typescript"
+  code={`frutas[1] = "pera";
+console.log(frutas); // ["manzana", "pera", "naranja"]
+
+// Esto daría error de TypeScript:
+// frutas[1] = 42; // Error: Type 'number' is not assignable to type 'string'`}
+/>
+<h2>Métodos útiles: "push" y "pop"</h2>
+<ul>
+  <li>
+    <InlineCodeBlock code="array.push(elemento)" lang="typescript" />: agrega un
+    elemento al final de un array. TypeScript verifica que el elemento sea del
+    tipo correcto.
+  </li>
+  <li>
+    <InlineCodeBlock code="array.pop()" lang="typescript" />: elimina el último
+    elemento de un array y lo devuelve. El tipo de retorno es <InlineCodeBlock
+      lang="typescript"
+      code="T | undefined"
+    />.
+  </li>
+</ul>
+<CodeBlock
+  lang="typescript"
+  code={`let numeros: number[] = [1, 2, 3];
+
+numeros.push(4);
+console.log(numeros); // [1, 2, 3, 4]
+
+// numeros.push("cinco"); // Error: Argument of type 'string' is not assignable to parameter of type 'number'
+
+let ultimo: number | undefined = numeros.pop();
+console.log(ultimo); // 4
+console.log(numeros); // [1, 2, 3]`}
+/>
+<h2>La propiedad "length"</h2>
+<p>
+  Cada array tiene una propiedad llamada .length, que indica cuántos elementos
+  tiene el array. TypeScript la tipea automáticamente como <InlineCodeBlock
+    lang="typescript"
+    code="number"
+  />.
+</p>
+<CodeBlock
+  lang="typescript"
+  code={`let letras: string[] = ["a", "b", "c"];
+let cantidad: number = letras.length;
+console.log(cantidad); // 3`}
+/>
+<p>Ojo: el último índice válido es length - 1.</p>
+<h2>Iterar un array con while</h2>
+<p>
+  Una forma muy común de trabajar con arrays es recorrerlos con un ciclo while.
+</p>
+<CodeBlock
+  lang="typescript"
+  code={`let frutas: string[] = ["manzana", "banana", "naranja"];
+let i: number = 0;
+while (i < frutas.length) {
+  console.log("Fruta: ", frutas[i]);
+  i++;
+}`}
+/>
+<p>Esto recorre todos los elementos del array, usando el índice i.</p>
+<h2>Iterar un array con for</h2>
+<p>
+  El caso anterior, pero reescrito con un ciclo for, que es más compacto y común
+  para este tipo de tareas:
+</p>
+<CodeBlock
+  lang="typescript"
+  code={`let frutas: string[] = ["manzana", "banana", "naranja"];
+
+for (let i: number = 0; i < frutas.length; i++) {
+  console.log("Fruta: ", frutas[i]);
+}`}
+/>
+<h2>Ejemplo de iteración de un array</h2>
+<p>
+  En muchos casos, se itera sobre arrays para hacer operaciones sobre todos los
+  elementos. Por ejemplo, si quiero sumar todos los números de un array de
+  edades, puedo hacer:
+</p>
+<CodeBlock
+  lang="typescript"
+  code={`let edades: number[] = [15, 18, 20];
+let suma: number = 0;
+
+for (let i: number = 0; i < edades.length; i++) {
+  suma = suma + edades[i];
+}
+
+console.log("Suma de edades:", suma); // 53
+`}
+/>
+<h2>Resumen</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Acción</th>
+      <th>Código</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Crear un array tipado</td>
+      <td
+        ><InlineCodeBlock
+          lang="typescript"
+          code="let lista: number[] = [1, 2, 3];"
+        /> (tipo seguido de corchetes)</td
+      >
+    </tr>
+    <tr>
+      <td>Acceder a un elemento</td>
+      <td
+        ><InlineCodeBlock lang="typescript" code="lista[<indice>]" />, donde el
+        indice es un numero de 0 a longitud -1, que representa la posición.</td
+      >
+    </tr>
+    <tr>
+      <td>Modificar un elemento</td>
+      <td
+        ><InlineCodeBlock lang="typescript" code="lista[<indice>] = 99" />,
+        TypeScript verifica que el valor sea del tipo correcto.</td
+      >
+    </tr>
+    <tr>
+      <td>Agregar al final</td>
+      <td
+        ><InlineCodeBlock lang="typescript" code="lista.push(4)" />, TypeScript
+        verifica el tipo del argumento.</td
+      >
+    </tr>
+    <tr>
+      <td>Sacar el último</td>
+      <td
+        ><InlineCodeBlock lang="typescript" code="lista.pop()" />, devuelve <InlineCodeBlock
+          lang="typescript"
+          code="number | undefined"
+        />.
+      </td>
+    </tr>
+    <tr>
+      <td>Saber cuántos elementos hay</td>
+      <td
+        ><InlineCodeBlock lang="typescript" code="lista.length" />, siempre es <InlineCodeBlock
+          lang="typescript"
+          code="number"
+        />.
+      </td>
+    </tr>
+    <tr>
+      <td>Recorrer con for</td>
+      <td
+        ><InlineCodeBlock
+          lang="typescript"
+          code="for (let i: number = 0; i < lista.length; i++){}"
+        />
+      </td>
+    </tr>
+  </tbody>
+</table>

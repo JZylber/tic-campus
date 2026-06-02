@@ -1,0 +1,91 @@
+---
+import CodeBlock from "../../../../../components/articles/code-block/CodeBlock.astro";
+import InlineCodeBlock from "../../../../../components/articles/code-block/InlineCodeBlock.astro";
+
+export const partial = true;
+
+const der = `erDiagram
+    barrios {
+        int id PK
+        varchar nombre
+    }
+    modalidades {
+        int id PK
+        varchar nombre
+    }
+    eventos_masivos {
+        int id PK
+        date fecha
+        text evento
+        text lugar
+        int modalidad_id FK
+        timestamp apertura
+        timestamp cierre
+        int aforo
+        int barrio_id FK
+    }
+    modalidades ||--o{ eventos_masivos : "modalidad_id"
+    barrios ||--o{ eventos_masivos : "barrio_id"`;
+---
+
+<p>
+  ¡Pasan muchas cosas en la ciudad de Buenos Aires! Y si hacés un evento masivo,
+  tenés que pedir permiso al gobierno de la ciudad. Contamos con esos datos para
+  los años 2024, 2025 y 2026.
+</p>
+
+<h2>DER</h2>
+<div class="mermaid" set:html={der} />
+
+<h2>Consigna</h2>
+<ol>
+  <li>Crear una nueva base de datos en <strong>Neon DB</strong>.</li>
+  <li>
+    Clonar el repositorio y correr:
+    <CodeBlock lang="bash" code="npm install" />
+  </li>
+  <li>
+    Conectarla con nuestro programa usando la librería <InlineCodeBlock
+      code="pg"
+      lang="js"
+    />. Está el esqueleto en <InlineCodeBlock code="main.js" lang="js" />.
+  </li>
+  <li>
+    Poblar la BDD con los datos usando la función <InlineCodeBlock
+      code="resetearBDD()"
+      lang="js"
+    />. <strong>OJO:</strong> Es una función asíncrona, así que no se olviden de usar
+    <InlineCodeBlock code="await" lang="js" /> al llamarla.
+  </li>
+  <li>
+    Completar las funciones para realizar las siguientes consultas a la base de
+    datos:
+    <ul>
+      <li>
+        Listar todos los eventos del día <InlineCodeBlock
+          code="2024-01-06"
+          lang="sql"
+        />.
+      </li>
+      <li>Borrar todos los eventos de Parque de la Ciudad.</li>
+      <li>
+        Modificar el aforo del Burger Fest a <InlineCodeBlock
+          code="4000"
+          lang="sql"
+        />.
+      </li>
+      <li>
+        Insertar nuevamente con fecha de hoy el evento con más aforo (2
+        queries).
+      </li>
+      <li>Obtener los 5 barrios con más eventos (nombre, cantidad).</li>
+    </ul>
+  </li>
+</ol>
+
+<p>
+  No se preocupen si se la mandan con las queries: <InlineCodeBlock
+    code="resetearBDD()"
+    lang="js"
+  /> la deja nuevita nuevita.
+</p>

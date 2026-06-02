@@ -27,7 +27,8 @@ import Select from "../../components/misc/select/Select.astro";
       year: 0,
       dataSheetId: undefined,
     },
-    markedStudents: [] as Student[],
+    studentRegistry: {} as Record<string, Student>,
+    loadedKeys: new Set<string>(),
     async init() {
       this.loadingSubjects = true;
       const user = await fetchCurrentUser();
@@ -39,8 +40,9 @@ import Select from "../../components/misc/select/Select.astro";
     },
     async loadMarksForSelectedSubject() {
       if (!this.selectedSubject.name) return;
+      const key = `${this.selectedSubject.year}__${this.selectedSubject.course}__${this.selectedSubject.name}`;
+      if (this.loadedKeys.has(key)) return;
       this.loadingMarks = true;
-      this.markedStudents = [];
       const subjectName = this.selectedSubject.name;
       const marksData = await fetchSubjectMarks(
         subjectName,
@@ -48,35 +50,33 @@ import Select from "../../components/misc/select/Select.astro";
         this.selectedSubject.course,
         this.selectedSubject.dataSheetId,
       );
-      // Process marksData as needed
       const { marksByStudent, criteria } = marksData;
       for (const studentId in marksByStudent) {
         const studentMarks = marksByStudent[studentId];
-        const student = new Student(
-          studentMarks.name,
-          studentMarks.surname,
-          studentId,
-          this.selectedSubject.course,
-          [this.selectedSubject.name],
-        )
+        const student = this.studentRegistry[studentId]
+          ? this.studentRegistry[studentId].addSubject(subjectName)
+          : new Student(
+              studentMarks.name,
+              studentMarks.surname,
+              studentId,
+              this.selectedSubject.course,
+              [subjectName],
+            );
+        student
           .setClassActivities(subjectName, studentMarks.classActivities)
           .setMarkedActivities(subjectName, studentMarks.markedActivities)
           .setRedos(subjectName, studentMarks.redoActivities)
-          .setCriteria(
-            subjectName,
-            criteria.proportion,
-            criteria.specialActivities,
-          );
+          .setCriteria(subjectName, criteria.proportion, criteria.specialActivities);
         student.calculateFinalMark(subjectName);
-        this.markedStudents.push(student);
+        this.studentRegistry[studentId] = student;
       }
+      this.loadedKeys.add(key);
       this.loadingMarks = false;
     },
     get years() {
       return [...new Set(this.subjects.map((s) => s.year))];
     },
     get subjectNames() {
-      // Get unique subject names for the selected year
       return [
         ...new Set(
           this.subjects
@@ -86,7 +86,6 @@ import Select from "../../components/misc/select/Select.astro";
       ];
     },
     get courseNames() {
-      // Filter by selected subject name to get the course names for that subject and year
       return [
         ...new Set(
           this.subjects
@@ -103,26 +102,26 @@ import Select from "../../components/misc/select/Select.astro";
       this.selectedSubject.year = year;
       this.selectedSubject.name = "";
       this.selectedSubject.course = "";
-      this.markedStudents = [];
     },
     selectSubject(name: string) {
       this.selectedSubject.name = name;
       this.selectedSubject.course = "";
-      this.markedStudents = [];
     },
     selectCourse(course: string) {
       this.selectedSubject.course = course;
-      this.markedStudents = [];
     },
     get students() {
-      // Sort by surname ascending, then by name ascending
-      this.markedStudents.sort((a, b) => {
-        if (a.surname === b.surname) {
-          return a.name.localeCompare(b.name);
-        }
-        return a.surname.localeCompare(b.surname);
-      });
-      return this.markedStudents;
+      const { name, course, year } = this.selectedSubject;
+      if (!name || !course) return [];
+      const key = `${year}__${course}__${name}`;
+      if (!this.loadedKeys.has(key)) return [];
+      return Object.values(this.studentRegistry)
+        .filter((s) => s.course === course && s.hasSubject(name))
+        .sort((a, b) =>
+          a.surname === b.surname
+            ? a.name.localeCompare(b.name)
+            : a.surname.localeCompare(b.surname),
+        );
     },
   }));
 </script>

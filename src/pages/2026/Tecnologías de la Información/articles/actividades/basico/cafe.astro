@@ -1,0 +1,69 @@
+---
+import InlineCodeBlock from "../../../../../../components/articles/code-block/InlineCodeBlock.astro";
+
+export const partial = true;
+---
+
+<h2>Consigna</h2>
+<p>
+  Un café de especialidad quiere una aplicación para calcular cuánto paga cada
+  persona de una mesa. Hay que completar el programa para que haga lo siguiente:
+</p>
+<ol>
+  <li>Preguntar el total de la cuenta.</li>
+  <li>
+    Preguntar si los clientes son estudiantes de ORT (<InlineCodeBlock
+      code="si"
+      lang="plaintext"
+    /> / <InlineCodeBlock code="no" lang="plaintext" />).
+  </li>
+  <li>
+    Si la respuesta es exactamente <InlineCodeBlock
+      code="si"
+      lang="plaintext"
+    /> (en minúscula), aplicar un <strong>10% de descuento</strong>.
+  </li>
+  <li>Preguntar entre cuántas personas se divide la cuenta.</li>
+  <li>
+    Mostrar el total por persona con el formato: <InlineCodeBlock
+      code="Total por persona: $<monto>"
+      lang="plaintext"
+    />
+  </li>
+</ol>
+<p>
+  <strong>IMPORTANTE:</strong> Los valores ingresados son strings. Para hacer cuentas,
+  hay que convertirlos a números. Esa es la gracia del ejercicio...
+</p>
+<h2>¿Qué hay que editar?</h2>
+<p>
+  El único archivo que tienen que modificar es <InlineCodeBlock
+    code="src/index.ts"
+    lang="plaintext"
+  />. El archivo <InlineCodeBlock code="src/lib/consola.ts" lang="plaintext" /> ya
+  está completo — es un helper que provee la función <InlineCodeBlock
+    code="preguntar()"
+    lang="typescript"
+  /> y no hace falta tocarlo.
+</p>
+<h2>Primeros pasos</h2>
+<p>
+  Esta es la primera vez que usamos <strong>npm</strong>. Antes de poder correr
+  el programa, hay que instalar las dependencias del proyecto. Esto se hace
+  <strong>una sola vez</strong> con:
+</p>
+<p><InlineCodeBlock code="npm install" lang="bash" /></p>
+<p>
+  Este comando descarga todo lo necesario para que el proyecto funcione. Si no
+  lo corren primero, el programa no va a andar.
+</p>
+<h2>Cómo correr el programa</h2>
+<p><InlineCodeBlock code="npm run start" lang="bash" /></p>
+<h2>Tests</h2>
+<p>
+  El proyecto incluye tests automáticos que se usan para la corrección. No hace
+  falta entenderlos ni modificarlos. Si quieren verlos correr:
+</p>
+<p><InlineCodeBlock code="npm test" lang="bash" /></p>
+<h2>Consigna manija</h2>
+<p>Pendiente...</p>

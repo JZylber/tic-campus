@@ -1,0 +1,83 @@
+---
+import CodeBlock from "../../../../../components/articles/code-block/CodeBlock.astro";
+import InlineCodeBlock from "../../../../../components/articles/code-block/InlineCodeBlock.astro";
+
+export const partial = true;
+---
+
+<h2>NodeJS básico</h2>
+
+<h2>Consigna</h2>
+<p>
+  Llamaremos "alumno" a un objeto de JavaScript que tenga la siguiente
+  estructura:
+</p>
+<CodeBlock
+  lang="js"
+  code={`{
+    nombre: "Juan",
+    apellido: "Gomez",
+    dni: 46345678,
+    anio: 4,
+    curso: "A",
+    nota: 8,
+}`}
+/>
+
+<h3>Ejercicio 1</h3>
+<p>
+  Este ejercicio consiste en crear un <strong>array</strong> de alumnos distintos,
+  con datos inventados que cubran las siguientes condiciones:
+</p>
+<ul>
+  <li>Al menos 3 alumnos deben estar aprobados (nota &gt;= 6).</li>
+  <li>Al menos 3 alumnos deben estar desaprobados.</li>
+  <li>
+    Debe haber al menos 2 alumnos en 4°A, 2 alumnos en 5°A, 2 alumnos en 4°B y
+    2 en 3°B.
+  </li>
+  <li>Los DNI deben empezar con 48 y no pueden ser todos iguales.</li>
+  <li>
+    Los nombres y apellidos no pueden ser todos iguales pero un nombre debe
+    repetirse 2 veces.
+  </li>
+</ul>
+
+<h3>Ejercicio 2</h3>
+<p>
+  Crear una función <InlineCodeBlock code="capitalizar" lang="js" /> que recibe un
+  string, hace <strong>la primera letra</strong> mayúscula y lo <em>devuelve</em>
+  (pueden o no utilizar la notación "arrow function").
+</p>
+
+<h3>Ejercicio 3</h3>
+<p>
+  Crear una función <InlineCodeBlock code="mostrarAlumno" lang="js" /> que recibe
+  un alumno y <em>muestra</em> su información de la siguiente manera en consola:
+</p>
+<CodeBlock
+  lang="txt"
+  code={`DNI: 46.345.678
+Nombre y apellido: Juan Gomez
+Curso: 4°A
+Nota: 8`}
+/>
+
+<h3>Ejercicio 4</h3>
+<p>
+  Utilizando la función <InlineCodeBlock code="capitalizar" lang="js" />,
+  capitalizar el nombre y el apellido de todos los alumnos en el array.
+</p>
+
+<h3>Ejercicio 5</h3>
+<p>
+  Utilizando la función <InlineCodeBlock code="mostrarAlumno" lang="js" />,
+  mostrar a todos los alumnos del array.
+</p>
+
+<h3>Ejercicio 6</h3>
+<ul>
+  <li>Mostrar únicamente los alumnos aprobados.</li>
+  <li>Mostrar únicamente los alumnos de 4to año.</li>
+  <li>Mostrar únicamente los alumnos de algún curso con letra "B".</li>
+</ul>

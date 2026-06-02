@@ -1,5 +1,6 @@
 import type { ClassActivity, MarkedActivity, RedoActivity } from "../types";
 import { backendURL } from "./shared";
+import { authFetch } from "./authToken";
 
 export type Subject = {
   name: string;
@@ -11,15 +12,33 @@ export type Subject = {
   template: string;
 };
 
-type Student = {
+export type Course = {
+  id: number;
+  name: string;
+  specialty: string;
+  year: number;
+};
+
+export type CourseEnrollment = {
+  courseId: number;
+  course: string;
+  year: number;
+};
+
+type StudentSubject = {
+  subject: string;
+  id_subject: string;
+  id_course: number;
+};
+
+export type Student = {
   id: string;
   name: string;
   surname: string;
   dni: string;
   email: string;
-  year: number;
-  course: string;
-  subjects: string[];
+  courses: CourseEnrollment[];
+  subjects: StudentSubject[];
 };
 
 export async function fetchSubjects() {
@@ -38,9 +57,7 @@ export async function fetchSubjects() {
 
 export async function fetchStudents() {
   try {
-    const response = await fetch(`${backendURL}/students`, {
-      credentials: "include",
-    });
+    const response = await authFetch(`${backendURL}/students`);
     if (!response.ok) {
       throw new Error(`Error fetching students: ${response.statusText}`);
     }
@@ -71,9 +88,8 @@ type RevisionRequest = {
 export async function fetchRevisionsByTeacher(teacherId: string, year: number) {
   // For now, stuck at 1
   try {
-    const response = await fetch(
+    const response = await authFetch(
       `${backendURL}/revisionRequests/teacher/${year}/${teacherId}`,
-      { credentials: "include" },
     );
     if (!response.ok) {
       throw new Error(
@@ -100,12 +116,11 @@ export async function fetchRevisionsByTeacher(teacherId: string, year: number) {
 
 export async function toggleRevisionReviewed(id: string, reviewed: boolean) {
   try {
-    const response = await fetch(
+    const response = await authFetch(
       `${backendURL}/revisionRequests/${id}/reviewed`,
       {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        credentials: "include",
         body: JSON.stringify({ reviewed }),
       },
     );
@@ -123,9 +138,9 @@ export async function toggleRevisionReviewed(id: string, reviewed: boolean) {
 
 export async function fetchTeacherSubjects(teacherId: string) {
   try {
-    const response = await fetch(`${backendURL}/subjects/teacher/${teacherId}`, {
-      credentials: "include",
-    });
+    const response = await authFetch(
+      `${backendURL}/subjects/teacher/${teacherId}`,
+    );
     if (!response.ok) {
       throw new Error(
         `Error fetching teacher subjects: ${response.statusText}`,
@@ -153,6 +168,107 @@ type SubjectMarks = {
   criteria: { proportion: number; specialActivities: string[] };
 };
 
+export async function fetchCourses(): Promise<Course[]> {
+  try {
+    const response = await authFetch(`${backendURL}/courses`);
+    if (!response.ok) {
+      throw new Error(`Error fetching courses: ${response.statusText}`);
+    }
+    return (await response.json()) as Course[];
+  } catch (error) {
+    console.error("Failed to fetch courses:", error);
+    return [];
+  }
+}
+
+export async function updateStudent(
+  studentId: string,
+  data: Partial<{ name: string; surname: string; email: string; dni: string }>,
+): Promise<Student | null> {
+  try {
+    const response = await authFetch(`${backendURL}/students/${studentId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) {
+      throw new Error(`Error updating student: ${response.statusText}`);
+    }
+    return (await response.json()) as Student;
+  } catch (error) {
+    console.error("Failed to update student:", error);
+    return null;
+  }
+}
+
+export async function enrollStudentInCourse(
+  studentId: string,
+  courseId: number,
+): Promise<CourseEnrollment | null> {
+  try {
+    const response = await authFetch(
+      `${backendURL}/students/${studentId}/course`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ courseId }),
+      },
+    );
+    if (!response.ok) {
+      throw new Error(`Error enrolling student in course: ${response.statusText}`);
+    }
+    return (await response.json()) as CourseEnrollment;
+  } catch (error) {
+    console.error("Failed to enroll student in course:", error);
+    return null;
+  }
+}
+
+export async function moveStudentCourse(
+  studentId: string,
+  oldCourseId: number,
+  newCourseId: number,
+): Promise<CourseEnrollment | null> {
+  try {
+    const response = await authFetch(
+      `${backendURL}/students/${studentId}/course`,
+      {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ oldCourseId, newCourseId }),
+      },
+    );
+    if (!response.ok) {
+      throw new Error(`Error moving student course: ${response.statusText}`);
+    }
+    return (await response.json()) as CourseEnrollment;
+  } catch (error) {
+    console.error("Failed to move student course:", error);
+    return null;
+  }
+}
+
+export async function removeStudentFromCourse(
+  studentId: string,
+  courseId: number,
+): Promise<boolean> {
+  try {
+    const response = await authFetch(
+      `${backendURL}/students/${studentId}/course/${courseId}`,
+      {
+        method: "DELETE",
+      },
+    );
+    if (!response.ok) {
+      throw new Error(`Error removing student from course: ${response.statusText}`);
+    }
+    return true;
+  } catch (error) {
+    console.error("Failed to remove student from course:", error);
+    return false;
+  }
+}
+
 export async function fetchSubjectMarks(
   subject: string,
   year: number,
@@ -161,9 +277,8 @@ export async function fetchSubjectMarks(
 ) {
   try {
     // "/marks/:subject/:course/:year"
-    const response = await fetch(
+    const response = await authFetch(
       `${backendURL}/marks/${subject}/${course}/${year}${dataSheetId ? `?dataSheetId=${encodeURIComponent(dataSheetId)}` : ""}`,
-      { credentials: "include" },
     );
     if (!response.ok) {
       throw new Error(`Error fetching subject marks: ${response.statusText}`);

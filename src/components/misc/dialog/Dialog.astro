@@ -1,0 +1,21 @@
+---
+interface Props {
+  xRef: string;
+  className?: string;
+}
+
+const { xRef, className = "" } = Astro.props;
+---
+
+<dialog
+  class={`m-auto rounded-2xl border-2 border-gray-300 ${className}`}
+  x-ref={xRef}
+>
+  <div class="flex justify-end p-2">
+    <span
+      class="material-symbols-outlined cursor-pointer"
+      @click="$el.closest('dialog').close()">cancel</span
+    >
+  </div>
+  <slot />
+</dialog>
