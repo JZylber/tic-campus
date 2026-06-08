@@ -1,0 +1,424 @@
+---
+import CodeBlock from "../../../../../components/articles/code-block/CodeBlock.astro";
+import InlineCodeBlock from "../../../../../components/articles/code-block/InlineCodeBlock.astro";
+
+export const partial = true;
+---
+
+<h2>Consigna</h2>
+<p>
+  Se pide <strong>por favor</strong> leer la consigna completa antes de empezar
+  a programar. Las preguntas que estén respondidas en la consigna no serán
+  respondidas en persona.
+</p>
+
+<h2>Objetivo</h2>
+<p>
+  El objetivo de este trabajo práctico es que puedas aplicar los conocimientos
+  adquiridos a lo largo de toda la materia para crear una API que permita la
+  gestión de una biblioteca de música (SpoTICfy).
+</p>
+
+<h2>Rúbricas</h2>
+<p>
+  Como vimos en la materia, una API es una interfaz que permite la comunicación
+  entre distintos sistemas. Por esta razón, es sumamente importante que la API
+  resultante de la resolución de este trabajo práctico cumpla los requerimientos
+  que plantea el mismo.
+</p>
+<p>
+  Prestar especial atención a que, por ejemplo, si se pide que una ruta devuelva
+  un recurso específico, la misma debe devolver el recurso correcto, no una
+  lista que contenga al recurso.
+</p>
+
+<h2>Grupos</h2>
+<p>
+  Este trabajo práctico se realizará en grupos de <strong>mínimo</strong> 2
+  personas y <strong>máximo</strong> 3 personas.
+</p>
+
+<h2>Instalación</h2>
+<p>
+  Para poder hacer que el proyecto funcione, es necesario que instales las
+  dependencias del mismo. Para ello, ejecuta el siguiente comando:
+</p>
+<CodeBlock lang="bash" code={`npm install`} />
+
+<h2>Ejecución</h2>
+<p>Para ejecutar el proyecto, ejecuta el siguiente comando:</p>
+<CodeBlock lang="bash" code={`npm start`} />
+<p>
+  O bien, si querés ejecutar el proyecto en modo desarrollo, ejecuta el
+  siguiente comando (esto hace uso de <InlineCodeBlock
+    code="nodemon"
+    lang="bash"
+  />, la herramienta que permite tener el servidor corriendo y que se reinicie
+  automáticamente cada vez que se modifica un archivo):
+</p>
+<CodeBlock lang="bash" code={`npm run dev`} />
+
+<h2>Estructura del proyecto</h2>
+<p>El proyecto está compuesto por los siguientes archivos:</p>
+<ul>
+  <li>
+    <InlineCodeBlock code="package.json" lang="bash" />: Contiene la información
+    del proyecto y las dependencias que se deben instalar.
+  </li>
+  <li>
+    <InlineCodeBlock code="index.js" lang="js" />: Es el archivo principal del
+    proyecto. En él se configura el servidor y se definen las rutas de la API
+    (hay que completarlo).
+  </li>
+  <li>
+    <InlineCodeBlock code="db.js" lang="js" />: Contiene la lógica para
+    conectarse a la base de datos (hay que completarlo).
+  </li>
+  <li>
+    <InlineCodeBlock code="/controllers" lang="bash" />: Contiene los
+    controladores de la API para cada tabla (hay que completarlos).
+  </li>
+  <li>
+    <InlineCodeBlock code="spoticfy.sql" lang="sql" />: Contiene el archivo SQL
+    para importar la base de datos con phpMyAdmin.
+  </li>
+  <li>
+    <InlineCodeBlock code="README.md" lang="bash" />: El archivo que estás
+    leyendo.
+  </li>
+  <li>
+    <InlineCodeBlock code=".REST" lang="bash" />: Contiene los requests de la
+    API para poder probarla con la extensión de VSCode REST Client.
+  </li>
+</ul>
+<p>
+  <strong>Importante:</strong> No es necesario que agregues archivos adicionales
+  al proyecto. Todo lo que se pide se puede resolver con los archivos que ya están
+  en el proyecto. Simplemente tenés que completar los archivos que ya están.
+</p>
+
+<h2>Pruebas</h2>
+<p>
+  Podés probar la API desde Insomnia. Es importante que, sin importar la
+  herramienta que uses, <strong>pruebes la API</strong>, y guardes las pruebas
+  que hagas.
+</p>
+
+<h2>Base de datos</h2>
+<p>
+  La base de datos que se brinda para este trabajo práctico está compuesta por
+  las siguientes tablas:
+</p>
+<ul>
+  <li>
+    <InlineCodeBlock code="artistas" lang="sql" />: Contiene los artistas de la
+    biblioteca.
+  </li>
+  <li>
+    <InlineCodeBlock code="albumes" lang="sql" />: Contiene los álbumes de la
+    biblioteca.
+  </li>
+  <li>
+    <InlineCodeBlock code="canciones" lang="sql" />: Contiene las canciones de
+    la biblioteca.
+  </li>
+</ul>
+<p>Y tienen la siguiente estructura:</p>
+
+<h3>DB - Artistas</h3>
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Campo</th>
+      <th>Tipo</th>
+      <th>Descripción</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><InlineCodeBlock code="id" lang="sql" /></td>
+      <td><InlineCodeBlock code="int" lang="sql" /></td>
+      <td>Identificador único del artista.</td>
+    </tr>
+    <tr>
+      <td><InlineCodeBlock code="nombre" lang="sql" /></td>
+      <td><InlineCodeBlock code="varchar(50)" lang="sql" /></td>
+      <td>Nombre del artista.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>DB - Álbumes</h3>
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Campo</th>
+      <th>Tipo</th>
+      <th>Descripción</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><InlineCodeBlock code="id" lang="sql" /></td>
+      <td><InlineCodeBlock code="int" lang="sql" /></td>
+      <td>Identificador único del álbum.</td>
+    </tr>
+    <tr>
+      <td><InlineCodeBlock code="nombre" lang="sql" /></td>
+      <td><InlineCodeBlock code="varchar(50)" lang="sql" /></td>
+      <td>Nombre del álbum.</td>
+    </tr>
+    <tr>
+      <td><InlineCodeBlock code="artista" lang="sql" /></td>
+      <td><InlineCodeBlock code="int" lang="sql" /></td>
+      <td>Identificador del artista.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>DB - Canciones</h3>
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Campo</th>
+      <th>Tipo</th>
+      <th>Descripción</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><InlineCodeBlock code="id" lang="sql" /></td>
+      <td><InlineCodeBlock code="int" lang="sql" /></td>
+      <td>Identificador único de la canción.</td>
+    </tr>
+    <tr>
+      <td><InlineCodeBlock code="nombre" lang="sql" /></td>
+      <td><InlineCodeBlock code="varchar(50)" lang="sql" /></td>
+      <td>Nombre de la canción.</td>
+    </tr>
+    <tr>
+      <td><InlineCodeBlock code="album" lang="sql" /></td>
+      <td><InlineCodeBlock code="int" lang="sql" /></td>
+      <td>Identificador del álbum.</td>
+    </tr>
+    <tr>
+      <td><InlineCodeBlock code="duracion" lang="sql" /></td>
+      <td><InlineCodeBlock code="int" lang="sql" /></td>
+      <td>Duración de la canción en segundos.</td>
+    </tr>
+    <tr>
+      <td><InlineCodeBlock code="reproducciones" lang="sql" /></td>
+      <td><InlineCodeBlock code="int" lang="sql" /></td>
+      <td>Cantidad de reproducciones de la canción.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>API</h2>
+<p>
+  <strong>Importante</strong>: los filtros de las requests de la API se deben
+  realizar con <InlineCodeBlock code="SQL" lang="sql" /> y no con <InlineCodeBlock
+    code="JavaScript"
+    lang="js"
+  />. Es decir, si se pide que se devuelvan los artistas cuyo nombre empiece con
+  una letra determinada, no se debe hacer con un <InlineCodeBlock
+    code="filter"
+    lang="js"
+  /> en JavaScript sino utilizando la condición correspondiente en la consulta de
+  SQL. Este es un punto importante a tener en cuenta para la evaluación y es motivo
+  de descalificación del punto entero si no se cumple.
+</p>
+<p>La API debe tener las siguientes rutas:</p>
+
+<h3>API - Artistas</h3>
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Método</th>
+      <th>Ruta</th>
+      <th>Descripción</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><InlineCodeBlock code="GET" lang="bash" /></td>
+      <td><InlineCodeBlock code="/artistas" lang="bash" /></td>
+      <td>Devuelve todos los artistas.</td>
+    </tr>
+    <tr>
+      <td><InlineCodeBlock code="GET" lang="bash" /></td>
+      <td><InlineCodeBlock code="/artistas/:id" lang="bash" /></td>
+      <td>Devuelve el artista con el identificador <InlineCodeBlock code="id" lang="bash" />.</td>
+    </tr>
+    <tr>
+      <td><InlineCodeBlock code="POST" lang="bash" /></td>
+      <td><InlineCodeBlock code="/artistas" lang="bash" /></td>
+      <td>Crea un nuevo artista.</td>
+    </tr>
+    <tr>
+      <td><InlineCodeBlock code="PUT" lang="bash" /></td>
+      <td><InlineCodeBlock code="/artistas/:id" lang="bash" /></td>
+      <td>Modifica el artista con el identificador <InlineCodeBlock code="id" lang="bash" />.</td>
+    </tr>
+    <tr>
+      <td><InlineCodeBlock code="DEL" lang="bash" /></td>
+      <td><InlineCodeBlock code="/artistas/:id" lang="bash" /></td>
+      <td>Elimina el artista con el identificador <InlineCodeBlock code="id" lang="bash" />.</td>
+    </tr>
+    <tr>
+      <td><InlineCodeBlock code="GET" lang="bash" /></td>
+      <td><InlineCodeBlock code="/artistas/:id/albumes" lang="bash" /></td>
+      <td>Devuelve todos los álbumes del artista con el identificador <InlineCodeBlock code="id" lang="bash" />.</td>
+    </tr>
+    <tr>
+      <td><InlineCodeBlock code="GET" lang="bash" /></td>
+      <td><InlineCodeBlock code="/artistas/:id/canciones" lang="bash" /></td>
+      <td>Devuelve todas las canciones del artista con el identificador <InlineCodeBlock code="id" lang="bash" />.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>API - Álbumes</h3>
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Método</th>
+      <th>Ruta</th>
+      <th>Descripción</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><InlineCodeBlock code="GET" lang="bash" /></td>
+      <td><InlineCodeBlock code="/albumes" lang="bash" /></td>
+      <td>Devuelve todos los álbumes.</td>
+    </tr>
+    <tr>
+      <td><InlineCodeBlock code="GET" lang="bash" /></td>
+      <td><InlineCodeBlock code="/albumes/:id" lang="bash" /></td>
+      <td>Devuelve el álbum con el identificador <InlineCodeBlock code="id" lang="bash" />.</td>
+    </tr>
+    <tr>
+      <td><InlineCodeBlock code="POST" lang="bash" /></td>
+      <td><InlineCodeBlock code="/albumes" lang="bash" /></td>
+      <td>Crea un nuevo álbum.</td>
+    </tr>
+    <tr>
+      <td><InlineCodeBlock code="PUT" lang="bash" /></td>
+      <td><InlineCodeBlock code="/albumes/:id" lang="bash" /></td>
+      <td>Modifica el álbum con el identificador <InlineCodeBlock code="id" lang="bash" />.</td>
+    </tr>
+    <tr>
+      <td><InlineCodeBlock code="DEL" lang="bash" /></td>
+      <td><InlineCodeBlock code="/albumes/:id" lang="bash" /></td>
+      <td>Elimina el álbum con el identificador <InlineCodeBlock code="id" lang="bash" />.</td>
+    </tr>
+    <tr>
+      <td><InlineCodeBlock code="GET" lang="bash" /></td>
+      <td><InlineCodeBlock code="/albumes/:id/canciones" lang="bash" /></td>
+      <td>Devuelve todas las canciones del álbum con el identificador <InlineCodeBlock code="id" lang="bash" />.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>API - Canciones</h3>
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Método</th>
+      <th>Ruta</th>
+      <th>Descripción</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><InlineCodeBlock code="GET" lang="bash" /></td>
+      <td><InlineCodeBlock code="/canciones" lang="bash" /></td>
+      <td>Devuelve todas las canciones.</td>
+    </tr>
+    <tr>
+      <td><InlineCodeBlock code="GET" lang="bash" /></td>
+      <td><InlineCodeBlock code="/canciones/:id" lang="bash" /></td>
+      <td>Devuelve la canción con el identificador <InlineCodeBlock code="id" lang="bash" />.</td>
+    </tr>
+    <tr>
+      <td><InlineCodeBlock code="POST" lang="bash" /></td>
+      <td><InlineCodeBlock code="/canciones" lang="bash" /></td>
+      <td>Crea una nueva canción.</td>
+    </tr>
+    <tr>
+      <td><InlineCodeBlock code="PUT" lang="bash" /></td>
+      <td><InlineCodeBlock code="/canciones/:id" lang="bash" /></td>
+      <td>Modifica la canción con el identificador <InlineCodeBlock code="id" lang="bash" />.</td>
+    </tr>
+    <tr>
+      <td><InlineCodeBlock code="DEL" lang="bash" /></td>
+      <td><InlineCodeBlock code="/canciones/:id" lang="bash" /></td>
+      <td>Elimina la canción con el identificador <InlineCodeBlock code="id" lang="bash" />.</td>
+    </tr>
+    <tr>
+      <td><InlineCodeBlock code="PUT" lang="bash" /></td>
+      <td><InlineCodeBlock code="/canciones/:id/reproducir" lang="bash" /></td>
+      <td>Incrementa en 1 la cantidad de reproducciones de la canción con el identificador <InlineCodeBlock code="id" lang="bash" />.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Ejercicios</h2>
+
+<h3>Ejercicio 0</h3>
+<ul>
+  <li>
+    Crear la base de datos <InlineCodeBlock code="spoticfy" lang="sql" /> en <strong
+      >Neon</strong
+    > e importar el archivo <InlineCodeBlock code="spoticfy.sql" lang="bash" /> que
+    se encuentra en la raíz del proyecto.
+  </li>
+  <li>
+    Instalar las dependencias del proyecto con <InlineCodeBlock
+      code="npm install"
+      lang="bash"
+    />.
+  </li>
+  <li>
+    Completar el archivo <InlineCodeBlock code="db.js" lang="js" /> con la lógica
+    necesaria para conectarse a la base de datos.
+  </li>
+  <li>
+    Probar que la API funciona, ejecutando el proyecto con <InlineCodeBlock
+      code="npm start"
+      lang="bash"
+    /> o <InlineCodeBlock code="npm run dev" lang="bash" /> y probando con una request
+    de tipo <InlineCodeBlock code="GET" lang="bash" /> a la ruta <InlineCodeBlock
+      code="/"
+      lang="bash"
+    />.
+  </li>
+</ul>
+
+<h3>Ejercicio 1</h3>
+<p>
+  Para saber que conocen bien la estructura de la base de datos, deberán
+  realizar un DER (Diagrama de Entidad-Relación) y un DLR (Diagrama
+  Lógico-Relacional) de la misma. Deberán subir ambos diagramas en formato de
+  imagen en la carpeta <InlineCodeBlock code="diagramas" lang="bash" />.
+</p>
+
+<h3>Ejercicio 2</h3>
+<p>
+  Completar todos los archivos que sean necesarios para que la API funcione
+  correctamente. Es decir, completar los controladores de cada tabla y el
+  archivo <InlineCodeBlock code="index.js" lang="js" /> con las rutas de la API.
+</p>
+<p>
+  Para cada endpoint, debe haber <strong>al menos</strong> un test de la ruta en
+  Insomnia. Cuando terminen todos los endpoints, exportar la colección de tests
+  en <InlineCodeBlock code="pruebas" lang="bash" />.
+</p>
+
+<h2>Entrega y defensa</h2>
+<p>
+  Para entregar alcanza con pushear el repositorio. Luego se va a tomar un
+  coloquio a cada uno de los integrantes donde se espera que sepan defender el
+  trabajo realizado.
+</p>
