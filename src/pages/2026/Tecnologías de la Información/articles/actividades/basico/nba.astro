@@ -1,0 +1,268 @@
+---
+import CodeBlock from "../../../../../../components/articles/code-block/CodeBlock.astro";
+import InlineCodeBlock from "../../../../../../components/articles/code-block/InlineCodeBlock.astro";
+
+export const partial = true;
+---
+
+<h2>Consigna</h2>
+<p>
+  Armá tu equipo ideal de la NBA, filtrando jugadores por posición.
+</p>
+<p>
+  Tenés acceso a una lista de todos los jugadores de la NBA a través de las
+  funciones de <InlineCodeBlock code="src/lib/jugadores.ts" lang="plaintext" />:
+</p>
+<ul>
+  <li>
+    <InlineCodeBlock code="cargarJugadores()" lang="typescript" /> — devuelve un
+    array con los IDs (números identificatorios) de todos los jugadores activos.
+  </li>
+  <li>
+    <InlineCodeBlock code="obtenerDato(id, caracteristica)" lang="typescript" /> —
+    dado un ID y el nombre de un campo (<InlineCodeBlock
+      code='"nombre"'
+      lang="plaintext"
+    />, <InlineCodeBlock code='"posicion"' lang="plaintext" />, <InlineCodeBlock
+      code='"pts"'
+      lang="plaintext"
+    />, etc.), devuelve su valor como string.
+  </li>
+  <li>
+    <InlineCodeBlock code="obtenerJugadoresPorIds(ids)" lang="typescript" /> — dado
+    un array de IDs, devuelve los datos completos de esos jugadores.
+  </li>
+</ul>
+<p>
+  Implementá las siguientes funciones en <InlineCodeBlock
+    code="src/index.ts"
+    lang="plaintext"
+  />:
+</p>
+<p>
+  <strong
+    ><InlineCodeBlock code="estaEnRoster(roster, id)" lang="typescript" /></strong
+  > — Recibe un array de IDs (el roster actual) y un ID. Devuelve <InlineCodeBlock
+    code="true"
+    lang="typescript"
+  /> si el ID ya está en el roster, <InlineCodeBlock
+    code="false"
+    lang="typescript"
+  /> si no.
+</p>
+<p>
+  <strong
+    ><InlineCodeBlock code="agregarAlRoster(roster, id)" lang="typescript" /></strong
+  > — Recibe el roster actual y un ID. Devuelve un <strong>nuevo array</strong> con
+  el ID agregado al final. No debe modificar el array original.
+</p>
+<p>
+  <strong
+    ><InlineCodeBlock code="quitarDelRoster(roster, id)" lang="typescript" /></strong
+  > — Recibe el roster actual y un ID. Devuelve un <strong>nuevo array</strong> sin
+  ese ID. No debe modificar el array original.
+</p>
+<p>
+  La interfaz ya está implementada: los botones "+" y "×" gestionan el roster
+  (máximo 5 jugadores). En la consigna base, al cambiar de tab se muestran
+  todos los jugadores sin filtrar por posición.
+</p>
+<h3>Ejemplo</h3>
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Acción</th>
+      <th>Resultado</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>El usuario hace click en "+" sobre LeBron James</td>
+      <td>LeBron aparece en el panel de roster</td>
+    </tr>
+    <tr>
+      <td>El usuario hace click en "×" sobre LeBron James</td>
+      <td>LeBron se elimina del roster</td>
+    </tr>
+    <tr>
+      <td>El roster ya tiene 5 jugadores y el usuario intenta agregar otro</td>
+      <td>El roster no cambia</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>¿Qué hay que editar?</h2>
+<p>
+  Solo <InlineCodeBlock code="src/index.ts" lang="plaintext" /> y <InlineCodeBlock
+    code="src/manija.ts"
+    lang="plaintext"
+  />. Los archivos en <InlineCodeBlock code="src/lib/" lang="plaintext" /> ya están
+  completos y no hay que tocarlos.
+</p>
+
+<h2>Primeros pasos</h2>
+<CodeBlock lang="bash" code="npm install" />
+
+<h2>Cómo correr el programa</h2>
+<p>
+  Este ejercicio usa una interfaz gráfica. A diferencia de los ejercicios
+  anteriores donde <InlineCodeBlock code="npm run start" lang="bash" /> mostraba
+  resultados en la terminal, acá <strong
+    >abre automáticamente una página en el navegador</strong
+  >. Esa página es la interfaz con la que interactuás con el programa.
+</p>
+<CodeBlock lang="bash" code="npm run start" />
+<p>Con hot reload:</p>
+<CodeBlock lang="bash" code="npm run dev" />
+
+<h2>Tests</h2>
+<CodeBlock
+  lang="bash"
+  code={`npm run test-base    # consigna base
+npm run test-manija  # consigna manija
+npm test             # todos los tests`}
+/>
+
+<h2>Consigna manija</h2>
+<p>
+  Implementá las siguientes funciones en <InlineCodeBlock
+    code="src/manija.ts"
+    lang="plaintext"
+  />:
+</p>
+<p>
+  <strong
+    ><InlineCodeBlock
+      code="filtrarPorPosicion(jugadores, posicion)"
+      lang="typescript"
+    /></strong
+  > — Recibe un array de IDs y una posición (<InlineCodeBlock
+    code='"G"'
+    lang="plaintext"
+  />, <InlineCodeBlock code='"F"' lang="plaintext" />, <InlineCodeBlock
+    code='"C"'
+    lang="plaintext"
+  /> o <InlineCodeBlock code='""' lang="plaintext" />). Devuelve un nuevo array
+  con solo los IDs cuya posición coincide. Si <InlineCodeBlock
+    code='posicion'
+    lang="typescript"
+  /> es <InlineCodeBlock code='""' lang="plaintext" />, devuelve todos los IDs sin
+  filtrar.
+</p>
+<p>
+  <strong
+    ><InlineCodeBlock
+      code="obtenerMejorJugador(ids, caracteristica)"
+      lang="typescript"
+    /></strong
+  > — Recibe un array de IDs y el nombre de la estadística a comparar (<InlineCodeBlock
+    code='"pts"'
+    lang="plaintext"
+  />, <InlineCodeBlock code='"reb"' lang="plaintext" />, <InlineCodeBlock
+    code='"ast"'
+    lang="plaintext"
+  />, etc.). Devuelve el ID del jugador con el valor más alto en esa
+  estadística. Si <InlineCodeBlock code="ids" lang="typescript" /> está vacío, devuelve
+  <InlineCodeBlock code="-1" lang="typescript" />.
+</p>
+<p>
+  Con estas funciones, los tabs de posición filtran la lista por posición, y el
+  botón "Armar mejor equipo" selecciona automáticamente al mejor base (por <InlineCodeBlock
+    code='"pts"'
+    lang="plaintext"
+  />), al mejor alero (por <InlineCodeBlock code='"reb"' lang="plaintext" />) y
+  al mejor pivote (por <InlineCodeBlock code='"reb"' lang="plaintext" />).
+</p>
+<h3>Ejemplo</h3>
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Llamada</th>
+      <th>Resultado</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td
+        ><InlineCodeBlock
+          code="filtrarPorPosicion([1, 2, 3], 'G')"
+          lang="typescript"
+        /></td
+      >
+      <td>IDs de los jugadores con posición <InlineCodeBlock code='"G"' lang="plaintext" /></td>
+    </tr>
+    <tr>
+      <td
+        ><InlineCodeBlock
+          code="filtrarPorPosicion([1, 2, 3], '')"
+          lang="typescript"
+        /></td
+      >
+      <td
+        ><InlineCodeBlock code="[1, 2, 3]" lang="typescript" /> (sin filtrar)</td
+      >
+    </tr>
+    <tr>
+      <td
+        ><InlineCodeBlock
+          code="obtenerMejorJugador([1, 2, 3], 'pts')"
+          lang="typescript"
+        /></td
+      >
+      <td>ID del jugador con más puntos</td>
+    </tr>
+    <tr>
+      <td
+        ><InlineCodeBlock
+          code="obtenerMejorJugador([], 'pts')"
+          lang="typescript"
+        /></td
+      >
+      <td><InlineCodeBlock code="-1" lang="typescript" /></td>
+    </tr>
+  </tbody>
+</table>
+<p>Para la manija:</p>
+<CodeBlock
+  lang="bash"
+  code={`npm run start-manija # ejecuta src/manija.ts
+npm run dev-manija   # ejecuta src/manija.ts con hot reload`}
+/>
+
+<h2>Debugger</h2>
+<p>
+  El proyecto tiene dos configuraciones de debug listas en VS Code (panel "Run
+  and Debug" o <InlineCodeBlock code="F5" lang="plaintext" />):
+</p>
+<ul>
+  <li>
+    <strong>Debuggear Consigna Base</strong> — lanza <InlineCodeBlock
+      code="src/index.ts"
+      lang="plaintext"
+    />
+  </li>
+  <li>
+    <strong>Debuggear Consigna Manija</strong> — lanza <InlineCodeBlock
+      code="src/manija.ts"
+      lang="plaintext"
+    />
+  </li>
+</ul>
+<p>
+  <strong>IMPORTANTE:</strong> Este ejercicio usa una interfaz gráfica bastante
+  compleja, que llama a tus funciones. Para probar errores, usen el debugger o
+  metan <InlineCodeBlock code="console.log" lang="typescript" />s. El debugger
+  saltea automáticamente el código de <InlineCodeBlock
+    code="src/lib/"
+    lang="plaintext"
+  /> y <InlineCodeBlock code="node_modules" lang="plaintext" />, así los breakpoints
+  y el step-into solo caen en el código que escribiste vos.
+</p>
+<p>
+  <strong>Tip:</strong> no uses F10 (Step Over) sobre <InlineCodeBlock
+    code="enviarAlFrontend"
+    lang="typescript"
+  /> — como es una operación asíncrona, el debugger va a terminar en código interno
+  de Node. En cambio, poné un breakpoint en la línea siguiente y presioná F5 (Continue)
+  para saltar hasta ahí.
+</p>
