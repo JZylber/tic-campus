@@ -1,0 +1,185 @@
+---
+import CodeBlock from "../../../../../components/articles/code-block/CodeBlock.astro";
+import InlineCodeBlock from "../../../../../components/articles/code-block/InlineCodeBlock.astro";
+
+export const partial = true;
+---
+
+<h2>Introducción</h2>
+<p>
+  El objetivo de este trabajo es realizar un análisis exploratorio de un dataset
+  de Spotify. El mismo contiene el historial de reproducciones de un usuario de
+  Spotify. El dataset se encuentra en el archivo <InlineCodeBlock
+    code="StreamingHistory_Extended.csv"
+    lang="plaintext"
+  />.
+</p>
+<p>
+  Para realizar el análisis, se debe utilizar Python y las herramientas vistas
+  en clase. En particular <strong>Pandas</strong> y <strong>Matplotlib</strong>.
+  Opcionalmente se pueden utilizar otras herramientas como Seaborn.
+</p>
+<p>
+  Se va a evaluar la calidad del análisis realizado, la presentación de los
+  resultados y la claridad de las conclusiones obtenidas. Además se tendrá en
+  cuenta la calidad y prolijidad del código utilizado: se espera que las
+  variables sean tipadas, que se utilicen nombres de variables descriptivos y
+  que el código esté comentado.
+</p>
+
+<h2>Consigna</h2>
+<p>El análisis tiene que incluir los siguientes puntos:</p>
+<ol>
+  <li>
+    ¿Qué información contiene el dataset? Describir las columnas y los tipos de
+    datos. <em
+      >Pista: ¿Son todas las columnas necesarias para el análisis? ¿Son todos
+      los registros del mismo tipo?</em
+    >
+  </li>
+  <li>
+    ¿A partir de qué fecha se registraron las reproducciones? ¿Hasta qué fecha?
+  </li>
+  <li>¿Cuántas canciones diferentes se escucharon en total?</li>
+  <li>
+    ¿Cuánto es la duración total de las reproducciones de canciones registradas?
+    <em
+      >Pista: ¿Alguna columna del dataset indica la duración de la
+      reproducción?</em
+    >
+  </li>
+  <li>¿Cuál es el artista más escuchado por tiempo total de reproducción?</li>
+  <li>¿Cuál es la canción más escuchada por tiempo total de reproducción?</li>
+  <li>
+    Del artista más escuchado (por tiempo reproducido), ¿cuál es la canción más
+    escuchada?
+  </li>
+  <li>
+    Determinar el top 10 de artistas más escuchados. Elegir un tipo de gráfico
+    adecuado para visualizar los resultados.
+  </li>
+  <li>
+    Determinar el top 10 de canciones más escuchadas. Elegir un tipo de gráfico
+    adecuado para visualizar los resultados.
+  </li>
+  <li>
+    Además se deben plantear al menos <strong>3 análisis adicionales</strong>.
+    Responderlas utilizando el dataset y acompañarlas con gráficos adecuados.
+  </li>
+</ol>
+
+<h2>Algunas consideraciones</h2>
+<ul>
+  <li>
+    Cada registro corresponde a una reproducción, y contiene un campo <InlineCodeBlock
+      code="ms_played"
+      lang="plaintext"
+    /> que indica la duración de la reproducción en milisegundos. Por lo tanto,
+    se debe tener en cuenta este campo para determinar la canción más escuchada.
+  </li>
+  <li>
+    Al explorar el dataset, se deben "limpiar" los datos antes de visualizar los
+    DataFrames. ¿Todos los registros son de canciones? ¿Hay valores nulos?
+  </li>
+  <li>
+    Para responder a las preguntas, se deben generar visualizaciones que
+    permitan entender mejor los datos. Por ejemplo, se puede generar un gráfico
+    de barras para visualizar el artista más escuchado. Investigar la
+    documentación de Matplotlib para generar distintos tipos de gráficos.
+  </li>
+  <li>
+    Al determinar la canción más escuchada, tener en cuenta que una misma
+    canción puede aparecer varias veces en el dataset. Ojo: hay nombres de
+    canciones repetidos en canciones distintas. Pensar en cómo resolver esto.
+  </li>
+  <li>
+    Se pueden usar datos agrupados por mes, día de la semana, etc. Investigar la
+    documentación de Pandas para convertir las fechas al tipo de dato <InlineCodeBlock
+      code="datetime"
+      lang="python"
+    /> y cómo extraer el mes, día de la semana, etc. Recomendación: crear nuevas
+    columnas en el DataFrame con esta información.
+  </li>
+</ul>
+
+<h2>Bonus</h2>
+<ul>
+  <li>¿Cuál es el día de la semana en el que más se escucha música? ¿Y el horario del día?</li>
+  <li>¿Cuál es el mes en el que más se escucha música?</li>
+  <li>¿Cuál es el artista que más se escucha en cada mes?</li>
+  <li>¿Cuál es la canción más veces salteada?</li>
+</ul>
+
+<h2>Bonus 2</h2>
+<p>
+  Utilizando la API de Spotify a través de la librería <InlineCodeBlock
+    code="spotipy"
+    lang="python"
+  />, obtener información adicional de las canciones y/o artistas. Por ejemplo,
+  se puede obtener el género de la canción, una sample de 30 segundos, o imagen
+  de portada para usar en las visualizaciones. Además, se puede solicitar por
+  cada canción un set de <InlineCodeBlock
+    code="audio_features"
+    lang="plaintext"
+  /> que incluye información como la <em>energía</em>, el <em>tempo</em> y la <em
+    >danceability</em
+  > de la canción, entre otros.
+</p>
+<p>
+  Sugerencia: no solicitar la información de todas las canciones del dataset, ya
+  que la API tiene un límite de requests por minuto. Solicitar solo de algunas
+  canciones, como por ejemplo las 10 más escuchadas.
+</p>
+<CodeBlock lang="bash" code="pip install spotipy" />
+
+<h2>Entrega</h2>
+<p>
+  El análisis se hace completando el archivo <InlineCodeBlock
+    code="analisis.ipynb"
+    lang="plaintext"
+  />. Debe tener bloques de código pero también bloques de texto sacando
+  conclusiones y explicando lo que se hace.
+</p>
+<p>Todas las celdas deben estar ejecutadas.</p>
+
+<h2>Condiciones de entrega</h2>
+<p>El notebook debe ejecutarse sin errores y debe incluir:</p>
+<ul>
+  <li>Una explicación de los pasos realizados y las conclusiones obtenidas.</li>
+  <li>Las visualizaciones generadas.</li>
+  <li>
+    El código utilizado para responder a las preguntas y para generar las
+    visualizaciones.
+  </li>
+</ul>
+
+<h2>Referencias</h2>
+<ul>
+  <li>
+    <a href="https://pandas.pydata.org/docs/" class="uppercase underline text-sh-blue"
+      >Documentación de Pandas</a
+    >
+  </li>
+  <li>
+    <a
+      href="https://matplotlib.org/stable/contents.html"
+      class="uppercase underline text-sh-blue">Documentación de Matplotlib</a
+    >
+  </li>
+  <li>
+    <a href="https://seaborn.pydata.org/" class="uppercase underline text-sh-blue"
+      >Documentación de Seaborn</a
+    >
+  </li>
+  <li>
+    <a href="https://docs.python.org/3/" class="uppercase underline text-sh-blue"
+      >Documentación de Python 3</a
+    >
+  </li>
+  <li>
+    <a
+      href="https://spotipy.readthedocs.io/en/2.24.0/"
+      class="uppercase underline text-sh-blue">Documentación de spotipy</a
+    >
+  </li>
+</ul>
