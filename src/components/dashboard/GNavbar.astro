@@ -3,6 +3,11 @@ interface Props {
   role: "teacher" | "admin";
 }
 const { role } = Astro.props;
+const switchHref =
+  role === "teacher"
+    ? "/tic-campus/dashboard/admin"
+    : "/tic-campus/dashboard/teacher";
+const switchLabel = role === "teacher" ? "Modo Admin" : "Modo Docente";
 ---
 
 <nav class="w-full bg-gray-50 border-b-2 border-gray-300 flex items-stretch">
@@ -34,16 +39,23 @@ const { role } = Astro.props;
       </a>
     )
   }
-  <a
-    href="/tic-campus"
-    class="ml-auto flex items-center justify-end gap-x-4 pl-4 border-l-2 border-gray-300"
-  >
-    <span
-      class="material-symbols-outlined !text-[30px]"
-      x-text="$store.student.id === -1?'question_mark':'person'"></span>
-    <div class="flex flex-col w-50 text-gray-700 text-[14px] md:text-[16px]">
-      <span x-text="$store.student.name"></span>
-      <span x-text="$store.student.surname"></span>
-    </div>
-  </a>
+  <div class="ml-auto flex items-stretch border-l-2 border-gray-300">
+    <a
+      x-show="$store.currentUser.role === 'ADMIN'"
+      x-cloak
+      href={switchHref}
+      class="flex items-center px-4 bg-sh-purple !text-sh-black hover:bg-sh-light-purple transition-colors font-bold uppercase text-sm"
+    >
+      {switchLabel}
+    </a>
+    <a href="/tic-campus/" class="flex items-center justify-end gap-x-4 px-4">
+      <span
+        class="material-symbols-outlined !text-[30px]"
+        x-text="$store.student.id === -1?'question_mark':'person'"></span>
+      <div class="flex flex-col w-50 text-gray-700 text-[14px] md:text-[16px]">
+        <span x-text="$store.student.name"></span>
+        <span x-text="$store.student.surname"></span>
+      </div>
+    </a>
+  </div>
 </nav>

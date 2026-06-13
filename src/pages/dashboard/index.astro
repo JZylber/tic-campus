@@ -2,6 +2,11 @@
 import Layout from "../../layouts/Layout.astro";
 ---
 
+<script>
+  import { requireTeacherAuth } from "../../scripts/auth";
+  await requireTeacherAuth();
+</script>
+
 <Layout>
   <div class="flex flex-col items-center grow gap-y-4">
     <h1 class="text-[30px] md:text-[36px] font-bold pt-4 pb-2">
@@ -9,7 +14,17 @@ import Layout from "../../layouts/Layout.astro";
     </h1>
     <p><strong>Esta sección es solo para docentes</strong></p>
     <p>Seleccioná tu perfil para ingresar.</p>
-    <div class="flex gap-x-12 justify-center items-center">
+    <div
+      x-show="$store.currentUser.role === null"
+      class="flex gap-x-12 justify-center items-center"
+    >
+      <div class="flex rounded-lg w-60 h-16 justify-center items-center text-[16px] sm:text-[24px] bg-gray-200 animate-pulse"></div>
+      <div class="flex rounded-lg w-60 h-16 justify-center items-center text-[16px] sm:text-[24px] bg-gray-200 animate-pulse"></div>
+    </div>
+    <div
+      x-show="$store.currentUser.role !== null"
+      class="flex gap-x-12 justify-center items-center"
+    >
       <a
         class="flex rounded-lg w-60 h-16 justify-center items-center text-[16px] sm:text-[24px] bg-sh-purple !text-sh-black hover:bg-sh-light-purple hover:shadow transition-colors cursor-pointer"
         href="/tic-campus/dashboard/teacher"
@@ -17,8 +32,12 @@ import Layout from "../../layouts/Layout.astro";
         <span>Docente</span>
       </a>
       <a
-        class="flex rounded-lg w-60 h-16 justify-center items-center text-[16px] sm:text-[24px] bg-sh-purple !text-sh-black hover:bg-sh-light-purple hover:shadow transition-colors cursor-pointer"
-        href="/tic-campus/dashboard/admin"
+        :href="$store.currentUser.role === 'ADMIN' ? '/tic-campus/dashboard/admin' : undefined"
+        :class="$store.currentUser.role === 'ADMIN'
+          ? 'bg-sh-purple !text-sh-black hover:bg-sh-light-purple hover:shadow cursor-pointer'
+          : 'bg-gray-300 !text-gray-500 cursor-not-allowed opacity-60'"
+        :title="$store.currentUser.role !== 'ADMIN' ? 'Sin permisos de administrador' : undefined"
+        class="flex rounded-lg w-60 h-16 justify-center items-center text-[16px] sm:text-[24px] transition-colors"
       >
         <span>Administrador</span>
       </a>
