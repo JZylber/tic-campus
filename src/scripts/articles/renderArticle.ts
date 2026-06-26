@@ -76,12 +76,18 @@ export async function renderArticleInto(
     const source = node.textContent ?? "";
     if (!source.trim()) continue;
     const id = "mermaid-" + Math.random().toString(36).slice(2);
-    const { svg } = await mermaid.render(id, source);
-    node.innerHTML = svg;
-    const svgEl = node.querySelector("svg");
-    if (svgEl) {
-      svgEl.style.display = "block";
-      svgEl.style.height = "auto";
+    try {
+      const { svg } = await mermaid.render(id, source);
+      node.innerHTML = svg;
+      const svgEl = node.querySelector("svg");
+      if (svgEl) {
+        svgEl.style.display = "block";
+        svgEl.style.height = "auto";
+      }
+    } catch (err) {
+      // A single failing diagram shouldn't abort the whole article render;
+      // leave the source visible and keep going.
+      console.error("Mermaid render failed:", err);
     }
   }
 }
