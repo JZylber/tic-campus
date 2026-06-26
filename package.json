@@ -1,9 +1,10 @@
 {
   "name": "tic-campus",
   "type": "module",
-  "version": "2.6.1",
+  "version": "2.7.0",
   "scripts": {
     "dev": "node scripts/choose-backend.mjs",
+    "preview:articles": "astro dev --open /tic-campus/preview",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
@@ -29,11 +30,5 @@
     "eslint": "^9.39.1",
     "eslint-plugin-astro": "^1.5.0",
     "tailwindcss": "^4.2.4"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "esbuild",
-      "sharp"
-    ]
   }
 }
