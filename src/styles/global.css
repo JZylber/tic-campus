@@ -59,6 +59,22 @@ html {
   .data-table tbody tr td {
     @apply p-2 text-center;
   }
+  .article-content {
+    @apply flex flex-col overflow-x-auto overflow-y-hidden;
+  }
+  .article-content h2 { @apply py-2 text-[32px]; }
+  .article-content h3 { @apply py-2 text-[24px]; }
+  .article-content p  { @apply text-gray-600; }
+  .article-content ul { @apply py-2 list-disc list-inside; }
+  .article-content ul li { @apply text-gray-600; }
+  .article-content ul li + li { @apply mt-1; }
+  .article-content li > ul { @apply ml-4 list-[circle]; }
+  .article-content li > ul > li { @apply list-[circle]; }
+  .article-content ol { @apply py-2 list-decimal list-inside; }
+  .article-content ol li { @apply text-gray-600; }
+  .article-content ol li + li { @apply mt-1; }
+  .article-content li > ol { @apply ml-4; }
+  .article-content a  { @apply text-sh-blue; }
 }
 
 .loader {

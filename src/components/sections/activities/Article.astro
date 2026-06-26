@@ -16,10 +16,7 @@ const { open, articleURL, content, course } = Astro.props;
   import type { AlpineComponent } from "alpinejs";
   import setAlpineData from "../../../scripts/alpine/setAlpineData";
   import type { Content } from "../../../scripts/types";
-  import mermaid from "mermaid";
-  mermaid.initialize({ startOnLoad: false });
-
-  const baseURL = "https://jzylber.github.io/";
+  import { renderArticleInto } from "../../../scripts/articles/renderArticle";
 
   setAlpineData(
     "articleData",
@@ -59,77 +56,7 @@ const { open, articleURL, content, course } = Astro.props;
           }
         },
         async initArticle(rawHTML: string) {
-          const parser = new DOMParser();
-          const doc = parser.parseFromString(rawHTML, "text/html");
-          // Get all script tags
-          let scripts = [...doc.querySelectorAll("script")];
-          //Remove from doc
-          scripts.forEach((el) => {
-            el.remove();
-          });
-          const element = this.$refs.content as HTMLElement;
-          // Clear previous content
-          element.innerHTML = "";
-          // Set new content
-          element.innerHTML += doc.body.innerHTML;
-          const loadScripts = scripts.map((el, index) => {
-            return new Promise((resolve, reject) => {
-              // Check if if the script has inline code
-              if (el.textContent) {
-                const inlineScript = document.createElement("script");
-                inlineScript.textContent = el.textContent;
-                document.head.appendChild(inlineScript);
-                resolve(true);
-              } else if (!el.src) {
-                // If no src and no inline code, resolve
-                resolve(true);
-              } else {
-                // If has src, create a new script tag and set the src
-                const newScript = document.createElement("script");
-                // Copy all atributtes from the original script tag
-                for (let i = 0; i < el.attributes.length; i++) {
-                  newScript.setAttribute(
-                    el.attributes[i].name,
-                    el.attributes[i].value,
-                  );
-                }
-                if (el.src) {
-                  // If the source is a relative path, add the base URL at the front
-                  if (
-                    el.src.startsWith("https://campus.ort.edu.ar/tic-campus")
-                  ) {
-                    newScript.src = el.src.replace(
-                      "https://campus.ort.edu.ar/",
-                      baseURL,
-                    );
-                  } else {
-                    newScript.src = el.src;
-                  }
-                }
-                // onload resolve the promise
-                newScript.onload = () => {
-                  resolve(true);
-                };
-                element.appendChild(newScript);
-              }
-            });
-          });
-          await Promise.all(loadScripts);
-          Alpine.initTree(element);
-          const mermaidNodes =
-            element.querySelectorAll<HTMLElement>(".mermaid");
-          for (const node of mermaidNodes) {
-            const source = node.textContent ?? "";
-            if (!source.trim()) continue;
-            const id = "mermaid-" + Math.random().toString(36).slice(2);
-            const { svg } = await mermaid.render(id, source);
-            node.innerHTML = svg;
-            const svgEl = node.querySelector("svg");
-            if (svgEl) {
-              svgEl.style.display = "block";
-              svgEl.style.height = "auto";
-            }
-          }
+          await renderArticleInto(this.$refs.content as HTMLElement, rawHTML);
         },
       }) as AlpineComponent<{
         loading: boolean;
@@ -340,10 +267,6 @@ const { open, articleURL, content, course } = Astro.props;
         </template>
       </div>
     </div>
-    <div
-      x-ref="content"
-      class="content overflow-x-auto overflow-y-hidden flex flex-col [&>h2]:py-2 [&>h2]:text-[32px] [&>h3]:text-[24px] [&>h3]:py-2 [&>p]:py [&>p]:text-gray-600 [&_ul]:py-2 [&>ul]:list-disc [&_ul]:list-inside [&_ul>li]:text-gray-600 [&>ul>li]:list-disc [&_ul>li+li]:mt-1 [&_ol]:py-2 [&_ol]:list-decimal [&_ol]:list-inside [&_ol>li]:text-gray-600 [&_ol>li+li]:mt-1 [&_li>ol]:ml-4 [&_li>ul]:ml-4 [&_li>ul>li]:list-[circle] [&_li>ul]:list-[circle] [&_a]:text-sh-blue"
-    >
-    </div>
+    <div x-ref="content" class="article-content"></div>
   </div>
 </article>

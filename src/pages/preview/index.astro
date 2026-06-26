@@ -1,0 +1,224 @@
+---
+import PreviewLayout from "../../layouts/PreviewLayout.astro";
+import Loader from "../../components/loader/Loader.astro";
+import Error from "../../components/articles/error/Error.astro";
+import Select from "../../components/misc/select/Select.astro";
+
+const base = import.meta.env.BASE_URL; // "/tic-campus/"
+
+type ArticleEntry = { label: string; url: string };
+type SubjectGroup = { subject: string; articles: ArticleEntry[] };
+type YearGroup = { year: string; subjects: SubjectGroup[] };
+
+/**
+ * Turns the keys of an `import.meta.glob` of every article partial into an
+ * ordered year → subject → article tree. We only need the file paths (the
+ * glob is never `eager`), so no article code is ever imported/bundled.
+ */
+function buildManifest(modules: Record<string, unknown>): YearGroup[] {
+  const tree: Record<string, Record<string, ArticleEntry[]>> = {};
+  for (const key of Object.keys(modules)) {
+    // key: /src/pages/2026/Hardware/articles/Clases/intro.astro
+    const rel = key.replace(/^\/src\/pages\//, "").replace(/\.astro$/, "");
+    const segments = rel.split("/");
+    // Skip dynamic route templates ([year], [subject], [ca1Course], …)
+    if (segments.some((s) => s.startsWith("["))) continue;
+    const articlesIdx = segments.indexOf("articles");
+    // Need at least "<year>/<subject>/articles/<rest>"
+    if (articlesIdx < 2) continue;
+    const year = segments[0];
+    const subject = segments.slice(1, articlesIdx).join("/");
+    const rest = segments.slice(articlesIdx + 1).join("/");
+    if (!rest) continue;
+    const url = `${base}${year}/${subject}/articles/${rest}`;
+    (tree[year] ??= {});
+    (tree[year][subject] ??= []);
+    tree[year][subject].push({ label: rest, url });
+  }
+
+  return Object.keys(tree)
+    .sort((a, b) => b.localeCompare(a, "es", { numeric: true })) // newest year first
+    .map((year) => ({
+      year,
+      subjects: Object.keys(tree[year])
+        .sort((a, b) => a.localeCompare(b, "es"))
+        .map((subject) => ({
+          subject,
+          articles: tree[year][subject].sort((a, b) =>
+            a.label.localeCompare(b.label, "es"),
+          ),
+        })),
+    }));
+}
+
+const manifest: YearGroup[] = import.meta.env.DEV
+  ? buildManifest(import.meta.glob("/src/pages/**/articles/**/*.astro"))
+  : [];
+
+// Mirror the regular article view's width envelope: the Layout.astro campus
+// container (sm:w-[95%] max-w-[1280px]) minus the navbar (lg:w-[250px]) and the
+// flex gap (lg:gap-x-4 = 1rem), since the article never spans the full 1280px.
+const widthClass =
+  "w-full sm:w-[95%] max-w-[calc(1280px_-_250px_-_1rem)] mx-auto";
+---
+
+<PreviewLayout>
+  {
+    import.meta.env.DEV ? (
+      <Fragment>
+        <script is:inline define:vars={{ manifest }}>
+          window.__ARTICLE_MANIFEST__ = manifest;
+        </script>
+        <main x-data="articlePreviewer()" class="flex flex-col h-screen">
+          <header class="border-b-2 border-gray-300 px-4 md:px-8 py-4">
+            <div class="flex flex-col gap-y-4">
+              <div class="flex items-center gap-x-3">
+                <span class="material-symbols-outlined text-sh-black text-[32px]!">
+                  preview
+                </span>
+                <h1 class="text-[24px] font-bold">Previsualizador de Artículos</h1>
+              </div>
+              <div class="flex flex-col sm:flex-row gap-4 sm:items-end">
+                <Select
+                  title="Año"
+                  xModel="year"
+                  options="years().map(y => ({value: y, label: y}))"
+                  className="sm:w-44"
+                />
+                <Select
+                  title="Materia"
+                  xModel="subject"
+                  options="currentSubjects().map(s => ({value: s, label: s}))"
+                  className="sm:w-72"
+                />
+                <Select
+                  title="Artículo"
+                  xModel="articleUrl"
+                  options="currentArticles().map(a => ({value: a.url, label: a.label}))"
+                  className="sm:flex-1"
+                />
+              </div>
+            </div>
+          </header>
+
+          <section class="relative grow overflow-y-auto scrollbar bg-gray-200 px-4 md:px-8 py-6 flex flex-col">
+            <div
+              class={`${widthClass} flex flex-col grow bg-gray-50 rounded-xl border border-gray-300 shadow-sm px-4 md:px-8 py-6`}
+            >
+              <div
+                x-show="!articleUrl && !loading && !error"
+                class="grow flex flex-col items-center justify-center gap-y-3 text-gray-400"
+              >
+                <span class="material-symbols-outlined text-[64px]!">article</span>
+                <p class="text-[20px]">Elegí un año, materia y artículo para previsualizar.</p>
+              </div>
+              <template x-if="error">
+                <Error message="errorMessage" />
+              </template>
+              <div
+                x-ref="content"
+                x-show="articleUrl && !loading && !error"
+                class="article-content"
+              />
+            </div>
+            <Loader show="loading" />
+          </section>
+        </main>
+      </Fragment>
+    ) : (
+      <main class="flex h-screen flex-col items-center justify-center gap-y-3 text-gray-500">
+        <span class="material-symbols-outlined text-[64px]!">construction</span>
+        <p class="text-[20px]">
+          El previsualizador de artículos solo está disponible en modo desarrollo.
+        </p>
+      </main>
+    )
+  }
+</PreviewLayout>
+
+<script>
+  import type { AlpineComponent } from "alpinejs";
+  import setAlpineData from "../../scripts/alpine/setAlpineData";
+  import { renderArticleInto } from "../../scripts/articles/renderArticle";
+
+  type ArticleEntry = { label: string; url: string };
+  type SubjectGroup = { subject: string; articles: ArticleEntry[] };
+  type YearGroup = { year: string; subjects: SubjectGroup[] };
+  type PreviewerData = {
+    manifest: YearGroup[];
+    year: string;
+    subject: string;
+    articleUrl: string;
+    loading: boolean;
+    error: boolean;
+    errorMessage: string;
+    init(): void;
+    years(): string[];
+    currentSubjects(): string[];
+    currentArticles(): ArticleEntry[];
+    loadArticle(url: string): Promise<void>;
+  };
+
+  setAlpineData(
+    "articlePreviewer",
+    () =>
+      ({
+    manifest: [] as YearGroup[],
+    year: "",
+    subject: "",
+    articleUrl: "",
+    loading: false,
+    error: false,
+    errorMessage: "",
+    init() {
+      this.manifest =
+        (window as unknown as { __ARTICLE_MANIFEST__?: YearGroup[] })
+          .__ARTICLE_MANIFEST__ ?? [];
+      // The Select components auto-select the first valid option, so the
+      // year → subject → article defaults cascade on their own; we only need
+      // to react to the resolved article URL.
+      this.$watch("articleUrl", (url: string) => this.loadArticle(url));
+    },
+    years(): string[] {
+      return this.manifest.map((y: YearGroup) => y.year);
+    },
+    currentSubjects(): string[] {
+      const y = this.manifest.find((y: YearGroup) => y.year === this.year);
+      return y ? y.subjects.map((s: SubjectGroup) => s.subject) : [];
+    },
+    currentArticles(): ArticleEntry[] {
+      const y = this.manifest.find((y: YearGroup) => y.year === this.year);
+      const s = y?.subjects.find(
+        (s: SubjectGroup) => s.subject === this.subject,
+      );
+      return s ? s.articles : [];
+    },
+    async loadArticle(url: string) {
+      const content = this.$refs.content as HTMLElement;
+      if (!url) {
+        content.innerHTML = "";
+        this.error = false;
+        return;
+      }
+      this.loading = true;
+      this.error = false;
+      try {
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error(
+            `(${response.status}) No se pudo cargar el artículo`,
+          );
+        }
+        const rawHTML = await response.text();
+        await renderArticleInto(content, rawHTML);
+      } catch (err) {
+        this.error = true;
+        this.errorMessage = String(err);
+        content.innerHTML = "";
+      } finally {
+        this.loading = false;
+      }
+    },
+      }) as AlpineComponent<PreviewerData>,
+  );
+</script>
