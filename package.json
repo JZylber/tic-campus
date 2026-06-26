@@ -4,6 +4,7 @@
   "version": "2.6.1",
   "scripts": {
     "dev": "node scripts/choose-backend.mjs",
+    "preview:articles": "astro dev --open /tic-campus/preview",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
