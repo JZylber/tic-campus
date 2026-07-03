@@ -65,6 +65,9 @@ const studentMarkStore = () => ({
         .filter((activity) => !activity.compulsory) || []
     );
   },
+  get allClassActivities() {
+    return this.student?.getActivities(this.subject) || [];
+  },
   get markedActivities() {
     return this.student?.getMarkedActivities(this.subject) || [];
   },

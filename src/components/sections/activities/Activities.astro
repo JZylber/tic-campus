@@ -81,7 +81,7 @@ const { subject, course, year, position } = Astro.props;
           if (this.content.type === "Actividad") {
             if (Alpine.store("marks")) {
               this.updateClassActivity();
-              this.$watch("$store.marks.classActivities", () =>
+              this.$watch("$store.marks.allClassActivities", () =>
                 this.updateClassActivity(),
               );
             }
@@ -95,8 +95,8 @@ const { subject, course, year, position } = Astro.props;
               this.$watch("$store.marks.markedActivities", () =>
                 this.updateMarkedActivity(),
               );
-              this.$watch("$store.marks.classActivities", () =>
-                this.updateMarkedActivity(),
+              this.$watch("$store.marks.allClassActivities", () =>
+                this.updateClassActivity(),
               );
             }
           }
@@ -145,7 +145,7 @@ const { subject, course, year, position } = Astro.props;
         updateClassActivity() {
           const contentId = this.content.id;
           const activities = (Alpine.store("marks") as AlpineStudentMarkStore)
-            .classActivities as ClassActivity[];
+            .allClassActivities as ClassActivity[];
           const results = activities.find(
             (activity) => activity.id === contentId,
           );
