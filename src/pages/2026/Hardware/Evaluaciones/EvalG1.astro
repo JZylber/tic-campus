@@ -1,0 +1,179 @@
+---
+export const partial = true;
+---
+
+<h2>Consigna - Carrera de LEDs</h2>
+
+<p>
+  Realizá un circuito en Tinkercad con <strong>6 LEDs</strong> (el color es indistinto,
+  pero debés elegir la resistencia adecuada para cada uno) y
+  <strong>3 pulsadores</strong>.
+</p>
+
+<p>
+  Al iniciar el programa deberá encontrarse encendido únicamente el
+  <strong>LED 1</strong>.
+</p>
+
+<h2>Funcionamiento</h2>
+
+<p>
+  <strong>Botón 1 – Avanzar</strong>
+</p>
+
+<p>
+  Cada vez que se presione este botón, el LED encendido deberá avanzar una
+  posición hacia la derecha.
+</p>
+
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Pulsación</th>
+      <th>LED encendido</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Estado inicial</td>
+      <td>LED 1</td>
+    </tr>
+    <tr>
+      <td>1° pulsación</td>
+      <td>LED 2</td>
+    </tr>
+    <tr>
+      <td>2° pulsación</td>
+      <td>LED 3</td>
+    </tr>
+    <tr>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <td>Al llegar al LED 6</td>
+      <td>La siguiente pulsación vuelve al LED 1</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>
+  <strong>Botón 2 – Retroceder</strong>
+</p>
+
+<p>
+  Cada vez que se presione este botón, el LED encendido deberá retroceder una
+  posición hacia la izquierda.
+</p>
+
+<p>
+  Si el LED encendido se encuentra en el LED 1, la siguiente pulsación deberá
+  pasar al LED 6.
+</p>
+
+<p>
+  <strong>Botón 3 – Reiniciar</strong>
+</p>
+
+<p>
+  Al presionar este botón, el sistema deberá volver al estado inicial, dejando
+  encendido únicamente el LED 1.
+</p>
+
+<h2>Importante</h2>
+
+<ul>
+  <li>
+    El LED encendido debe permanecer en ese estado hasta que se presione otro
+    botón.
+  </li>
+  <li>
+    No debe ser necesario mantener presionado un botón para que el LED continúe
+    encendido.
+  </li>
+  <li>
+    En ningún momento puede haber más de un LED encendido al mismo tiempo.
+  </li>
+</ul>
+
+<h2>Sugerencia</h2>
+
+<p>
+  Antes de escribir el código que controla los LEDs, pensá cómo organizar el
+  programa.
+</p>
+
+<p>
+  Una posible estrategia consiste en utilizar <strong
+    >variables de estado</strong
+  >
+  (también llamadas <em>flags</em>) que indiquen qué acción debe realizar el
+  sistema. Los pulsadores pueden modificar esas variables y, luego, el programa
+  actualizar la posición del LED encendido en función del estado actual.
+</p>
+
+<h2>Mensajes por puerto serie</h2>
+
+<p>
+  Después de cada acción, el programa deberá informar por puerto serie el estado
+  actual del sistema.
+</p>
+
+<p>Por ejemplo:</p>
+
+<ul>
+  <li>Posición: LED 1</li>
+  <li>Posición: LED 2</li>
+  <li>Posición: LED 6</li>
+  <li>Sistema reiniciado</li>
+</ul>
+
+<h2>Criterios de evaluación</h2>
+
+<p>
+  <strong
+    >El correcto funcionamiento del programa es un requisito indispensable para
+    aprobar el ejercicio.</strong
+  > Si el circuito no cumple con la consigna, el trabajo será considerado desaprobado.
+</p>
+
+<p>Además, se tendrá en cuenta:</p>
+
+<ul>
+  <li>Que cada pulsador realice la acción indicada en la consigna.</li>
+  <li>
+    Que los LEDs permanezcan en el estado esperado hasta una nueva pulsación.
+  </li>
+  <li>Que las resistencias elegidas sean adecuadas para cada LED.</li>
+  <li>
+    Que las conexiones en el protoboard sean prolijas, ordenadas y correctas.
+  </li>
+  <li>
+    Que el código esté correctamente indentado y cuente con comentarios que
+    faciliten su comprensión.
+  </li>
+  <li>Que cada botón active el modo correspondiente.</li>
+  <li>
+    Que el patrón seleccionado permanezca activo hasta una nueva pulsación.
+  </li>
+  <li>Que el cambio entre modos sea correcto.</li>
+  <li>Que las resistencias elegidas sean adecuadas para cada LED.</li>
+  <li>
+    Que las conexiones en el protoboard sean prolijas, ordenadas y correctas.
+  </li>
+  <li>
+    Que el código esté correctamente indentado y cuente con comentarios que
+    faciliten su comprensión.
+  </li>
+  <li>Que nunca haya más de un LED encendido al mismo tiempo.</li>
+  <li>Que el cambio de posición sea correcto al llegar a los extremos.</li>
+  <li>Que el programa envíe mensajes claros por puerto serie.</li>
+  <li>Que las resistencias elegidas sean adecuadas para cada LED.</li>
+  <li>
+    Que las conexiones en el protoboard sean prolijas, ordenadas y correctas.
+  </li>
+  <li>
+    Que el código esté correctamente indentado y cuente con comentarios que
+    faciliten su comprensión.
+  </li>
+</ul>

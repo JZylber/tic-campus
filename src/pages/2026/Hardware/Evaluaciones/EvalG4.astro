@@ -1,0 +1,122 @@
+---
+export const partial = true;
+---
+
+<h2>Consigna - Modos de iluminación</h2>
+
+<p>
+  Realizá un circuito en Tinkercad con <strong>6 LEDs</strong> (el color es indistinto,
+  pero debés elegir la resistencia adecuada para cada uno) y
+  <strong>6 pulsadores</strong>.
+</p>
+
+<p>Cada pulsador deberá activar un modo distinto de iluminación de los LEDs.</p>
+
+<h2>Modos de funcionamiento</h2>
+
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Botón</th>
+      <th>Patrón de LEDs</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Botón 1</td>
+      <td>Solo los LEDs extremos (LED 1 y LED 6).</td>
+    </tr>
+    <tr>
+      <td>Botón 2</td>
+      <td>Solo los LEDs centrales (LED 3 y LED 4).</td>
+    </tr>
+    <tr>
+      <td>Botón 3</td>
+      <td>Solo los LEDs ubicados en posiciones impares (1, 3 y 5).</td>
+    </tr>
+    <tr>
+      <td>Botón 4</td>
+      <td>Solo los LEDs ubicados en posiciones pares (2, 4 y 6).</td>
+    </tr>
+    <tr>
+      <td>Botón 5</td>
+      <td>Todos los LEDs encendidos.</td>
+    </tr>
+    <tr>
+      <td>Botón 6</td>
+      <td>Todos los LEDs apagados.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Importante</h2>
+
+<ul>
+  <li>
+    El patrón seleccionado deberá permanecer activo hasta que se presione otro
+    botón.
+  </li>
+  <li>
+    No debe ser necesario mantener presionado un botón para conservar el patrón
+    de iluminación.
+  </li>
+  <li>
+    Al presionar un nuevo botón, el patrón anterior deberá reemplazarse por el
+    nuevo.
+  </li>
+</ul>
+
+<h2>Sugerencia</h2>
+
+<p>
+  Antes de comenzar a escribir el código, pensá cómo representar el estado del
+  sistema.
+</p>
+
+<p>
+  Una posible estrategia consiste en utilizar <strong
+    >variables de estado</strong
+  >
+  (también llamadas <em>flags</em>) para indicar qué modo de iluminación está
+  activo. Los pulsadores pueden modificar esas variables y, luego, el programa
+  decidir qué LEDs deben permanecer encendidos según el modo seleccionado.
+</p>
+
+<h2>Criterios de evaluación</h2>
+
+<p>
+  <strong
+    >El correcto funcionamiento del programa es un requisito indispensable para
+    aprobar el ejercicio.</strong
+  > Si el circuito no cumple con la consigna, el trabajo será considerado desaprobado.
+</p>
+
+<p>Además, se tendrá en cuenta:</p>
+
+<ul>
+  <li>Que cada pulsador realice la acción indicada en la consigna.</li>
+  <li>
+    Que los LEDs permanezcan en el estado esperado hasta una nueva pulsación.
+  </li>
+  <li>Que las resistencias elegidas sean adecuadas para cada LED.</li>
+  <li>
+    Que las conexiones en el protoboard sean prolijas, ordenadas y correctas.
+  </li>
+  <li>
+    Que el código esté correctamente indentado y cuente con comentarios que
+    faciliten su comprensión.
+  </li>
+  <li>Que cada botón active el modo correspondiente.</li>
+  <li>
+    Que el patrón seleccionado permanezca activo hasta una nueva pulsación.
+  </li>
+  <li>Que el cambio entre modos sea correcto.</li>
+  <li>Que las resistencias elegidas sean adecuadas para cada LED.</li>
+  <li>
+    Que las conexiones en el protoboard sean prolijas, ordenadas y correctas.
+  </li>
+  <li>
+    Que el código esté correctamente indentado y cuente con comentarios que
+    faciliten su comprensión.
+  </li>
+</ul>
