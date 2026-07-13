@@ -1,0 +1,233 @@
+---
+export const partial = true;
+---
+
+<h2>Consigna - Contador de LEDs</h2>
+
+<p>
+  Realizá un circuito en <strong>Tinkercad</strong> con <strong>6 LEDs</strong>
+  (el color es indistinto, pero debés elegir la resistencia adecuada para cada uno)
+  y <strong>3 pulsadores</strong>.
+</p>
+
+<p>Al iniciar el programa, todos los LEDs deberán encontrarse apagados.</p>
+
+<p>
+  Cada pulsador modificará la cantidad de LEDs encendidos según se indica a
+  continuación.
+</p>
+
+<h2>Funcionamiento</h2>
+
+<h3>Botón 1 – Agregar un LED</h3>
+
+<p>
+  Cada vez que se presione este botón deberá encenderse <strong
+    >un LED más</strong
+  >, comenzando por el LED 1.
+</p>
+
+<pre><code>○ ○ ○ ○ ○ ○
+
+↓
+
+● ○ ○ ○ ○ ○
+
+↓
+
+● ● ○ ○ ○ ○
+
+↓
+
+● ● ● ○ ○ ○
+</code></pre>
+
+<p>
+  Cuando los seis LEDs estén encendidos, las siguientes pulsaciones no deberán
+  producir ningún cambio.
+</p>
+
+<p>
+  <strong>
+    Además, deberá enviarse un mensaje por puerto serie indicando la cantidad de
+    LEDs encendidos.
+  </strong>
+</p>
+
+<p>Por ejemplo:</p>
+
+<pre><code>LEDs encendidos: 3</code></pre>
+
+<hr />
+
+<h3>Botón 2 – Quitar un LED</h3>
+
+<p>
+  Cada vez que se presione este botón deberá apagarse <strong
+    >el último LED encendido</strong
+  >.
+</p>
+
+<pre><code>● ● ● ● ○ ○
+
+↓
+
+● ● ● ○ ○ ○
+
+↓
+
+● ● ○ ○ ○ ○
+</code></pre>
+
+<p>
+  Si todos los LEDs están apagados, las siguientes pulsaciones no deberán
+  producir ningún cambio.
+</p>
+
+<p>
+  <strong>
+    Además, deberá enviarse un mensaje por puerto serie indicando la cantidad de
+    LEDs encendidos.
+  </strong>
+</p>
+
+<p>Por ejemplo:</p>
+
+<pre><code>LEDs encendidos: 2</code></pre>
+
+<hr />
+
+<h3>Botón 3 – Reiniciar</h3>
+
+<p>Al presionar este botón deberán apagarse todos los LEDs.</p>
+
+<p>
+  <strong>
+    Además, deberá enviarse un mensaje por puerto serie indicando que el sistema
+    fue reiniciado.
+  </strong>
+</p>
+
+<p>Por ejemplo:</p>
+
+<pre><code>Sistema reiniciado
+LEDs encendidos: 0</code></pre>
+
+<h2>Importante</h2>
+
+<ul>
+  <li>
+    La cantidad de LEDs encendidos deberá permanecer igual hasta que se presione
+    otro botón.
+  </li>
+  <li>
+    <strong>No</strong> debe ser necesario mantener presionado un botón.
+  </li>
+  <li>Nunca podrán encenderse más de 6 LEDs.</li>
+  <li>Nunca podrá haber una cantidad negativa de LEDs encendidos.</li>
+</ul>
+
+<h2>Sugerencia</h2>
+
+<p>
+  Antes de comenzar a escribir el código, pensá qué información necesita
+  recordar el programa.
+</p>
+
+<p>
+  Una posible estrategia consiste en utilizar una <strong>variable</strong> que represente
+  la cantidad de LEDs encendidos. Los pulsadores modificarán ese valor y, luego, el
+  programa decidirá qué LEDs deben permanecer encendidos.
+</p>
+
+<h2>Criterios de evaluación</h2>
+
+<p>
+  <strong>
+    El correcto funcionamiento del programa es un requisito indispensable para
+    aprobar el ejercicio. Si el circuito no cumple con la consigna, el trabajo
+    será considerado desaprobado.
+  </strong>
+</p>
+
+<p>Además, se tendrá en cuenta:</p>
+
+<ul>
+  <li>Que cada pulsador realice la acción correspondiente.</li>
+  <li>Que la cantidad de LEDs encendidos sea siempre correcta.</li>
+  <li>Que se respeten los límites mínimo y máximo.</li>
+  <li>Que el programa envíe los mensajes correspondientes por puerto serie.</li>
+  <li>
+    Que las resistencias elegidas sean adecuadas según el color de cada LED.
+  </li>
+  <li>
+    Que las conexiones en el protoboard sean prolijas, ordenadas y correctas.
+  </li>
+  <li>
+    Que el código esté correctamente indentado y cuente con comentarios que
+    faciliten su comprensión.
+  </li>
+</ul>
+
+<h2>Desafío (opcional)</h2>
+
+<p>
+  Agregá un <strong>cuarto pulsador</strong> que active un
+  <strong>Modo Fiesta</strong>.
+</p>
+
+<p>Al presionar este botón:</p>
+
+<ul>
+  <li>Todos los LEDs deberán parpadear <strong>5 veces</strong>.</li>
+  <li>Cada cambio de estado deberá ocurrir cada <strong>500 ms</strong>.</li>
+  <li>
+    Al finalizar el efecto, el sistema deberá volver
+    <strong
+      >exactamente al estado en el que se encontraba antes de activar el Modo
+      Fiesta</strong
+    >.
+  </li>
+</ul>
+
+<h3>Ejemplo</h3>
+
+<pre><code>Estado inicial
+
+● ● ● ○ ○ ○
+
+↓
+
+● ● ● ● ● ●
+
+↓
+
+○ ○ ○ ○ ○ ○
+
+↓
+
+● ● ● ● ● ●
+
+↓
+
+○ ○ ○ ○ ○ ○
+
+...
+
+(repetir hasta completar 5 parpadeos)
+
+↓
+
+● ● ● ○ ○ ○
+</code></pre>
+
+<p>
+  Durante el efecto, el programa también deberá informar por puerto serie el
+  inicio y el fin del Modo Fiesta.
+</p>
+
+<p>Por ejemplo:</p>
+
+<pre><code>Modo Fiesta activado
+Modo Fiesta finalizado
+LEDs encendidos: 3</code></pre>
