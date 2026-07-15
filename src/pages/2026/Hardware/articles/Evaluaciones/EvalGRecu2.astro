@@ -1,0 +1,266 @@
+---
+export const partial = true;
+---
+
+<h2>Consigna</h2>
+
+<p>
+  Realizá un circuito en <strong>Tinkercad</strong> con <strong>6 LEDs</strong>
+  (el color es indistinto, pero debés elegir la resistencia adecuada para cada uno)
+  y <strong>3 pulsadores</strong>.
+</p>
+
+<p>
+  El circuito representará un <strong>depósito de cajas</strong>. Cada LED
+  encendido representará <strong>una caja almacenada</strong>.
+</p>
+
+<p>
+  Al iniciar el programa, el depósito deberá encontrarse <strong>vacío</strong>,
+  por lo que todos los LEDs deberán estar apagados.
+</p>
+
+<br />
+<hr />
+<br />
+
+<h2>Materiales</h2>
+
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Componente</th>
+      <th>Cantidad</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>LEDs</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <td>Pulsadores</td>
+      <td>3</td>
+    </tr>
+  </tbody>
+</table>
+
+<br />
+<hr />
+<br />
+
+<h2>Representación del depósito</h2>
+
+<p>Los LEDs representarán la cantidad de cajas almacenadas en el depósito.</p>
+
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Cantidad de cajas</th>
+      <th>Estado de los LEDs</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>○ ○ ○ ○ ○ ○</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>● ○ ○ ○ ○ ○</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>● ● ● ○ ○ ○</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>● ● ● ● ● ●</td>
+    </tr>
+  </tbody>
+</table>
+
+<br />
+<hr />
+<br />
+
+<h2>Funcionamiento</h2>
+
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Botón</th>
+      <th>Acción</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Botón 1</strong></td>
+      <td>Agregar una caja al depósito.</td>
+    </tr>
+    <tr>
+      <td><strong>Botón 2</strong></td>
+      <td>Retirar una caja del depósito.</td>
+    </tr>
+    <tr>
+      <td><strong>Botón 3</strong></td>
+      <td>Vaciar completamente el depósito.</td>
+    </tr>
+  </tbody>
+</table>
+
+<br />
+<hr />
+<br />
+
+<h3>Botón 1 – Agregar una caja</h3>
+
+<p>
+  Cada vez que se presione este botón deberá agregarse una caja al depósito,
+  encendiendo un LED más.
+</p>
+
+<pre><code>○ ○ ○ ○ ○ ○
+
+↓
+
+● ○ ○ ○ ○ ○
+
+↓
+
+● ● ○ ○ ○ ○
+
+↓
+
+● ● ● ○ ○ ○
+</code></pre>
+
+<p>
+  Cuando el depósito alcance las <strong>6 cajas</strong>, las siguientes
+  pulsaciones no deberán producir ningún cambio.
+</p>
+
+<br />
+<hr />
+<br />
+
+<h3>Botón 2 – Retirar una caja</h3>
+
+<p>
+  Cada vez que se presione este botón deberá retirarse la última caja
+  almacenada, apagando un LED.
+</p>
+
+<pre><code>● ● ● ● ○ ○
+
+↓
+
+● ● ● ○ ○ ○
+
+↓
+
+● ● ○ ○ ○ ○
+</code></pre>
+
+<p>
+  Si el depósito está vacío, las siguientes pulsaciones no deberán producir
+  ningún cambio.
+</p>
+
+<br />
+<hr />
+<br />
+
+<h3>Botón 3 – Vaciar depósito</h3>
+
+<p>
+  Al presionar este botón deberán retirarse todas las cajas del depósito,
+  apagando todos los LEDs.
+</p>
+
+<pre><code>● ● ● ● ● ●
+
+↓
+
+○ ○ ○ ○ ○ ○
+</code></pre>
+
+<br />
+<hr />
+<br />
+
+<h2>Importante</h2>
+
+<ul>
+  <li>
+    La cantidad de cajas deberá mantenerse hasta que se presione otro botón.
+  </li>
+  <li>No será necesario mantener presionado ningún botón.</li>
+  <li>El depósito no podrá almacenar más de <strong>6 cajas</strong>.</li>
+  <li>La cantidad de cajas nunca podrá ser negativa.</li>
+</ul>
+
+<br />
+<hr />
+<br />
+
+<h2>Sugerencia</h2>
+
+<p>
+  Antes de comenzar a programar, pensá qué información necesita recordar el
+  sistema.
+</p>
+
+<p>
+  Una posible estrategia consiste en utilizar una <strong>variable</strong> que almacene
+  la cantidad de cajas presentes en el depósito. Luego, el estado de los LEDs deberá
+  actualizarse en función del valor de esa variable.
+</p>
+
+<br />
+<hr />
+<br />
+
+<h2>Criterios de evaluación</h2>
+
+<p>
+  <strong>
+    El correcto funcionamiento del programa es un requisito indispensable para
+    aprobar el ejercicio. Si el circuito no cumple con la consigna, el trabajo
+    será considerado desaprobado.
+  </strong>
+</p>
+
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Se evaluará</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>✔ El funcionamiento correcto de los tres botones.</td>
+    </tr>
+    <tr>
+      <td
+        >✔ Que la cantidad de LEDs represente correctamente la cantidad de
+        cajas.</td
+      >
+    </tr>
+    <tr>
+      <td>✔ Que no puedan almacenarse más de 6 cajas.</td>
+    </tr>
+    <tr>
+      <td>✔ Que la cantidad de cajas nunca sea negativa.</td>
+    </tr>
+    <tr>
+      <td>✔ La correcta elección de las resistencias para cada LED.</td>
+    </tr>
+    <tr>
+      <td>✔ La prolijidad de las conexiones en el protoboard.</td>
+    </tr>
+    <tr>
+      <td>✔ La correcta indentación y el uso de comentarios en el código.</td>
+    </tr>
+  </tbody>
+</table>
