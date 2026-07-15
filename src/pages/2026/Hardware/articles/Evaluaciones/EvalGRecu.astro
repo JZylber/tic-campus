@@ -16,26 +16,113 @@ export const partial = true;
   >.
 </p>
 
+<hr />
+
+<h2>Materiales</h2>
+
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Componente</th>
+      <th>Cantidad</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>LEDs</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <td>Pulsadores</td>
+      <td>4</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2>Representación del marcador</h2>
+
 <p>
-  Los <strong>3 primeros LEDs</strong> funcionarán como el marcador del
-  <strong>Equipo A</strong> y los <strong>3 últimos LEDs</strong> como el marcador
-  del <strong>Equipo B</strong>. Cada LED encendido representará
-  <strong>un gol</strong>.
+  Los <strong>LEDs 1, 2 y 3</strong> funcionarán como el marcador del
+  <strong>Equipo A</strong>.
 </p>
 
 <p>
-  Al iniciar el programa, el partido deberá comenzar con un marcador de
-  <strong>0 a 0</strong>, por lo que todos los LEDs deberán encontrarse
-  apagados.
+  Los <strong>LEDs 4, 5 y 6</strong> funcionarán como el marcador del
+  <strong>Equipo B</strong>.
 </p>
+
+<p>
+  Cada LED encendido representará <strong>un gol</strong>.
+</p>
+
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>LEDs</th>
+      <th>Representan</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>LED 1, LED 2 y LED 3</td>
+      <td>Goles del Equipo A</td>
+    </tr>
+    <tr>
+      <td>LED 4, LED 5 y LED 6</td>
+      <td>Goles del Equipo B</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>
+  Al iniciar el programa, el marcador deberá comenzar en <strong>0 a 0</strong>.
+</p>
+
+<pre><code>Equipo A        Equipo B
+
+○ ○ ○   ○ ○ ○
+</code></pre>
+
+<hr />
 
 <h2>Funcionamiento</h2>
+
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Botón</th>
+      <th>Acción</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Botón 1</strong></td>
+      <td>Registrar un gol para el Equipo A.</td>
+    </tr>
+    <tr>
+      <td><strong>Botón 2</strong></td>
+      <td>Registrar un gol para el Equipo B.</td>
+    </tr>
+    <tr>
+      <td><strong>Botón 3</strong></td>
+      <td>Comenzar un nuevo partido (0 a 0).</td>
+    </tr>
+    <tr>
+      <td><strong>Botón 4</strong></td>
+      <td>Finalizar el partido e informar el resultado.</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
 
 <h3>Botón 1 – Gol del Equipo A</h3>
 
 <p>
-  Cada vez que se presione este botón, el marcador luminoso deberá registrar un
-  nuevo gol para el Equipo A.
+  Cada vez que se presione este botón deberá registrarse un nuevo gol para el
+  Equipo A.
 </p>
 
 <pre><code>Equipo A        Equipo B
@@ -56,29 +143,23 @@ export const partial = true;
 </code></pre>
 
 <p>
-  Una vez alcanzados los <strong>3 goles</strong>, las siguientes pulsaciones no
-  deberán producir ningún cambio.
+  Cuando el Equipo A llegue a <strong>3 goles</strong>, las siguientes
+  pulsaciones no deberán producir ningún cambio.
 </p>
 
-<p>
-  <strong>
-    Además, deberá enviarse un mensaje por puerto serie indicando el marcador
-    actual.
-  </strong>
-</p>
-
-<p>Por ejemplo:</p>
+<p><strong>Puerto serie:</strong></p>
 
 <pre><code>Gol del Equipo A
-Marcador: A 2 - 1 B</code></pre>
+Marcador: A 2 - 1 B
+</code></pre>
 
 <hr />
 
 <h3>Botón 2 – Gol del Equipo B</h3>
 
 <p>
-  Cada vez que se presione este botón, el marcador luminoso deberá registrar un
-  nuevo gol para el Equipo B.
+  Cada vez que se presione este botón deberá registrarse un nuevo gol para el
+  Equipo B.
 </p>
 
 <pre><code>Equipo A        Equipo B
@@ -99,101 +180,100 @@ Marcador: A 2 - 1 B</code></pre>
 </code></pre>
 
 <p>
-  Una vez alcanzados los <strong>3 goles</strong>, las siguientes pulsaciones no
-  deberán producir ningún cambio.
+  Cuando el Equipo B llegue a <strong>3 goles</strong>, las siguientes
+  pulsaciones no deberán producir ningún cambio.
 </p>
 
-<p>
-  <strong>
-    Además, deberá enviarse un mensaje por puerto serie indicando el marcador
-    actual.
-  </strong>
-</p>
-
-<p>Por ejemplo:</p>
+<p><strong>Puerto serie:</strong></p>
 
 <pre><code>Gol del Equipo B
-Marcador: A 2 - 2 B</code></pre>
+Marcador: A 2 - 2 B
+</code></pre>
 
 <hr />
 
 <h3>Botón 3 – Nuevo partido</h3>
 
 <p>
-  Al presionar este botón, el marcador deberá volver a <strong>0 a 0</strong>,
-  apagando todos los LEDs.
+  Al presionar este botón, ambos equipos deberán volver a tener
+  <strong>0 goles</strong>.
 </p>
 
-<p>
-  <strong>
-    Además, deberá enviarse un mensaje por puerto serie indicando que comenzó un
-    nuevo partido.
-  </strong>
-</p>
+<p>Todos los LEDs deberán apagarse.</p>
 
-<p>Por ejemplo:</p>
+<p><strong>Puerto serie:</strong></p>
 
 <pre><code>Nuevo partido
-Marcador: A 0 - 0 B</code></pre>
+Marcador: A 0 - 0 B
+</code></pre>
 
 <hr />
 
 <h3>Botón 4 – Finalizar partido</h3>
 
 <p>
-  Al presionar este botón, el programa deberá anunciar por puerto serie el
+  Al presionar este botón, el programa deberá informar por puerto serie el
   resultado final del encuentro.
 </p>
 
 <p>
-  Si un equipo convirtió más goles que el otro, deberá indicar cuál fue el
-  ganador. Si ambos equipos tienen la misma cantidad de goles, deberá indicarse
-  que el partido terminó en empate.
+  Si un equipo convirtió más goles que el otro, deberá indicar el ganador. Si
+  ambos equipos tienen la misma cantidad de goles, deberá indicar que el partido
+  terminó empatado.
 </p>
 
 <p>
-  El estado del marcador luminoso <strong>no deberá modificarse</strong> al finalizar
-  el partido.
+  <strong>Los LEDs no deberán modificarse.</strong>
 </p>
 
-<p>Por ejemplo:</p>
+<p><strong>Puerto serie:</strong></p>
 
 <pre><code>Partido finalizado
 Resultado final: A 3 - 2 B
-Ganador: Equipo A</code></pre>
+Ganador: Equipo A
+</code></pre>
 
-<p>O bien:</p>
+<p>o bien</p>
 
 <pre><code>Partido finalizado
 Resultado final: A 2 - 2 B
-Empate</code></pre>
+Empate
+</code></pre>
+
+<hr />
 
 <h2>Importante</h2>
 
 <ul>
   <li>El marcador deberá mantenerse hasta que se presione otro botón.</li>
-  <li>
-    <strong>No</strong> debe ser necesario mantener presionado un botón.
-  </li>
-  <li>
-    Ningún equipo podrá superar los <strong>3 goles</strong>.
-  </li>
+  <li>No será necesario mantener presionado ningún botón.</li>
+  <li>Ningún equipo podrá superar los <strong>3 goles</strong>.</li>
 </ul>
+
+<hr />
 
 <h2>Sugerencia</h2>
 
 <p>
-  Antes de comenzar a escribir el código, pensá qué información necesita
-  recordar el programa.
+  Antes de comenzar a programar, pensá qué información necesita recordar el
+  sistema.
 </p>
 
 <p>
-  En este ejercicio existen <strong>dos marcadores independientes</strong>: uno
-  para cada equipo. Una posible estrategia consiste en utilizar una variable
-  para almacenar los goles del Equipo A y otra para almacenar los goles del
-  Equipo B. Luego, el programa deberá actualizar el marcador luminoso de acuerdo
-  con esos valores.
+  En este ejercicio existen <strong>dos marcadores independientes</strong>. Una
+  posible estrategia consiste en utilizar:
 </p>
+
+<ul>
+  <li>Una variable para almacenar los goles del Equipo A.</li>
+  <li>Otra variable para almacenar los goles del Equipo B.</li>
+</ul>
+
+<p>
+  Luego, el estado de los LEDs deberá actualizarse en función de esas variables.
+</p>
+
+<hr />
 
 <h2>Criterios de evaluación</h2>
 
@@ -205,23 +285,33 @@ Empate</code></pre>
   </strong>
 </p>
 
-<p>Además, se tendrá en cuenta:</p>
-
-<ul>
-  <li>Que cada pulsador realice la acción correspondiente.</li>
-  <li>
-    Que el marcador luminoso represente correctamente el resultado del partido.
-  </li>
-  <li>Que ningún equipo pueda superar los 3 goles.</li>
-  <li>Que el programa envíe los mensajes correspondientes por puerto serie.</li>
-  <li>
-    Que las resistencias elegidas sean adecuadas según el color de cada LED.
-  </li>
-  <li>
-    Que las conexiones en el protoboard sean prolijas, ordenadas y correctas.
-  </li>
-  <li>
-    Que el código esté correctamente indentado y cuente con comentarios que
-    faciliten su comprensión.
-  </li>
-</ul>
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Se evaluará</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>✔ El funcionamiento correcto de los cuatro botones.</td>
+    </tr>
+    <tr>
+      <td>✔ Que el marcador luminoso represente correctamente el resultado.</td>
+    </tr>
+    <tr>
+      <td>✔ Que ningún equipo pueda superar los 3 goles.</td>
+    </tr>
+    <tr>
+      <td>✔ El envío de mensajes claros por puerto serie.</td>
+    </tr>
+    <tr>
+      <td>✔ La correcta elección de las resistencias para cada LED.</td>
+    </tr>
+    <tr>
+      <td>✔ La prolijidad de las conexiones en el protoboard.</td>
+    </tr>
+    <tr>
+      <td>✔ La correcta indentación y el uso de comentarios en el código.</td>
+    </tr>
+  </tbody>
+</table>
