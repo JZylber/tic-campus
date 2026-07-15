@@ -1,0 +1,227 @@
+---
+export const partial = true;
+---
+
+<h2>Consigna</h2>
+
+<p>
+  Realizá un circuito en <strong>Tinkercad</strong> con <strong>6 LEDs</strong>
+  (el color es indistinto, pero debés elegir la resistencia adecuada para cada uno)
+  y <strong>4 pulsadores</strong>.
+</p>
+
+<p>
+  El circuito representará el <strong
+    >marcador luminoso de un partido de fútbol</strong
+  >.
+</p>
+
+<p>
+  Los <strong>3 primeros LEDs</strong> funcionarán como el marcador del
+  <strong>Equipo A</strong> y los <strong>3 últimos LEDs</strong> como el marcador
+  del <strong>Equipo B</strong>. Cada LED encendido representará
+  <strong>un gol</strong>.
+</p>
+
+<p>
+  Al iniciar el programa, el partido deberá comenzar con un marcador de
+  <strong>0 a 0</strong>, por lo que todos los LEDs deberán encontrarse
+  apagados.
+</p>
+
+<h2>Funcionamiento</h2>
+
+<h3>Botón 1 – Gol del Equipo A</h3>
+
+<p>
+  Cada vez que se presione este botón, el marcador luminoso deberá registrar un
+  nuevo gol para el Equipo A.
+</p>
+
+<pre><code>Equipo A        Equipo B
+
+○ ○ ○   ○ ○ ○
+
+↓
+
+● ○ ○   ○ ○ ○
+
+↓
+
+● ● ○   ○ ○ ○
+
+↓
+
+● ● ●   ○ ○ ○
+</code></pre>
+
+<p>
+  Una vez alcanzados los <strong>3 goles</strong>, las siguientes pulsaciones no
+  deberán producir ningún cambio.
+</p>
+
+<p>
+  <strong>
+    Además, deberá enviarse un mensaje por puerto serie indicando el marcador
+    actual.
+  </strong>
+</p>
+
+<p>Por ejemplo:</p>
+
+<pre><code>Gol del Equipo A
+Marcador: A 2 - 1 B</code></pre>
+
+<hr />
+
+<h3>Botón 2 – Gol del Equipo B</h3>
+
+<p>
+  Cada vez que se presione este botón, el marcador luminoso deberá registrar un
+  nuevo gol para el Equipo B.
+</p>
+
+<pre><code>Equipo A        Equipo B
+
+● ○ ○   ○ ○ ○
+
+↓
+
+● ○ ○   ● ○ ○
+
+↓
+
+● ○ ○   ● ● ○
+
+↓
+
+● ○ ○   ● ● ●
+</code></pre>
+
+<p>
+  Una vez alcanzados los <strong>3 goles</strong>, las siguientes pulsaciones no
+  deberán producir ningún cambio.
+</p>
+
+<p>
+  <strong>
+    Además, deberá enviarse un mensaje por puerto serie indicando el marcador
+    actual.
+  </strong>
+</p>
+
+<p>Por ejemplo:</p>
+
+<pre><code>Gol del Equipo B
+Marcador: A 2 - 2 B</code></pre>
+
+<hr />
+
+<h3>Botón 3 – Nuevo partido</h3>
+
+<p>
+  Al presionar este botón, el marcador deberá volver a <strong>0 a 0</strong>,
+  apagando todos los LEDs.
+</p>
+
+<p>
+  <strong>
+    Además, deberá enviarse un mensaje por puerto serie indicando que comenzó un
+    nuevo partido.
+  </strong>
+</p>
+
+<p>Por ejemplo:</p>
+
+<pre><code>Nuevo partido
+Marcador: A 0 - 0 B</code></pre>
+
+<hr />
+
+<h3>Botón 4 – Finalizar partido</h3>
+
+<p>
+  Al presionar este botón, el programa deberá anunciar por puerto serie el
+  resultado final del encuentro.
+</p>
+
+<p>
+  Si un equipo convirtió más goles que el otro, deberá indicar cuál fue el
+  ganador. Si ambos equipos tienen la misma cantidad de goles, deberá indicarse
+  que el partido terminó en empate.
+</p>
+
+<p>
+  El estado del marcador luminoso <strong>no deberá modificarse</strong> al finalizar
+  el partido.
+</p>
+
+<p>Por ejemplo:</p>
+
+<pre><code>Partido finalizado
+Resultado final: A 3 - 2 B
+Ganador: Equipo A</code></pre>
+
+<p>O bien:</p>
+
+<pre><code>Partido finalizado
+Resultado final: A 2 - 2 B
+Empate</code></pre>
+
+<h2>Importante</h2>
+
+<ul>
+  <li>El marcador deberá mantenerse hasta que se presione otro botón.</li>
+  <li>
+    <strong>No</strong> debe ser necesario mantener presionado un botón.
+  </li>
+  <li>
+    Ningún equipo podrá superar los <strong>3 goles</strong>.
+  </li>
+</ul>
+
+<h2>Sugerencia</h2>
+
+<p>
+  Antes de comenzar a escribir el código, pensá qué información necesita
+  recordar el programa.
+</p>
+
+<p>
+  En este ejercicio existen <strong>dos marcadores independientes</strong>: uno
+  para cada equipo. Una posible estrategia consiste en utilizar una variable
+  para almacenar los goles del Equipo A y otra para almacenar los goles del
+  Equipo B. Luego, el programa deberá actualizar el marcador luminoso de acuerdo
+  con esos valores.
+</p>
+
+<h2>Criterios de evaluación</h2>
+
+<p>
+  <strong>
+    El correcto funcionamiento del programa es un requisito indispensable para
+    aprobar el ejercicio. Si el circuito no cumple con la consigna, el trabajo
+    será considerado desaprobado.
+  </strong>
+</p>
+
+<p>Además, se tendrá en cuenta:</p>
+
+<ul>
+  <li>Que cada pulsador realice la acción correspondiente.</li>
+  <li>
+    Que el marcador luminoso represente correctamente el resultado del partido.
+  </li>
+  <li>Que ningún equipo pueda superar los 3 goles.</li>
+  <li>Que el programa envíe los mensajes correspondientes por puerto serie.</li>
+  <li>
+    Que las resistencias elegidas sean adecuadas según el color de cada LED.
+  </li>
+  <li>
+    Que las conexiones en el protoboard sean prolijas, ordenadas y correctas.
+  </li>
+  <li>
+    Que el código esté correctamente indentado y cuente con comentarios que
+    faciliten su comprensión.
+  </li>
+</ul>
