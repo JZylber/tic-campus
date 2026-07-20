@@ -2,7 +2,6 @@ import type { Material, Unit } from "../types";
 import { backendURL } from "./shared";
 
 type TemplatesResponse = Array<{
-  id: number;
   name: string;
   course: string;
   year: string;

@@ -27,7 +27,6 @@ export type CourseEnrollment = {
 
 type StudentSubject = {
   subject: string;
-  id_subject: string;
   id_course: number;
 };
 
