@@ -48,9 +48,17 @@ const optionalOfferingsPageData = () =>
     },
     get coursesForActiveLevel() {
       return (this.allCourses as Course[])
-        .filter(
-          (c) => Number(c.name[2]) === this.activeLevel && c.year === this.year,
-        )
+        .filter((c) => {
+          if (Number(c.name[2]) !== this.activeLevel || c.year !== this.year) {
+            return false;
+          }
+          // NI4 is a different specialty from NR4 — only NR courses take part
+          // in TIC Campus optional offerings at level 4.
+          if (this.activeLevel === 4 && !c.name.startsWith("NR")) {
+            return false;
+          }
+          return true;
+        })
         .sort((a, b) => a.name.localeCompare(b.name, "es"));
     },
     get offeringsForActiveLevel() {
