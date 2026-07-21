@@ -24,7 +24,7 @@ const { title, xModel, options, className } = Astro.props;
     class="text-center md:text-left text-sh-dark-gray text-[16px] font-semibold"
     x-text={`'${title}'`}></label>
   <div class="justify-center md:justify-start items-center flex">
-    <div class="flex w-full max-w-[200px] justify-between items-center">
+    <div class="flex w-full max-w-[200px] justify-between items-center gap-x-3">
       <template x-for="option in options">
         <div
           class="w-11 aspect-square flex justify-center items-center border-2 border-sh-gray rounded-xl"
