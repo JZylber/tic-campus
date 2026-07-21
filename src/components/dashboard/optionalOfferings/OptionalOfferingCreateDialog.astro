@@ -1,0 +1,45 @@
+---
+import Dialog from "../../misc/dialog/Dialog.astro";
+import Select from "../../misc/select/Select.astro";
+---
+
+<Dialog xRef="createOfferingDialog" className="w-1/2 p-6 overflow-y-auto max-h-[75vh]">
+  <h2 class="text-2xl font-bold mb-6">Nueva optativa</h2>
+
+  <div class="flex flex-col gap-4">
+    <Select title="Materia" xModel="createForm.subjectId" options="subjectOptions" />
+
+    <div class="flex flex-col gap-2">
+      <h3 class="text-lg font-semibold border-b border-gray-200 pb-1">
+        Cursos (Nivel <span x-text="activeLevel"></span>° &mdash; <span x-text="year"></span>)
+      </h3>
+      <template x-for="course in coursesForActiveLevel" :key="course.id">
+        <label class="flex items-center gap-2 py-1 cursor-pointer">
+          <input
+            type="checkbox"
+            class="accent-sh-purple w-5 h-5"
+            :checked="createForm.courseIds.includes(course.id)"
+            @change="toggleCreateCourse(course.id)"
+          />
+          <span x-text="course.name"></span>
+        </label>
+      </template>
+      <span
+        class="text-sh-dark-gray text-sm"
+        x-show="coursesForActiveLevel.length === 0"
+      >
+        No hay cursos disponibles para este nivel y año.
+      </span>
+    </div>
+
+    <div class="flex justify-between items-center mt-2">
+      <span class="text-red-500 text-sm" x-text="error ?? ''" x-show="error"></span>
+      <button
+        @click="submitCreate().then((ok) => { if (ok) $el.closest('dialog').close(); })"
+        class="ml-auto px-4 py-2 bg-sh-black text-white rounded-xl hover:opacity-80 disabled:opacity-40 cursor-pointer"
+        :disabled="saving || isNaN(createForm.subjectId) || createForm.courseIds.length === 0"
+        >Crear</button
+      >
+    </div>
+  </div>
+</Dialog>

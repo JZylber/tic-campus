@@ -1,0 +1,82 @@
+---
+import Loader from "../../loader/Loader.astro";
+import Radio from "../../misc/radio/Radio.astro";
+import OptionalOfferingCreateDialog from "./OptionalOfferingCreateDialog.astro";
+import OptionalOfferingEditDialog from "./OptionalOfferingEditDialog.astro";
+---
+
+<script>
+  import setAlpineData from "../../../scripts/alpine/setAlpineData";
+  import optionalOfferingsPageData from "../../../scripts/alpine/data/optionalOfferingsPage";
+
+  setAlpineData("optionalOfferingsPage", optionalOfferingsPageData);
+</script>
+<div class="w-full flex justify-center py-4" x-data="optionalOfferingsPage()">
+  <Loader show="loading" />
+  <OptionalOfferingCreateDialog />
+  <OptionalOfferingEditDialog />
+
+  <div class="w-full flex flex-col gap-y-4 px-4" x-show="!loading">
+    <div class="flex w-full items-end gap-x-8">
+      <Radio options="levelOptions" xModel="activeLevel" title="Nivel" />
+      <button
+        @click="openCreate(); $refs.createOfferingDialog.showModal()"
+        class="ml-auto px-4 py-2 bg-sh-black text-white rounded-xl hover:opacity-80 cursor-pointer h-fit"
+        >Nueva optativa</button
+      >
+    </div>
+    <table class="w-full">
+      <thead class="bg-sh-black text-gray-50 text-lg font-semibold">
+        <tr>
+          <th class="px-4 py-2">Materia</th>
+          <th class="px-4 py-2">Cursos</th>
+          <th class="px-4 py-2">Editar</th>
+          <th class="px-4 py-2">Eliminar</th>
+        </tr>
+      </thead>
+      <tbody>
+        <template x-for="offering in offeringsForActiveLevel" :key="offering.id">
+          <tr class="border-b-2 border-gray-300 hover:bg-gray-300">
+            <td class="px-4 py-2" x-text="offering.displayName"></td>
+            <td
+              class="px-4 py-2"
+              x-text="offering.courses.map((c) => c.courseName).join(', ')"
+            ></td>
+            <td class="px-4 py-2">
+              <div class="flex justify-center items-center">
+                <div
+                  class="cursor-pointer rounded-full flex justify-center items-center p-1 w-fit aspect-square hover:bg-sh-purple text-sh-black hover:text-white transition-colors"
+                  @click="openEdit(offering); $refs.editOfferingDialog.showModal()"
+                >
+                  <span
+                    class="material-symbols-outlined text-[20px] transition-colors"
+                    >edit</span
+                  >
+                </div>
+              </div>
+            </td>
+            <td class="px-4 py-2">
+              <div class="flex justify-center items-center">
+                <div
+                  class="cursor-pointer rounded-full flex justify-center items-center p-1 w-fit aspect-square hover:bg-red-500 text-sh-black hover:text-white transition-colors"
+                  @click="removeOffering(offering.id)"
+                >
+                  <span
+                    class="material-symbols-outlined text-[20px] transition-colors"
+                    >delete</span
+                  >
+                </div>
+              </div>
+            </td>
+          </tr>
+        </template>
+      </tbody>
+    </table>
+    <span
+      class="text-sh-dark-gray text-sm"
+      x-show="offeringsForActiveLevel.length === 0"
+      >No hay optativas para este nivel.</span
+    >
+    <span class="text-red-500 text-sm" x-text="error ?? ''" x-show="error"></span>
+  </div>
+</div>

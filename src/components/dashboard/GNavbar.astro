@@ -31,12 +31,20 @@ const switchLabel = role === "teacher" ? "Modo Admin" : "Modo Docente";
   }
   {
     role === "admin" && (
-      <a
-        href="/tic-campus/dashboard/admin"
-        class="py-4 flex items-center justify-center w-40 hover:bg-gray-300 uppercase font-bold text-gray-700"
-      >
-        Estudiantes
-      </a>
+      <>
+        <a
+          href="/tic-campus/dashboard/admin"
+          class="py-4 flex items-center justify-center w-40 hover:bg-gray-300 uppercase font-bold text-gray-700"
+        >
+          Estudiantes
+        </a>
+        <a
+          href="/tic-campus/dashboard/admin/optativas"
+          class="py-4 flex items-center justify-center w-40 hover:bg-gray-300 uppercase font-bold text-gray-700"
+        >
+          Optativas
+        </a>
+      </>
     )
   }
   <div class="ml-auto flex items-stretch border-l-2 border-gray-300">

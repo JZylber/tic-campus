@@ -1,0 +1,37 @@
+---
+import Dialog from "../../misc/dialog/Dialog.astro";
+---
+
+<Dialog xRef="editOfferingDialog" className="w-1/2 p-6 overflow-y-auto max-h-[75vh]">
+  <h2 class="text-2xl font-bold mb-2">Editar optativa</h2>
+  <p class="text-sh-dark-gray mb-6" x-text="editForm.offering?.subjectName ?? ''"></p>
+
+  <div class="flex flex-col gap-4">
+    <div class="flex flex-col gap-2">
+      <h3 class="text-lg font-semibold border-b border-gray-200 pb-1">
+        Cursos (Nivel <span x-text="activeLevel"></span>° &mdash; <span x-text="year"></span>)
+      </h3>
+      <template x-for="course in coursesForActiveLevel" :key="course.id">
+        <label class="flex items-center gap-2 py-1 cursor-pointer">
+          <input
+            type="checkbox"
+            class="accent-sh-purple w-5 h-5"
+            :checked="editForm.courseIds.includes(course.id)"
+            @change="toggleEditCourse(course.id)"
+          />
+          <span x-text="course.name"></span>
+        </label>
+      </template>
+    </div>
+
+    <div class="flex justify-between items-center mt-2">
+      <span class="text-red-500 text-sm" x-text="error ?? ''" x-show="error"></span>
+      <button
+        @click="saveEdit().then((ok) => { if (ok) $el.closest('dialog').close(); })"
+        class="ml-auto px-4 py-2 bg-sh-black text-white rounded-xl hover:opacity-80 disabled:opacity-40 cursor-pointer"
+        :disabled="saving || editForm.courseIds.length === 0"
+        >Guardar</button
+      >
+    </div>
+  </div>
+</Dialog>

@@ -23,12 +23,14 @@
     "pnpm": "^10.6.5"
   },
   "devDependencies": {
+    "@astrojs/check": "^0.9.9",
     "@tailwindcss/vite": "^4.2.4",
     "@types/alpinejs__collapse": "^3.13.4",
     "@types/alpinejs__persist": "^3.13.4",
     "@typescript-eslint/parser": "^8.46.4",
     "eslint": "^9.39.1",
     "eslint-plugin-astro": "^1.5.0",
-    "tailwindcss": "^4.2.4"
+    "tailwindcss": "^4.2.4",
+    "typescript": "^5.9.3"
   }
 }
