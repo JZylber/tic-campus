@@ -1,0 +1,271 @@
+---
+import Loader from "../../loader/Loader.astro";
+import TimetableCell from "./TimetableCell.astro";
+import { DAYS, getGridBlocks, getGridCells } from "../../../scripts/timetableLayout";
+
+interface Props {
+  // Enables click/keyboard interaction on every cell (filled or empty) so a
+  // caller (e.g. an admin editor) can react to `timetable-cell-click`
+  // events. View-only callers should leave this false.
+  editable?: boolean;
+}
+
+const { editable = false } = Astro.props;
+
+const blocks = getGridBlocks();
+const cells = getGridCells();
+const daysJson = JSON.stringify(DAYS);
+---
+
+<div class="flex flex-col gap-y-4" x-data="{personalized: false}">
+  <Loader show="state === 'loading'" />
+
+  <template x-if="state === 'error'">
+    <div
+      class="flex-grow flex justify-center items-center text-[20px] md:text-[24px] text-sh-red"
+    >
+      Ocurrió un error al cargar los horarios.
+    </div>
+  </template>
+
+  <template x-if="state === 'empty'">
+    <div
+      class="flex-grow flex justify-center items-center text-[20px] md:text-[24px]"
+    >
+      Proximamente...
+    </div>
+  </template>
+
+  <template x-if="state === 'ready' && seminars && seminars.length > 0">
+    <div class="flex flex-col gap-y-2 pt-2 pb-4 border-y-2 border-gray-400">
+      <h2 class="text-center text-[20px] md:text-[24px] font-bold">
+        Seminarios Avanzados
+      </h2>
+      <div
+        class="flex flex-col gap-2 items-center md:flex-row md:justify-center md:gap-x-8"
+      >
+        <template x-for="seminar in seminars">
+          <div
+            class="flex text-sh-black text-[16px] md:text-[18px] rounded-lg w-full max-w-56 md:w-48 h-8 md:h-10 justify-center items-center"
+            :class="subjectColorClass(seminar)"
+          >
+            <span x-text="seminar"></span>
+          </div>
+        </template>
+      </div>
+    </div>
+  </template>
+
+  <template x-if="state === 'ready'">
+    <div class="flex flex-col gap-y-4">
+      <template x-if="seminars && seminars.length > 0">
+        <div class="flex justify-center w-full" x-init="personalized = true">
+          <div
+            class="rounded-lg bg-gray-400 text-[16px] font-bold text-gray-300 flex justify-center items-center w-60 h-10 overflow-hidden"
+            role="tablist"
+            aria-label="Vista de horario"
+          >
+            <button
+              type="button"
+              role="tab"
+              :aria-selected="personalized"
+              class="w-1/2 h-full flex justify-center items-center cursor-pointer transition-colors"
+              :class="{'bg-sh-purple text-white': personalized}"
+              @click="personalized = true"
+            >
+              Propios
+            </button>
+            <button
+              type="button"
+              role="tab"
+              :aria-selected="!personalized"
+              class="w-1/2 h-full flex justify-center items-center cursor-pointer transition"
+              :class="{'bg-sh-purple text-white': !personalized}"
+              @click="personalized = false"
+            >
+              Rotación
+            </button>
+          </div>
+        </div>
+      </template>
+
+      <!-- Desktop: full weekly grid -->
+      <div
+        class="hidden md:grid grid-cols-[40px_repeat(5,minmax(0,1fr))] grid-rows-[32px_repeat(3,minmax(0,1fr))_12px_repeat(3,minmax(0,1fr))] items-stretch border-gray-400 border-2 w-full max-w-full rounded-xl overflow-hidden gap-[1px] bg-gray-400"
+        role="grid"
+        aria-label="Horario semanal"
+      >
+        <div
+          class="grid grid-cols-subgrid grid-rows-1 col-span-full bg-gray-300 text-gray-600 text-[16px] font-bold items-stretch"
+        >
+          {
+            DAYS.map((day, index) => (
+              <div
+                class="flex items-center justify-center"
+                style={`grid-column-start: ${index + 2};`}
+                role="columnheader"
+                aria-colindex={index + 2}
+              >
+                {day}
+              </div>
+            ))
+          }
+        </div>
+        <div
+          class="grid grid-rows-subgrid grid-cols-subgrid col-start-1 row-start-2 -row-end-1 bg-gray-50"
+        >
+          {
+            blocks.map(({ block, row }) => (
+              <div
+                class="flex justify-center items-center"
+                style={`grid-row-start: ${row};`}
+                role="rowheader"
+                aria-rowindex={row}
+              >
+                {block}
+              </div>
+            ))
+          }
+        </div>
+        <div
+          class="grid grid-cols-subgrid grid-rows-subgrid row-start-2 -row-end-1 col-start-2 -col-end-1"
+        >
+          <div class="row-start-4 bg-gray-300 col-span-full" aria-hidden="true"></div>
+          {
+            cells.map(({ row, col, day, block }) => (
+              <TimetableCell
+                row={row}
+                col={col}
+                day={day}
+                block={block}
+                editable={editable}
+                class="bg-gray-50 flex flex-col overflow-hidden"
+                style={`grid-column-start: ${col}; grid-row-start: ${row};`}
+              >
+                <template x-for="{subject,room,teacher} in slotData">
+                  <div
+                    class="flex flex-col items-center h-full gap-y-0.5 py-1 transition-opacity"
+                    :class="slotClasses(subject, personalized, isProjectSlot)"
+                  >
+                    <span
+                      class="text-sh-black text-[14px] md:text-[16px] font-semibold"
+                      x-text="subject"></span>
+                    <span
+                      class="text-gray-600 text-[12px] md:text-[14px]"
+                      x-text="room"></span>
+                    <span
+                      class="text-gray-600 text-[12px] md:text-[14px]"
+                      x-text="teacher"></span>
+                  </div>
+                </template>
+              </TimetableCell>
+            ))
+          }
+        </div>
+      </div>
+
+      <!-- Mobile: single-day carousel -->
+      <div
+        class="flex flex-col md:hidden border-gray-400 border-2 w-full rounded-xl overflow-hidden bg-gray-300 text-gray-600 text-[14px] md:text-[16px] font-bold"
+        x-data={`{day: 0, days: ${daysJson}}`}
+        x-init="day = new Date().getDay() - 1; if (day < 0 || day >= 5) day = 0"
+        role="grid"
+        aria-label="Horario diario"
+      >
+        <div
+          class="flex py-2 w-full divide-x divide-gray-400 border-b-2 border-gray-400"
+        >
+          <button
+            type="button"
+            class="w-10 flex items-center justify-center"
+            @click="day = Math.max(day - 1, 0)"
+            :aria-disabled="day === 0"
+            aria-label="Día anterior"
+          >
+            <span
+              class="material-symbols-outlined"
+              :class="{'text-gray-400': day === 0}"
+              aria-hidden="true">chevron_left</span
+            >
+          </button>
+          <div class="grow flex justify-center items-center" aria-live="polite">
+            <span x-text="days[day]"></span>
+          </div>
+          <button
+            type="button"
+            class="w-10 flex items-center justify-center"
+            @click="day = Math.min(day + 1, 4)"
+            :aria-disabled="day === 4"
+            aria-label="Día siguiente"
+          >
+            <span
+              class="material-symbols-outlined"
+              :class="{'text-gray-400': day === 4}"
+              aria-hidden="true">chevron_right</span
+            >
+          </button>
+        </div>
+        <div
+          class="w-full grid grid-cols-[40px_1fr] grid-rows-[repeat(3,1fr)_12px_repeat(3,1fr)] bg-gray-400 gap-0.5 items-stretch"
+          x-swipe:left="day = Math.min(day + 1, 4)"
+          x-swipe:right="day = Math.max(day - 1, 0)"
+        >
+          {
+            blocks.map(({ block, row }) => (
+              <div
+                class="bg-gray-50 flex justify-center items-center text-[20px] font-bold"
+                style={`grid-row-start: ${row};`}
+                role="rowheader"
+                aria-rowindex={row}
+              >
+                {block}
+              </div>
+            ))
+          }
+          <div class="bg-gray-400 row-start-4 col-span-full" aria-hidden="true"></div>
+          {
+            blocks.map(({ row, block }) => (
+              <div class="bg-gray-50 w-full overflow-hidden" style={`grid-row-start: ${row};`}>
+                <div
+                  class="w-[500%] flex transition-transform"
+                  :style="`transform: translateX(${day * -20}%)`"
+                >
+                  {
+                    DAYS.map((dayName, index) => (
+                      <TimetableCell
+                        row={row}
+                        col={index + 1}
+                        day={dayName}
+                        block={block}
+                        editable={editable}
+                        class="flex flex-col w-1/5 overflow-hidden"
+                      >
+                        <template x-for="{subject,room,teacher} in slotData">
+                          <div
+                            class="flex flex-col items-center h-full gap-y-0.5 py-1"
+                            :class="slotClasses(subject, personalized, isProjectSlot)"
+                          >
+                            <span class="text-[14px]">
+                              <span
+                                class="text-sh-black font-semibold"
+                                x-text="subject"></span>
+                              <span class="text-gray-600" x-text="' - ' + teacher"
+                              ></span>
+                            </span>
+                            <span
+                              class="text-gray-600 text-[12px] md:text-[14px]"
+                              x-text="room"></span>
+                          </div>
+                        </template>
+                      </TimetableCell>
+                    ))
+                  }
+                </div>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </template>
+</div>

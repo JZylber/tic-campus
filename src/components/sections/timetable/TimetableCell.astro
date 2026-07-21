@@ -1,0 +1,46 @@
+---
+interface Props {
+  row: number;
+  col: number;
+  day: string;
+  block: number;
+  editable?: boolean;
+  class?: string;
+  style?: string;
+}
+
+const {
+  row,
+  col,
+  day,
+  block,
+  editable = false,
+  class: className,
+  style,
+} = Astro.props;
+
+const clickDetail = `{ day: '${day}', block: ${block}, row: ${row}, col: ${col}, slots: slotData }`;
+---
+
+<div
+  class:list={[
+    className,
+    editable && "cursor-pointer hover:ring-2 hover:ring-inset hover:ring-sh-purple",
+  ]}
+  style={style}
+  x-data="{ slotData: [], isProjectSlot: false }"
+  x-effect={`slotData = getTimetableByGridPos(${row}, ${col}); if (seminars) { isProjectSlot = !slotData.some((slot) => seminars.includes(slot.subject)) }`}
+  role="gridcell"
+  aria-rowindex={row}
+  aria-colindex={col}
+  aria-label={`${day}, bloque ${block}`}
+  tabindex={editable ? 0 : undefined}
+  {...editable
+    ? {
+        "@click": `$dispatch('timetable-cell-click', ${clickDetail})`,
+        "@keydown.enter": `$dispatch('timetable-cell-click', ${clickDetail})`,
+      }
+    : {}}
+>
+  <slot />
+</div>
