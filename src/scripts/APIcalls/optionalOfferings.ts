@@ -5,6 +5,7 @@ export type OptionalOffering = {
   id: number;
   subjectId: number;
   subjectName: string;
+  name: string | null;
   year: number;
   level: number;
   templateId: string;
@@ -45,6 +46,7 @@ export async function createOptionalOffering(data: {
   subjectId: number;
   year: number;
   courseIds: number[];
+  name?: string | null;
 }): Promise<OptionalOffering | null> {
   try {
     const response = await authFetch(`${backendURL}/offerings/optional`, {
@@ -64,7 +66,7 @@ export async function createOptionalOffering(data: {
 
 export async function updateOptionalOffering(
   id: number,
-  data: { courseIds: number[] },
+  data: { courseIds?: number[]; name?: string | null },
 ): Promise<OptionalOffering | null> {
   try {
     const response = await authFetch(`${backendURL}/offerings/optional/${id}`, {

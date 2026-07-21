@@ -7,6 +7,16 @@ import Dialog from "../../misc/dialog/Dialog.astro";
   <p class="text-sh-dark-gray mb-6" x-text="editForm.offering?.subjectName ?? ''"></p>
 
   <div class="flex flex-col gap-4">
+    <div class="flex flex-col gap-1">
+      <label class="text-sm font-semibold text-sh-dark-gray">Nombre (opcional)</label>
+      <input
+        type="text"
+        x-model="editForm.name"
+        placeholder="Nombre"
+        class="border-2 border-sh-gray rounded-xl px-3 py-2 focus:outline-sh-purple"
+      />
+    </div>
+
     <div class="flex flex-col gap-2">
       <h3 class="text-lg font-semibold border-b border-gray-200 pb-1">
         Cursos (Nivel <span x-text="activeLevel"></span>° &mdash; <span x-text="year"></span>)

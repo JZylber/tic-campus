@@ -27,10 +27,12 @@ const optionalOfferingsPageData = () =>
     createForm: {
       subjectId: NaN as number,
       courseIds: [] as number[],
+      name: "" as string,
     },
     editForm: {
       offering: null as Offering | null,
       courseIds: [] as number[],
+      name: "" as string,
     },
     get levelOptions() {
       return [
@@ -56,6 +58,12 @@ const optionalOfferingsPageData = () =>
         (o) => o.level === this.activeLevel,
       );
     },
+    courseNamesList(offering: Offering): string {
+      return [...offering.courses]
+        .map((c) => c.courseName)
+        .sort((a, b) => a.localeCompare(b, "es"))
+        .join(", ");
+    },
     init() {
       Promise.all([
         fetchOptionalOfferings(this.year),
@@ -69,7 +77,7 @@ const optionalOfferingsPageData = () =>
       });
     },
     openCreate() {
-      this.createForm = { subjectId: NaN, courseIds: [] };
+      this.createForm = { subjectId: NaN, courseIds: [], name: "" };
       this.error = null;
     },
     toggleCreateCourse(courseId: number) {
@@ -87,11 +95,11 @@ const optionalOfferingsPageData = () =>
         subjectId: this.createForm.subjectId,
         year: this.year,
         courseIds: this.createForm.courseIds,
+        name: this.createForm.name.trim() || null,
       });
       this.saving = false;
       if (!created) {
-        this.error =
-          "No se pudo crear la optativa. Puede que ya esté ofrecida a alguno de esos cursos.";
+        this.error = "No se pudo crear la optativa. Intentá nuevamente.";
         return false;
       }
       this.offerings.push(created);
@@ -101,6 +109,7 @@ const optionalOfferingsPageData = () =>
       this.editForm = {
         offering,
         courseIds: offering.courses.map((c) => c.courseId),
+        name: offering.name ?? "",
       };
       this.error = null;
     },
@@ -117,6 +126,7 @@ const optionalOfferingsPageData = () =>
       this.error = null;
       const updated = await updateOptionalOffering(this.editForm.offering.id, {
         courseIds: this.editForm.courseIds,
+        name: this.editForm.name.trim() || null,
       });
       this.saving = false;
       if (!updated) {
