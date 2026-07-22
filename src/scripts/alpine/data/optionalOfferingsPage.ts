@@ -120,7 +120,7 @@ const optionalOfferingsPageData = () =>
       });
       this.saving = false;
       if (!created) {
-        this.error = "No se pudo crear la optativa. Intentá nuevamente.";
+        this.error = "No se pudo crear el seminario avanzado. Intentá nuevamente.";
         return false;
       }
       this.offerings.push(created);
@@ -164,7 +164,7 @@ const optionalOfferingsPageData = () =>
       return true;
     },
     async removeOffering(id: number) {
-      if (!window.confirm("¿Eliminar esta optativa?")) return;
+      if (!window.confirm("¿Eliminar este seminario avanzado?")) return;
       this.error = null;
       const ok = await deleteOptionalOffering(id);
       if (!ok) {

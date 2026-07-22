@@ -22,7 +22,7 @@ import OptionalOfferingEditDialog from "./OptionalOfferingEditDialog.astro";
       <button
         @click="openCreate(); $refs.createOfferingDialog.showModal()"
         class="ml-auto px-4 py-2 bg-sh-black text-white rounded-xl hover:opacity-80 cursor-pointer h-fit"
-        >Nueva optativa</button
+        >Nuevo seminario avanzado</button
       >
     </div>
     <table class="w-full">
@@ -74,7 +74,7 @@ import OptionalOfferingEditDialog from "./OptionalOfferingEditDialog.astro";
     <span
       class="text-sh-dark-gray text-sm"
       x-show="offeringsForActiveLevel.length === 0"
-      >No hay optativas para este nivel.</span
+      >No hay seminarios avanzados para este nivel.</span
     >
     <span class="text-red-500 text-sm" x-text="error ?? ''" x-show="error"></span>
   </div>
