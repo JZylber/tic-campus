@@ -8,16 +8,29 @@ interface Props {
   // caller (e.g. an admin editor) can react to `timetable-cell-click`
   // events. View-only callers should leave this false.
   editable?: boolean;
+  // Alpine expression (or boolean) controlling whether the "Propios" tab is
+  // selectable. Callers that can't tell who "Propios" would mean (e.g. no
+  // student identified) pass a falsy expression to grey it out and force
+  // "Rotación". Defaults to always-available, matching prior behavior.
+  personalizedAvailable?: string | boolean;
 }
 
-const { editable = false } = Astro.props;
+const { editable = false, personalizedAvailable = true } = Astro.props;
+const personalizedAvailableExpr =
+  typeof personalizedAvailable === "string"
+    ? personalizedAvailable
+    : JSON.stringify(personalizedAvailable);
 
 const blocks = getGridBlocks();
 const cells = getGridCells();
 const daysJson = JSON.stringify(DAYS);
 ---
 
-<div class="flex flex-col gap-y-4" x-data="{personalized: false}">
+<div
+  class="flex flex-col gap-y-4"
+  x-data="{personalized: false, personalizedAvailable: true}"
+  x-effect={`personalizedAvailable = ${personalizedAvailableExpr}; if (!personalizedAvailable) personalized = false`}
+>
   <Loader show="state === 'loading'" />
 
   <template x-if="state === 'error'">
@@ -59,7 +72,7 @@ const daysJson = JSON.stringify(DAYS);
   <template x-if="state === 'ready'">
     <div class="flex flex-col gap-y-4">
       <template x-if="seminars && seminars.length > 0">
-        <div class="flex justify-center w-full" x-init="personalized = true">
+        <div class="flex justify-center w-full" x-init="personalized = personalizedAvailable">
           <div
             class="rounded-lg bg-gray-400 text-[16px] font-bold text-gray-300 flex justify-center items-center w-60 h-10 overflow-hidden"
             role="tablist"
@@ -69,9 +82,11 @@ const daysJson = JSON.stringify(DAYS);
               type="button"
               role="tab"
               :aria-selected="personalized"
-              class="w-1/2 h-full flex justify-center items-center cursor-pointer transition-colors"
-              :class="{'bg-sh-purple text-white': personalized}"
-              @click="personalized = true"
+              :aria-disabled="!personalizedAvailable"
+              :tabindex="personalizedAvailable ? 0 : -1"
+              class="w-1/2 h-full flex justify-center items-center transition-colors"
+              :class="{'bg-sh-purple text-white': personalized, 'cursor-pointer': personalizedAvailable, 'cursor-not-allowed opacity-50': !personalizedAvailable}"
+              @click="personalizedAvailable && (personalized = true)"
             >
               Propios
             </button>

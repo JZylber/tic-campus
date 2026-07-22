@@ -6,3 +6,11 @@ export function matchesSemesterFilter(offeringSemester: Semester, filter: Semest
   if (filter === "BOTH") return offeringSemester === "BOTH";
   return offeringSemester === filter || offeringSemester === "BOTH";
 }
+
+// Cuatrimestre toggles default to whichever term is actually current, using
+// July 25th as the cutover point (school's informal 1er/2do boundary).
+export function defaultCuatrimestre(now: Date = new Date()): "FIRST" | "SECOND" {
+  const month = now.getMonth(); // 0-indexed, 6 = July
+  const isAfterCutover = month > 6 || (month === 6 && now.getDate() > 25);
+  return isAfterCutover ? "SECOND" : "FIRST";
+}

@@ -1,6 +1,6 @@
 import type { AlpineComponent } from "alpinejs";
 import { fetchOfferings, type OfferingWithSlots, type Semester } from "../../APIcalls/offeringTimeSlots";
-import { matchesSemesterFilter } from "../../offeringSemester";
+import { matchesSemesterFilter, defaultCuatrimestre } from "../../offeringSemester";
 import { fetchCourses, fetchStudents, type Course, type Student } from "../../APIcalls/dashboard";
 import {
   WEEKDAY_TO_DAY,
@@ -36,7 +36,7 @@ const studentSchedulePageData = () =>
     level: NaN as number,
     courseId: NaN as number,
     studentId: NaN as number,
-    cuatrimestre: (new Date().getMonth() < 6 ? "FIRST" : "SECOND") as Semester,
+    cuatrimestre: defaultCuatrimestre() as Semester,
     offerings: [] as OfferingWithSlots[],
     allCourses: [] as Course[],
     allStudents: [] as Student[],

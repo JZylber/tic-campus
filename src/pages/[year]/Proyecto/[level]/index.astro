@@ -1,25 +1,20 @@
 ---
 import Layout from "../../../../layouts/Layout.astro";
 import Navbar from "../../../../components/navbar/Navbar.astro";
+import { getProyectoLevelPaths } from "../../../../scripts/proyectoLevels";
 
-export function getStaticPaths() {
-  return [
-    {
-      params: { year: "2025", courses: "NR3" },
-      props: { dataSheetId: "" },
-    },
-  ];
+export async function getStaticPaths() {
+  return getProyectoLevelPaths();
 }
 
-const { courses, year } = Astro.params;
-const { dataSheetId } = Astro.props;
+const { level } = Astro.params;
 const subject = "Proyecto";
 
 const items = [{ name: "home", icon: "home", title: subject }];
 ---
 
-<Layout dataSheetId={dataSheetId}>
-  <Navbar course={courses} subject={subject} items={items} />
+<Layout>
+  <Navbar course={level} subject={subject} items={items} />
   <main
     class="relative grow bg-gray-50 border-y sm:border-r lg:border-l border-gray-300 sm:rounded-r-xl lg:rounded-l-xl overflow-hidden"
   >

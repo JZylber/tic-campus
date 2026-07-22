@@ -25,6 +25,10 @@ export type OfferingWithSlots = {
   displayName: string;
   courses: Array<{ courseId: number; courseName: string; division: string }>;
   timeSlots: OfferingTimeSlot[];
+  // Only present on fetchPublicOfferingSchedule results; fetchOfferings
+  // (the admin endpoint) doesn't compute this. Only meaningful for OPTIONAL
+  // offerings when a real studentId was resolved.
+  enrolled?: boolean;
 };
 
 export async function fetchOfferings(year: number): Promise<OfferingWithSlots[]> {
@@ -36,6 +40,30 @@ export async function fetchOfferings(year: number): Promise<OfferingWithSlots[]>
     return (await response.json()) as OfferingWithSlots[];
   } catch (error) {
     console.error("Failed to fetch offerings:", error);
+    return [];
+  }
+}
+
+// Public counterpart of fetchOfferings — no JWT, scoped to one subject and
+// level, for the campus-embedded student-facing timetable pages. studentId
+// may be "0"/unknown when no student was identified via SSO; the backend
+// tolerates that gracefully (every offering just comes back unenrolled).
+export async function fetchPublicOfferingSchedule(
+  subject: string,
+  year: number,
+  level: number,
+  studentId: string,
+): Promise<OfferingWithSlots[]> {
+  try {
+    const response = await fetch(
+      `${backendURL}/offerings/${encodeURIComponent(subject)}/${year}/${level}/${encodeURIComponent(studentId)}`,
+    );
+    if (!response.ok) {
+      throw new Error(`Error fetching public offering schedule: ${response.statusText}`);
+    }
+    return (await response.json()) as OfferingWithSlots[];
+  } catch (error) {
+    console.error("Failed to fetch public offering schedule:", error);
     return [];
   }
 }
