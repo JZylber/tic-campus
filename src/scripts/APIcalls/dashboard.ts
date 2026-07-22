@@ -38,6 +38,7 @@ export type Student = {
   email: string;
   courses: CourseEnrollment[];
   subjects: StudentSubject[];
+  optionalOfferingIds: number[];
 };
 
 export async function fetchSubjects() {

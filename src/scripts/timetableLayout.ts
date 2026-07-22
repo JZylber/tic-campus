@@ -31,6 +31,10 @@ export type TimetableEntry = {
   block: number;
   room: string;
   teacher: string;
+  // Set when this entry lost/tied an overlap-resolution tiebreak against
+  // another entry in the same slot (see studentSchedulePage.ts) — surfaced
+  // in the grid as a visual warning instead of being silently dropped.
+  conflict?: boolean;
 };
 
 export type TimetableBySubject = Record<string, TimetableEntry[]>;
@@ -44,7 +48,7 @@ export const getSlotsAtGridPos = (
   timetable: TimetableBySubject | null,
   row: number,
   col: number
-): Array<{ subject: string; room: string; teacher: string }> => {
+): Array<{ subject: string; room: string; teacher: string; conflict?: boolean }> => {
   if (timetable === null) return [];
   const day = DAYS[col - 1];
   return Object.entries(timetable)
@@ -55,6 +59,7 @@ export const getSlotsAtGridPos = (
           subject,
           room: entry.room,
           teacher: entry.teacher,
+          conflict: entry.conflict,
         }))
     )
     .sort((a, b) => {

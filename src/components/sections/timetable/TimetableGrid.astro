@@ -142,11 +142,17 @@ const daysJson = JSON.stringify(DAYS);
                 class="bg-gray-50 flex flex-col overflow-hidden"
                 style={`grid-column-start: ${col}; grid-row-start: ${row};`}
               >
-                <template x-for="{subject,room,teacher} in slotData">
+                <template x-for="{subject,room,teacher,conflict} in slotData">
                   <div
                     class="flex flex-col items-center h-full gap-y-0.5 py-1 transition-opacity"
-                    :class="slotClasses(subject, personalized, isProjectSlot)"
+                    :class="[slotClasses(subject, personalized, isProjectSlot), conflict && 'ring-2 ring-inset ring-sh-red']"
                   >
+                    <span
+                      class="text-[10px] md:text-[11px] font-bold text-sh-red"
+                      x-show="conflict"
+                      x-cloak
+                      >¡Conflicto!</span
+                    >
                     <span
                       class="text-[14px] md:text-[16px] font-semibold"
                       x-text="subject"></span>
@@ -242,11 +248,17 @@ const daysJson = JSON.stringify(DAYS);
                         editable={editable}
                         class="flex flex-col w-1/5 overflow-hidden"
                       >
-                        <template x-for="{subject,room,teacher} in slotData">
+                        <template x-for="{subject,room,teacher,conflict} in slotData">
                           <div
                             class="flex flex-col items-center h-full gap-y-0.5 py-1"
-                            :class="slotClasses(subject, personalized, isProjectSlot)"
+                            :class="[slotClasses(subject, personalized, isProjectSlot), conflict && 'ring-2 ring-inset ring-sh-red']"
                           >
+                            <span
+                              class="text-[10px] font-bold text-sh-red"
+                              x-show="conflict"
+                              x-cloak
+                              >¡Conflicto!</span
+                            >
                             <span class="text-[14px]">
                               <span
                                 class="font-semibold"
