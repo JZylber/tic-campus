@@ -7,6 +7,11 @@ const SUBJECT_COLORS: Record<string, string> = {
   Backend: "bg-sh-medium-green",
   TIMI: "bg-sh-medium-yellow",
   Proyecto: "bg-gray-200",
+  IA: "bg-tic-ia",
+  "Desarrollo de Videojuegos": "bg-tic-juegos",
+  IOT: "bg-tic-iot",
+  "UX/UI": "bg-tic-impacto-social",
+  "Arte de Videojuegos": "bg-tic-rv",
 };
 
 const FALLBACK_PALETTE = [
@@ -27,9 +32,12 @@ const hashString = (value: string): number => {
 
 // Offering display names may append "-<offering name>" (see
 // composeSubjectName in the backend) to disambiguate variants of the same
-// subject, e.g. "Hardware-Turno Tarde". Colors should key off the subject
-// alone so every variant of a subject renders consistently.
-const getBaseSubjectName = (subject: string): string => subject.split("-")[0];
+// subject, e.g. "Hardware-Turno Tarde", and/or " (<divisions>)" (see
+// buildDisplayName in the backend) to disambiguate which courses a subject
+// is offered to, e.g. "IA (Z)". Colors should key off the subject alone so
+// every variant of a subject renders consistently.
+const getBaseSubjectName = (subject: string): string =>
+  subject.split("-")[0].replace(/\s*\([^)]*\)\s*$/, "").trim();
 
 export const getSubjectColorClass = (subject: string): string => {
   const base = getBaseSubjectName(subject);

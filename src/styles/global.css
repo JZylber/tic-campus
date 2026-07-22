@@ -38,6 +38,17 @@ html {
   --color-sh-green: rgba(31, 203, 95, 1);
   --color-sh-medium-green: #68e898;
   --color-sh-light-green: rgba(233, 253, 242, 1);
+  --color-tic-ia: #9fea18;
+  --color-tic-app: #f2cb00;
+  --color-tic-juegos: #2ab9ff;
+  --color-tic-rv: #00ead0;
+  --color-tic-satelite: #ff6c31;
+  --color-tic-iot: #ed57ec;
+  --color-tic-blockchain: #390040;
+  --color-tic-3d: #008080;
+  --color-tic-arte: #e9d2f4;
+  --color-tic-hardware: #cc2624;
+  --color-tic-impacto-social: #a431ff;
 }
 
 @layer components {
