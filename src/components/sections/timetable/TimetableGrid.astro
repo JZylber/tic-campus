@@ -91,7 +91,7 @@ const daysJson = JSON.stringify(DAYS);
 
       <!-- Desktop: full weekly grid -->
       <div
-        class="hidden md:grid grid-cols-[40px_repeat(5,minmax(0,1fr))] grid-rows-[32px_repeat(3,minmax(0,1fr))_12px_repeat(3,minmax(0,1fr))] items-stretch border-gray-400 border-2 w-full max-w-full rounded-xl overflow-hidden gap-[1px] bg-gray-400"
+        class="hidden md:grid grid-cols-[40px_repeat(5,minmax(0,1fr))] grid-rows-[32px_repeat(3,minmax(96px,1fr))_12px_repeat(3,minmax(96px,1fr))] items-stretch border-gray-400 border-2 w-full max-w-full rounded-xl overflow-hidden gap-[1px] bg-gray-400"
         role="grid"
         aria-label="Horario semanal"
       >
@@ -206,7 +206,7 @@ const daysJson = JSON.stringify(DAYS);
           </button>
         </div>
         <div
-          class="w-full grid grid-cols-[40px_1fr] grid-rows-[repeat(3,1fr)_12px_repeat(3,1fr)] bg-gray-400 gap-0.5 items-stretch"
+          class="w-full grid grid-cols-[40px_1fr] grid-rows-[repeat(3,minmax(64px,1fr))_12px_repeat(3,minmax(64px,1fr))] bg-gray-400 gap-0.5 items-stretch"
           x-swipe:left="day = Math.min(day + 1, 4)"
           x-swipe:right="day = Math.max(day - 1, 0)"
         >

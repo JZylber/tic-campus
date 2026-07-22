@@ -1,15 +1,12 @@
 import type { AlpineComponent } from "alpinejs";
-import { BLOCK_TO_ROW, DAYS } from "../../timetableLayout";
+import {
+  getSlotsAtGridPos,
+  type TimetableBySubject,
+  type TimetableEntry,
+} from "../../timetableLayout";
 import { getSlotClasses, getSubjectColorClass } from "../../timetableColors";
 
-export type TimetableEntry = {
-  day: string;
-  block: number;
-  room: string;
-  teacher: string;
-};
-
-export type TimetableBySubject = Record<string, TimetableEntry[]>;
+export type { TimetableEntry, TimetableBySubject };
 
 type TimetableState = "loading" | "error" | "empty" | "ready";
 
@@ -58,25 +55,7 @@ const timetableData = () => {
       this.error = true;
     },
     getTimetableByGridPos(row: number, col: number) {
-      if (this.timetable === null) return [];
-      const day = DAYS[col - 1];
-      return Object.entries(this.timetable)
-        .flatMap(([subject, entries]) =>
-          entries
-            .filter(
-              (entry) => entry.day === day && BLOCK_TO_ROW[entry.block] === row
-            )
-            .map((entry) => ({
-              subject,
-              room: entry.room,
-              teacher: entry.teacher,
-            }))
-        )
-        .sort((a, b) => {
-          if (a.subject === "Proyecto") return 1;
-          if (b.subject === "Proyecto") return -1;
-          return 0;
-        });
+      return getSlotsAtGridPos(this.timetable, row, col);
     },
     subjectColorClass: getSubjectColorClass,
     slotClasses: getSlotClasses,

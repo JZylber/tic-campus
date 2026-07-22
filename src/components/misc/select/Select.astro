@@ -9,15 +9,17 @@ interface Props {
       }>
     | string;
   className?: string;
+  disabled?: boolean | string;
 }
 
-const { title, xModel, options, className } = Astro.props;
+const { title, xModel, options, className, disabled = false } = Astro.props;
+const disabledExpr = typeof disabled === "string" ? disabled : JSON.stringify(disabled);
 ---
 
 <div
-  x-data={`{options: [], selectedOption: null}`}
+  x-data={`{options: [], selectedOption: null, disabled: false}`}
   class={`flex flex-col items-center md:items-start gap-2 ${className}`}
-  x-effect={`options=${typeof options === "string" ? options : JSON.stringify(options)};if(options.length > 0){const _cur = options.find(o => o.value === ${xModel}); if(_cur){selectedOption = _cur;}else{${xModel} = options[0].value; selectedOption = options[0];}}`}
+  x-effect={`options=${typeof options === "string" ? options : JSON.stringify(options)};disabled=${disabledExpr};if(options.length > 0){const _cur = options.find(o => o.value === ${xModel}); if(_cur){selectedOption = _cur;}else{${xModel} = options[0].value; selectedOption = options[0];}}`}
 >
   <label
     class="text-center md:text-left text-sh-dark-gray text-[16px] font-semibold"
@@ -31,10 +33,11 @@ const { title, xModel, options, className } = Astro.props;
          where event retargeting breaks element.contains(event.target). -->
     <div
       x-data="{ open: false }"
-      @click="open = !open"
+      x-effect="if (disabled) open = false"
+      @click="disabled || (open = !open)"
       @click.window="if(!$event.composedPath().includes($el)) open = false"
       class="absolute bg-gray-50 overflow-hidden w-full flex flex-col rounded-xl text-sh-dark-gray text-[16px] border-2 border-sh-gray cursor-pointer"
-      :class=`{'z-10': open}`
+      :class=`{'z-10': open, 'opacity-50 pointer-events-none': disabled}`
     >
       <div class="p-2 flex justify-between items-center gap-x-6">
         <span x-text="selectedOption ? selectedOption.label : ''"></span>

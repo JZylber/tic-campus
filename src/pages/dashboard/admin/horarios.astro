@@ -1,0 +1,19 @@
+---
+import OfferingTimeSlotsPanel from "../../../components/dashboard/offeringTimeSlots/OfferingTimeSlotsPanel.astro";
+import AdminLayout from "../../../layouts/AdminLayout.astro";
+---
+
+<script>
+  import { requireAdminAuth } from "../../../scripts/auth";
+  requireAdminAuth();
+</script>
+
+<AdminLayout>
+  <div class="w-full h-full flex flex-col items-center overflow-y-scroll">
+    <h1 class="text-[30px] md:text-[36px] font-bold pt-4 pb-2">Horarios</h1>
+    <h2 class="text-[16px] md:text-[20px] pb-4">
+      Administrá los horarios de cada materia por año.
+    </h2>
+    <OfferingTimeSlotsPanel />
+  </div>
+</AdminLayout>

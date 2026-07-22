@@ -25,16 +25,23 @@ const hashString = (value: string): number => {
   return hash;
 };
 
-export const getSubjectColorClass = (subject: string): string =>
-  SUBJECT_COLORS[subject] ??
-  FALLBACK_PALETTE[hashString(subject) % FALLBACK_PALETTE.length];
+// Offering display names may append "-<offering name>" (see
+// composeSubjectName in the backend) to disambiguate variants of the same
+// subject, e.g. "Hardware-Turno Tarde". Colors should key off the subject
+// alone so every variant of a subject renders consistently.
+const getBaseSubjectName = (subject: string): string => subject.split("-")[0];
+
+export const getSubjectColorClass = (subject: string): string => {
+  const base = getBaseSubjectName(subject);
+  return SUBJECT_COLORS[base] ?? FALLBACK_PALETTE[hashString(base) % FALLBACK_PALETTE.length];
+};
 
 export const getSlotClasses = (
   subject: string,
   personalized: boolean,
   isProjectSlot: boolean
 ): string => {
-  const isProyecto = subject === "Proyecto";
+  const isProyecto = getBaseSubjectName(subject) === "Proyecto";
   const dimmed = personalized && isProyecto !== isProjectSlot;
   return dimmed
     ? `${getSubjectColorClass(subject)} opacity-10`
