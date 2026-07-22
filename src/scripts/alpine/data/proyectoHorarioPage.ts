@@ -16,6 +16,17 @@ function groupLabelFor(displayName: string): string {
   return match ? match[1] : "Todos";
 }
 
+// Key used to bucket an offering into a group timetable. Mirrors the backend's
+// composeSubjectName ("Frontend-1"): it keeps the bare subject name (dropping
+// displayName's "(AC)"/"(BD)" division suffix, which the active tab already
+// conveys) but preserves the offering's own `name` so two variants of the same
+// subject (e.g. "Frontend" split into 1/2) stay distinct instead of one
+// overwriting the other. getBaseSubjectName in timetableColors strips the
+// "-<name>" suffix, so every variant still resolves to the same color.
+function groupSubjectKey(offering: OfferingWithSlots): string {
+  return offering.name ? `${offering.subjectName}-${offering.name}` : offering.subjectName;
+}
+
 const proyectoHorarioPageData = (year: number, level: number) =>
   ({
     loading: true,
@@ -76,7 +87,7 @@ const proyectoHorarioPageData = (year: number, level: number) =>
         ...(this.getGroupOptionalOfferings(groupId) as OfferingWithSlots[]),
       ];
       for (const offering of offerings) {
-        timetable[offering.subjectName] = offering.timeSlots.map((slot) => ({
+        timetable[groupSubjectKey(offering)] = offering.timeSlots.map((slot) => ({
           day: WEEKDAY_TO_DAY[slot.day],
           block: slot.slot,
           room: slot.classroom ?? "",
