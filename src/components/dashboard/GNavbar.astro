@@ -84,7 +84,12 @@ const otherDashboards = [
         </a>
       ))
     }
-    <a href="/tic-campus/" class="flex items-center justify-end gap-x-4 px-4">
+    <a
+      href="/tic-campus/"
+      x-show="$store.currentUser.role === 'ADMIN' && $store.student.id !== -1"
+      x-cloak
+      class="flex items-center justify-end gap-x-4 px-4"
+    >
       <span
         class="material-symbols-outlined !text-[30px]"
         x-text="$store.student.id === -1?'question_mark':'person'"></span>
