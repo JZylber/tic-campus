@@ -1,5 +1,6 @@
 ---
 import Dialog from "../../misc/dialog/Dialog.astro";
+import Select from "../../misc/select/Select.astro";
 ---
 
 <Dialog xRef="editOfferingDialog" className="w-1/2 p-6 overflow-y-auto max-h-[75vh]">
@@ -7,6 +8,8 @@ import Dialog from "../../misc/dialog/Dialog.astro";
   <p class="text-sh-dark-gray mb-6" x-text="editForm.offering?.subjectName ?? ''"></p>
 
   <div class="flex flex-col gap-4">
+    <Select title="Semestre" xModel="editForm.semester" options="semesterOptions" />
+
     <div class="flex flex-col gap-1">
       <label class="text-sm font-semibold text-sh-dark-gray">Nombre (opcional)</label>
       <input

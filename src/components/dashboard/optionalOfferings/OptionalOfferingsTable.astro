@@ -30,6 +30,7 @@ import OptionalOfferingEditDialog from "./OptionalOfferingEditDialog.astro";
         <tr>
           <th class="px-4 py-2">Materia</th>
           <th class="px-4 py-2">Cursos</th>
+          <th class="px-4 py-2">Semestre</th>
           <th class="px-4 py-2">Editar</th>
           <th class="px-4 py-2">Eliminar</th>
         </tr>
@@ -39,6 +40,7 @@ import OptionalOfferingEditDialog from "./OptionalOfferingEditDialog.astro";
           <tr class="border-b-2 border-gray-300 hover:bg-gray-300">
             <td class="px-4 py-2" x-text="offering.displayName"></td>
             <td class="px-4 py-2" x-text="courseNamesList(offering)"></td>
+            <td class="px-4 py-2" x-text="semesterLabel(offering.semester)"></td>
             <td class="px-4 py-2">
               <div class="flex justify-center items-center">
                 <div

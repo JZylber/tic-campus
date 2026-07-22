@@ -2,6 +2,7 @@ import { backendURL } from "./shared";
 import { authFetch } from "./authToken";
 
 export type Weekday = "MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY";
+export type Semester = "FIRST" | "SECOND" | "BOTH";
 
 export type OfferingTimeSlot = {
   id: number;
@@ -20,6 +21,7 @@ export type OfferingWithSlots = {
   level: number;
   templateId: string;
   spreadsheetId: string | null;
+  semester: Semester;
   displayName: string;
   courses: Array<{ courseId: number; courseName: string; division: string }>;
   timeSlots: OfferingTimeSlot[];

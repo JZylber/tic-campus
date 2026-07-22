@@ -6,7 +6,15 @@ import {
   deleteOfferingTimeSlot,
   type OfferingWithSlots,
   type OfferingTimeSlot,
+  type Semester,
 } from "../../APIcalls/offeringTimeSlots";
+
+// An offering tagged BOTH runs all year, so it matches every semester filter
+// except the BOTH filter itself, which is used to isolate full-year offerings.
+function matchesSemesterFilter(offeringSemester: Semester, filter: Semester): boolean {
+  if (filter === "BOTH") return offeringSemester === "BOTH";
+  return offeringSemester === filter || offeringSemester === "BOTH";
+}
 import { fetchCourses, type Course } from "../../APIcalls/dashboard";
 import {
   DAY_TO_WEEKDAY,
@@ -33,6 +41,7 @@ const offeringTimeSlotsPageData = () =>
     error: null as string | null,
     year: new Date().getFullYear(),
     level: NaN as number,
+    semesterFilter: "FIRST" as Semester,
     offeringId: NaN as number,
     offerings: [] as OfferingWithSlots[],
     allCourses: [] as Course[],
@@ -56,16 +65,30 @@ const offeringTimeSlotsPageData = () =>
         disabled: !offerings.some((o) => o.level === level),
       }));
     },
+    get semesterFilterOptions() {
+      return [
+        { value: "FIRST", label: "1er Cuatrimestre" },
+        { value: "SECOND", label: "2do Cuatrimestre" },
+        { value: "BOTH", label: "Anual" },
+      ];
+    },
     get offeringOptions() {
       if (isNaN(this.level)) return [];
       return (this.offerings as OfferingWithSlots[])
-        .filter((o) => o.level === this.level)
+        .filter(
+          (o) =>
+            o.level === this.level &&
+            matchesSemesterFilter(o.semester, this.semesterFilter),
+        )
         .map((o) => ({ value: o.id, label: o.displayName }));
     },
     get selectedOffering(): OfferingWithSlots | null {
       return (
         (this.offerings as OfferingWithSlots[]).find(
-          (o) => o.id === this.offeringId && o.level === this.level,
+          (o) =>
+            o.id === this.offeringId &&
+            o.level === this.level &&
+            matchesSemesterFilter(o.semester, this.semesterFilter),
         ) ?? null
       );
     },

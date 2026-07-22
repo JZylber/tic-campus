@@ -21,6 +21,12 @@ import SlotDialog from "./SlotDialog.astro";
       <Radio title="Año escolar" xModel="level" options="levelOptions" className="w-full md:w-1/4" />
       <Select title="Año" xModel="year" options="yearOptions" className="w-full md:w-32" />
       <Select
+        title="Semestre"
+        xModel="semesterFilter"
+        options="semesterFilterOptions"
+        className="w-full md:w-1/4"
+      />
+      <Select
         title="Materia"
         xModel="offeringId"
         options="offeringOptions"

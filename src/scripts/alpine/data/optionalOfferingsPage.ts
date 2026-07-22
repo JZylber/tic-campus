@@ -28,16 +28,25 @@ const optionalOfferingsPageData = () =>
       subjectId: NaN as number,
       courseIds: [] as number[],
       name: "" as string,
+      semester: "FIRST" as Offering["semester"],
     },
     editForm: {
       offering: null as Offering | null,
       courseIds: [] as number[],
       name: "" as string,
+      semester: "FIRST" as Offering["semester"],
     },
     get levelOptions() {
       return [
         { value: 3, label: "3" },
         { value: 4, label: "4" },
+      ];
+    },
+    get semesterOptions() {
+      return [
+        { value: "FIRST", label: "1er Cuatrimestre" },
+        { value: "SECOND", label: "2do Cuatrimestre" },
+        { value: "BOTH", label: "Anual" },
       ];
     },
     get subjectOptions() {
@@ -72,6 +81,9 @@ const optionalOfferingsPageData = () =>
         .sort((a, b) => a.localeCompare(b, "es"))
         .join(", ");
     },
+    semesterLabel(semester: Offering["semester"]): string {
+      return this.semesterOptions.find((o: { value: string }) => o.value === semester)?.label ?? "";
+    },
     init() {
       Promise.all([
         fetchOptionalOfferings(this.year),
@@ -85,7 +97,7 @@ const optionalOfferingsPageData = () =>
       });
     },
     openCreate() {
-      this.createForm = { subjectId: NaN, courseIds: [], name: "" };
+      this.createForm = { subjectId: NaN, courseIds: [], name: "", semester: "FIRST" };
       this.error = null;
     },
     toggleCreateCourse(courseId: number) {
@@ -104,6 +116,7 @@ const optionalOfferingsPageData = () =>
         year: this.year,
         courseIds: this.createForm.courseIds,
         name: this.createForm.name.trim() || null,
+        semester: this.createForm.semester,
       });
       this.saving = false;
       if (!created) {
@@ -118,6 +131,7 @@ const optionalOfferingsPageData = () =>
         offering,
         courseIds: offering.courses.map((c) => c.courseId),
         name: offering.name ?? "",
+        semester: offering.semester,
       };
       this.error = null;
     },
@@ -135,6 +149,7 @@ const optionalOfferingsPageData = () =>
       const updated = await updateOptionalOffering(this.editForm.offering.id, {
         courseIds: this.editForm.courseIds,
         name: this.editForm.name.trim() || null,
+        semester: this.editForm.semester,
       });
       this.saving = false;
       if (!updated) {

@@ -1,6 +1,8 @@
 import { backendURL } from "./shared";
 import { authFetch } from "./authToken";
 
+export type Semester = "FIRST" | "SECOND" | "BOTH";
+
 export type OptionalOffering = {
   id: number;
   subjectId: number;
@@ -10,6 +12,7 @@ export type OptionalOffering = {
   level: number;
   templateId: string;
   spreadsheetId: string | null;
+  semester: Semester;
   displayName: string;
   courses: Array<{ courseId: number; courseName: string; division: string }>;
 };
@@ -47,6 +50,7 @@ export async function createOptionalOffering(data: {
   year: number;
   courseIds: number[];
   name?: string | null;
+  semester: Semester;
 }): Promise<OptionalOffering | null> {
   try {
     const response = await authFetch(`${backendURL}/offerings/optional`, {
@@ -66,7 +70,7 @@ export async function createOptionalOffering(data: {
 
 export async function updateOptionalOffering(
   id: number,
-  data: { courseIds?: number[]; name?: string | null },
+  data: { courseIds?: number[]; name?: string | null; semester?: Semester },
 ): Promise<OptionalOffering | null> {
   try {
     const response = await authFetch(`${backendURL}/offerings/optional/${id}`, {
