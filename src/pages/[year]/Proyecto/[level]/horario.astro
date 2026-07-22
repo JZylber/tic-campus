@@ -30,7 +30,12 @@ const { year, level } = Astro.params;
         options="cuatrimestreOptions"
         className="w-full md:w-1/3"
       />
-      <TimetableGrid editable={false} personalizedAvailable="personalizedAvailable" />
+      <TimetableGrid
+        editable={false}
+        personalizedAvailable="personalizedAvailable"
+        tabs="groupTabs"
+        alwaysShowTabs={true}
+      />
     </div>
   </main>
 </Layout>

@@ -11,15 +11,34 @@ interface Props {
   // Alpine expression (or boolean) controlling whether the "Propios" tab is
   // selectable. Callers that can't tell who "Propios" would mean (e.g. no
   // student identified) pass a falsy expression to grey it out and force
-  // "Rotación". Defaults to always-available, matching prior behavior.
+  // the first non-personalized tab. Defaults to always-available, matching
+  // prior behavior.
   personalizedAvailable?: string | boolean;
+  // Alpine expression (or literal array) for the non-personalized tabs —
+  // one per distinct schedule "view" a caller wants to expose (e.g. one per
+  // rotation group). Defaults to a single "Rotación" tab, reproducing the
+  // old fixed Propios/Rotación toggle for every caller that doesn't opt in.
+  tabs?: string | Array<{ id: string; label: string }>;
+  // Forces the tab switcher to render even with a single non-personalized
+  // tab and no seminars — needed by callers where "Propios" already differs
+  // meaningfully from that single tab (e.g. Proyecto, where "Propios" only
+  // shows the student's own rotation group).
+  alwaysShowTabs?: string | boolean;
 }
 
-const { editable = false, personalizedAvailable = true } = Astro.props;
+const {
+  editable = false,
+  personalizedAvailable = true,
+  tabs = [{ id: "rotacion", label: "Rotación" }],
+  alwaysShowTabs = false,
+} = Astro.props;
 const personalizedAvailableExpr =
   typeof personalizedAvailable === "string"
     ? personalizedAvailable
     : JSON.stringify(personalizedAvailable);
+const tabsExpr = typeof tabs === "string" ? tabs : JSON.stringify(tabs);
+const alwaysShowTabsExpr =
+  typeof alwaysShowTabs === "string" ? alwaysShowTabs : JSON.stringify(alwaysShowTabs);
 
 const blocks = getGridBlocks();
 const cells = getGridCells();
@@ -28,8 +47,14 @@ const daysJson = JSON.stringify(DAYS);
 
 <div
   class="flex flex-col gap-y-4"
-  x-data="{personalized: false, canPersonalize: true}"
-  x-effect={`canPersonalize = ${personalizedAvailableExpr}; if (!canPersonalize) personalized = false`}
+  x-data="{personalized: false, canPersonalize: true, tabsList: [], activeTab: null, alwaysShowTabs: false}"
+  x-effect={`
+    canPersonalize = ${personalizedAvailableExpr};
+    if (!canPersonalize) personalized = false;
+    tabsList = ${tabsExpr};
+    alwaysShowTabs = ${alwaysShowTabsExpr};
+    if (!tabsList.some((t) => t.id === activeTab)) activeTab = tabsList[0]?.id ?? null;
+  `}
 >
   <Loader show="state === 'loading'" />
 
@@ -71,10 +96,10 @@ const daysJson = JSON.stringify(DAYS);
 
   <template x-if="state === 'ready'">
     <div class="flex flex-col gap-y-4">
-      <template x-if="seminars && seminars.length > 0">
+      <template x-if="(seminars && seminars.length > 0) || tabsList.length > 1 || alwaysShowTabs">
         <div class="flex justify-center w-full" x-init="personalized = canPersonalize">
           <div
-            class="rounded-lg bg-gray-400 text-[16px] font-bold text-gray-300 flex justify-center items-center w-60 h-10 overflow-hidden"
+            class="rounded-lg bg-gray-400 text-[16px] font-bold text-gray-300 inline-flex justify-center items-center h-10 overflow-hidden"
             role="tablist"
             aria-label="Vista de horario"
           >
@@ -84,22 +109,23 @@ const daysJson = JSON.stringify(DAYS);
               :aria-selected="personalized"
               :aria-disabled="!canPersonalize"
               :tabindex="canPersonalize ? 0 : -1"
-              class="w-1/2 h-full flex justify-center items-center transition-colors"
+              class="px-4 h-full flex justify-center items-center transition-colors"
               :class="{'bg-sh-purple text-white': personalized, 'cursor-pointer': canPersonalize, 'cursor-not-allowed opacity-50': !canPersonalize}"
               @click="canPersonalize && (personalized = true)"
             >
               Propios
             </button>
-            <button
-              type="button"
-              role="tab"
-              :aria-selected="!personalized"
-              class="w-1/2 h-full flex justify-center items-center cursor-pointer transition"
-              :class="{'bg-sh-purple text-white': !personalized}"
-              @click="personalized = false"
-            >
-              Rotación
-            </button>
+            <template x-for="tab in tabsList" :key="tab.id">
+              <button
+                type="button"
+                role="tab"
+                :aria-selected="!personalized && activeTab === tab.id"
+                class="px-4 h-full flex justify-center items-center cursor-pointer transition-colors"
+                :class="{'bg-sh-purple text-white': !personalized && activeTab === tab.id}"
+                @click="personalized = false; activeTab = tab.id"
+                x-text="tab.label"
+              ></button>
+            </template>
           </div>
         </div>
       </template>

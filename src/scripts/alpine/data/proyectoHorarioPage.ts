@@ -8,6 +8,14 @@ import type { AlpineStudentStore } from "../stores/student";
 
 type State = "loading" | "ready";
 
+// buildDisplayName (backend) renders "Proyecto (AC)" for an offering that only
+// covers part of the level's courses, and bare "Proyecto" for one covering the
+// whole level — this is the inverse, turning that into a tab label.
+function groupLabelFor(displayName: string): string {
+  const match = displayName.match(/\(([^)]+)\)\s*$/);
+  return match ? match[1] : "Todos";
+}
+
 const proyectoHorarioPageData = (year: number, level: number) =>
   ({
     loading: true,
@@ -28,9 +36,25 @@ const proyectoHorarioPageData = (year: number, level: number) =>
         matchesSemesterFilter(o.semester, this.cuatrimestre),
       );
     },
-    get timetable(): TimetableBySubject {
+    // Distinct MANDATORY offerings for the level — a level can have several
+    // (e.g. level 4's AC/BD rotation groups), each rendered as its own tab
+    // instead of merged into one grid.
+    get mandatoryOfferings() {
+      return (this.visibleOfferings as OfferingWithSlots[]).filter((o) => o.kind === "MANDATORY");
+    },
+    get groupTabs() {
+      return (this.mandatoryOfferings as OfferingWithSlots[])
+        .map((o) => ({ id: String(o.id), label: groupLabelFor(o.displayName) }))
+        .sort((a, b) => a.label.localeCompare(b.label));
+    },
+    getGroupTimetable(groupId: string | null): TimetableBySubject {
+      const offerings = this.visibleOfferings as OfferingWithSlots[];
+      const mandatory = offerings.filter(
+        (o) => o.kind === "MANDATORY" && String(o.id) === groupId,
+      );
+      const optional = offerings.filter((o) => o.kind === "OPTIONAL");
       const timetable: TimetableBySubject = {};
-      for (const offering of this.visibleOfferings as OfferingWithSlots[]) {
+      for (const offering of [...mandatory, ...optional]) {
         timetable[offering.displayName] = offering.timeSlots.map((slot) => ({
           day: WEEKDAY_TO_DAY[slot.day],
           block: slot.slot,
@@ -67,8 +91,16 @@ const proyectoHorarioPageData = (year: number, level: number) =>
     get state(): State {
       return this.loading ? "loading" : "ready";
     },
-    getTimetableByGridPos(row: number, col: number, personalized = false) {
-      return getSlotsAtGridPos(personalized ? this.personalizedTimetable : this.timetable, row, col);
+    getTimetableByGridPos(
+      row: number,
+      col: number,
+      personalized = false,
+      groupId: string | null = null,
+    ) {
+      const timetable = personalized
+        ? this.personalizedTimetable
+        : this.getGroupTimetable(groupId ?? (this.groupTabs[0]?.id ?? null));
+      return getSlotsAtGridPos(timetable, row, col);
     },
     subjectColorClass: getSubjectColorClass,
     subjectSecondaryTextClass: getSubjectSecondaryTextClass,

@@ -29,7 +29,7 @@ const clickDetail = `{ day: '${day}', block: ${block}, row: ${row}, col: ${col},
   ]}
   style={style}
   x-data="{ slotData: [] }"
-  x-effect={`slotData = getTimetableByGridPos(${row}, ${col}, personalized)`}
+  x-effect={`slotData = getTimetableByGridPos(${row}, ${col}, personalized, activeTab)`}
   role="gridcell"
   aria-rowindex={row}
   aria-colindex={col}

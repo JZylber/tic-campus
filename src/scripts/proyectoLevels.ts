@@ -1,21 +1,17 @@
-import { fetchSubjects } from "./APIcalls/dashboard";
+import { fetchSubjectLevels } from "./APIcalls/offeringTimeSlots";
 
 // Derives valid (year, level) pairs for the Proyecto pages from whatever
-// "Proyecto" offerings actually exist in the catalog, instead of hardcoding
-// which levels currently have one — Proyecto is offered per-level (every
-// division shares the same offering), so this collapses the per-course rows
-// fetchSubjects() returns down to their unique (year, level) pairs.
+// "Proyecto" MANDATORY offerings actually exist in the catalog, instead of
+// hardcoding which levels currently have one. Deliberately uses the
+// templateId-agnostic /offerings/:subject/levels endpoint rather than
+// /subjects — Proyecto pages aren't template-driven, and a level can be
+// split across multiple offerings (e.g. level 4's AC/BD rotation groups)
+// that never got a shared templateId.
 export async function getProyectoLevelPaths(): Promise<
   Array<{ params: { year: string; level: string } }>
 > {
-  const subjects = await fetchSubjects();
-  const pairs = new Set(
-    subjects
-      .filter((s) => s.name === "Proyecto")
-      .map((s) => `${s.year}-${s.level}`),
-  );
-  return [...pairs].map((pair) => {
-    const [year, level] = pair.split("-");
-    return { params: { year, level } };
-  });
+  const pairs = await fetchSubjectLevels("Proyecto");
+  return pairs.map(({ year, level }) => ({
+    params: { year: String(year), level: String(level) },
+  }));
 }

@@ -68,6 +68,24 @@ export async function fetchPublicOfferingSchedule(
   }
 }
 
+// Distinct (year, level) pairs where a MANDATORY offering of `subject` exists —
+// unlike fetchSubjects()/GET /subjects, not filtered by templateId, since Proyecto's
+// static path generation (the only current caller) isn't template-driven.
+export async function fetchSubjectLevels(
+  subject: string,
+): Promise<Array<{ year: number; level: number }>> {
+  try {
+    const response = await fetch(`${backendURL}/offerings/${encodeURIComponent(subject)}/levels`);
+    if (!response.ok) {
+      throw new Error(`Error fetching subject levels: ${response.statusText}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Failed to fetch subject levels:", error);
+    return [];
+  }
+}
+
 export async function addOfferingTimeSlot(
   offeringId: number,
   data: { day: Weekday; slot: number; classroom?: string },
