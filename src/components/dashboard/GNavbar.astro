@@ -92,13 +92,13 @@ const otherDashboards = [
     }
     <a
       href="/tic-campus/"
-      x-show="$store.currentUser.role === 'ADMIN' && $store.student.id !== -1"
+      x-show="$store.currentUser.role === 'ADMIN' && $store.student.id !== ''"
       x-cloak
       class="flex items-center justify-end gap-x-4 px-4"
     >
       <span
         class="material-symbols-outlined !text-[30px]"
-        x-text="$store.student.id === -1?'question_mark':'person'"></span>
+        x-text="$store.student.id === ''?'question_mark':'person'"></span>
       <div class="flex flex-col w-50 text-gray-700 text-[14px] md:text-[16px]">
         <span x-text="$store.student.name"></span>
         <span x-text="$store.student.surname"></span>
