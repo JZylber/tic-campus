@@ -21,6 +21,7 @@ type AlpineTimetableData = AlpineComponent<{
   setTimetable: (timetable: TimetableBySubject) => void;
   setSeminars: (seminars: Array<string>) => void;
   setError: () => void;
+  getSeminars: () => Array<string> | null;
   getTimetableByGridPos: (
     row: number,
     col: number,
@@ -54,6 +55,9 @@ const timetableData = () => {
     },
     setError() {
       this.error = true;
+    },
+    getSeminars() {
+      return this.seminars;
     },
     getTimetableByGridPos(row: number, col: number) {
       return getSlotsAtGridPos(this.timetable, row, col);

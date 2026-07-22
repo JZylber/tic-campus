@@ -55,7 +55,7 @@ const studentSchedulePageData = () =>
     get state(): TimetableState {
       return this.selectedStudent ? "ready" : "empty";
     },
-    get seminars() {
+    getSeminars() {
       return null;
     },
     get resolvedTimetable(): TimetableBySubject {

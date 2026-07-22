@@ -89,7 +89,7 @@ const offeringTimeSlotsPageData = () =>
     get state(): TimetableState {
       return this.selectedOffering ? "ready" : "empty";
     },
-    get seminars() {
+    getSeminars() {
       return null;
     },
     get timetable(): TimetableBySubject {

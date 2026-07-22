@@ -47,13 +47,14 @@ const daysJson = JSON.stringify(DAYS);
 
 <div
   class="flex flex-col gap-y-4"
-  x-data="{personalized: false, canPersonalize: true, tabsList: [], activeTab: null, alwaysShowTabs: false}"
+  x-data="{personalized: false, canPersonalize: true, tabsList: [], activeTab: null, alwaysShowTabs: false, visibleSeminars: []}"
   x-effect={`
     canPersonalize = ${personalizedAvailableExpr};
     if (!canPersonalize) personalized = false;
     tabsList = ${tabsExpr};
     alwaysShowTabs = ${alwaysShowTabsExpr};
     if (!tabsList.some((t) => t.id === activeTab)) activeTab = tabsList[0]?.id ?? null;
+    visibleSeminars = getSeminars(personalized, activeTab) ?? [];
   `}
 >
   <Loader show="state === 'loading'" />
@@ -74,7 +75,7 @@ const daysJson = JSON.stringify(DAYS);
     </div>
   </template>
 
-  <template x-if="state === 'ready' && seminars && seminars.length > 0">
+  <template x-if="state === 'ready' && visibleSeminars.length > 0">
     <div class="flex flex-col gap-y-2 pt-2 pb-4 border-y-2 border-gray-400">
       <h2 class="text-center text-[20px] md:text-[24px] font-bold">
         Seminarios Avanzados
@@ -82,7 +83,7 @@ const daysJson = JSON.stringify(DAYS);
       <div
         class="flex flex-col gap-2 items-center md:flex-row md:justify-center md:gap-x-8"
       >
-        <template x-for="seminar in seminars">
+        <template x-for="seminar in visibleSeminars">
           <div
             class="flex text-[16px] md:text-[18px] rounded-lg w-full max-w-56 md:w-48 h-8 md:h-10 justify-center items-center"
             :class="subjectColorClass(seminar)"
@@ -96,7 +97,7 @@ const daysJson = JSON.stringify(DAYS);
 
   <template x-if="state === 'ready'">
     <div class="flex flex-col gap-y-4">
-      <template x-if="(seminars && seminars.length > 0) || tabsList.length > 1 || alwaysShowTabs">
+      <template x-if="visibleSeminars.length > 0 || tabsList.length > 1 || alwaysShowTabs">
         <div class="flex justify-center w-full" x-init="personalized = canPersonalize">
           <div
             class="rounded-lg bg-gray-400 text-[16px] font-bold text-gray-300 inline-flex justify-center items-center h-10 overflow-hidden"
