@@ -1,0 +1,44 @@
+---
+interface Props {
+  title: string;
+  xModel: string;
+  options:
+    | Array<{
+        value: any;
+        label: string;
+      }>
+    | string;
+  className?: string;
+  disabled?: boolean | string;
+}
+
+const { title, xModel, options, className, disabled = false } = Astro.props;
+const disabledExpr = typeof disabled === "string" ? disabled : JSON.stringify(disabled);
+---
+
+<div
+  x-data={`{options: [], disabled: false}`}
+  class={`flex flex-col items-center md:items-start gap-2 ${className}`}
+  x-effect={`options=${typeof options === "string" ? options : JSON.stringify(options)};disabled=${disabledExpr};if(options.length > 0 && !options.some(o => o.value === ${xModel})){${xModel} = options[0].value}`}
+>
+  <label
+    class="text-center md:text-left text-sh-dark-gray text-[16px] font-semibold"
+    x-text={`'${title}'`}></label>
+  <div
+    class="w-full h-[44px] flex bg-gray-50 rounded-xl border-2 border-sh-gray divide-x-2 divide-sh-gray overflow-hidden text-[16px]"
+    :class="{'opacity-50 pointer-events-none': disabled}"
+  >
+    <template x-for="option in options">
+      <div
+        class="flex-1 flex justify-center items-center cursor-pointer transition-colors"
+        :class=`{
+        'bg-sh-gray text-gray-50': ${xModel} === option.value,
+        'bg-gray-50 text-sh-gray hover:bg-gray-300': ${xModel} !== option.value
+        }`
+        @click=`${xModel} = option.value`
+      >
+        <span x-text="option.label"></span>
+      </div>
+    </template>
+  </div>
+</div>

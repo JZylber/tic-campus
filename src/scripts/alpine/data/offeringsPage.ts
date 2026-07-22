@@ -1,31 +1,36 @@
 import type { AlpineComponent } from "alpinejs";
 import {
-  fetchOptionalOfferings,
   fetchSubjectsCatalog,
-  createOptionalOffering,
-  updateOptionalOffering,
-  deleteOptionalOffering,
-} from "../../APIcalls/optionalOfferings";
+  createOffering,
+  updateOffering,
+  deleteOffering,
+  type Offering,
+  type OfferingKind,
+} from "../../APIcalls/offerings";
+import { fetchOfferings } from "../../APIcalls/offeringTimeSlots";
 import { fetchCourses } from "../../APIcalls/dashboard";
 
-type Offerings = Awaited<ReturnType<typeof fetchOptionalOfferings>>;
-type Offering = Offerings[number];
+type Offerings = Offering[];
 type SubjectsCatalog = Awaited<ReturnType<typeof fetchSubjectsCatalog>>;
 type Courses = Awaited<ReturnType<typeof fetchCourses>>;
 type Course = Courses[number];
 
-const optionalOfferingsPageData = () =>
+const LEVELS = [3, 4, 5];
+
+const offeringsPageData = () =>
   ({
     loading: true,
     saving: false,
     error: null as string | null,
     year: new Date().getFullYear(),
+    activeKind: "MANDATORY" as OfferingKind,
     activeLevel: 3 as number,
     offerings: [] as Offerings,
     subjectsCatalog: [] as SubjectsCatalog,
     allCourses: [] as Courses,
     createForm: {
       subjectId: NaN as number,
+      kind: "MANDATORY" as OfferingKind,
       courseIds: [] as number[],
       name: "" as string,
       semester: "FIRST" as Offering["semester"],
@@ -36,11 +41,14 @@ const optionalOfferingsPageData = () =>
       name: "" as string,
       semester: "FIRST" as Offering["semester"],
     },
-    get levelOptions() {
+    get kindOptions() {
       return [
-        { value: 3, label: "3" },
-        { value: 4, label: "4" },
+        { value: "MANDATORY", label: "Obligatorias" },
+        { value: "OPTIONAL", label: "Optativas" },
       ];
+    },
+    get levelOptions() {
+      return LEVELS.map((level) => ({ value: level, label: String(level) }));
     },
     get semesterOptions() {
       return [
@@ -55,24 +63,31 @@ const optionalOfferingsPageData = () =>
         label: s.name,
       }));
     },
-    get coursesForActiveLevel() {
+    coursesForKind(kind: OfferingKind) {
       return (this.allCourses as Course[])
         .filter((c) => {
           if (Number(c.name[2]) !== this.activeLevel || c.year !== this.year) {
             return false;
           }
           // NI4 is a different specialty from NR4 — only NR courses take part
-          // in TIC Campus optional offerings at level 4.
-          if (this.activeLevel === 4 && !c.name.startsWith("NR")) {
+          // in TIC Campus optional seminars at level 4. Mandatory subjects
+          // apply to every specialty, so this exclusion is optional-only.
+          if (kind === "OPTIONAL" && this.activeLevel === 4 && !c.name.startsWith("NR")) {
             return false;
           }
           return true;
         })
         .sort((a, b) => a.name.localeCompare(b.name, "es"));
     },
+    get createCourses() {
+      return this.coursesForKind(this.createForm.kind);
+    },
+    get editCourses() {
+      return this.coursesForKind(this.editForm.offering?.kind ?? "MANDATORY");
+    },
     get offeringsForActiveLevel() {
       return (this.offerings as Offerings).filter(
-        (o) => o.level === this.activeLevel,
+        (o) => o.level === this.activeLevel && o.kind === this.activeKind,
       );
     },
     courseNamesList(offering: Offering): string {
@@ -86,7 +101,7 @@ const optionalOfferingsPageData = () =>
     },
     init() {
       Promise.all([
-        fetchOptionalOfferings(this.year),
+        fetchOfferings(this.year),
         fetchSubjectsCatalog(),
         fetchCourses(),
       ]).then(([offerings, subjects, courses]) => {
@@ -97,7 +112,13 @@ const optionalOfferingsPageData = () =>
       });
     },
     openCreate() {
-      this.createForm = { subjectId: NaN, courseIds: [], name: "", semester: "FIRST" };
+      this.createForm = {
+        subjectId: NaN,
+        kind: this.activeKind,
+        courseIds: [],
+        name: "",
+        semester: "FIRST",
+      };
       this.error = null;
     },
     toggleCreateCourse(courseId: number) {
@@ -111,8 +132,9 @@ const optionalOfferingsPageData = () =>
       }
       this.saving = true;
       this.error = null;
-      const created = await createOptionalOffering({
+      const created = await createOffering({
         subjectId: this.createForm.subjectId,
+        kind: this.createForm.kind,
         year: this.year,
         courseIds: this.createForm.courseIds,
         name: this.createForm.name.trim() || null,
@@ -120,7 +142,7 @@ const optionalOfferingsPageData = () =>
       });
       this.saving = false;
       if (!created) {
-        this.error = "No se pudo crear el seminario avanzado. Intentá nuevamente.";
+        this.error = "No se pudo crear la materia. Intentá nuevamente.";
         return false;
       }
       this.offerings.push(created);
@@ -146,7 +168,7 @@ const optionalOfferingsPageData = () =>
       }
       this.saving = true;
       this.error = null;
-      const updated = await updateOptionalOffering(this.editForm.offering.id, {
+      const updated = await updateOffering(this.editForm.offering.id, {
         courseIds: this.editForm.courseIds,
         name: this.editForm.name.trim() || null,
         semester: this.editForm.semester,
@@ -164,9 +186,9 @@ const optionalOfferingsPageData = () =>
       return true;
     },
     async removeOffering(id: number) {
-      if (!window.confirm("¿Eliminar este seminario avanzado?")) return;
+      if (!window.confirm("¿Eliminar esta materia?")) return;
       this.error = null;
-      const ok = await deleteOptionalOffering(id);
+      const ok = await deleteOffering(id);
       if (!ok) {
         this.error =
           "No se pudo eliminar. Puede que haya alumnos inscriptos o revisiones asociadas.";
@@ -176,4 +198,4 @@ const optionalOfferingsPageData = () =>
     },
   }) as AlpineComponent<any>;
 
-export default optionalOfferingsPageData;
+export default offeringsPageData;

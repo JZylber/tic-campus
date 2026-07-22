@@ -1,28 +1,30 @@
 ---
 import Loader from "../../loader/Loader.astro";
 import Radio from "../../misc/radio/Radio.astro";
-import OptionalOfferingCreateDialog from "./OptionalOfferingCreateDialog.astro";
-import OptionalOfferingEditDialog from "./OptionalOfferingEditDialog.astro";
+import Toggle from "../../misc/toggle/Toggle.astro";
+import OfferingCreateDialog from "./OfferingCreateDialog.astro";
+import OfferingEditDialog from "./OfferingEditDialog.astro";
 ---
 
 <script>
   import setAlpineData from "../../../scripts/alpine/setAlpineData";
-  import optionalOfferingsPageData from "../../../scripts/alpine/data/optionalOfferingsPage";
+  import offeringsPageData from "../../../scripts/alpine/data/offeringsPage";
 
-  setAlpineData("optionalOfferingsPage", optionalOfferingsPageData);
+  setAlpineData("offeringsPage", offeringsPageData);
 </script>
-<div class="w-full flex justify-center py-4" x-data="optionalOfferingsPage()">
+<div class="w-full flex justify-center py-4" x-data="offeringsPage()">
   <Loader show="loading" />
-  <OptionalOfferingCreateDialog />
-  <OptionalOfferingEditDialog />
+  <OfferingCreateDialog />
+  <OfferingEditDialog />
 
   <div class="w-full flex flex-col gap-y-4 px-4" x-show="!loading">
     <div class="flex w-full items-end gap-x-8">
+      <Toggle options="kindOptions" xModel="activeKind" title="Tipo" className="w-48" />
       <Radio options="levelOptions" xModel="activeLevel" title="Nivel" />
       <button
         @click="openCreate(); $refs.createOfferingDialog.showModal()"
         class="ml-auto px-4 py-2 bg-sh-black text-white rounded-xl hover:opacity-80 cursor-pointer h-fit"
-        >Nuevo seminario avanzado</button
+        >Nueva materia</button
       >
     </div>
     <table class="w-full">
@@ -74,7 +76,7 @@ import OptionalOfferingEditDialog from "./OptionalOfferingEditDialog.astro";
     <span
       class="text-sh-dark-gray text-sm"
       x-show="offeringsForActiveLevel.length === 0"
-      >No hay seminarios avanzados para este nivel.</span
+      >No hay materias para este nivel.</span
     >
     <span class="text-red-500 text-sm" x-text="error ?? ''" x-show="error"></span>
   </div>

@@ -1,5 +1,5 @@
 ---
-import OptionalOfferingsTable from "../../../components/dashboard/optionalOfferings/OptionalOfferingsTable.astro";
+import AvanzadosTable from "../../../components/dashboard/avanzados/AvanzadosTable.astro";
 import AdminLayout from "../../../layouts/AdminLayout.astro";
 ---
 
@@ -10,10 +10,10 @@ import AdminLayout from "../../../layouts/AdminLayout.astro";
 
 <AdminLayout>
   <div class="w-full h-full flex flex-col items-center overflow-y-scroll">
-    <h1 class="text-[30px] md:text-[36px] font-bold pt-4 pb-2">Seminarios Avanzados</h1>
+    <h1 class="text-[30px] md:text-[36px] font-bold pt-4 pb-2">Avanzados</h1>
     <h2 class="text-[16px] md:text-[20px] pb-4">
-      Administrá los seminarios avanzados de 3° y 4° año y los cursos a los que se ofrecen.
+      Emparejá estudiantes de nivel 3 y 4 con los seminarios avanzados del segundo cuatrimestre.
     </h2>
-    <OptionalOfferingsTable />
+    <AvanzadosTable />
   </div>
 </AdminLayout>

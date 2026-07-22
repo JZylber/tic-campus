@@ -1,0 +1,66 @@
+---
+import Loader from "../../loader/Loader.astro";
+import Radio from "../../misc/radio/Radio.astro";
+import Select from "../../misc/select/Select.astro";
+import AvanzadoMatchDialog from "./AvanzadoMatchDialog.astro";
+---
+
+<script>
+  import setAlpineData from "../../../scripts/alpine/setAlpineData";
+  import avanzadosPageData from "../../../scripts/alpine/data/avanzadosPage";
+
+  setAlpineData("avanzadosPage", avanzadosPageData);
+</script>
+<div class="w-full flex justify-center py-4" x-data="avanzadosPage()">
+  <Loader show="loading" />
+  <AvanzadoMatchDialog />
+
+  <div class="w-full flex flex-col gap-y-4 px-4" x-show="!loading">
+    <div class="flex w-full items-end gap-x-8">
+      <Radio options="levelOptions" xModel="activeLevel" title="Nivel" />
+      <Select title="Curso" xModel="filter.courseId" options="courseFilterOptions" className="min-w-48" />
+    </div>
+    <table class="w-full">
+      <thead class="bg-sh-black text-gray-50 text-lg font-semibold">
+        <tr>
+          <th class="px-4 py-2">Apellido, Nombre</th>
+          <th class="px-4 py-2">Curso</th>
+          <th class="px-4 py-2">Avanzados</th>
+          <th class="px-4 py-2">Editar</th>
+        </tr>
+      </thead>
+      <tbody>
+        <template x-for="student in filteredStudents" :key="student.studentId">
+          <tr class="border-b-2 border-gray-300 hover:bg-gray-300">
+            <td class="px-4 py-2" x-text="`${student.surname}, ${student.name}`"></td>
+            <td class="px-4 py-2" x-text="student.courseName"></td>
+            <td class="px-4 py-2">
+              <div class="flex flex-wrap gap-1">
+                <template x-for="match in student.avanzados" :key="match.offeringId">
+                  <span
+                    class="rounded-full px-2 py-1 text-xs text-sh-black"
+                    :class="colorClass(match)"
+                    x-text="match.displayName"
+                  ></span>
+                </template>
+              </div>
+            </td>
+            <td class="px-4 py-2">
+              <div class="flex justify-center items-center">
+                <div
+                  class="cursor-pointer rounded-full flex justify-center items-center p-1 w-fit aspect-square hover:bg-sh-purple text-sh-black hover:text-white transition-colors"
+                  @click="openEdit(student); $refs.avanzadoMatchDialog.showModal()"
+                >
+                  <span class="material-symbols-outlined text-[20px] transition-colors">edit</span>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </template>
+      </tbody>
+    </table>
+    <span class="text-sh-dark-gray text-sm" x-show="filteredStudents.length === 0"
+      >No hay estudiantes para este nivel.</span
+    >
+  </div>
+</div>
