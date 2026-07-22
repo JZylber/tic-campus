@@ -2,10 +2,10 @@
 // back to a deterministic pick from the palette so new/whole-level subjects
 // still render consistently without editing this map.
 const SUBJECT_COLORS: Record<string, string> = {
-  Hardware: "bg-sh-medium-red",
-  Frontend: "bg-sh-medium-blue",
-  Backend: "bg-sh-medium-green",
-  TIMI: "bg-sh-medium-yellow",
+  Hardware: "bg-tic-iot",
+  Frontend: "bg-tic-3d",
+  Backend: "bg-tic-app",
+  TIMI: "bg-tic-arte",
   Proyecto: "bg-gray-200",
   IA: "bg-tic-ia",
   "Desarrollo de Videojuegos": "bg-tic-juegos",
@@ -37,17 +37,23 @@ const hashString = (value: string): number => {
 // is offered to, e.g. "IA (Z)". Colors should key off the subject alone so
 // every variant of a subject renders consistently.
 const getBaseSubjectName = (subject: string): string =>
-  subject.split("-")[0].replace(/\s*\([^)]*\)\s*$/, "").trim();
+  subject
+    .split("-")[0]
+    .replace(/\s*\([^)]*\)\s*$/, "")
+    .trim();
 
 export const getSubjectColorClass = (subject: string): string => {
   const base = getBaseSubjectName(subject);
-  return SUBJECT_COLORS[base] ?? FALLBACK_PALETTE[hashString(base) % FALLBACK_PALETTE.length];
+  return (
+    SUBJECT_COLORS[base] ??
+    FALLBACK_PALETTE[hashString(base) % FALLBACK_PALETTE.length]
+  );
 };
 
 export const getSlotClasses = (
   subject: string,
   personalized: boolean,
-  isProjectSlot: boolean
+  isProjectSlot: boolean,
 ): string => {
   const isProyecto = getBaseSubjectName(subject) === "Proyecto";
   const dimmed = personalized && isProyecto !== isProjectSlot;
