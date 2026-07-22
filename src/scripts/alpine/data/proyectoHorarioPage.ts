@@ -85,19 +85,14 @@ const proyectoHorarioPageData = (year: number, level: number) =>
       }
       return timetable;
     },
-    // Called from TimetableGrid with its local tab-selection state: when
-    // "Propios" is active, the student's own enrolled seminars regardless of
-    // group; otherwise, whichever seminars are scoped to the active group's
-    // tab (see getGroupOptionalOfferings).
-    getSeminars(personalized: boolean, groupId: string | null): string[] {
-      if (personalized) {
-        return (this.visibleOfferings as OfferingWithSlots[])
-          .filter((o) => o.kind === "OPTIONAL" && o.enrolled)
-          .map((o) => o.subjectName);
-      }
-      return (this.getGroupOptionalOfferings(groupId) as OfferingWithSlots[]).map(
-        (o) => o.subjectName,
-      );
+    // The "Seminarios Avanzados" header always reflects the detected
+    // student's own enrollment, regardless of which tab (Propios/AC/BD) is
+    // active — TimetableGrid additionally hides the header entirely unless
+    // personalizedAvailable (i.e. a student was detected).
+    getSeminars(): string[] {
+      return (this.visibleOfferings as OfferingWithSlots[])
+        .filter((o) => o.kind === "OPTIONAL" && o.enrolled)
+        .map((o) => o.subjectName);
     },
     get personalizedAvailable() {
       return this.studentDetected;
@@ -114,7 +109,16 @@ const proyectoHorarioPageData = (year: number, level: number) =>
         (o) => o.kind === "MANDATORY" && o.courses.some((c) => c.courseName === this.studentCourse),
       );
       const optional = offerings.filter((o) => o.kind === "OPTIONAL" && o.enrolled);
-      return resolveOfferingsTimetable([...mandatory, ...optional]);
+      // resolveOfferingsTimetable keys by displayName, which carries the
+      // "(AC)"/"(BD)" suffix — redundant on "Propios", since it's already
+      // implicitly the student's own group. Strip it just for this view
+      // (the shared Docentes/Tutores lookup in studentSchedulePage.ts still
+      // wants it, since a teacher hasn't picked a group from a visible tab).
+      const withoutGroupSuffix = [...mandatory, ...optional].map((o) => ({
+        ...o,
+        displayName: o.subjectName,
+      }));
+      return resolveOfferingsTimetable(withoutGroupSuffix);
     },
     get state(): State {
       return this.loading ? "loading" : "ready";
