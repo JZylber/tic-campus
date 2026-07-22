@@ -47,22 +47,24 @@ const proyectoHorarioPageData = (year: number, level: number) =>
         .map((o) => ({ id: String(o.id), label: groupLabelFor(o.displayName) }))
         .sort((a, b) => a.label.localeCompare(b.label));
     },
+    // Each group tab is exactly one MANDATORY offering — seminars are shown
+    // separately above (the "Seminarios Avanzados" pills), so they aren't
+    // repeated here, and the label is the bare subject name (not
+    // displayName's "(AC)"/"(BD)" suffix) since the active tab already says
+    // which group this is.
     getGroupTimetable(groupId: string | null): TimetableBySubject {
-      const offerings = this.visibleOfferings as OfferingWithSlots[];
-      const mandatory = offerings.filter(
+      const offering = (this.visibleOfferings as OfferingWithSlots[]).find(
         (o) => o.kind === "MANDATORY" && String(o.id) === groupId,
       );
-      const optional = offerings.filter((o) => o.kind === "OPTIONAL");
-      const timetable: TimetableBySubject = {};
-      for (const offering of [...mandatory, ...optional]) {
-        timetable[offering.displayName] = offering.timeSlots.map((slot) => ({
+      if (!offering) return {};
+      return {
+        [offering.subjectName]: offering.timeSlots.map((slot) => ({
           day: WEEKDAY_TO_DAY[slot.day],
           block: slot.slot,
           room: slot.classroom ?? "",
           teacher: "",
-        }));
-      }
-      return timetable;
+        })),
+      };
     },
     get seminars() {
       const optional = (this.visibleOfferings as OfferingWithSlots[]).filter(
