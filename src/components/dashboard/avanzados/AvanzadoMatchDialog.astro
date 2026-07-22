@@ -2,15 +2,23 @@
 import Dialog from "../../misc/dialog/Dialog.astro";
 ---
 
-<Dialog xRef="avanzadoMatchDialog" className="w-1/2 p-6 overflow-y-auto max-h-[75vh]">
-  <h2 class="text-2xl font-bold mb-2">Emparejar avanzados</h2>
+<Dialog
+  xRef="avanzadoMatchDialog"
+  className="w-1/2 p-6 overflow-y-auto max-h-[75vh]"
+>
+  <h2 class="text-2xl font-bold mb-2">Seminarios avanzados</h2>
   <p class="text-sh-dark-gray mb-6">
-    <span x-text="`${editMatch.student?.surname ?? ''}, ${editMatch.student?.name ?? ''}`"></span>
+    <span
+      x-text="`${editMatch.student?.surname ?? ''}, ${editMatch.student?.name ?? ''}`"
+    ></span>
     &mdash; <span x-text="editMatch.student?.courseName ?? ''"></span>
   </p>
 
   <div class="flex flex-col gap-2">
-    <template x-for="offering in availableOfferingsForStudent(editMatch.student)" :key="offering.id">
+    <template
+      x-for="offering in availableOfferingsForStudent(editMatch.student)"
+      :key="offering.id"
+    >
       <label class="flex items-center gap-3 py-1 cursor-pointer">
         <input
           type="checkbox"
@@ -28,6 +36,7 @@ import Dialog from "../../misc/dialog/Dialog.astro";
       x-show="availableOfferingsForStudent(editMatch.student).length === 0"
       >No hay avanzados disponibles para este curso.</span
     >
-    <span class="text-red-500 text-sm" x-text="error ?? ''" x-show="error"></span>
+    <span class="text-red-500 text-sm" x-text="error ?? ''" x-show="error"
+    ></span>
   </div>
 </Dialog>
