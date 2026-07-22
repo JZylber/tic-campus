@@ -46,7 +46,7 @@ const daysJson = JSON.stringify(DAYS);
       >
         <template x-for="seminar in seminars">
           <div
-            class="flex text-sh-black text-[16px] md:text-[18px] rounded-lg w-full max-w-56 md:w-48 h-8 md:h-10 justify-center items-center"
+            class="flex text-[16px] md:text-[18px] rounded-lg w-full max-w-56 md:w-48 h-8 md:h-10 justify-center items-center"
             :class="subjectColorClass(seminar)"
           >
             <span x-text="seminar"></span>
@@ -148,13 +148,15 @@ const daysJson = JSON.stringify(DAYS);
                     :class="slotClasses(subject, personalized, isProjectSlot)"
                   >
                     <span
-                      class="text-sh-black text-[14px] md:text-[16px] font-semibold"
+                      class="text-[14px] md:text-[16px] font-semibold"
                       x-text="subject"></span>
                     <span
-                      class="text-gray-600 text-[12px] md:text-[14px]"
+                      class="text-[12px] md:text-[14px]"
+                      :class="subjectSecondaryTextClass(subject)"
                       x-text="room"></span>
                     <span
-                      class="text-gray-600 text-[12px] md:text-[14px]"
+                      class="text-[12px] md:text-[14px]"
+                      :class="subjectSecondaryTextClass(subject)"
                       x-text="teacher"></span>
                   </div>
                 </template>
@@ -247,13 +249,16 @@ const daysJson = JSON.stringify(DAYS);
                           >
                             <span class="text-[14px]">
                               <span
-                                class="text-sh-black font-semibold"
+                                class="font-semibold"
                                 x-text="subject"></span>
-                              <span class="text-gray-600" x-text="' - ' + teacher"
+                              <span
+                                :class="subjectSecondaryTextClass(subject)"
+                                x-text="' - ' + teacher"
                               ></span>
                             </span>
                             <span
-                              class="text-gray-600 text-[12px] md:text-[14px]"
+                              class="text-[12px] md:text-[14px]"
+                              :class="subjectSecondaryTextClass(subject)"
                               x-text="room"></span>
                           </div>
                         </template>

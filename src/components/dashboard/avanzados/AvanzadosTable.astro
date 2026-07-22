@@ -38,7 +38,7 @@ import AvanzadoMatchDialog from "./AvanzadoMatchDialog.astro";
               <div class="flex flex-wrap gap-1">
                 <template x-for="match in student.avanzados" :key="match.offeringId">
                   <span
-                    class="rounded-full px-2 py-1 text-xs text-sh-black"
+                    class="rounded-full px-2 py-1 text-xs"
                     :class="colorClass(match)"
                     x-text="match.displayName"
                   ></span>

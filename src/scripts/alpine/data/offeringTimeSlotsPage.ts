@@ -22,7 +22,11 @@ import {
   getSlotsAtGridPos,
   type TimetableBySubject,
 } from "../../timetableLayout";
-import { getSlotClasses, getSubjectColorClass } from "../../timetableColors";
+import {
+  getSlotClasses,
+  getSubjectColorClass,
+  getSubjectSecondaryTextClass,
+} from "../../timetableColors";
 
 type SlotDialogState = {
   mode: "create" | "edit";
@@ -114,6 +118,7 @@ const offeringTimeSlotsPageData = () =>
       return getSlotsAtGridPos(this.timetable, row, col);
     },
     subjectColorClass: getSubjectColorClass,
+    subjectSecondaryTextClass: getSubjectSecondaryTextClass,
     slotClasses: getSlotClasses,
     async init() {
       this.allCourses = await fetchCourses();

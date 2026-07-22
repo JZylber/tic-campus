@@ -4,7 +4,11 @@ import {
   type TimetableBySubject,
   type TimetableEntry,
 } from "../../timetableLayout";
-import { getSlotClasses, getSubjectColorClass } from "../../timetableColors";
+import {
+  getSlotClasses,
+  getSubjectColorClass,
+  getSubjectSecondaryTextClass,
+} from "../../timetableColors";
 
 export type { TimetableEntry, TimetableBySubject };
 
@@ -23,6 +27,7 @@ type AlpineTimetableData = AlpineComponent<{
     col: number
   ) => Array<{ subject: string; room: string; teacher: string }>;
   subjectColorClass: (subject: string) => string;
+  subjectSecondaryTextClass: (subject: string) => string;
   slotClasses: (
     subject: string,
     personalized: boolean,
@@ -58,6 +63,7 @@ const timetableData = () => {
       return getSlotsAtGridPos(this.timetable, row, col);
     },
     subjectColorClass: getSubjectColorClass,
+    subjectSecondaryTextClass: getSubjectSecondaryTextClass,
     slotClasses: getSlotClasses,
   } as AlpineTimetableData;
 };
