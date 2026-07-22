@@ -1,13 +1,13 @@
 ---
 interface Props {
-  role: "teacher" | "admin";
+  role: "teacher" | "admin" | "tutor";
 }
 const { role } = Astro.props;
-const switchHref =
-  role === "teacher"
-    ? "/tic-campus/dashboard/admin"
-    : "/tic-campus/dashboard/teacher";
-const switchLabel = role === "teacher" ? "Modo Admin" : "Modo Docente";
+const otherDashboards = [
+  { key: "teacher", label: "Modo Docente", href: "/tic-campus/dashboard/teacher" },
+  { key: "admin", label: "Modo Admin", href: "/tic-campus/dashboard/admin" },
+  { key: "tutor", label: "Modo Tutor", href: "/tic-campus/dashboard/tutor" },
+].filter((dashboard) => dashboard.key !== role);
 ---
 
 <nav class="w-full bg-gray-50 border-b-2 border-gray-300 flex items-stretch">
@@ -25,6 +25,24 @@ const switchLabel = role === "teacher" ? "Modo Admin" : "Modo Docente";
           class="py-4 flex items-center justify-center w-40 hover:bg-gray-300 uppercase font-bold text-gray-700"
         >
           Revisiones
+        </a>
+        <a
+          href="/tic-campus/dashboard/teacher/horarios"
+          class="py-4 flex items-center justify-center w-40 hover:bg-gray-300 uppercase font-bold text-gray-700"
+        >
+          Horarios
+        </a>
+      </>
+    )
+  }
+  {
+    role === "tutor" && (
+      <>
+        <a
+          href="/tic-campus/dashboard/tutor"
+          class="py-4 flex items-center justify-center w-40 hover:bg-gray-300 uppercase font-bold text-gray-700"
+        >
+          Horarios
         </a>
       </>
     )
@@ -54,14 +72,18 @@ const switchLabel = role === "teacher" ? "Modo Admin" : "Modo Docente";
     )
   }
   <div class="ml-auto flex items-stretch border-l-2 border-gray-300">
-    <a
-      x-show="$store.currentUser.role === 'ADMIN'"
-      x-cloak
-      href={switchHref}
-      class="flex items-center px-4 bg-sh-purple !text-sh-black hover:bg-sh-light-purple transition-colors font-bold uppercase text-sm"
-    >
-      {switchLabel}
-    </a>
+    {
+      otherDashboards.map((dashboard) => (
+        <a
+          x-show="$store.currentUser.role === 'ADMIN'"
+          x-cloak
+          href={dashboard.href}
+          class="flex items-center px-4 bg-sh-purple !text-sh-black hover:bg-sh-light-purple transition-colors font-bold uppercase text-sm"
+        >
+          {dashboard.label}
+        </a>
+      ))
+    }
     <a href="/tic-campus/" class="flex items-center justify-end gap-x-4 px-4">
       <span
         class="material-symbols-outlined !text-[30px]"

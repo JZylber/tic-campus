@@ -19,7 +19,7 @@ export async function fetchCurrentUser(): Promise<UserInfo | null> {
   }
 }
 
-export async function requireAuth() {
+export async function requireDashboardAuth() {
   try {
     const response = await authFetch(`${backendURL}/user/info`);
     if (!response.ok) {
@@ -27,9 +27,11 @@ export async function requireAuth() {
       return;
     }
     const user: UserInfo = await response.json();
-    if (user.role !== "TEACHER" && user.role !== "ADMIN") {
-      window.location.href = `${backendURL}/auth/google?returnTo=${encodeURIComponent(window.location.href)}`;
+    if (user.role !== "TEACHER" && user.role !== "ADMIN" && user.role !== "COUNSELOR") {
+      window.location.href = "/tic-campus/dashboard/unauthorized";
+      return;
     }
+    (Alpine.store("currentUser") as CurrentUserStore).set(user.id, user.name, user.surname, user.role);
   } catch {
     window.location.href = `${backendURL}/auth/google?returnTo=${encodeURIComponent(window.location.href)}`;
   }
@@ -44,6 +46,24 @@ export async function requireTeacherAuth() {
     }
     const user: UserInfo = await response.json();
     if (user.role !== "TEACHER" && user.role !== "ADMIN") {
+      window.location.href = "/tic-campus/dashboard/unauthorized";
+      return;
+    }
+    (Alpine.store("currentUser") as CurrentUserStore).set(user.id, user.name, user.surname, user.role);
+  } catch {
+    window.location.href = `${backendURL}/auth/google?returnTo=${encodeURIComponent(window.location.href)}`;
+  }
+}
+
+export async function requireTutorAuth() {
+  try {
+    const response = await authFetch(`${backendURL}/user/info`);
+    if (!response.ok) {
+      window.location.href = `${backendURL}/auth/google?returnTo=${encodeURIComponent(window.location.href)}`;
+      return;
+    }
+    const user: UserInfo = await response.json();
+    if (user.role !== "COUNSELOR" && user.role !== "ADMIN") {
       window.location.href = "/tic-campus/dashboard/unauthorized";
       return;
     }

@@ -1,0 +1,13 @@
+---
+import HorariosPlaceholder from "../../../components/dashboard/HorariosPlaceholder.astro";
+import TutorLayout from "../../../layouts/TutorLayout.astro";
+---
+
+<script>
+  import { requireTutorAuth } from "../../../scripts/auth";
+  requireTutorAuth();
+</script>
+
+<TutorLayout>
+  <HorariosPlaceholder />
+</TutorLayout>

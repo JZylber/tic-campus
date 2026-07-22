@@ -3,21 +3,21 @@ import Layout from "../../layouts/Layout.astro";
 ---
 
 <script>
-  import { requireTeacherAuth } from "../../scripts/auth";
-  await requireTeacherAuth();
+  import { requireDashboardAuth } from "../../scripts/auth";
+  await requireDashboardAuth();
 </script>
 
 <Layout>
   <div class="flex flex-col items-center grow gap-y-4">
     <h1 class="text-[30px] md:text-[36px] font-bold pt-4 pb-2">
-      Dashboard Docente
+      Dashboard
     </h1>
-    <p><strong>Esta sección es solo para docentes</strong></p>
     <p>Seleccioná tu perfil para ingresar.</p>
     <div
       x-show="$store.currentUser.role === null"
       class="flex gap-x-12 justify-center items-center"
     >
+      <div class="flex rounded-lg w-60 h-16 justify-center items-center text-[16px] sm:text-[24px] bg-gray-200 animate-pulse"></div>
       <div class="flex rounded-lg w-60 h-16 justify-center items-center text-[16px] sm:text-[24px] bg-gray-200 animate-pulse"></div>
       <div class="flex rounded-lg w-60 h-16 justify-center items-center text-[16px] sm:text-[24px] bg-gray-200 animate-pulse"></div>
     </div>
@@ -26,10 +26,24 @@ import Layout from "../../layouts/Layout.astro";
       class="flex gap-x-12 justify-center items-center"
     >
       <a
-        class="flex rounded-lg w-60 h-16 justify-center items-center text-[16px] sm:text-[24px] bg-sh-purple !text-sh-black hover:bg-sh-light-purple hover:shadow transition-colors cursor-pointer"
-        href="/tic-campus/dashboard/teacher"
+        :href="($store.currentUser.role === 'TEACHER' || $store.currentUser.role === 'ADMIN') ? '/tic-campus/dashboard/teacher' : undefined"
+        :class="($store.currentUser.role === 'TEACHER' || $store.currentUser.role === 'ADMIN')
+          ? 'bg-sh-purple !text-sh-black hover:bg-sh-light-purple hover:shadow cursor-pointer'
+          : 'bg-gray-300 !text-gray-500 cursor-not-allowed opacity-60'"
+        :title="($store.currentUser.role !== 'TEACHER' && $store.currentUser.role !== 'ADMIN') ? 'Sin permisos de docente' : undefined"
+        class="flex rounded-lg w-60 h-16 justify-center items-center text-[16px] sm:text-[24px] transition-colors"
       >
         <span>Docente</span>
+      </a>
+      <a
+        :href="($store.currentUser.role === 'COUNSELOR' || $store.currentUser.role === 'ADMIN') ? '/tic-campus/dashboard/tutor' : undefined"
+        :class="($store.currentUser.role === 'COUNSELOR' || $store.currentUser.role === 'ADMIN')
+          ? 'bg-sh-purple !text-sh-black hover:bg-sh-light-purple hover:shadow cursor-pointer'
+          : 'bg-gray-300 !text-gray-500 cursor-not-allowed opacity-60'"
+        :title="($store.currentUser.role !== 'COUNSELOR' && $store.currentUser.role !== 'ADMIN') ? 'Sin permisos de tutor' : undefined"
+        class="flex rounded-lg w-60 h-16 justify-center items-center text-[16px] sm:text-[24px] transition-colors"
+      >
+        <span>Tutor</span>
       </a>
       <a
         :href="$store.currentUser.role === 'ADMIN' ? '/tic-campus/dashboard/admin' : undefined"
