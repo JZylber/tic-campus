@@ -5,7 +5,6 @@ import {
   type TimetableEntry,
 } from "../../timetableLayout";
 import {
-  getSlotClasses,
   getSubjectColorClass,
   getSubjectSecondaryTextClass,
 } from "../../timetableColors";
@@ -24,15 +23,12 @@ type AlpineTimetableData = AlpineComponent<{
   setError: () => void;
   getTimetableByGridPos: (
     row: number,
-    col: number
+    col: number,
+    personalized?: boolean
   ) => Array<{ subject: string; room: string; teacher: string }>;
   subjectColorClass: (subject: string) => string;
   subjectSecondaryTextClass: (subject: string) => string;
-  slotClasses: (
-    subject: string,
-    personalized: boolean,
-    isProjectSlot: boolean
-  ) => string;
+  slotClasses: (subject: string) => string;
 }>;
 
 // Holds the reactive timetable/seminars data and exposes it to
@@ -64,7 +60,7 @@ const timetableData = () => {
     },
     subjectColorClass: getSubjectColorClass,
     subjectSecondaryTextClass: getSubjectSecondaryTextClass,
-    slotClasses: getSlotClasses,
+    slotClasses: getSubjectColorClass,
   } as AlpineTimetableData;
 };
 

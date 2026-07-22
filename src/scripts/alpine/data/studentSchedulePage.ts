@@ -2,32 +2,11 @@ import type { AlpineComponent } from "alpinejs";
 import { fetchOfferings, type OfferingWithSlots, type Semester } from "../../APIcalls/offeringTimeSlots";
 import { matchesSemesterFilter, defaultCuatrimestre } from "../../offeringSemester";
 import { fetchCourses, fetchStudents, type Course, type Student } from "../../APIcalls/dashboard";
-import {
-  WEEKDAY_TO_DAY,
-  getSlotsAtGridPos,
-  type TimetableBySubject,
-} from "../../timetableLayout";
-import {
-  getSlotClasses,
-  getSubjectColorClass,
-  getSubjectSecondaryTextClass,
-} from "../../timetableColors";
+import { getSlotsAtGridPos, type TimetableBySubject } from "../../timetableLayout";
+import { resolveOfferingsTimetable } from "../../timetableResolve";
+import { getSubjectColorClass, getSubjectSecondaryTextClass } from "../../timetableColors";
 
 type TimetableState = "empty" | "ready";
-
-type ResolvableEntry = {
-  offering: OfferingWithSlots;
-  day: string;
-  block: number;
-  room: string;
-};
-
-// Term-specific offerings (FIRST/SECOND) beat annual ones (BOTH) for the
-// selected cuatrimestre; among equally term-specific offerings, an OPTIONAL
-// one the student chose beats an inherited MANDATORY one.
-function overlapScore(offering: OfferingWithSlots): number {
-  return (offering.semester !== "BOTH" ? 2 : 0) + (offering.kind === "OPTIONAL" ? 1 : 0);
-}
 
 const studentSchedulePageData = () =>
   ({
@@ -96,47 +75,14 @@ const studentSchedulePageData = () =>
           matchesSemesterFilter(o.semester, this.cuatrimestre),
       );
 
-      const entries: ResolvableEntry[] = [...mandatory, ...optional].flatMap((offering) =>
-        offering.timeSlots.map((slot) => ({
-          offering,
-          day: WEEKDAY_TO_DAY[slot.day],
-          block: slot.slot,
-          room: slot.classroom ?? "",
-        })),
-      );
-
-      const byPosition = new Map<string, ResolvableEntry[]>();
-      for (const entry of entries) {
-        const key = `${entry.day}-${entry.block}`;
-        const group = byPosition.get(key);
-        if (group) group.push(entry);
-        else byPosition.set(key, [entry]);
-      }
-
-      const timetable: TimetableBySubject = {};
-      for (const group of byPosition.values()) {
-        const maxScore = Math.max(...group.map((e) => overlapScore(e.offering)));
-        const winners = group.filter((e) => overlapScore(e.offering) === maxScore);
-        const conflict = winners.length > 1;
-        for (const entry of winners) {
-          const list = (timetable[entry.offering.displayName] ??= []);
-          list.push({
-            day: entry.day,
-            block: entry.block,
-            room: entry.room,
-            teacher: "",
-            conflict,
-          });
-        }
-      }
-      return timetable;
+      return resolveOfferingsTimetable([...mandatory, ...optional]);
     },
     getTimetableByGridPos(row: number, col: number) {
       return getSlotsAtGridPos(this.resolvedTimetable, row, col);
     },
     subjectColorClass: getSubjectColorClass,
     subjectSecondaryTextClass: getSubjectSecondaryTextClass,
-    slotClasses: getSlotClasses,
+    slotClasses: getSubjectColorClass,
     async init() {
       const [courses, students, offerings] = await Promise.all([
         fetchCourses(),

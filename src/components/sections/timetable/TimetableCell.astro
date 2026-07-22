@@ -28,8 +28,8 @@ const clickDetail = `{ day: '${day}', block: ${block}, row: ${row}, col: ${col},
     editable && "cursor-pointer hover:ring-2 hover:ring-inset hover:ring-sh-purple",
   ]}
   style={style}
-  x-data="{ slotData: [], isProjectSlot: false }"
-  x-effect={`slotData = getTimetableByGridPos(${row}, ${col}); if (seminars) { isProjectSlot = !slotData.some((slot) => seminars.includes(slot.subject)) }`}
+  x-data="{ slotData: [] }"
+  x-effect={`slotData = getTimetableByGridPos(${row}, ${col}, personalized)`}
   role="gridcell"
   aria-rowindex={row}
   aria-colindex={col}

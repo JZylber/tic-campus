@@ -73,15 +73,3 @@ export const getSubjectColorClass = (subject: string): string => {
 
 export const getSubjectSecondaryTextClass = (subject: string): string =>
   SECONDARY_TEXT_BY_PRIMARY[getSubjectColor(subject).text];
-
-export const getSlotClasses = (
-  subject: string,
-  personalized: boolean,
-  isProjectSlot: boolean,
-): string => {
-  const isProyecto = getBaseSubjectName(subject) === "Proyecto";
-  const dimmed = personalized && isProyecto !== isProjectSlot;
-  return dimmed
-    ? `${getSubjectColorClass(subject)} opacity-10`
-    : getSubjectColorClass(subject);
-};

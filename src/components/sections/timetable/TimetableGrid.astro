@@ -28,8 +28,8 @@ const daysJson = JSON.stringify(DAYS);
 
 <div
   class="flex flex-col gap-y-4"
-  x-data="{personalized: false, personalizedAvailable: true}"
-  x-effect={`personalizedAvailable = ${personalizedAvailableExpr}; if (!personalizedAvailable) personalized = false`}
+  x-data="{personalized: false, canPersonalize: true}"
+  x-effect={`canPersonalize = ${personalizedAvailableExpr}; if (!canPersonalize) personalized = false`}
 >
   <Loader show="state === 'loading'" />
 
@@ -72,7 +72,7 @@ const daysJson = JSON.stringify(DAYS);
   <template x-if="state === 'ready'">
     <div class="flex flex-col gap-y-4">
       <template x-if="seminars && seminars.length > 0">
-        <div class="flex justify-center w-full" x-init="personalized = personalizedAvailable">
+        <div class="flex justify-center w-full" x-init="personalized = canPersonalize">
           <div
             class="rounded-lg bg-gray-400 text-[16px] font-bold text-gray-300 flex justify-center items-center w-60 h-10 overflow-hidden"
             role="tablist"
@@ -82,11 +82,11 @@ const daysJson = JSON.stringify(DAYS);
               type="button"
               role="tab"
               :aria-selected="personalized"
-              :aria-disabled="!personalizedAvailable"
-              :tabindex="personalizedAvailable ? 0 : -1"
+              :aria-disabled="!canPersonalize"
+              :tabindex="canPersonalize ? 0 : -1"
               class="w-1/2 h-full flex justify-center items-center transition-colors"
-              :class="{'bg-sh-purple text-white': personalized, 'cursor-pointer': personalizedAvailable, 'cursor-not-allowed opacity-50': !personalizedAvailable}"
-              @click="personalizedAvailable && (personalized = true)"
+              :class="{'bg-sh-purple text-white': personalized, 'cursor-pointer': canPersonalize, 'cursor-not-allowed opacity-50': !canPersonalize}"
+              @click="canPersonalize && (personalized = true)"
             >
               Propios
             </button>
@@ -160,7 +160,7 @@ const daysJson = JSON.stringify(DAYS);
                 <template x-for="{subject,room,teacher,conflict} in slotData">
                   <div
                     class="flex flex-col items-center h-full gap-y-0.5 py-1 transition-opacity"
-                    :class="[slotClasses(subject, personalized, isProjectSlot), conflict && 'ring-2 ring-inset ring-sh-red']"
+                    :class="[slotClasses(subject), conflict && 'ring-2 ring-inset ring-sh-red']"
                   >
                     <span
                       class="text-[10px] md:text-[11px] font-bold text-sh-red"
@@ -266,7 +266,7 @@ const daysJson = JSON.stringify(DAYS);
                         <template x-for="{subject,room,teacher,conflict} in slotData">
                           <div
                             class="flex flex-col items-center h-full gap-y-0.5 py-1"
-                            :class="[slotClasses(subject, personalized, isProjectSlot), conflict && 'ring-2 ring-inset ring-sh-red']"
+                            :class="[slotClasses(subject), conflict && 'ring-2 ring-inset ring-sh-red']"
                           >
                             <span
                               class="text-[10px] font-bold text-sh-red"

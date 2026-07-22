@@ -2,11 +2,8 @@ import type { AlpineComponent } from "alpinejs";
 import { fetchPublicOfferingSchedule, type OfferingWithSlots, type Semester } from "../../APIcalls/offeringTimeSlots";
 import { matchesSemesterFilter, defaultCuatrimestre } from "../../offeringSemester";
 import { WEEKDAY_TO_DAY, getSlotsAtGridPos, type TimetableBySubject } from "../../timetableLayout";
-import {
-  getSlotClasses,
-  getSubjectColorClass,
-  getSubjectSecondaryTextClass,
-} from "../../timetableColors";
+import { resolveOfferingsTimetable } from "../../timetableResolve";
+import { getSubjectColorClass, getSubjectSecondaryTextClass } from "../../timetableColors";
 import type { AlpineStudentStore } from "../stores/student";
 
 type State = "loading" | "ready";
@@ -19,6 +16,7 @@ const proyectoHorarioPageData = (year: number, level: number) =>
     cuatrimestre: defaultCuatrimestre() as Semester,
     offerings: [] as OfferingWithSlots[],
     studentDetected: false,
+    studentCourse: "",
     get cuatrimestreOptions() {
       return [
         { value: "FIRST", label: "1er Cuatrimestre" },
@@ -52,19 +50,34 @@ const proyectoHorarioPageData = (year: number, level: number) =>
     get personalizedAvailable() {
       return this.studentDetected;
     },
+    // Scoped to the student's own course and enrollment, then stepped
+    // through the same overlap-resolution rules as the Docentes/Tutores
+    // per-student lookup (see studentSchedulePage.ts). Scoping `mandatory`
+    // to the student's course matters because a level can have multiple
+    // MANDATORY "Proyecto" offerings, one per division/rotation group.
+    get personalizedTimetable(): TimetableBySubject {
+      if (!this.studentDetected) return {};
+      const offerings = this.visibleOfferings as OfferingWithSlots[];
+      const mandatory = offerings.filter(
+        (o) => o.kind === "MANDATORY" && o.courses.some((c) => c.courseName === this.studentCourse),
+      );
+      const optional = offerings.filter((o) => o.kind === "OPTIONAL" && o.enrolled);
+      return resolveOfferingsTimetable([...mandatory, ...optional]);
+    },
     get state(): State {
       return this.loading ? "loading" : "ready";
     },
-    getTimetableByGridPos(row: number, col: number) {
-      return getSlotsAtGridPos(this.timetable, row, col);
+    getTimetableByGridPos(row: number, col: number, personalized = false) {
+      return getSlotsAtGridPos(personalized ? this.personalizedTimetable : this.timetable, row, col);
     },
     subjectColorClass: getSubjectColorClass,
     subjectSecondaryTextClass: getSubjectSecondaryTextClass,
-    slotClasses: getSlotClasses,
+    slotClasses: getSubjectColorClass,
     async init() {
       const studentStore = Alpine.store("student") as AlpineStudentStore;
       await studentStore.getStudentData("Proyecto", this.year);
       this.studentDetected = studentStore.id !== "";
+      this.studentCourse = studentStore.course;
       this.offerings = await fetchPublicOfferingSchedule(
         "Proyecto",
         this.year,
