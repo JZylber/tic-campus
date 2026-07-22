@@ -54,9 +54,14 @@ const avanzadosPageData = () =>
       );
     },
     get filteredStudents() {
-      return (this.studentsForActiveLevel as Students).filter(
-        (s) => isNaN(this.filter.courseId) || s.courseId === this.filter.courseId,
-      );
+      return (this.studentsForActiveLevel as Students)
+        .filter((s) => isNaN(this.filter.courseId) || s.courseId === this.filter.courseId)
+        .sort(
+          (a, b) =>
+            a.courseName.localeCompare(b.courseName, "es") ||
+            a.surname.localeCompare(b.surname, "es") ||
+            a.name.localeCompare(b.name, "es"),
+        );
     },
     availableOfferingsForStudent(student: AvanzadoStudent | null) {
       if (!student) return [];

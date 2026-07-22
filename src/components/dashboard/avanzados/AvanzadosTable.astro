@@ -24,7 +24,7 @@ import AvanzadoMatchDialog from "./AvanzadoMatchDialog.astro";
       <thead class="bg-sh-black text-gray-50 text-lg font-semibold">
         <tr>
           <th class="px-4 py-2">Apellido, Nombre</th>
-          <th class="px-4 py-2">Curso</th>
+          <th class="px-4 py-2 text-center">Curso</th>
           <th class="px-4 py-2">Avanzados</th>
           <th class="px-4 py-2">Editar</th>
         </tr>
@@ -33,7 +33,7 @@ import AvanzadoMatchDialog from "./AvanzadoMatchDialog.astro";
         <template x-for="student in filteredStudents" :key="student.studentId">
           <tr class="border-b-2 border-gray-300 hover:bg-gray-300">
             <td class="px-4 py-2" x-text="`${student.surname}, ${student.name}`"></td>
-            <td class="px-4 py-2" x-text="student.courseName"></td>
+            <td class="px-4 py-2 text-center" x-text="student.courseName"></td>
             <td class="px-4 py-2">
               <div class="flex flex-wrap gap-1">
                 <template x-for="match in student.avanzados" :key="match.offeringId">
