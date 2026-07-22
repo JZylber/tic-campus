@@ -186,7 +186,7 @@ const daysJson = JSON.stringify(DAYS);
               >
                 <template x-for="{subject,room,teacher,conflict} in slotData">
                   <div
-                    class="flex flex-col items-center h-full gap-y-0.5 py-1 transition-opacity"
+                    class="flex flex-col items-center justify-center grow gap-y-0.5 py-1 transition-opacity"
                     :class="[slotClasses(subject), conflict && 'ring-2 ring-inset ring-sh-red']"
                   >
                     <span
@@ -275,9 +275,9 @@ const daysJson = JSON.stringify(DAYS);
           <div class="bg-gray-400 row-start-4 col-span-full" aria-hidden="true"></div>
           {
             blocks.map(({ row, block }) => (
-              <div class="bg-gray-50 w-full overflow-hidden" style={`grid-row-start: ${row};`}>
+              <div class="bg-gray-50 w-full overflow-hidden flex" style={`grid-row-start: ${row};`}>
                 <div
-                  class="w-[500%] flex transition-transform"
+                  class="w-[500%] flex shrink-0 transition-transform"
                   :style="`transform: translateX(${day * -20}%)`"
                 >
                   {
@@ -292,7 +292,7 @@ const daysJson = JSON.stringify(DAYS);
                       >
                         <template x-for="{subject,room,teacher,conflict} in slotData">
                           <div
-                            class="flex flex-col items-center h-full gap-y-0.5 py-1"
+                            class="flex flex-col items-center justify-center grow gap-y-0.5 py-1"
                             :class="[slotClasses(subject), conflict && 'ring-2 ring-inset ring-sh-red']"
                           >
                             <span
