@@ -1,0 +1,153 @@
+<script type="module" id="campus-insertion">
+  // Two subject options the viewer can pick between via the button selector below.
+  // course/year stay fixed regardless of which subject is chosen.
+  const subjectBasico = "Materia de Prueba (Básico)";
+  const subjectAvanzado = "Materia de Prueba (Avanzado)";
+  const course = "NR5Z";
+  const year = 0;
+  const baseURL = "https://jzylber.github.io/";
+  // Create a div tag with the id "leftoverinformation", display none and append all breadcrumbs and menu to it
+  let leftoverDiv = document.createElement("div");
+  leftoverDiv.style.display = "none";
+  leftoverDiv.id = "leftoverinformation";
+  document.querySelectorAll("a.breadcrumb").forEach((el) => {
+    leftoverDiv.innerHTML += el.outerHTML;
+  });
+  // Get the div with classes col and s1 and add to the template
+  let menu = document.querySelector(".col.s1 ul");
+  if (menu) {
+    leftoverDiv.innerHTML += menu.outerHTML;
+  }
+  document.body.appendChild(leftoverDiv);
+  // Clear parent and prepare it for the selector / shadow DOM
+  let parent = document
+    .getElementById("campus-insertion")
+    .closest(".bodySitio");
+  parent.id = "campus-insertion";
+  //Remove class container
+  parent.classList.remove("container");
+  // Add classes max-width: 1280px, width 100% and margin 0 auto
+  parent.style.margin = "0 auto";
+  parent.style.maxWidth = "1280px";
+  //Add media query so on width > 40 rem, the width is 95%
+  let mediaQuery = window.matchMedia("(min-width: 40rem)");
+  const applyWidth = (matches) => {
+    parent.style.width = matches ? "95%" : "100%";
+  };
+  applyWidth(mediaQuery.matches);
+  mediaQuery.addEventListener("change", (e) => applyWidth(e.matches));
+  parent.innerHTML = "";
+
+  // Show the Básico / Avanzado selector, centered vertically and horizontally,
+  // before fetching/rendering anything.
+  const selector = document.createElement("div");
+  selector.id = "campus-subject-selector";
+  selector.style.display = "flex";
+  selector.style.alignItems = "center";
+  selector.style.justifyContent = "center";
+  selector.style.gap = "1.5rem";
+  selector.style.minHeight = "60vh";
+  selector.style.width = "100%";
+
+  const makeButton = (label, subject) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.textContent = label;
+    button.style.padding = "0.75rem 2rem";
+    button.style.fontSize = "1.1rem";
+    button.style.cursor = "pointer";
+    button.style.border = "2px solid #333";
+    button.style.borderRadius = "0.5rem";
+    button.style.background = "#fff";
+    button.addEventListener("click", () => {
+      selector.remove();
+      loadSubject(subject);
+    });
+    return button;
+  };
+
+  selector.appendChild(makeButton("Básico", subjectBasico));
+  selector.appendChild(makeButton("Avanzado", subjectAvanzado));
+  parent.appendChild(selector);
+
+  async function loadSubject(subject) {
+    let campusLink = encodeURI(
+      `https://jzylber.github.io/tic-campus/${year}/${subject}/${course}`
+    );
+    let campusHTML = await fetch(campusLink).then((response) => {
+      return response.text();
+    });
+    // Clear parent and add shadow DOM
+    parent.innerHTML = "";
+    const shadow = parent.attachShadow({ mode: "open" });
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(campusHTML, "text/html");
+    // Append all link and style tags to shadow and mirror link tags to document head.
+    // onload/onerror are set before appendChild so the event can never fire before the handler is ready.
+    const linkLoadPromises = [];
+    [...doc.querySelectorAll("link, style")].forEach((el) => {
+      if (el.tagName === "LINK") {
+        if (el.href.startsWith("https://campus.ort.edu.ar/tic-campus")) {
+          el.href = el.href.replace("https://campus.ort.edu.ar/", baseURL);
+        }
+        // Only mirror stylesheets to document.head and await their load.
+        // preconnect/prefetch/preload links are document-level hints — browsers
+        // often never fire onload for them, which would stall Promise.all forever.
+        if (el.relList.contains("stylesheet")) {
+          const newLink = el.cloneNode();
+          newLink.href = el.href;
+          linkLoadPromises.push(
+            new Promise((resolve) => { newLink.onload = resolve; newLink.onerror = resolve; })
+          );
+          document.head.appendChild(newLink);
+        }
+      }
+      shadow.appendChild(el);
+    });
+    const triggerDOMContentLoaded = () => {
+      document.dispatchEvent(new CustomEvent("DOMContentLoaded"));
+    };
+    // Get all script tags
+    let scripts = [...doc.querySelectorAll("script")];
+    //Remove from doc
+    scripts.forEach((el) => {
+      el.remove();
+    });
+    //Set parents innerHTML to template + doc body innerHtml
+    shadow.innerHTML += doc.body.innerHTML;
+    const loadScripts = scripts.map((el, index) => {
+      return new Promise((resolve, reject) => {
+        // Check if if the script has inline code
+        if (el.textContent) {
+          // Eval content directly and resolve
+          eval(el.textContent);
+          resolve();
+        } else if (!el.src) {
+          // If no src and no inline code, resolve
+          resolve();
+        } else {
+          // If has src, create a new script tag and set the src
+          const newScript = document.createElement("script");
+          // Copy all atributtes from the original script tag
+          for (let i = 0; i < el.attributes.length; i++) {
+            newScript.setAttribute(el.attributes[i].name, el.attributes[i].value);
+          }
+          if (el.src.startsWith("https://campus.ort.edu.ar/tic-campus")) {
+            newScript.src = el.src.replace("https://campus.ort.edu.ar/", baseURL);
+          } else {
+            newScript.src = el.src;
+          }
+          newScript.onload = () => resolve();
+          newScript.onerror = () => reject(new Error(`Failed to load script: ${newScript.src}`));
+          shadow.appendChild(newScript);
+        }
+      });
+    });
+    await Promise.all(loadScripts);
+    // Wait for all stylesheets to load before initializing Alpine,
+    // so CSS custom properties (e.g. --breakpoint-lg) are readable.
+    await Promise.all(linkLoadPromises);
+    triggerDOMContentLoaded();
+    window.Alpine.initTree(parent.shadowRoot);
+  }
+</script>
