@@ -49,6 +49,7 @@ html {
   --color-tic-arte: #e9d2f4;
   --color-tic-hardware: #cc2624;
   --color-tic-impacto-social: #a431ff;
+  --color-tic-web: #4D4DFF;
 }
 
 @layer components {

@@ -10,8 +10,8 @@ interface SubjectColor {
 // back to a deterministic pick from the palette so new/whole-level subjects
 // still render consistently without editing this map.
 const SUBJECT_COLORS: Record<string, SubjectColor> = {
-  Hardware: { bg: "bg-tic-iot", text: "text-white" },
-  Frontend: { bg: "bg-tic-3d", text: "text-white" },
+  Hardware: { bg: "bg-tic-hardware", text: "text-white" },
+  Frontend: { bg: "bg-tic-web", text: "text-white" },
   Backend: { bg: "bg-tic-app", text: "text-sh-black" },
   TIMI: { bg: "bg-tic-arte", text: "text-sh-black" },
   Proyecto: { bg: "bg-gray-200", text: "text-sh-black" },
