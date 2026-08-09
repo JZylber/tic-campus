@@ -1,0 +1,392 @@
+---
+import CodeBlock from "../../../../../components/articles/code-block/CodeBlock.astro";
+import InlineCodeBlock from "../../../../../components/articles/code-block/InlineCodeBlock.astro";
+import ImportantBox from "../../../../../components/articles/alertbox/ImportantBox.astro";
+
+export const partial = true;
+---
+
+<h2>¿Por qué aprender objetos?</h2>
+<p>
+  Cuando programamos, muchas veces necesitamos <strong
+    >organizar datos relacionados</strong
+  >. Por ejemplo, si estamos armando el backend de una Pokédex (una app de
+  registro de Pokémon), necesitamos representar cada Pokémon con su
+  información.
+</p>
+<p>Imaginá esto:</p>
+<CodeBlock
+  lang="ts"
+  code={`let nombre: string = "Pikachu";
+let tipo: string = "Eléctrico";
+let nivel: number = 12;`}
+/>
+<p>
+  Esto sirve... pero si queremos manejar muchos Pokémon, ¡necesitamos una
+  estructura más ordenada! <strong>
+    Los objetos nos ayudan a agrupar todo eso en un solo lugar
+  </strong>.
+</p>
+<h2>¿Qué es un objeto?</h2>
+<p>
+  Un <strong>objeto</strong> es una colección de datos relacionados, llamados <strong
+    >atributos</strong
+  >
+  (o propiedades), escritos en forma de <strong>clave: valor</strong>.
+</p>
+<CodeBlock
+  lang="ts"
+  code={`let pikachu = {
+    nombre: "Pikachu",
+    tipo: "Eléctrico",
+    nivel: 12
+};`}
+/>
+<p>
+  Este objeto representa a Pikachu con tres atributos: nombre, tipo y nivel.
+  Con solo mirar estos valores, TypeScript ya sabe que <em>nombre</em> y <em
+    >tipo</em
+  > son de tipo <InlineCodeBlock code="string" lang="ts" />, y que <em
+    >nivel</em
+  > es de tipo <InlineCodeBlock code="number" lang="ts" />.
+</p>
+<h2>Acceder a los valores</h2>
+<p>Podemos obtener los datos de un objeto de dos formas:</p>
+<h3>Con punto (.)</h3>
+<CodeBlock
+  lang="ts"
+  code={`console.log(pikachu.nombre); // "Pikachu"
+console.log(pikachu.nivel);  // 12
+`}
+/>
+<h3>Con corchetes ([])</h3>
+<CodeBlock
+  lang="ts"
+  code={`console.log(pikachu["nombre"]); // "Pikachu"
+console.log(pikachu["nivel"]);  // 12
+`}
+/>
+<p>
+  Esta última forma es útil si el nombre del atributo proviene de una
+  variable. Convenía declararla con <InlineCodeBlock
+    code="const"
+    lang="ts"
+  />: así TypeScript sabe que su valor es exactamente <InlineCodeBlock
+    code='"nivel"'
+    lang="ts"
+  /> —y no cualquier texto—, y puede confirmar que es un atributo válido de <em
+    >pikachu</em
+  >.
+</p>
+<CodeBlock
+  lang="ts"
+  code={`const atributo = "nivel";
+console.log(pikachu[atributo]); // 12`}
+/>
+<h2>Modificar valores</h2>
+<p>Podés actualizar cualquier valor del objeto:</p>
+<CodeBlock
+  lang="ts"
+  code={`pikachu.nivel = 13; // Pikachu subió de nivel
+pikachu["tipo"] = "Eléctrico/Normal"; // Le agregamos un subtipo`}
+/>
+<p>
+  TypeScript también controla que el valor nuevo sea del tipo correcto. Si te
+  equivocás, te avisa con un error:
+</p>
+<CodeBlock
+  lang="ts"
+  code={`pikachu.nivel = "trece"; // Error: Type 'string' is not assignable to type 'number'`}
+/>
+<h2>Agregar nuevos atributos</h2>
+<p>
+  En JavaScript los objetos son dinámicos: se pueden expandir agregando
+  atributos nuevos en cualquier momento. En TypeScript, en cambio, un objeto
+  tiene una <strong>forma fija</strong>: apenas lo creás, TypeScript infiere qué
+  atributos tiene y no te deja agregar otros que no estaban.
+</p>
+<CodeBlock
+  lang="ts"
+  code={`pikachu.ataque = "Impactrueno"; // Error: Property 'ataque' does not exist on type '{ nombre: string; tipo: string; nivel: number; }'`}
+/>
+<p>
+  Esto es justamente lo que hace útil a TypeScript: si escribiste mal el
+  nombre de un atributo, o te olvidaste de definirlo, te enterás <em
+    >antes</em
+  > de ejecutar el programa —no cuando ya está corriendo en producción—. Para poder
+  agregar atributos nuevos, primero tenemos que decirle a TypeScript qué forma
+  puede tener el objeto. Eso se hace con un <strong>tipo</strong>.
+</p>
+<h2>Definir tipos para objetos</h2>
+<p>
+  Un <InlineCodeBlock code="type" lang="ts" /> le da nombre a la <strong
+    >forma</strong
+  > de un objeto: qué atributos tiene y de qué tipo es cada uno. Por convención,
+  el nombre de un tipo se escribe en <em>PascalCase</em> (con mayúscula inicial).
+</p>
+<CodeBlock
+  lang="ts"
+  code={`type Pokemon = {
+    nombre: string;
+    tipo: string;
+    nivel: number;
+};`}
+/>
+<p>
+  Ahora podemos usar <em>Pokemon</em> para anotar cualquier variable que deba
+  tener esa forma:
+</p>
+<CodeBlock
+  lang="ts"
+  code={`let pikachu: Pokemon = {
+    nombre: "Pikachu",
+    tipo: "Eléctrico",
+    nivel: 12
+};`}
+/>
+<p>
+  A partir de acá, TypeScript exige que el objeto tenga <strong
+    >todos</strong
+  > los atributos del tipo, con el tipo correcto:
+</p>
+<CodeBlock
+  lang="ts"
+  code={`let charmander: Pokemon = {
+    nombre: "Charmander",
+    tipo: "Fuego"
+}; // Error: Property 'nivel' is missing in type '{ nombre: string; tipo: string; }' but required in type 'Pokemon'`}
+/>
+<CodeBlock
+  lang="ts"
+  code={`let squirtle: Pokemon = {
+    nombre: "Squirtle",
+    tipo: "Agua",
+    nivel: "diez" // Error: Type 'string' is not assignable to type 'number'
+};`}
+/>
+<p>
+  Tampoco te deja agregar, al crear el objeto, un atributo que no forma parte
+  del tipo:
+</p>
+<CodeBlock
+  lang="ts"
+  code={`let bulbasaur: Pokemon = {
+    nombre: "Bulbasaur",
+    tipo: "Planta",
+    nivel: 5,
+    color: "verde" // Error: Object literal may only specify known properties, and 'color' does not exist in type 'Pokemon'
+};`}
+/>
+<h3>Atributos opcionales</h3>
+<p>
+  A veces un atributo no siempre está presente —como la habilidad de un
+  Pokémon, que puede que todavía no conozcamos—. Para eso usamos <InlineCodeBlock
+    code="?"
+    lang="ts"
+  /> después del nombre del atributo:
+</p>
+<CodeBlock
+  lang="ts"
+  code={`type Pokemon = {
+    nombre: string;
+    tipo: string;
+    nivel: number;
+    habilidad?: string; // opcional
+};`}
+/>
+<p>
+  Ahora sí podemos crear un Pokémon sin <em>habilidad</em>, y agregársela más
+  adelante —al ser opcional, sigue siendo parte del tipo—:
+</p>
+<CodeBlock
+  lang="ts"
+  code={`let pikachu: Pokemon = { nombre: "Pikachu", tipo: "Eléctrico", nivel: 12 };
+pikachu.habilidad = "Electricidad estática"; // Ahora sí funciona`}
+/>
+<p>
+  <InlineCodeBlock code="type" lang="ts" /> es una herramienta exclusiva de TypeScript:
+  cuando el código se compila a JavaScript, los tipos desaparecen —nunca llegan
+  a ejecutarse—.
+</p>
+<h2>Objetos anidados y listas</h2>
+<p>
+  Los atributos de un objeto también pueden ser, a su vez, objetos. Por
+  ejemplo, podemos representar las estadísticas de un Pokémon con su propio
+  tipo, y usarlo como atributo de <em>Pokemon</em>:
+</p>
+<CodeBlock
+  lang="ts"
+  code={`type Stats = {
+    hp: number;
+    ataque: number;
+    defensa: number;
+};
+
+type Pokemon = {
+    nombre: string;
+    tipo: string;
+    nivel: number;
+    habilidad?: string;
+    stats: Stats;
+};`}
+/>
+<CodeBlock
+  lang="ts"
+  code={`let pikachu: Pokemon = {
+    nombre: "Pikachu",
+    tipo: "Eléctrico",
+    nivel: 12,
+    stats: { hp: 35, ataque: 55, defensa: 40 }
+};
+
+console.log(pikachu.stats.hp); // 35`}
+/>
+<p>
+  Y si necesitamos manejar varios Pokémon a la vez —como en una Pokédex—,
+  podemos usar un <strong>array de objetos</strong>, anotado con <InlineCodeBlock
+    code="Pokemon[]"
+    lang="ts"
+  />:
+</p>
+<CodeBlock
+  lang="ts"
+  code={`let pokedex: Pokemon[] = [
+    { nombre: "Pikachu", tipo: "Eléctrico", nivel: 12, stats: { hp: 35, ataque: 55, defensa: 40 } },
+    { nombre: "Charmander", tipo: "Fuego", nivel: 8, stats: { hp: 39, ataque: 52, defensa: 43 } }
+];
+
+for (const pokemon of pokedex) {
+    console.log(pokemon.nombre + " - Nivel " + pokemon.nivel);
+}
+// Pikachu - Nivel 12
+// Charmander - Nivel 8`}
+/>
+<p>
+  Cada elemento del array tiene que cumplir con el tipo <em>Pokemon</em>
+  —TypeScript los revisa uno por uno—.
+</p>
+<h2>Objetos y JSON</h2>
+<p>
+  Cuando un backend se comunica con otra parte del sistema —por ejemplo, un
+  frontend que le pide datos por HTTP—, los objetos no viajan como objetos de
+  JavaScript: viajan como <strong>texto</strong>, en un formato llamado <strong
+    >JSON</strong
+  > (JavaScript Object Notation).
+</p>
+<p>
+  Para convertir un objeto a texto JSON usamos <InlineCodeBlock
+    code="JSON.stringify()"
+    lang="ts"
+  />:
+</p>
+<CodeBlock
+  lang="ts"
+  code={`let pikachu: Pokemon = {
+    nombre: "Pikachu",
+    tipo: "Eléctrico",
+    nivel: 12,
+    stats: { hp: 35, ataque: 55, defensa: 40 }
+};
+
+let texto: string = JSON.stringify(pikachu);
+console.log(texto);`}
+/>
+<p>El resultado es un texto con esta forma:</p>
+<CodeBlock
+  lang="json"
+  code={`{
+  "nombre": "Pikachu",
+  "tipo": "Eléctrico",
+  "nivel": 12,
+  "stats": { "hp": 35, "ataque": 55, "defensa": 40 }
+}`}
+/>
+<p>
+  En JSON, las claves siempre van entre comillas dobles —a diferencia de los
+  objetos de TypeScript, donde las comillas son opcionales—.
+</p>
+<p>
+  Para hacer el camino inverso —convertir un texto JSON en un objeto que
+  podamos usar—, usamos <InlineCodeBlock code="JSON.parse()" lang="ts" />:
+</p>
+<CodeBlock
+  lang="ts"
+  code={`let pikachuDeVuelta: Pokemon = JSON.parse(texto);
+console.log(pikachuDeVuelta.stats.hp); // 35`}
+/>
+<ImportantBox warning="Los tipos no se verifican en tiempo de ejecución">
+  <p>
+    <InlineCodeBlock code="JSON.parse()" lang="ts" /> le devuelve <em
+      >any</em
+    > a TypeScript, así que la anotación <InlineCodeBlock
+      code=": Pokemon"
+      lang="ts"
+    /> es una promesa nuestra, no algo que TypeScript compruebe. Si el texto no
+    tiene la forma esperada —por ejemplo, si a la respuesta de la API le falta
+    un atributo—, TypeScript no se da cuenta, y el error va a aparecer recién
+    cuando el programa se ejecute.
+  </p>
+</ImportantBox>
+<h2>Resumen</h2>
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Acción</th>
+      <th>Ejemplo</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Crear un objeto</td>
+      <td
+        ><InlineCodeBlock
+          lang="ts"
+          code="let pokemon = {nombre: 'Bulbasaur', nivel: 1};"
+        /></td
+      >
+    </tr>
+    <tr>
+      <td>Acceder a un atributo</td>
+      <td
+        ><InlineCodeBlock lang="ts" code="pokemon.nombre;" /> o <InlineCodeBlock
+          lang="ts"
+          code="pokemon['nombre'];"
+        /></td
+      >
+    </tr>
+    <tr>
+      <td>Cambiar valor</td>
+      <td><InlineCodeBlock lang="ts" code="pokemon.nivel = 10;" /></td>
+    </tr>
+    <tr>
+      <td>Definir un tipo</td>
+      <td
+        ><InlineCodeBlock
+          lang="ts"
+          code="type Pokemon = { nombre: string; nivel: number };"
+        /></td
+      >
+    </tr>
+    <tr>
+      <td>Atributo opcional</td>
+      <td><InlineCodeBlock lang="ts" code="habilidad?: string;" /></td>
+    </tr>
+    <tr>
+      <td>Array de objetos tipado</td>
+      <td><InlineCodeBlock lang="ts" code="let pokedex: Pokemon[] = [];" /></td>
+    </tr>
+    <tr>
+      <td>Objeto a JSON</td>
+      <td><InlineCodeBlock lang="ts" code="JSON.stringify(pokemon);" /></td>
+    </tr>
+    <tr>
+      <td>JSON a objeto</td>
+      <td
+        ><InlineCodeBlock
+          lang="ts"
+          code="let pokemon: Pokemon = JSON.parse(texto);"
+        /></td
+      >
+    </tr>
+  </tbody>
+</table>
