@@ -34,6 +34,28 @@ export async function fetchSubjectsCatalog(): Promise<SubjectCatalogEntry[]> {
   }
 }
 
+export type OfferingStudent = {
+  studentId: number;
+  name: string;
+  surname: string;
+  email: string;
+  dni: string;
+  courseName: string;
+};
+
+export async function fetchOfferingStudents(offeringId: number): Promise<OfferingStudent[]> {
+  try {
+    const response = await authFetch(`${backendURL}/offerings/${offeringId}/students`);
+    if (!response.ok) {
+      throw new Error(`Error fetching offering students: ${response.statusText}`);
+    }
+    return (await response.json()) as OfferingStudent[];
+  } catch (error) {
+    console.error("Failed to fetch offering students:", error);
+    return [];
+  }
+}
+
 export async function createOffering(data: {
   subjectId: number;
   kind: OfferingKind;

@@ -1,0 +1,64 @@
+---
+import Loader from "../../loader/Loader.astro";
+import Radio from "../../misc/radio/Radio.astro";
+import Toggle from "../../misc/toggle/Toggle.astro";
+import Select from "../../misc/select/Select.astro";
+---
+
+<script>
+  import setAlpineData from "../../../scripts/alpine/setAlpineData";
+  import listadosPageData from "../../../scripts/alpine/data/listadosPage";
+
+  setAlpineData("listadosPage", listadosPageData);
+</script>
+<div class="w-full flex justify-center py-4" x-data="listadosPage()">
+  <Loader show="loading" />
+
+  <div class="w-full flex flex-col gap-y-4 px-4" x-show="!loading">
+    <div class="flex w-full flex-wrap items-end gap-8">
+      <Toggle options="semesterOptions" xModel="semester" title="Cuatrimestre" className="w-80" />
+      <Radio options="levelOptions" xModel="activeLevel" title="Nivel" />
+      <Select title="Materia" xModel="offeringId" options="offeringOptions" className="min-w-64" />
+      <button
+        @click="download()"
+        :disabled="students.length === 0"
+        class="ml-auto px-4 py-2 bg-sh-black text-white rounded-xl hover:opacity-80 cursor-pointer h-fit disabled:opacity-50 disabled:pointer-events-none"
+        >Descargar CSV</button
+      >
+    </div>
+
+    <div class="relative min-h-32">
+      <Loader show="loadingRoster" />
+      <table class="w-full" x-show="!loadingRoster">
+        <thead class="bg-sh-black text-gray-50 text-lg font-semibold">
+          <tr>
+            <th class="px-4 py-2">Apellido</th>
+            <th class="px-4 py-2">Nombre</th>
+            <th class="px-4 py-2">Email</th>
+            <th class="px-4 py-2">DNI</th>
+            <th class="px-4 py-2">Curso</th>
+          </tr>
+        </thead>
+        <tbody>
+          <template x-for="student in students" :key="student.studentId">
+            <tr class="border-b-2 border-gray-300 hover:bg-gray-300">
+              <td class="px-4 py-2" x-text="student.surname"></td>
+              <td class="px-4 py-2" x-text="student.name"></td>
+              <td class="px-4 py-2" x-text="student.email"></td>
+              <td class="px-4 py-2" x-text="student.dni"></td>
+              <td class="px-4 py-2" x-text="student.courseName"></td>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+      <span
+        class="text-sh-dark-gray text-sm"
+        x-show="!loadingRoster && students.length === 0"
+        >No hay estudiantes para esta materia.</span
+      >
+    </div>
+    <span class="text-sh-dark-gray text-sm" x-show="!loadingRoster && students.length > 0">
+      <span x-text="students.length"></span> estudiantes
+    </span>
+  </div>
+</div>
