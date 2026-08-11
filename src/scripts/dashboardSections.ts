@@ -74,6 +74,13 @@ export const DASHBOARD_SECTIONS: DashboardSection[] = [
     roles: ["ADMIN"],
   },
   {
+    key: "grilla",
+    label: "Grilla",
+    group: "informacion",
+    path: "dashboard/grilla",
+    roles: ["TEACHER", "COUNSELOR", "ADMIN"],
+  },
+  {
     key: "grillas-estudiantes",
     label: "Grillas Estudiantes",
     group: "informacion",

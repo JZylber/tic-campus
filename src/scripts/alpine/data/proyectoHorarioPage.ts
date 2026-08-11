@@ -1,31 +1,18 @@
 import type { AlpineComponent } from "alpinejs";
 import { fetchPublicOfferingSchedule, type OfferingWithSlots, type Semester } from "../../APIcalls/offeringTimeSlots";
 import { matchesSemesterFilter, defaultCuatrimestre } from "../../offeringSemester";
-import { WEEKDAY_TO_DAY, getSlotsAtGridPos, type TimetableBySubject } from "../../timetableLayout";
+import { getSlotsAtGridPos, type TimetableBySubject } from "../../timetableLayout";
 import { resolveOfferingsTimetable } from "../../timetableResolve";
 import { getSubjectColorClass, getSubjectSecondaryTextClass } from "../../timetableColors";
+import {
+  mandatoryOfferingsOf,
+  groupTabsOf,
+  groupOptionalOfferingsOf,
+  groupTimetableOf,
+} from "../../proyectoTimetableGroups";
 import type { AlpineStudentStore } from "../stores/student";
 
 type State = "loading" | "ready";
-
-// buildDisplayName (backend) renders "Proyecto (AC)" for an offering that only
-// covers part of the level's courses, and bare "Proyecto" for one covering the
-// whole level — this is the inverse, turning that into a tab label.
-function groupLabelFor(displayName: string): string {
-  const match = displayName.match(/\(([^)]+)\)\s*$/);
-  return match ? match[1] : "Todos";
-}
-
-// Key used to bucket an offering into a group timetable. Mirrors the backend's
-// composeSubjectName ("Frontend-1"): it keeps the bare subject name (dropping
-// displayName's "(AC)"/"(BD)" division suffix, which the active tab already
-// conveys) but preserves the offering's own `name` so two variants of the same
-// subject (e.g. "Frontend" split into 1/2) stay distinct instead of one
-// overwriting the other. getBaseSubjectName in timetableColors strips the
-// "-<name>" suffix, so every variant still resolves to the same color.
-function groupSubjectKey(offering: OfferingWithSlots): string {
-  return offering.name ? `${offering.subjectName}-${offering.name}` : offering.subjectName;
-}
 
 const proyectoHorarioPageData = (year: number, level: number) =>
   ({
@@ -51,50 +38,24 @@ const proyectoHorarioPageData = (year: number, level: number) =>
     // (e.g. level 4's AC/BD rotation groups), each rendered as its own tab
     // instead of merged into one grid.
     get mandatoryOfferings() {
-      return (this.visibleOfferings as OfferingWithSlots[]).filter((o) => o.kind === "MANDATORY");
+      return mandatoryOfferingsOf(this.visibleOfferings as OfferingWithSlots[]);
     },
     get groupTabs() {
-      return (this.mandatoryOfferings as OfferingWithSlots[])
-        .map((o) => ({ id: String(o.id), label: groupLabelFor(o.displayName) }))
-        .sort((a, b) => a.label.localeCompare(b.label));
+      return groupTabsOf(this.mandatoryOfferings as OfferingWithSlots[]);
     },
-    // Seminars aren't level-wide either — one scoped to only part of the
-    // level (e.g. offered just to NR4A/NR4C) only belongs on that group's
-    // tab; one spanning the whole level (all its courses fall inside the
-    // group) belongs on every group's tab.
     getGroupOptionalOfferings(groupId: string | null): OfferingWithSlots[] {
-      const groupOffering = (this.mandatoryOfferings as OfferingWithSlots[]).find(
-        (o) => String(o.id) === groupId,
-      );
-      if (!groupOffering) return [];
-      const groupCourseIds = new Set(groupOffering.courses.map((c) => c.courseId));
-      return (this.visibleOfferings as OfferingWithSlots[]).filter(
-        (o) => o.kind === "OPTIONAL" && o.courses.some((c) => groupCourseIds.has(c.courseId)),
+      return groupOptionalOfferingsOf(
+        groupId,
+        this.mandatoryOfferings as OfferingWithSlots[],
+        this.visibleOfferings as OfferingWithSlots[],
       );
     },
-    // A group tab is its own MANDATORY offering plus whichever seminars are
-    // scoped to it. The label is the bare subject name (not displayName's
-    // "(AC)"/"(BD)" suffix) since the active tab already says which group
-    // this is.
     getGroupTimetable(groupId: string | null): TimetableBySubject {
-      const groupOffering = (this.mandatoryOfferings as OfferingWithSlots[]).find(
-        (o) => String(o.id) === groupId,
+      return groupTimetableOf(
+        groupId,
+        this.mandatoryOfferings as OfferingWithSlots[],
+        this.visibleOfferings as OfferingWithSlots[],
       );
-      if (!groupOffering) return {};
-      const timetable: TimetableBySubject = {};
-      const offerings: OfferingWithSlots[] = [
-        groupOffering,
-        ...(this.getGroupOptionalOfferings(groupId) as OfferingWithSlots[]),
-      ];
-      for (const offering of offerings) {
-        timetable[groupSubjectKey(offering)] = offering.timeSlots.map((slot) => ({
-          day: WEEKDAY_TO_DAY[slot.day],
-          block: slot.slot,
-          room: slot.classroom ?? "",
-          teacher: "",
-        }));
-      }
-      return timetable;
     },
     // The "Seminarios Avanzados" header always reflects the detected
     // student's own enrollment, regardless of which tab (Propios/AC/BD) is
