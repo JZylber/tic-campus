@@ -1,0 +1,131 @@
+---
+import CodeBlock from "../../../../../components/articles/code-block/CodeBlock.astro";
+import InlineCodeBlock from "../../../../../components/articles/code-block/InlineCodeBlock.astro";
+
+export const partial = true;
+---
+
+<h2>Introducción</h2>
+<p>
+  Esta consigna es un homenaje a dos ex alumnos de TIC, <strong>Abril</strong>
+  y <strong>Blur</strong>. El diseño es de Abril, y está todo autorizado por
+  Blur.
+</p>
+
+<h2>Consigna base</h2>
+<p>
+  TAGG es una app creada por alumnos para elegir tu look. Blur arma su
+  atuendo con el placard interactivo: zapatillas, pantalón y remera, cada uno
+  con su propio par de flechas.
+</p>
+<p>
+  El frontend guarda el atuendo actual en un objeto global, con el nombre de
+  la prenda puesta en cada categoría:
+</p>
+<CodeBlock
+  lang="js"
+  code={`let ropa = {
+  zapatillas: 'CONVERSE.jpg',
+  pantalones: 'STANDART_JEANS.jpg',
+  remera: 'BLUR_SHIRT.jpg',
+};`}
+/>
+<p>
+  Cada flecha hace un pedido al backend indicando la categoría a cambiar y si
+  hay que ir hacia adelante o hacia atrás. El backend tiene un catálogo
+  (array de prendas) por categoría, y busca ahí cuál es la prenda siguiente o
+  anterior —con vuelta al principio al llegar al final, y vuelta al final al
+  llegar al principio—. La respuesta lleva solo los nombres nuevos: <InlineCodeBlock
+    code="frontend/main.js"
+    lang="plaintext"
+  /> tiene su propia copia del catálogo (con las imágenes) y busca ahí lo que
+  necesita para actualizar la pantalla.
+</p>
+<p>
+  Hay que completar tres funciones en <InlineCodeBlock
+    code="src/index.ts"
+    lang="plaintext"
+  />: <InlineCodeBlock code="cambiarZapatillas" lang="ts" />, <InlineCodeBlock
+    code="cambiarPantalón"
+    lang="ts"
+  /> y <InlineCodeBlock code="cambiarRemera" lang="ts" />. Las tres reciben el
+  atuendo actual y la dirección (<InlineCodeBlock
+    code="adelante: true"
+    lang="ts"
+  /> o <InlineCodeBlock code="false" lang="ts" />), y devuelven el atuendo con
+  la prenda de su categoría actualizada. Ya están importadas desde <InlineCodeBlock
+    code="src/lib/ropa.ts"
+    lang="plaintext"
+  />:
+</p>
+<ul>
+  <li>
+    <InlineCodeBlock code="buscarIndice(prendas, nombre)" lang="ts" /> — la posición
+    de una prenda dentro del catálogo.
+  </li>
+  <li>
+    <InlineCodeBlock
+      code="siguienteIndice(indice, cantidad, adelante)"
+      lang="ts"
+    /> — la posición siguiente o anterior, con vuelta.
+  </li>
+</ul>
+
+<h2>Consigna manija</h2>
+<p>
+  El botón RANDOMIZAR arma un atuendo al azar: una prenda al azar de cada
+  catálogo. Va en una función <InlineCodeBlock code="randomizar" lang="ts" />,
+  en el mismo <InlineCodeBlock code="src/index.ts" lang="plaintext" />. Devuelve
+  el mismo formato que cambiar ropa:
+</p>
+<CodeBlock
+  lang="json"
+  code={`{ "ropa": { "zapatillas": "...", "pantalones": "...", "remera": "..." } }`}
+/>
+<p>
+  La forma fácil es elegir un índice (número) al azar. ¿Por qué no averiguan
+  cómo hacer esto? ¡Googleen!
+</p>
+
+<h2>¿Qué hay que editar?</h2>
+<p>
+  <InlineCodeBlock code="src/index.ts" lang="plaintext" /> — las tres funciones
+  <InlineCodeBlock code="cambiarX" lang="ts" /> y, para la manija, <InlineCodeBlock
+    code="randomizar"
+    lang="ts"
+  />.
+</p>
+<p>
+  Todo lo demás ya está completo: <InlineCodeBlock
+    code="src/lib/ropa.ts"
+    lang="plaintext"
+  /> (los catálogos y las funciones auxiliares), <InlineCodeBlock
+    code="src/lib/servidor.ts"
+    lang="plaintext"
+  />, <InlineCodeBlock code="frontend/index.html" lang="plaintext" />, <InlineCodeBlock
+    code="frontend/styles.css"
+    lang="plaintext"
+  /> y <InlineCodeBlock code="frontend/main.js" lang="plaintext" />.
+</p>
+
+<h2>Primeros pasos</h2>
+<p>
+  Antes de poder correr el programa, hay que instalar las dependencias del
+  proyecto. Esto se hace <strong>una sola vez</strong> con:
+</p>
+<CodeBlock lang="bash" code="npm install" />
+
+<h2>Cómo correr el programa</h2>
+<CodeBlock lang="bash" code="npm run start" />
+
+<h2>Tests</h2>
+<p>
+  El proyecto incluye tests automáticos que se usan para la corrección. No
+  hace falta entenderlos ni modificarlos:
+</p>
+<CodeBlock
+  lang="bash"
+  code={`npm run test-base    # consigna base
+npm run test-manija  # consigna manija
+npm test             # todos`}
+/>
