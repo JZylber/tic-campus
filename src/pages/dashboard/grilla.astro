@@ -1,6 +1,6 @@
 ---
 import DashboardLayout from "../../layouts/DashboardLayout.astro";
-import GrillaProyectoPanel from "../../components/dashboard/grillaProyecto/GrillaProyectoPanel.astro";
+import GrillaPanel from "../../components/dashboard/grilla/GrillaPanel.astro";
 ---
 
 <script>
@@ -13,8 +13,8 @@ import GrillaProyectoPanel from "../../components/dashboard/grillaProyecto/Grill
   <div class="w-full h-full flex flex-col items-center overflow-y-scroll">
     <h1 class="text-[30px] md:text-[36px] font-bold pt-4 pb-2">Grilla</h1>
     <h2 class="text-[16px] md:text-[20px] pb-4">
-      Horario general de Proyecto por nivel y rotación.
+      Horario completo por nivel y rotación.
     </h2>
-    <GrillaProyectoPanel />
+    <GrillaPanel />
   </div>
 </DashboardLayout>

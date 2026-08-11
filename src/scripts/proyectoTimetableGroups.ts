@@ -3,12 +3,13 @@ import { WEEKDAY_TO_DAY, type TimetableBySubject } from "./timetableLayout";
 
 // Shared between the student-facing Proyecto horario pages
 // (alpine/data/proyectoHorarioPage.ts) and the dashboard's Información ›
-// Grilla view (alpine/data/grillaProyectoPage.ts) — both need to turn a
-// level's MANDATORY "Proyecto" offerings into rotation-group tabs and each
-// tab's timetable, they just wrap different personalization layers around
-// it. Kept level-agnostic and personalization-agnostic on purpose: callers
-// pass in whichever offerings are already scoped to their year/level/
-// semester filter.
+// Grilla view (alpine/data/grillaPage.ts) — both derive rotation-group tabs
+// from a level's MANDATORY "Proyecto" offerings; groupTimetableOf builds
+// each tab's Proyecto-only slice (what the student page shows) while
+// fullGroupTimetableOf builds the group's entire schedule across every
+// subject (what Grilla shows). Kept level-agnostic and
+// personalization-agnostic on purpose: callers pass in whichever offerings
+// are already scoped to their year/level/semester filter.
 
 export type TimetableTab = { id: string; label: string };
 
@@ -61,6 +62,19 @@ export function groupOptionalOfferingsOf(
   );
 }
 
+function offeringsToTimetable(offerings: OfferingWithSlots[]): TimetableBySubject {
+  const timetable: TimetableBySubject = {};
+  for (const offering of offerings) {
+    timetable[groupSubjectKey(offering)] = offering.timeSlots.map((slot) => ({
+      day: WEEKDAY_TO_DAY[slot.day],
+      block: slot.slot,
+      room: slot.classroom ?? "",
+      teacher: "",
+    }));
+  }
+  return timetable;
+}
+
 // A group tab is its own MANDATORY offering plus whichever seminars are
 // scoped to it. The label is the bare subject name (not displayName's
 // "(AC)"/"(BD)" suffix) since the active tab already says which group this
@@ -72,18 +86,30 @@ export function groupTimetableOf(
 ): TimetableBySubject {
   const groupOffering = mandatoryOfferings.find((o) => String(o.id) === groupId);
   if (!groupOffering) return {};
-  const timetable: TimetableBySubject = {};
-  const offerings: OfferingWithSlots[] = [
+  return offeringsToTimetable([
     groupOffering,
     ...groupOptionalOfferingsOf(groupId, mandatoryOfferings, visibleOfferings),
-  ];
-  for (const offering of offerings) {
-    timetable[groupSubjectKey(offering)] = offering.timeSlots.map((slot) => ({
-      day: WEEKDAY_TO_DAY[slot.day],
-      block: slot.slot,
-      room: slot.classroom ?? "",
-      teacher: "",
-    }));
-  }
-  return timetable;
+  ]);
+}
+
+// Every offering of any subject and kind — not just the rotation anchor and
+// its scoped seminars — whose courses overlap the rotation group's own
+// course-set. This is the group's *entire* weekly schedule (every mandatory
+// subject plus every seminar it carries), the same thing a student in that
+// group actually sees across their whole week, versus groupTimetableOf's
+// narrower Proyecto-only slice. `anchorOfferings` still defines the
+// rotation groups themselves (Proyecto is the subject whose per-group
+// scheduling *is* "the rotation" at this school); `allOfferings` supplies
+// the content once a group's course-set is known.
+export function fullGroupTimetableOf(
+  groupId: string | null,
+  anchorOfferings: OfferingWithSlots[],
+  allOfferings: OfferingWithSlots[],
+): TimetableBySubject {
+  const groupOffering = anchorOfferings.find((o) => String(o.id) === groupId);
+  if (!groupOffering) return {};
+  const groupCourseIds = new Set(groupOffering.courses.map((c) => c.courseId));
+  return offeringsToTimetable(
+    allOfferings.filter((o) => o.courses.some((c) => groupCourseIds.has(c.courseId))),
+  );
 }

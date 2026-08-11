@@ -3,18 +3,27 @@ import { fetchOfferings, type OfferingWithSlots, type Semester } from "../../API
 import { matchesSemesterFilter, defaultCuatrimestre } from "../../offeringSemester";
 import { getSlotsAtGridPos } from "../../timetableLayout";
 import { getSubjectColorClass, getSubjectSecondaryTextClass } from "../../timetableColors";
-import { mandatoryOfferingsOf, groupTabsOf, groupTimetableOf } from "../../proyectoTimetableGroups";
+import { mandatoryOfferingsOf, groupTabsOf, fullGroupTimetableOf } from "../../proyectoTimetableGroups";
 
 type State = "loading" | "ready";
 
-// Backs the dashboard's Información › Grilla view — the staff-facing
-// counterpart of the student's per-level Proyecto horario page
-// (alpine/data/proyectoHorarioPage.ts), reusing the same rotation-group
-// logic but without any individual-student personalization: there's no
-// "Propios" tab here (TimetableGrid's showPersonalizedTab={false}), and
-// both levels are reachable from one page via a level toggle instead of
-// one page per (year, level).
-const grillaProyectoPageData = () =>
+// Backs the dashboard's Información › Grilla view: the whole weekly
+// timetable for a level, every subject included, split into rotation-group
+// tabs (AC/BD) — the same complete schedule a student in that group sees,
+// just without picking an individual student first. There's no "Propios"
+// tab here (TimetableGrid's showPersonalizedTab={false}); both levels are
+// reachable from one page via a level toggle instead of one page per
+// (year, level).
+//
+// "Proyecto" is the only subject that actually splits a level into rotation
+// groups (its own MANDATORY offerings are what define "AC"/"BD"), so its
+// offerings are still what groupTabs is built from. Every other subject —
+// whole-level offerings like Matemática as well as scoped seminars — gets
+// merged into whichever rotation group(s) its courses overlap, via
+// fullGroupTimetableOf. This is the distinction from proyectoHorarioPage.ts
+// (the student's per-level Proyecto-only page), which deliberately shows
+// just the Proyecto+seminars slice via groupTimetableOf.
+const grillaPageData = () =>
   ({
     loading: true,
     year: new Date().getFullYear(),
@@ -30,30 +39,29 @@ const grillaProyectoPageData = () =>
         { value: "SECOND", label: "2do Cuatrimestre" },
       ];
     },
-    // fetchOfferings(year) returns every offering for the year, not just
-    // Proyecto's — the public per-level endpoint proyectoHorarioPage.ts uses
-    // scopes this server-side instead, but that endpoint doesn't accept a
-    // JWT-authenticated caller's role the way this dashboard view needs to
-    // reuse the same fetch pattern as the rest of Información, so it's
-    // filtered client-side here.
     get visibleOfferings(): OfferingWithSlots[] {
-      return (this.offerings as OfferingWithSlots[]).filter(
-        (o) => o.subjectName === "Proyecto" && matchesSemesterFilter(o.semester, this.cuatrimestre),
+      return (this.offerings as OfferingWithSlots[]).filter((o) =>
+        matchesSemesterFilter(o.semester, this.cuatrimestre),
       );
     },
     get levelOfferings(): OfferingWithSlots[] {
       return (this.visibleOfferings as OfferingWithSlots[]).filter((o) => o.level === this.level);
     },
-    get mandatoryOfferings(): OfferingWithSlots[] {
-      return mandatoryOfferingsOf(this.levelOfferings as OfferingWithSlots[]);
+    // Proyecto-only, and only its MANDATORY (rotation-defining) offerings —
+    // the anchor used purely to derive the tabs themselves, not the grid
+    // content.
+    get proyectoMandatoryOfferings(): OfferingWithSlots[] {
+      return mandatoryOfferingsOf(
+        (this.levelOfferings as OfferingWithSlots[]).filter((o) => o.subjectName === "Proyecto"),
+      );
     },
     get levelTabs() {
-      return groupTabsOf(this.mandatoryOfferings as OfferingWithSlots[]);
+      return groupTabsOf(this.proyectoMandatoryOfferings as OfferingWithSlots[]);
     },
     getTimetableByGridPos(row: number, col: number, _personalized: boolean, activeTab: string | null) {
-      const timetable = groupTimetableOf(
+      const timetable = fullGroupTimetableOf(
         activeTab,
-        this.mandatoryOfferings as OfferingWithSlots[],
+        this.proyectoMandatoryOfferings as OfferingWithSlots[],
         this.levelOfferings as OfferingWithSlots[],
       );
       return getSlotsAtGridPos(timetable, row, col);
@@ -76,4 +84,4 @@ const grillaProyectoPageData = () =>
     },
   }) as AlpineComponent<any>;
 
-export default grillaProyectoPageData;
+export default grillaPageData;

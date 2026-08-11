@@ -7,11 +7,11 @@ import TimetableGrid from "../../sections/timetable/TimetableGrid.astro";
 
 <script>
   import setAlpineData from "../../../scripts/alpine/setAlpineData";
-  import grillaProyectoPageData from "../../../scripts/alpine/data/grillaProyectoPage";
+  import grillaPageData from "../../../scripts/alpine/data/grillaPage";
 
-  setAlpineData("grillaProyectoPage", grillaProyectoPageData);
+  setAlpineData("grillaPage", grillaPageData);
 </script>
-<div class="w-full flex justify-center py-4" x-data="grillaProyectoPage()">
+<div class="w-full flex justify-center py-4" x-data="grillaPage()">
   <Loader show="loading" />
 
   <div class="w-full flex flex-col gap-y-4 px-4" x-show="!loading">
