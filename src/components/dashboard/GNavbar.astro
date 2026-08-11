@@ -1,120 +1,83 @@
 ---
-interface Props {
-  role: "teacher" | "admin" | "tutor";
-}
-const { role } = Astro.props;
-const otherDashboards = [
-  { key: "teacher", label: "Modo Docente", href: "/tic-campus/dashboard/teacher" },
-  { key: "admin", label: "Modo Admin", href: "/tic-campus/dashboard/admin" },
-  { key: "tutor", label: "Modo Tutor", href: "/tic-campus/dashboard/tutor" },
-].filter((dashboard) => dashboard.key !== role);
+import {
+  DASHBOARD_GROUPS,
+  groupRoles,
+  sectionByPath,
+  sectionsInGroup,
+} from "../../scripts/dashboardSections";
+
+// Two-tier nav: which group is active (and therefore which group's items
+// the second row shows) is derived from the URL at build time, so the
+// correct row renders in the very first paint with no JS. Which
+// groups/items are visible at all depends on the logged-in user's role,
+// which is only known client-side (after requireAuth's /user/info fetch)
+// — that part is handled by dashboardNav() below via x-show + x-cloak.
+const activeSection = sectionByPath(Astro.url.pathname);
+const activeGroup = activeSection?.group ?? DASHBOARD_GROUPS[0].key;
+const activeGroupItems = sectionsInGroup(activeGroup);
+const base = import.meta.env.BASE_URL;
 ---
 
-<nav class="w-full bg-gray-50 border-b-2 border-gray-300 flex items-stretch">
-  {
-    role === "teacher" && (
-      <>
-        <a
-          href="/tic-campus/dashboard/teacher"
-          class="py-4 flex items-center justify-center w-40 hover:bg-gray-300 uppercase font-bold text-gray-700"
-        >
-          Notas
-        </a>
-        <a
-          href="/tic-campus/dashboard/teacher/revision"
-          class="py-4 flex items-center justify-center w-40 hover:bg-gray-300 uppercase font-bold text-gray-700"
-        >
-          Revisiones
-        </a>
-        <a
-          href="/tic-campus/dashboard/teacher/horarios"
-          class="py-4 flex items-center justify-center w-40 hover:bg-gray-300 uppercase font-bold text-gray-700"
-        >
-          Horarios
-        </a>
-        <a
-          href="/tic-campus/dashboard/teacher/listados"
-          class="py-4 flex items-center justify-center w-40 hover:bg-gray-300 uppercase font-bold text-gray-700"
-        >
-          Listados
-        </a>
-      </>
-    )
-  }
-  {
-    role === "tutor" && (
-      <>
-        <a
-          href="/tic-campus/dashboard/tutor"
-          class="py-4 flex items-center justify-center w-40 hover:bg-gray-300 uppercase font-bold text-gray-700"
-        >
-          Horarios
-        </a>
-        <a
-          href="/tic-campus/dashboard/tutor/listados"
-          class="py-4 flex items-center justify-center w-40 hover:bg-gray-300 uppercase font-bold text-gray-700"
-        >
-          Listados
-        </a>
-      </>
-    )
-  }
-  {
-    role === "admin" && (
-      <>
-        <a
-          href="/tic-campus/dashboard/admin"
-          class="py-4 flex items-center justify-center w-40 hover:bg-gray-300 uppercase font-bold text-gray-700"
-        >
-          Estudiantes
-        </a>
-        <a
-          href="/tic-campus/dashboard/admin/materias"
-          class="py-4 flex items-center justify-center w-40 hover:bg-gray-300 uppercase font-bold text-gray-700"
-        >
-          Materias
-        </a>
-        <a
-          href="/tic-campus/dashboard/admin/avanzados"
-          class="py-4 flex items-center justify-center w-40 hover:bg-gray-300 uppercase font-bold text-gray-700"
-        >
-          Avanzados
-        </a>
-        <a
-          href="/tic-campus/dashboard/admin/horarios"
-          class="py-4 flex items-center justify-center w-40 hover:bg-gray-300 uppercase font-bold text-gray-700"
-        >
-          Horarios
-        </a>
-      </>
-    )
-  }
-  <div class="ml-auto flex items-stretch border-l-2 border-gray-300">
+<script>
+  import setAlpineData from "../../scripts/alpine/setAlpineData";
+  import dashboardNavData from "../../scripts/alpine/data/dashboardNav";
+
+  setAlpineData("dashboardNav", dashboardNavData);
+</script>
+
+<div x-data="dashboardNav()">
+  <nav class="w-full bg-gray-50 border-b border-gray-300 flex items-stretch">
     {
-      otherDashboards.map((dashboard) => (
+      DASHBOARD_GROUPS.map((group) => (
         <a
-          x-show="$store.currentUser.role === 'ADMIN'"
+          x-show={`canSee(${JSON.stringify(groupRoles(group.key))})`}
           x-cloak
-          href={dashboard.href}
-          class="flex items-center px-4 bg-sh-purple !text-sh-black hover:bg-sh-light-purple transition-colors font-bold uppercase text-sm"
+          :href={`groupHref('${group.key}')`}
+          class:list={[
+            "py-3 px-6 flex items-center justify-center uppercase font-bold text-sm tracking-wide transition-colors border-b-2",
+            group.key === activeGroup
+              ? "text-sh-black border-sh-black"
+              : "text-gray-500 border-transparent hover:text-sh-black hover:bg-gray-200",
+          ]}
         >
-          {dashboard.label}
+          {group.label}
         </a>
       ))
     }
-    <a
-      href="/tic-campus/"
-      x-show="$store.currentUser.role === 'ADMIN' && $store.student.id !== ''"
-      x-cloak
-      class="flex items-center justify-end gap-x-4 px-4"
-    >
-      <span
-        class="material-symbols-outlined !text-[30px]"
-        x-text="$store.student.id === ''?'question_mark':'person'"></span>
-      <div class="flex flex-col w-50 text-gray-700 text-[14px] md:text-[16px]">
-        <span x-text="$store.student.name"></span>
-        <span x-text="$store.student.surname"></span>
-      </div>
-    </a>
-  </div>
-</nav>
+    <div class="ml-auto flex items-stretch border-l-2 border-gray-300">
+      <a
+        href={`${base}`}
+        x-show="$store.currentUser.role === 'ADMIN' && $store.student.id !== ''"
+        x-cloak
+        class="flex items-center justify-end gap-x-4 px-4"
+      >
+        <span
+          class="material-symbols-outlined !text-[30px]"
+          x-text="$store.student.id === ''?'question_mark':'person'"></span>
+        <div class="flex flex-col w-50 text-gray-700 text-[14px] md:text-[16px]">
+          <span x-text="$store.student.name"></span>
+          <span x-text="$store.student.surname"></span>
+        </div>
+      </a>
+    </div>
+  </nav>
+  <nav class="w-full bg-white border-b-2 border-gray-300 flex items-stretch">
+    {
+      activeGroupItems.map((section) => (
+        <a
+          x-show={`canSee(${JSON.stringify(section.roles)})`}
+          x-cloak
+          href={`${base}${section.path}`}
+          class:list={[
+            "py-2 px-5 flex items-center justify-center font-semibold text-[15px] transition-colors border-b-2",
+            section.key === activeSection?.key
+              ? "text-sh-black border-sh-purple"
+              : "text-gray-500 border-transparent hover:text-sh-black hover:bg-gray-100",
+          ]}
+        >
+          {section.label}
+        </a>
+      ))
+    }
+  </nav>
+</div>

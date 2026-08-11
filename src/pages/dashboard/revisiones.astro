@@ -1,14 +1,15 @@
 ---
-import TeacherLayout from "../../../layouts/TeacherLayout.astro";
-import RevisionTable from "../../../components/dashboard/RevisionTable.astro";
+import DashboardLayout from "../../layouts/DashboardLayout.astro";
+import RevisionTable from "../../components/dashboard/RevisionTable.astro";
 ---
 
 <script>
-  import { requireTeacherAuth } from "../../../scripts/auth";
-  requireTeacherAuth();
+  import { requireAuth } from "../../scripts/auth";
+  import { rolesFor } from "../../scripts/dashboardSections";
+  requireAuth(rolesFor("revisiones"));
 </script>
 
-<TeacherLayout>
+<DashboardLayout>
   <div class="w-full h-full flex flex-col items-center overflow-y-scroll">
     <h1 class="text-[30px] md:text-[36px] font-bold pt-4 pb-2">
       Pedidos de Revisión
@@ -18,4 +19,4 @@ import RevisionTable from "../../../components/dashboard/RevisionTable.astro";
     </h2>
     <RevisionTable />
   </div>
-</TeacherLayout>
+</DashboardLayout>

@@ -1,0 +1,14 @@
+---
+import StudentSchedulePanel from "../../components/dashboard/studentSchedule/StudentSchedulePanel.astro";
+import DashboardLayout from "../../layouts/DashboardLayout.astro";
+---
+
+<script>
+  import { requireAuth } from "../../scripts/auth";
+  import { rolesFor } from "../../scripts/dashboardSections";
+  requireAuth(rolesFor("grillas-estudiantes"));
+</script>
+
+<DashboardLayout>
+  <StudentSchedulePanel />
+</DashboardLayout>

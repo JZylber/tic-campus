@@ -24,4 +24,24 @@ export default defineConfig({
     assets: "astro",
   },
   base: "/tic-campus/",
+  // The dashboard nav used to nest routes under a role (/dashboard/teacher,
+  // /dashboard/tutor, /dashboard/admin) — see dashboardSections.ts for why
+  // that was dropped. These keep old bookmarks/links alive by forwarding to
+  // the flat routes. Astro applies `base` to the source keys automatically
+  // (matched against the real request path) but NOT to the destination —
+  // verified against the emitted dist/ redirect pages, where the "to" target
+  // came out as literal, unprefixed "/dashboard/notas" and would 404 on
+  // GitHub Pages. Destinations must spell out the base themselves.
+  redirects: {
+    "/dashboard/teacher": "/tic-campus/dashboard/notas",
+    "/dashboard/teacher/revision": "/tic-campus/dashboard/revisiones",
+    "/dashboard/teacher/horarios": "/tic-campus/dashboard/grillas-estudiantes",
+    "/dashboard/teacher/listados": "/tic-campus/dashboard/listados",
+    "/dashboard/tutor": "/tic-campus/dashboard/grillas-estudiantes",
+    "/dashboard/tutor/listados": "/tic-campus/dashboard/listados",
+    "/dashboard/admin": "/tic-campus/dashboard/estudiantes",
+    "/dashboard/admin/materias": "/tic-campus/dashboard/materias",
+    "/dashboard/admin/avanzados": "/tic-campus/dashboard/avanzados",
+    "/dashboard/admin/horarios": "/tic-campus/dashboard/horarios-materias",
+  },
 });

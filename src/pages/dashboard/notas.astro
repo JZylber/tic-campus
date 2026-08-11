@@ -1,14 +1,15 @@
 ---
-import MarksTable from "../../../components/dashboard/MarksTable.astro";
-import TeacherLayout from "../../../layouts/TeacherLayout.astro";
+import MarksTable from "../../components/dashboard/MarksTable.astro";
+import DashboardLayout from "../../layouts/DashboardLayout.astro";
 ---
 
 <script>
-  import { requireTeacherAuth } from "../../../scripts/auth";
-  requireTeacherAuth();
+  import { requireAuth } from "../../scripts/auth";
+  import { rolesFor } from "../../scripts/dashboardSections";
+  requireAuth(rolesFor("notas"));
 </script>
 
-<TeacherLayout>
+<DashboardLayout>
   <div class="w-full h-full flex flex-col items-center overflow-y-scroll">
     <h1 class="text-[30px] md:text-[36px] font-bold pt-4 pb-2">Notas</h1>
     <h2 class="text-[16px] md:text-[20px] pb-4">
@@ -17,4 +18,4 @@ import TeacherLayout from "../../../layouts/TeacherLayout.astro";
     </h2>
     <MarksTable />
   </div>
-</TeacherLayout>
+</DashboardLayout>
