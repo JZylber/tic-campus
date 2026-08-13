@@ -1,0 +1,31 @@
+---
+export const partial = true;
+---
+
+<h2>Biblioteca de Datasheets</h2>
+<h3>
+  Manuales técnicos de los componentes. <br />
+  Aprender a buscar la información que importa. <br />
+</h3>
+
+<p style="margin-bottom: 1.5rem;">
+  El Datasheet es el manual de fábrica de un componente. Suele estar en inglés y tener decenas de páginas con gráficos complejos. <strong>La regla de oro es: no lo leemos entero.</strong> Entramos al documento buscando responder solo tres preguntas clave para no quemar nada: ¿A qué voltaje funciona? (<em>Operating Voltage</em>), ¿Cuánto consume? (<em>Operating Current</em>) y ¿Para qué sirve cada pata? (<em>Pinout</em>).
+</p>
+
+<div style="margin-bottom: 2rem; padding: 1.5rem; background-color: #f3f4f6; border-radius: 8px; text-align: center;">
+  <p style="margin-bottom: 1rem; font-size: 1.1rem;">
+    <strong>Accedé a la carpeta con los PDFs de esta clase acá:</strong>
+  </p>
+  <a 
+    href="https://drive.google.com/drive/folders/1KnWosIl-sOlqjcMqOgPLAmxbKAFemXuL?usp=drive_link" 
+    target="_blank" 
+    rel="noopener noreferrer" 
+    style="display: inline-block; padding: 0.75rem 1.5rem; background-color: #3b82f6; color: white; text-decoration: none; border-radius: 6px; font-weight: bold;"
+  >
+    📁 Abrir Carpeta de Datasheets
+  </a>
+</div>
+
+<p>
+  <strong>Desafío de la clase:</strong> Abran el datasheet del componente que les tocó en la mesa, identifiquen los 3 datos clave y discutan con su dupla cómo lo conectarían físicamente a la placa Arduino antes de empezar a escribir código.
+</p>
