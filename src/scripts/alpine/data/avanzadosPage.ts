@@ -115,9 +115,6 @@ const avanzadosPageData = () =>
         }
         student.avanzados.push(match);
       }
-
-      const idx = (this.students as Students).findIndex((s) => s.studentId === student.studentId);
-      if (idx !== -1) this.students[idx] = { ...student, avanzados: [...student.avanzados] };
     },
   }) as AlpineComponent<any>;
 

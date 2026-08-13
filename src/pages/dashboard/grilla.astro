@@ -1,0 +1,20 @@
+---
+import DashboardLayout from "../../layouts/DashboardLayout.astro";
+import GrillaPanel from "../../components/dashboard/grilla/GrillaPanel.astro";
+---
+
+<script>
+  import { requireAuth } from "../../scripts/auth";
+  import { rolesFor } from "../../scripts/dashboardSections";
+  requireAuth(rolesFor("grilla"));
+</script>
+
+<DashboardLayout>
+  <div class="w-full h-full flex flex-col items-center overflow-y-scroll">
+    <h1 class="text-[30px] md:text-[36px] font-bold pt-4 pb-2">Grilla</h1>
+    <h2 class="text-[16px] md:text-[20px] pb-4">
+      Horario completo por nivel y rotación.
+    </h2>
+    <GrillaPanel />
+  </div>
+</DashboardLayout>

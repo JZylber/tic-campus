@@ -1,14 +1,15 @@
 ---
-import TutorLayout from "../../../layouts/TutorLayout.astro";
-import ListadosPanel from "../../../components/dashboard/listados/ListadosPanel.astro";
+import DashboardLayout from "../../layouts/DashboardLayout.astro";
+import ListadosPanel from "../../components/dashboard/listados/ListadosPanel.astro";
 ---
 
 <script>
-  import { requireTutorAuth } from "../../../scripts/auth";
-  requireTutorAuth();
+  import { requireAuth } from "../../scripts/auth";
+  import { rolesFor } from "../../scripts/dashboardSections";
+  requireAuth(rolesFor("listados"));
 </script>
 
-<TutorLayout>
+<DashboardLayout>
   <div class="w-full h-full flex flex-col items-center overflow-y-scroll">
     <h1 class="text-[30px] md:text-[36px] font-bold pt-4 pb-2">Listados</h1>
     <h2 class="text-[16px] md:text-[20px] pb-4">
@@ -16,4 +17,4 @@ import ListadosPanel from "../../../components/dashboard/listados/ListadosPanel.
     </h2>
     <ListadosPanel />
   </div>
-</TutorLayout>
+</DashboardLayout>

@@ -1,6 +1,7 @@
 import { backendURL } from "./APIcalls/shared";
 import { authFetch } from "./APIcalls/authToken";
 import type { CurrentUserStore } from "./alpine/stores/currentUser";
+import type { DashboardRole } from "./dashboardSections";
 
 type UserInfo = {
   id: number;
@@ -8,6 +9,8 @@ type UserInfo = {
   surname: string | null;
   role: string;
 };
+
+const unauthorizedURL = `${import.meta.env.BASE_URL}dashboard/unauthorized`;
 
 export async function fetchCurrentUser(): Promise<UserInfo | null> {
   try {
@@ -19,74 +22,30 @@ export async function fetchCurrentUser(): Promise<UserInfo | null> {
   }
 }
 
-export async function requireDashboardAuth() {
+// Single dashboard auth guard: fetches the current user, sends them through
+// Google OAuth if they're not logged in, sends them to /dashboard/unauthorized
+// if their role isn't in `allowed`, and otherwise populates the currentUser
+// store and returns the user. `allowed` is the same role list a page's nav
+// section declares in dashboardSections.ts, so the guard and the nav can
+// never drift apart.
+export async function requireAuth(
+  allowed: DashboardRole[],
+): Promise<UserInfo | null> {
   try {
     const response = await authFetch(`${backendURL}/user/info`);
     if (!response.ok) {
       window.location.href = `${backendURL}/auth/google?returnTo=${encodeURIComponent(window.location.href)}`;
-      return;
+      return null;
     }
     const user: UserInfo = await response.json();
-    if (user.role !== "TEACHER" && user.role !== "ADMIN" && user.role !== "COUNSELOR") {
-      window.location.href = "/tic-campus/dashboard/unauthorized";
-      return;
+    if (!allowed.includes(user.role as DashboardRole)) {
+      window.location.href = unauthorizedURL;
+      return null;
     }
     (Alpine.store("currentUser") as CurrentUserStore).set(user.id, user.name, user.surname, user.role);
+    return user;
   } catch {
     window.location.href = `${backendURL}/auth/google?returnTo=${encodeURIComponent(window.location.href)}`;
-  }
-}
-
-export async function requireTeacherAuth() {
-  try {
-    const response = await authFetch(`${backendURL}/user/info`);
-    if (!response.ok) {
-      window.location.href = `${backendURL}/auth/google?returnTo=${encodeURIComponent(window.location.href)}`;
-      return;
-    }
-    const user: UserInfo = await response.json();
-    if (user.role !== "TEACHER" && user.role !== "ADMIN") {
-      window.location.href = "/tic-campus/dashboard/unauthorized";
-      return;
-    }
-    (Alpine.store("currentUser") as CurrentUserStore).set(user.id, user.name, user.surname, user.role);
-  } catch {
-    window.location.href = `${backendURL}/auth/google?returnTo=${encodeURIComponent(window.location.href)}`;
-  }
-}
-
-export async function requireTutorAuth() {
-  try {
-    const response = await authFetch(`${backendURL}/user/info`);
-    if (!response.ok) {
-      window.location.href = `${backendURL}/auth/google?returnTo=${encodeURIComponent(window.location.href)}`;
-      return;
-    }
-    const user: UserInfo = await response.json();
-    if (user.role !== "COUNSELOR" && user.role !== "ADMIN") {
-      window.location.href = "/tic-campus/dashboard/unauthorized";
-      return;
-    }
-    (Alpine.store("currentUser") as CurrentUserStore).set(user.id, user.name, user.surname, user.role);
-  } catch {
-    window.location.href = `${backendURL}/auth/google?returnTo=${encodeURIComponent(window.location.href)}`;
-  }
-}
-
-export async function requireAdminAuth() {
-  try {
-    const response = await authFetch(`${backendURL}/user/info`);
-    if (!response.ok) {
-      window.location.href = `${backendURL}/auth/google?returnTo=${encodeURIComponent(window.location.href)}`;
-      return;
-    }
-    const user: UserInfo = await response.json();
-    if (user.role !== "ADMIN") {
-      window.location.href = "/tic-campus/dashboard/unauthorized";
-      return;
-    }
-    (Alpine.store("currentUser") as CurrentUserStore).set(user.id, user.name, user.surname, user.role);
-  } catch {
-    window.location.href = `${backendURL}/auth/google?returnTo=${encodeURIComponent(window.location.href)}`;
+    return null;
   }
 }

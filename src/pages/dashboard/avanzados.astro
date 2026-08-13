@@ -1,14 +1,15 @@
 ---
-import AvanzadosTable from "../../../components/dashboard/avanzados/AvanzadosTable.astro";
-import AdminLayout from "../../../layouts/AdminLayout.astro";
+import AvanzadosTable from "../../components/dashboard/avanzados/AvanzadosTable.astro";
+import DashboardLayout from "../../layouts/DashboardLayout.astro";
 ---
 
 <script>
-  import { requireAdminAuth } from "../../../scripts/auth";
-  requireAdminAuth();
+  import { requireAuth } from "../../scripts/auth";
+  import { rolesFor } from "../../scripts/dashboardSections";
+  requireAuth(rolesFor("avanzados"));
 </script>
 
-<AdminLayout>
+<DashboardLayout>
   <div class="w-full h-full flex flex-col items-center overflow-y-scroll">
     <h1 class="text-[30px] md:text-[36px] font-bold pt-4 pb-2">Avanzados</h1>
     <h2 class="text-[16px] md:text-[20px] pb-4">
@@ -16,4 +17,4 @@ import AdminLayout from "../../../layouts/AdminLayout.astro";
     </h2>
     <AvanzadosTable />
   </div>
-</AdminLayout>
+</DashboardLayout>

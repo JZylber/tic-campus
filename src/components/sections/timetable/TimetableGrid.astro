@@ -24,6 +24,13 @@ interface Props {
   // meaningfully from that single tab (e.g. Proyecto, where "Propios" only
   // shows the student's own rotation group).
   alwaysShowTabs?: string | boolean;
+  // Whether the "Propios" button appears in the tab bar at all — distinct
+  // from personalizedAvailable, which controls whether it's *enabled*.
+  // Callers with no individual/student context at all (e.g. the dashboard's
+  // admin-facing Grilla view) set this false to drop the button entirely
+  // instead of rendering it permanently disabled. Defaults to true so every
+  // existing caller is unaffected.
+  showPersonalizedTab?: string | boolean;
 }
 
 const {
@@ -31,6 +38,7 @@ const {
   personalizedAvailable = true,
   tabs = [{ id: "rotacion", label: "Rotación" }],
   alwaysShowTabs = false,
+  showPersonalizedTab = true,
 } = Astro.props;
 const personalizedAvailableExpr =
   typeof personalizedAvailable === "string"
@@ -39,6 +47,8 @@ const personalizedAvailableExpr =
 const tabsExpr = typeof tabs === "string" ? tabs : JSON.stringify(tabs);
 const alwaysShowTabsExpr =
   typeof alwaysShowTabs === "string" ? alwaysShowTabs : JSON.stringify(alwaysShowTabs);
+const showPersonalizedTabExpr =
+  typeof showPersonalizedTab === "string" ? showPersonalizedTab : JSON.stringify(showPersonalizedTab);
 
 const blocks = getGridBlocks();
 const cells = getGridCells();
@@ -47,12 +57,13 @@ const daysJson = JSON.stringify(DAYS);
 
 <div
   class="flex flex-col gap-y-4"
-  x-data="{personalized: false, canPersonalize: true, tabsList: [], activeTab: null, alwaysShowTabs: false, visibleSeminars: []}"
+  x-data="{personalized: false, canPersonalize: true, tabsList: [], activeTab: null, alwaysShowTabs: false, showPersonalizedTab: true, visibleSeminars: []}"
   x-effect={`
     canPersonalize = ${personalizedAvailableExpr};
     if (!canPersonalize) personalized = false;
     tabsList = ${tabsExpr};
     alwaysShowTabs = ${alwaysShowTabsExpr};
+    showPersonalizedTab = ${showPersonalizedTabExpr};
     if (!tabsList.some((t) => t.id === activeTab)) activeTab = tabsList[0]?.id ?? null;
     visibleSeminars = getSeminars(personalized, activeTab) ?? [];
   `}
@@ -104,18 +115,20 @@ const daysJson = JSON.stringify(DAYS);
             role="tablist"
             aria-label="Vista de horario"
           >
-            <button
-              type="button"
-              role="tab"
-              :aria-selected="personalized"
-              :aria-disabled="!canPersonalize"
-              :tabindex="canPersonalize ? 0 : -1"
-              class="px-4 h-full flex justify-center items-center transition-colors"
-              :class="{'bg-sh-purple text-white': personalized, 'cursor-pointer': canPersonalize, 'cursor-not-allowed opacity-50': !canPersonalize}"
-              @click="canPersonalize && (personalized = true)"
-            >
-              Propios
-            </button>
+            <template x-if="showPersonalizedTab">
+              <button
+                type="button"
+                role="tab"
+                :aria-selected="personalized"
+                :aria-disabled="!canPersonalize"
+                :tabindex="canPersonalize ? 0 : -1"
+                class="px-4 h-full flex justify-center items-center transition-colors"
+                :class="{'bg-sh-purple text-white': personalized, 'cursor-pointer': canPersonalize, 'cursor-not-allowed opacity-50': !canPersonalize}"
+                @click="canPersonalize && (personalized = true)"
+              >
+                Propios
+              </button>
+            </template>
             <template x-for="tab in tabsList" :key="tab.id">
               <button
                 type="button"

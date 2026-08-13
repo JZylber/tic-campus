@@ -1,0 +1,20 @@
+---
+import StudentTable from "../../components/dashboard/students/StudentTable.astro";
+import DashboardLayout from "../../layouts/DashboardLayout.astro";
+---
+
+<script>
+  import { requireAuth } from "../../scripts/auth";
+  import { rolesFor } from "../../scripts/dashboardSections";
+  requireAuth(rolesFor("estudiantes"));
+</script>
+
+<DashboardLayout>
+  <div class="w-full h-full flex flex-col items-center overflow-y-scroll">
+    <h1 class="text-[30px] md:text-[36px] font-bold pt-4 pb-2">Estudiantes</h1>
+    <h2 class="text-[16px] md:text-[20px] pb-4">
+      Buscá un estudiante, revisá sus datos y asignale un curso.
+    </h2>
+    <StudentTable />
+  </div>
+</DashboardLayout>
