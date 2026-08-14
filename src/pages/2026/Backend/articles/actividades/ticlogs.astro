@@ -1,0 +1,93 @@
+---
+import CodeBlock from "../../../../../components/articles/code-block/CodeBlock.astro";
+import InlineCodeBlock from "../../../../../components/articles/code-block/InlineCodeBlock.astro";
+import ImportantBox from "../../../../../components/articles/alertbox/ImportantBox.astro";
+
+export const partial = true;
+---
+
+<h2>Introducción</h2>
+<p>
+  Un alumno cometió un crimen imperdonable: <strong
+    >dejó una compu desenchufada</strong
+  >. Por eso queremos encontrar al culpable.
+</p>
+
+<h2>El caso</h2>
+<ul>
+  <li>La compu desenchufada es la <strong>22</strong>.</li>
+  <li>Fue durante la materia <em>"Historia de Boca"</em>.</li>
+  <li>Fue un <strong>5to bloque</strong>.</li>
+  <li>Fue en <strong>5E (NR5E)</strong>.</li>
+</ul>
+
+<h2>API</h2>
+<p>
+  Contamos con una API, <strong>ticlogs</strong>, con la información de la
+  semana del <strong>06/07/2026</strong> al <strong>10/07/2026</strong>.
+  Todos los endpoints son <InlineCodeBlock code="GET" lang="plaintext" />, así
+  que se pueden probar directo desde el navegador entrando a la URL.
+</p>
+<p>La URL base es:</p>
+<CodeBlock lang="text" code="https://api.ort.edu.ar/ticlogs" />
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Endpoint</th>
+      <th>Descripción</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><InlineCodeBlock code="/materias" lang="plaintext" /></td>
+      <td>Todas las materias.</td>
+    </tr>
+    <tr>
+      <td>
+        <InlineCodeBlock code="/horario/:idMateria" lang="plaintext" />
+      </td>
+      <td>El horario de una materia.</td>
+    </tr>
+    <tr>
+      <td>
+        <InlineCodeBlock
+          code="/retiros?dia=&bloque=&ambito="
+          lang="plaintext"
+        />
+      </td>
+      <td>Retiros de PCs, filtrables por día, bloque y ámbito.</td>
+    </tr>
+    <tr>
+      <td>
+        <InlineCodeBlock code="/alumnos?curso=&id=" lang="plaintext" />
+      </td>
+      <td>Alumnos, filtrables por curso e id.</td>
+    </tr>
+  </tbody>
+</table>
+<p>
+  Por ejemplo, para ver todos los alumnos de <InlineCodeBlock
+    code="NR5E"
+    lang="plaintext"
+  />:
+</p>
+<CodeBlock
+  lang="text"
+  code="https://api.ort.edu.ar/ticlogs/alumnos?curso=NR5E"
+/>
+
+<h2>Consigna</h2>
+<p>
+  ¡Encuentren al culpable! Cuando lo hagan, llamen a alguno de los profes,
+  mostrándoles al culpable.
+</p>
+<ImportantBox>
+  <p>
+    Tienen que mostrar el llamado a la API <strong
+      >SOLO con el culpable</strong
+    >, es decir, filtrado por ID: algo como <InlineCodeBlock
+      code="/alumnos?id=..."
+      lang="plaintext"
+    />. No alcanza con mostrar la lista completa y señalar con el dedo.
+  </p>
+</ImportantBox>
