@@ -1,0 +1,119 @@
+---
+import CodeBlock from "../../../../../components/articles/code-block/CodeBlock.astro";
+import InlineCodeBlock from "../../../../../components/articles/code-block/InlineCodeBlock.astro";
+import ImportantBox from "../../../../../components/articles/alertbox/ImportantBox.astro";
+
+export const partial = true;
+---
+
+<h2>Manejo de Estados con useState</h2>
+<p>
+  En React, cuando queremos que la pantalla responda a la interacción del usuario
+  (como hacer clic en un botón o escribir en un campo de texto), necesitamos utilizar
+  <strong>estados</strong>. A diferencia de una variable tradicional, cuando el estado de un componente cambia, React
+  vuelve a renderizar la interfaz automáticamente para mostrar los datos actualizados.
+</p>
+<p>
+  Para manejar estados en componentes funcionales usamos el Hook <InlineCodeBlock code="useState" lang="tsx" />.
+</p>
+
+<h2>Consigna Base</h2>
+<p>
+  Deberán crear una página en React que combine dos funcionalidades principales utilizando estados independientes:
+</p>
+
+<h3>1. Contador de pulsaciones</h3>
+<ul>
+  <li>Crear un estado llamado <InlineCodeBlock code="contador" lang="tsx" /> inicializado en <InlineCodeBlock code="0" lang="tsx" />.</li>
+  <li>Mostrar el valor actual del contador en pantalla.</li>
+  <li>Agregar tres botones de interacción:
+    <ul>
+      <li><strong>Incrementar (+1)</strong>: suma 1 al contador.</li>
+      <li><strong>Decrementar (-1)</strong>: resta 1 al contador.</li>
+      <li><strong>Reiniciar (0)</strong>: vuelve el contador a 0.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3>2. Previsualizador de texto (Input interactivo)</h3>
+<ul>
+  <li>Crear un estado llamado <InlineCodeBlock code="texto" lang="tsx" /> inicializado en un string vacío <InlineCodeBlock code='""' lang="tsx" />.</li>
+  <li>Agregar un campo de texto (<InlineCodeBlock code="<input />" lang="tsx" />).</li>
+  <li>Vincular el evento <InlineCodeBlock code="onChange" lang="tsx" /> del input para que actualice el estado <InlineCodeBlock code="texto" lang="tsx" /> en tiempo real a medida que el usuario escribe.</li>
+  <li>Mostrar el contenido del estado dentro de un componente o tarjeta de previsualización en vivo (por ejemplo: <em>"Texto ingresado: [tu texto aquí]"</em>).</li>
+</ul>
+
+<CodeBlock
+  lang="tsx"
+  code={`import { useState } from 'react';
+
+export default function MiPagina() {
+  const [contador, setContador] = useState(0);
+  const [texto, setTexto] = useState('');
+
+  return (
+    <div>
+      {/* Tu código aquí */}
+    </div>
+  );
+}`}
+/>
+
+<h2>Consigna Manija (Desafío Extra) 🔥</h2>
+<p>
+  En aplicaciones reales de React, es muy común que el estado se declare en un componente padre y que los componentes hijos sean los encargados de actualizarlo.
+</p>
+<p>
+  <strong>El desafío:</strong> Separen la interfaz modularizando su código en componentes hijos y <strong>pasen la función modificadora de estado (<InlineCodeBlock code="setState" lang="tsx" />) por parámetro/prop</strong> a los componentes hijos.
+</p>
+
+<ul>
+  <li>
+    Crear un componente hijo (por ejemplo <InlineCodeBlock code="Botonera" lang="tsx" /> o <InlineCodeBlock code="BotonContador" lang="tsx" />) que reciba la función <InlineCodeBlock code="setContador" lang="tsx" /> por props y ejecute las actualizaciones desde allí al hacer click.
+  </li>
+  <li>
+    Crear un componente hijo (por ejemplo <InlineCodeBlock code="InputCustom" lang="tsx" />) que reciba <InlineCodeBlock code="setTexto" lang="tsx" /> por prop y actualice el estado del padre al escribir.
+  </li>
+</ul>
+
+<p>Ejemplo de estructura esperada para la consigna manija:</p>
+
+<CodeBlock
+  lang="tsx"
+  code={`// Componente Hijo que recibe la función setState como prop
+function Botonera({ setContador }) {
+  return (
+    <div>
+      <button onClick={() => setContador(prev => prev + 1)}>Sumar 1</button>
+      <button onClick={() => setContador(prev => prev - 1)}>Restar 1</button>
+      <button onClick={() => setContador(0)}>Resetear</button>
+    </div>
+  );
+}
+
+// Componente Padre
+export default function PaginaPadre() {
+  const [contador, setContador] = useState(0);
+
+  return (
+    <div>
+      <h2>Valor actual: {contador}</h2>
+      <Botonera setContador={setContador} />
+    </div>
+  );
+}`}
+/>
+
+<ImportantBox>
+  <p>
+    <strong>¡Atención!</strong> Nunca modifiquen el estado directamente (por ejemplo: <InlineCodeBlock code="contador++" lang="tsx" /> o <InlineCodeBlock code="texto = 'nuevo'" lang="tsx" />). Recuerden usar siempre la función modificadora correspondiente (<InlineCodeBlock code="setContador" lang="tsx" /> o <InlineCodeBlock code="setTexto" lang="tsx" />) para que React pueda detectar el cambio y volver a renderizar el componente.
+  </p>
+</ImportantBox>
+
+<h2>¿Qué hay que editar y entregar?</h2>
+<ul>
+  <li>Crear un componente/página en la carpeta del proyecto.</li>
+  <li>Asegurarse de importar <InlineCodeBlock code="useState" lang="tsx" /> desde <InlineCodeBlock code="'react'" lang="tsx" />.</li>
+  <li>Probar que tanto el contador como el input respondan inmediatamente en la pantalla.</li>
+  <li>Si realizan la consigna manija, verificar que los componentes hijos utilicen correctamente las props recibidas para modificar el estado del padre.</li>
+</ul>

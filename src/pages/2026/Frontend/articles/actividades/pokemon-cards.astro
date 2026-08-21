@@ -1,47 +1,113 @@
 ---
+import CodeBlock from "../../../../../components/articles/code-block/CodeBlock.astro";
+import InlineCodeBlock from "../../../../../components/articles/code-block/InlineCodeBlock.astro";
+import ImportantBox from "../../../../../components/articles/alertbox/ImportantBox.astro";
+
 export const partial = true;
 ---
 
-<h2>Tarjetas coleccionables (Componentes reutilizables de React)</h2>
+<h2>Tarjetas Coleccionables (Componentes Reutilizables de React)</h2>
 <p>
-  Como primer clase vamos a empezar a acostumbrarnos a los componentes de React y a usar sus props
+  En esta actividad comenzaremos a familiarizarnos con la creación de <strong>componentes reutilizables en React</strong> y el paso de información a través de <strong>props</strong>.
 </p>
-<h3>Consigna</h3>
-<p>Piensen en cualquier entidad (una persona, un pokemon, un personaje de alguna serie, etc.) y como seria una playing card de eso</p>
-<p>Por ejemplo, yo voy a usar pokemons, pero pueden usar algo tipo las cartas adrenalyn, una tarjeta de presentacion de alguien, o demas.</p>
+
+<h2>Introducción</h2>
+<p>
+  Piensen en cualquier entidad (un Pokémon, un personaje de alguna serie/película, un deportista, etc.) y en cómo se vería una <em>playing card</em> (tarjeta coleccionable) de esa entidad.
+</p>
+<p>
+  Por ejemplo, podemos tomar como referencia las cartas de Pokémon, las tarjetas Adrenalyn XL o una tarjeta de presentación personal.
+</p>
 <img
   src="img/front/pokemonCards.png"
-  alt="Pokemon Cards"
-  class="my-2"
+  alt="Ejemplo de Pokémon Cards"
+  class="my-4 rounded-lg shadow-md max-w-full"
 />
-<h3>Consigna</h3>
+
+<h2>Consigna Paso a Paso</h2>
 <ol>
   <li>
-    Crear una pagina (que deberia estar en la carpeta pages dentro de la carpeta de la materia) con el siguiente contenido:
-    <ul>
-      <li>Un h1 con un titulo y el estilo que quieran, no es lo mas importante</li>
-    </ul>
+    <strong>Crear la página principal:</strong> Crear una página en la carpeta del proyecto con un título principal (<InlineCodeBlock code="<h1>" lang="tsx" />) que identifique la colección.
   </li>
   <li>
-    Esta es la parte mas importante de la consigna, tienen que pensar que atributos tiene el personaje que eligieron que varia en el caso de los pokemon, tienen:
+    <strong>Diseñar el componente y sus Props:</strong> Definir qué atributos caracterizan a la entidad elegida y variarán en cada tarjeta. En el caso de un Pokémon, por ejemplo:
     <ul>
-      <li>Nombre</li>
-      <li>Tipo</li>
-      <li>hp</li>
-      <li>ataque</li>
-      <li>defensa</li>
-      <li>velocidad</li>
-      <li>imagen</li> 
+      <li><InlineCodeBlock code="nombre" lang="tsx" /></li>
+      <li><InlineCodeBlock code="tipo" lang="tsx" /></li>
+      <li><InlineCodeBlock code="hp" lang="tsx" /></li>
+      <li><InlineCodeBlock code="ataque" lang="tsx" /></li>
+      <li><InlineCodeBlock code="defensa" lang="tsx" /></li>
+      <li><InlineCodeBlock code="velocidad" lang="tsx" /></li>
+      <li><InlineCodeBlock code="imagen" lang="tsx" /></li>
     </ul>
-    Y esto es justamente lo que van a tener que pasarle como prop a su componente de JSX
+    Estos atributos serán las <strong>props</strong> que recibirá su componente JSX de React.
   </li>
-  <li>Luego, crear un array de objetos en su pagina, esta informacion deberia estar hardcodeada porque es una practica, no es necesario que la conecten a una api por ahora</li>
-  <img
-    src="img/front/arrayPokemons.png"
-    alt="Array Pokemon"
-    class="my-2"
+  <li>
+    <strong>Crear el arreglo de datos:</strong> En su página, definir un array de objetos con los datos hardcodeados de al menos 3 o 4 personajes.
+  </li>
+  <CodeBlock
+    lang="tsx"
+    code={`// Componente reutilizable
+function PokemonCard({ nombre, tipo, hp, ataque, imagen }) {
+  return (
+    <div class="card">
+      <img src={imagen} alt={nombre} />
+      <h3>{nombre}</h3>
+      <p>Tipo: {tipo}</p>
+      <p>HP: {hp} | Ataque: {ataque}</p>
+    </div>
+  );
+}
+
+// Renderizado con .map()
+export default function Catalogo() {
+  return (
+    <div class="grid">
+      {pokemons.map((pokemon) => (
+        <PokemonCard key={pokemon.nombre} {...pokemon} />
+      ))}
+    </div>
+  );
+}`}
   />
-  <li>Finalmente, iteren sobre ese array con map y muestren las cards en pantalla</li>
-  <li>Cuestiones de estilos son a gusto</li>
-  Un consejo, para manejar las imagenes de los pokemons, pueden crear una carpeta dentro de assets/images y guardar todas las imagenes ahi. La ruta a la imagen se pasa por parametro
+  <li>
+    <strong>Renderizar con <InlineCodeBlock code=".map()" lang="tsx" />:</strong> Iterar sobre el arreglo de objetos para renderizar automáticamente una tarjeta por cada elemento en pantalla.
+  </li>
 </ol>
+
+<h2>Ejemplo de un array de pokemons</h2>
+<CodeBlock
+  lang="tsx"
+  code={`const pokemons = [
+  {
+    name: "Pikachu",
+    typeImg: electricType,
+    image: pikachu,
+    abilities: ["Static", "Lightning Rod"],
+    stats: { hp: 35, atk: 55, def: 40, spd: 90, total: 325 },
+  },
+  {
+    name: "Charizard",
+    typeImg: fireType,
+    image: charizard,
+    abilities: ["Blaze", "Solar Power"],
+    stats: { hp: 78, atk: 84, def: 78, spd: 100, total: 534 },
+  },
+  {
+    name: "Squirtle",
+    typeImg: waterType,
+    image: squirtle,
+    abilities: ["Torrent", "Rain Dish"],
+    stats: { hp: 44, atk: 48, def: 65, spd: 43, total: 314 },
+  },
+];`}
+/>
+
+<ImportantBox>
+  <p>
+    <strong>Consejo para las imágenes:</strong> Pueden guardar las imágenes locales en la carpeta <InlineCodeBlock code="assets/images" lang="plaintext" /> o utilizar URLs directas. La ruta de la imagen se pasa como una prop más al componente.
+  </p>
+  <p>
+    <strong>Estilos:</strong> Las decisiones de diseño y CSS son totalmente libres. ¡Hagan que sus tarjetas se vean geniales!
+  </p>
+</ImportantBox>
