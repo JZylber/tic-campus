@@ -2,35 +2,46 @@
 export const partial = true;
 ---
 
-<h2>Pokemon Cards</h2>
+<h2>Tarjetas coleccionables (Componentes reutilizables de React)</h2>
 <p>
-  Como primer clase vamos a empezar a acostumbrarnos a los componentes de react y a usar sus props
+  Como primer clase vamos a empezar a acostumbrarnos a los componentes de React y a usar sus props
 </p>
 <h3>Consigna</h3>
 <p>Piensen en cualquier entidad (una persona, un pokemon, un personaje de alguna serie, etc.) y como seria una playing card de eso</p>
-<p>Por ejemplo, yo voy a usar pokemones, pero pueden usar algo tipo las cartas adrenalyn, una tarjeta de presentacion de alguien, o demas</p>
+<p>Por ejemplo, yo voy a usar pokemons, pero pueden usar algo tipo las cartas adrenalyn, una tarjeta de presentacion de alguien, o demas.</p>
 <img
-  src="/img/frontend/pokemon-cards.png"
+  src="img/front/pokemonCards.png"
   alt="Pokemon Cards"
   class="my-2"
 />
-<h3>Requisitos</h3>
+<h3>Consigna</h3>
 <ol>
   <li>
-    Al hacer click en el botón "Obtener Pokemones", se deben mostrar
-    aleatoriamente 5 pokemones.
-  </li>
-  <li>
-    Al hacer click en un pokemone, se debe mostrar la siguiente información:
+    Crear una pagina (que deberia estar en la carpeta pages dentro de la carpeta de la materia) con el siguiente contenido:
     <ul>
-      <li>Imagen del pokemone.</li>
-      <li>Nombre del pokemone.</li>
-      <li>Tipo del pokemone.</li>
-      <li>Peso del pokemone.</li>
-      <li>Altura del pokemone.</li>
+      <li>Un h1 con un titulo y el estilo que quieran, no es lo mas importante</li>
     </ul>
   </li>
   <li>
-    Al presionar "Limpiar", se deben borrar todos los pokemones.
+    Esta es la parte mas importante de la consigna, tienen que pensar que atributos tiene el personaje que eligieron que varia en el caso de los pokemon, tienen:
+    <ul>
+      <li>Nombre</li>
+      <li>Tipo</li>
+      <li>hp</li>
+      <li>ataque</li>
+      <li>defensa</li>
+      <li>velocidad</li>
+      <li>imagen</li> 
+    </ul>
+    Y esto es justamente lo que van a tener que pasarle como prop a su componente de JSX
   </li>
+  <li>Luego, crear un array de objetos en su pagina, esta informacion deberia estar hardcodeada porque es una practica, no es necesario que la conecten a una api por ahora</li>
+  <img
+    src="img/front/arrayPokemons.png"
+    alt="Array Pokemon"
+    class="my-2"
+  />
+  <li>Finalmente, iteren sobre ese array con map y muestren las cards en pantalla</li>
+  <li>Cuestiones de estilos son a gusto</li>
+  Un consejo, para manejar las imagenes de los pokemons, pueden crear una carpeta dentro de assets/images y guardar todas las imagenes ahi. La ruta a la imagen se pasa por parametro
 </ol>
