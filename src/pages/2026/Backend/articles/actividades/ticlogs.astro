@@ -24,9 +24,9 @@ export const partial = true;
 <h2>API</h2>
 <p>
   Contamos con una API, <strong>ticlogs</strong>, con la información de la
-  semana del <strong>06/07/2026</strong> al <strong>10/07/2026</strong>.
-  Todos los endpoints son <InlineCodeBlock code="GET" lang="plaintext" />, así
-  que se pueden probar directo desde el navegador entrando a la URL.
+  semana del <strong>06/07/2026</strong> al <strong>10/07/2026</strong>. Todos
+  los endpoints son <InlineCodeBlock code="GET" lang="plaintext" />, así que se
+  pueden probar directo desde el navegador entrando a la URL.
 </p>
 <p>La URL base es:</p>
 <CodeBlock lang="text" code="https://api.ort.edu.ar/ticlogs" />
@@ -63,6 +63,12 @@ export const partial = true;
       </td>
       <td>Alumnos, filtrables por curso e id.</td>
     </tr>
+    <tr>
+      <td>
+        <InlineCodeBlock code="/cafe" lang="plaintext" />
+      </td>
+      <td>Ruta secreta y misteriosa</td>
+    </tr>
   </tbody>
 </table>
 <p>
@@ -83,8 +89,7 @@ export const partial = true;
 </p>
 <ImportantBox>
   <p>
-    Tienen que mostrar el llamado a la API <strong
-      >SOLO con el culpable</strong
+    Tienen que mostrar el llamado a la API <strong>SOLO con el culpable</strong
     >, es decir, filtrado por ID: algo como <InlineCodeBlock
       code="/alumnos?id=..."
       lang="plaintext"
