@@ -20,6 +20,13 @@ import Dialog from "../../misc/dialog/Dialog.astro";
         </button>
       </template>
     </div>
+    <p
+      x-show="selectedStudent.error"
+      x-cloak
+      x-text="selectedStudent.error"
+      class="text-center text-red-700 text-[14px] mt-2"
+    >
+    </p>
   </div>
 
   <!-- State B: subject list -->

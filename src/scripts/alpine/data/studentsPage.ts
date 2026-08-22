@@ -24,6 +24,7 @@ const studentsPageData = () =>
     selectedStudent: {
       student: null as Student | null,
       selectedCourse: null as CourseEnrollment | null,
+      error: "",
     },
     get subjectsForCourse() {
       const { student, selectedCourse } = this.selectedStudent;
@@ -138,15 +139,23 @@ const studentsPageData = () =>
       this.selectedStudent.student = student;
       this.selectedStudent.selectedCourse = null;
     },
-    selectCourse(course: CourseEnrollment) {
+    async selectCourse(course: CourseEnrollment) {
+      // Minting the token is what actually grants the view; the backend checks
+      // this admin is allowed to see this student. Only advance the dialog once
+      // it succeeds, so a refusal is visible instead of producing a page with
+      // no marks on it.
       const studentStore = Alpine.store("student") as AlpineStudentStore;
-      studentStore.setStudent(
-        this.selectedStudent.student!.name,
-        this.selectedStudent.student!.surname,
+      this.selectedStudent.error = "";
+      const granted = await studentStore.impersonate(
+        String(this.selectedStudent.student!.id),
         course.course,
-        this.selectedStudent.student!.id,
+        course.year,
       );
-      studentStore.setSubject("");
+      if (!granted) {
+        this.selectedStudent.error =
+          "No se pudo abrir la vista de este estudiante.";
+        return;
+      }
       this.selectedStudent.selectedCourse = course;
     },
     openEdit(student: Student) {
