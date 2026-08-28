@@ -163,6 +163,31 @@ export default function RenderizadoCondicional() {
     <strong>Estilos de las Tarjetas:</strong> Diseñar y estilar ambas tarjetas utilizando
     clases de CSS o Tailwind para que el cambio de estado se sienta moderno y responsivo.
   </li>
+  <li>
+    <strong>Manija Extra — Estado Global con useContext:</strong> Investigar sobre el Hook <InlineCodeBlock
+      code="useContext"
+      lang="tsx"
+    /> para manejar el estado de autenticación de forma centralizada desde un nivel superior (o Home) sin necesidad de pasar props de manera manual.
+    <ul>
+      <li>
+        <strong>¿Qué es?</strong> Es un Hook nativo de React que forma parte de la Context API.
+      </li>
+      <li>
+        <strong>¿Para qué sirve?</strong> Permite compartir estados y datos globales (como la sesión del usuario) directamente entre componentes a través del árbol de la aplicación, evitando el <em>prop drilling</em>.
+      </li>
+      <li>
+        <strong>¿Dónde investigar?</strong> Pueden consultar la <a
+          href="https://react.dev/reference/react/useContext"
+          target="_blank"
+          rel="noopener noreferrer">documentación oficial de React (useContext)</a
+        > y la guía oficial para <a
+          href="https://react.dev/learn/passing-data-deeply-with-context"
+          target="_blank"
+          rel="noopener noreferrer">pasar datos profundamente con Context</a
+        >.
+      </li>
+    </ul>
+  </li>
 </ul>
 
 <ImportantBox>
