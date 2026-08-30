@@ -1,0 +1,367 @@
+---
+import CodeBlock from "../../../../../components/articles/code-block/CodeBlock.astro";
+import InlineCodeBlock from "../../../../../components/articles/code-block/InlineCodeBlock.astro";
+import ImportantBox from "../../../../../components/articles/alertbox/ImportantBox.astro";
+
+export const partial = true;
+---
+
+<h2>Introducción</h2>
+<p>
+  Cortázar anotado es una edición web de <em>Todos los fuegos el fuego</em> que se
+  puede escribir al margen: las anotaciones quedan guardadas adentro del archivo
+  del cuento.
+</p>
+<p>
+  El frontend ya está hecho: arma el índice, muestra el cuento y, al tocar
+  cualquier palabra, abre un campito para anotarla. Lo que falta es el backend
+  que lee y escribe los cuentos.
+</p>
+
+<h2>Consigna base</h2>
+<p>
+  Va en <InlineCodeBlock code="src/index.ts" lang="plaintext" />, con tres rutas:
+</p>
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Ruta</th>
+      <th>Qué hace</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <InlineCodeBlock code="GET /api/cuento/:nombre" lang="plaintext" />
+      </td>
+      <td>
+        Devuelve <InlineCodeBlock code="{ texto }" lang="json" /> (objeto con una
+        única clave <InlineCodeBlock code="texto" lang="plaintext" />) con el cuento
+        entero, tal cual está guardado.
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <InlineCodeBlock
+          code="GET /api/anotacion/:nombre/:en?texto=..."
+          lang="plaintext"
+        />
+      </td>
+      <td>
+        Agrega una anotación en la posición <InlineCodeBlock
+          code=":en"
+          lang="plaintext"
+        /> y la guarda.
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <InlineCodeBlock
+          code="GET /api/borrarAnotacion/:nombre/:en"
+          lang="plaintext"
+        />
+      </td>
+      <td>
+        Borra la anotación que está en la posición <InlineCodeBlock
+          code=":en"
+          lang="plaintext"
+        />.
+      </td>
+    </tr>
+  </tbody>
+</table>
+<p>
+  En <InlineCodeBlock code="src/index.ts" lang="plaintext" /> ya está armado el servidor:
+  arriba de todo el <InlineCodeBlock code="app" lang="ts" /> de Express (que entiende
+  JSON y sirve la página de <InlineCodeBlock code="frontend/" lang="plaintext" />)
+  y abajo de todo el <InlineCodeBlock code="app.listen" lang="ts" /> que lo arranca.
+  Las rutas van en el medio, entre esas dos cosas.
+</p>
+<p>
+  Los ocho cuentos viven en <InlineCodeBlock code="data/" lang="plaintext" />, uno
+  por archivo: <InlineCodeBlock
+    code="data/05-la-isla-a-mediodia.txt"
+    lang="plaintext"
+  />. El <InlineCodeBlock code=":nombre" lang="plaintext" /> que llega por la ruta
+  es el del archivo <strong>sin</strong> el <InlineCodeBlock
+    code=".txt"
+    lang="plaintext"
+  />, así que el archivo se arma con <InlineCodeBlock
+    code="join(carpetaDatos, nombre + '.txt')"
+    lang="ts"
+  /> (<InlineCodeBlock code="carpetaDatos" lang="ts" /> ya está declarada arriba de
+  todo en <InlineCodeBlock code="src/index.ts" lang="plaintext" />).
+</p>
+<p>
+  Para leer y escribir están estas dos funciones de <InlineCodeBlock
+    code="node:fs"
+    lang="plaintext"
+  />, que <strong>tienen que importar</strong>:
+</p>
+<ul>
+  <li>
+    <InlineCodeBlock code="readFileSync(archivo, 'utf-8')" lang="ts" /> — devuelve
+    todo el contenido como un <InlineCodeBlock code="string" lang="ts" />.
+  </li>
+  <li>
+    <InlineCodeBlock code="writeFileSync(archivo, texto, 'utf-8')" lang="ts" /> —
+    pisa el archivo con ese <InlineCodeBlock code="string" lang="ts" />.
+  </li>
+</ul>
+<p>
+  Y para las anotaciones, dos funciones de <InlineCodeBlock
+    code="src/lib/anotaciones.ts"
+    lang="plaintext"
+  />, ya importadas:
+</p>
+<ul>
+  <li>
+    <InlineCodeBlock code="agregarAnotacion(texto, en, anotacion)" lang="ts" /> —
+    devuelve <strong>un texto nuevo</strong>, con la anotación metida en la posición
+    <InlineCodeBlock code="en" lang="ts" />.
+  </li>
+  <li>
+    <InlineCodeBlock code="borrarAnotacion(texto, en)" lang="ts" /> — devuelve un
+    texto nuevo, sin la anotación que está en <InlineCodeBlock
+      code="en"
+      lang="ts"
+    />.
+  </li>
+</ul>
+<p>
+  Ninguna de las dos toca el archivo: eso es trabajo de ustedes. Anotar es siempre
+  lo mismo, tres pasos: <strong>leer</strong> el archivo, pasar el texto por la función,
+  <strong>escribir</strong> el resultado de vuelta en el mismo archivo. Después se
+  contesta <InlineCodeBlock code="{ texto }" lang="json" /> con el cuento ya modificado,
+  que es lo que el frontend usa para volver a dibujar la página.
+</p>
+<p>
+  Ejemplo de <InlineCodeBlock
+    code="GET /api/cuento/05-la-isla-a-mediodia"
+    lang="plaintext"
+  />:
+</p>
+<CodeBlock
+  lang="json"
+  code={`{ "texto": "LA ISLA A MEDIODÍA\\n\\nLa primera vez que vio la isla, Marini estaba..." }`}
+/>
+<p>
+  Ejemplo de <InlineCodeBlock
+    code="GET /api/anotacion/05-la-isla-a-mediodia/50?texto=acá%20empieza%20el%20sueño"
+    lang="plaintext"
+  />:
+</p>
+<CodeBlock
+  lang="json"
+  code={`{ "texto": "LA ISLA A MEDIODÍA\\n\\nLa primera vez que vio la isla␁acá empieza el sueño␂, Marini..." }`}
+/>
+<p>
+  Esos <InlineCodeBlock code="␁" lang="plaintext" /> y <InlineCodeBlock
+    code="␂"
+    lang="plaintext"
+  /> son los caracteres de control 1 y 2 de la tabla ASCII: marcan dónde empieza y
+  dónde termina una anotación. No se ven al imprimir el texto, pero ocupan un lugar,
+  así que el cuento con anotaciones sigue siendo un <InlineCodeBlock
+    code="string"
+    lang="ts"
+  /> común y corriente. La posición <InlineCodeBlock code=":en" lang="plaintext" />
+  es un número: cuántos caracteres hay antes del lugar donde va la anotación, contando
+  sobre el texto tal como está guardado (marcas incluidas). El frontend ya lo calcula
+  y lo manda en la URL: ustedes lo reciben como <InlineCodeBlock
+    code="req.params.en"
+    lang="ts"
+  />, en texto, y lo pasan a número con <InlineCodeBlock
+    code="Number(...)"
+    lang="ts"
+  />.
+</p>
+<p>
+  Lo que se escribe en la anotación viaja en la URL, después del <InlineCodeBlock
+    code="?"
+    lang="plaintext"
+  />: <InlineCodeBlock code="?texto=lo que sea" lang="plaintext" />. Eso se lee con
+  <InlineCodeBlock code="req.query.texto" lang="ts" />.
+</p>
+<ImportantBox>
+  <p>
+    Las tres rutas son <InlineCodeBlock code="GET" lang="plaintext" />, incluso
+    las dos que escriben. En una API de verdad, agregar sería <InlineCodeBlock
+      code="POST"
+      lang="plaintext"
+    /> y borrar sería <InlineCodeBlock code="DELETE" lang="plaintext" />. Eso llega
+    en la consigna manija; por ahora todo entra por la URL, que es lo que ya saben
+    hacer.
+  </p>
+</ImportantBox>
+<p>
+  Las anotaciones se guardan en los archivos de <InlineCodeBlock
+    code="data/"
+    lang="plaintext"
+  />, así que el libro se va llenando de notas de verdad. Si en algún momento lo
+  quieren dejar como estaba: <InlineCodeBlock
+    code="git checkout data/"
+    lang="bash"
+  />.
+</p>
+
+<h2>Consigna manija</h2>
+<p>
+  Además de anotar, se puede <strong>resaltar</strong> un pedazo del cuento. El frontend
+  ya lo tiene listo —se selecciona con el mouse y aparece el botón— pero le faltan
+  las rutas.
+</p>
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Ruta</th>
+      <th>Qué hace</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <InlineCodeBlock code="POST /api/resaltar/:nombre" lang="plaintext" />
+      </td>
+      <td>Guarda un resaltado nuevo.</td>
+    </tr>
+    <tr>
+      <td>
+        <InlineCodeBlock code="GET /api/resaltado/:nombre" lang="plaintext" />
+      </td>
+      <td>La lista de resaltados de ese cuento.</td>
+    </tr>
+    <tr>
+      <td>
+        <InlineCodeBlock code="DELETE /api/resaltado/:nombre" lang="plaintext" />
+      </td>
+      <td>Borra uno.</td>
+    </tr>
+  </tbody>
+</table>
+<p>
+  Va en el mismo <InlineCodeBlock code="src/index.ts" lang="plaintext" />, abajo de
+  todo, donde dice <InlineCodeBlock
+    code="---- Consigna manija ----"
+    lang="plaintext"
+  />.
+</p>
+<p>
+  Un resaltado es sólo eso: dónde empieza y dónde termina. Los de todo el libro
+  viven juntos en un único archivo, <InlineCodeBlock
+    code="data/resaltados.txt"
+    lang="plaintext"
+  /> (ya está creado, vacío), una línea por resaltado y comas en el medio:
+</p>
+<CodeBlock
+  lang="text"
+  code={`05-la-isla-a-mediodia,120,148
+08-el-otro-cielo,44,97
+05-la-isla-a-mediodia,900,912`}
+/>
+<p>
+  Acá aparece lo nuevo, y es lo que tienen que averiguar solos: estas rutas <strong
+    >no son GET</strong
+  > y los datos <strong>no viajan por la URL</strong>. <InlineCodeBlock
+    code="POST /api/resaltar/:nombre"
+    lang="plaintext"
+  /> y <InlineCodeBlock code="DELETE /api/resaltado/:nombre" lang="plaintext" /> traen
+  <InlineCodeBlock code="{ desde, hasta }" lang="json" /> en el <strong>cuerpo</strong
+  > del pedido. Hay que buscar dos cosas: cómo se declara en Express una ruta que no
+  es GET, y de dónde se saca el cuerpo que llega con ella. Para que no pierdan tiempo:
+  el <InlineCodeBlock code="app.use(express.json())" lang="ts" /> que está arriba de
+  todo en <InlineCodeBlock code="src/index.ts" lang="plaintext" /> es lo que hace que
+  ese cuerpo llegue como un objeto y no como texto.
+</p>
+<p>Del lado del archivo:</p>
+<ul>
+  <li>
+    El resaltado nuevo va <strong>al final</strong>, sin pisar los que ya estaban:
+    para eso está <InlineCodeBlock
+      code="appendFileSync(archivo, texto, 'utf-8')"
+      lang="ts"
+    />, de <InlineCodeBlock code="node:fs" lang="plaintext" />.
+  </li>
+  <li>Para borrar hay que leer todo, sacar esa línea y volver a escribir el resto.</li>
+  <li>
+    Ojo con las líneas vacías: partir el archivo con <InlineCodeBlock
+      code={`split('\\n')`}
+      lang="ts"
+    /> deja una al final.
+  </li>
+</ul>
+<p>
+  Las tres rutas contestan lo mismo: la lista de resaltados de ese cuento, como quedó
+  después del pedido.
+</p>
+<p>
+  Ejemplo de <InlineCodeBlock
+    code="GET /api/resaltado/05-la-isla-a-mediodia"
+    lang="plaintext"
+  />:
+</p>
+<CodeBlock
+  lang="json"
+  code={`[
+  { "desde": 120, "hasta": 148 },
+  { "desde": 900, "hasta": 912 }
+]`}
+/>
+<p>
+  <InlineCodeBlock code="desde" lang="plaintext" /> y <InlineCodeBlock
+    code="hasta"
+    lang="plaintext"
+  /> son posiciones, como el <InlineCodeBlock code=":en" lang="plaintext" /> de las
+  anotaciones, pero contadas sobre el cuento <strong>sin</strong> las anotaciones (el
+  texto que devuelve <InlineCodeBlock code="sinAnotaciones" lang="ts" />): así un resaltado
+  no se corre de lugar cuando alguien anota más arriba. Las calcula el frontend; ustedes
+  las reciben y las guardan tal cual.
+</p>
+
+<h2>¿Qué hay que editar?</h2>
+<p>
+  <InlineCodeBlock code="src/index.ts" lang="plaintext" /> — las tres rutas de la consigna
+  base y, para la manija, las tres de resaltado.
+</p>
+<p>
+  Todo lo demás ya está completo: <InlineCodeBlock
+    code="src/lib/anotaciones.ts"
+    lang="plaintext"
+  /> (las funciones que arman y desarman las anotaciones), <InlineCodeBlock
+    code="data/"
+    lang="plaintext"
+  /> (los ocho cuentos y el archivo de resaltados) y todo el <InlineCodeBlock
+    code="frontend/"
+    lang="plaintext"
+  />.
+</p>
+
+<h2>Primeros pasos</h2>
+<p>
+  Antes de poder correr el programa, hay que instalar las dependencias del
+  proyecto. Esto se hace <strong>una sola vez</strong> con:
+</p>
+<CodeBlock lang="bash" code="npm install" />
+
+<h2>Cómo correr el programa</h2>
+<CodeBlock lang="bash" code="npm run start" />
+
+<h2>Tests</h2>
+<p>
+  El proyecto incluye tests automáticos que se usan para la corrección. No hace
+  falta entenderlos ni modificarlos:
+</p>
+<CodeBlock
+  lang="bash"
+  code={`npm run test-base    # consigna base
+npm run test-manija  # consigna manija
+npm test             # todos`}
+/>
+<p>
+  Los tests escriben su propio cuento de mentira en <InlineCodeBlock
+    code="data/"
+    lang="plaintext"
+  /> y lo borran al terminar, y los de la manija dejan <InlineCodeBlock
+    code="data/resaltados.txt"
+    lang="plaintext"
+  /> como estaba: no tocan los ocho de Cortázar ni sus resaltados.
+</p>
