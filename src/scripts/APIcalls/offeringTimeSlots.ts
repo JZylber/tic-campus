@@ -1,4 +1,5 @@
 import { backendURL } from "./shared";
+import { studentFetch } from "./studentToken";
 import { authFetch } from "./authToken";
 
 export type Weekday = "MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY";
@@ -55,7 +56,7 @@ export async function fetchPublicOfferingSchedule(
   studentId: string,
 ): Promise<OfferingWithSlots[]> {
   try {
-    const response = await fetch(
+    const response = await studentFetch(
       `${backendURL}/offerings/${encodeURIComponent(subject)}/${year}/${level}/${encodeURIComponent(studentId)}`,
     );
     if (!response.ok) {

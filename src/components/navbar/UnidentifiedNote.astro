@@ -1,0 +1,36 @@
+---
+// Shown in place of the "Nota Parcial" card when campus knows who is logged in
+// but we could not match them to a student of this course.
+//
+// Deliberately phrased as a question and styled as a quiet note, not an error:
+// course pages are public, and a teacher or a student from another division
+// dropping in to read the material and simply not getting marks is correct
+// behaviour, not a fault. It is only a problem if they *are* in this course —
+// which is exactly what the first line asks.
+interface Props {
+  minimized: string;
+}
+
+const { minimized } = Astro.props;
+---
+
+<template x-if="$store.pageData.onCampus && $store.student.unidentified">
+  <div
+    class="grow flex flex-col justify-end"
+    x-data="{ minimized: false }"
+    x-effect={`minimized = ${minimized}`}
+  >
+    <div
+      x-show="!minimized"
+      class="w-full rounded-2xl bg-gray-200 p-4 flex flex-col gap-y-2 text-sh-dark-gray"
+    >
+      <span class="text-[16px] font-semibold"
+        >¿Estás en esta materia y sos de este curso?</span
+      >
+      <p class="text-[14px] text-gray-600 m-0">
+        Esto quiere decir que no te pudimos identificar como alumno. Chequeá que
+        estés logueado, y si lo estás, avisale a tu profe.
+      </p>
+    </div>
+  </div>
+</template>
