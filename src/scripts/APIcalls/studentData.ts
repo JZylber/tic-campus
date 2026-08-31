@@ -53,7 +53,21 @@ export async function verifyCampusSession(
     if (response.status === 404 || response.status === 409) {
       return { status: "unidentified" };
     }
-    if (!response.ok) return { status: "unavailable" };
+    if (!response.ok) {
+      // Anything else is our fault, not a failed identity match, so it stays
+      // "unavailable" -- UnidentifiedNote tells the visitor to talk to their
+      // teacher, which is wrong advice for a malformed request. Log it, though:
+      // silently rendering nothing is how a 400 here went unnoticed.
+      const reason = await response
+        .json()
+        .then((body) => body?.reason ?? body?.message)
+        .catch(() => undefined);
+      console.warn(
+        `Campus session check failed: ${response.status}`,
+        reason ?? "(no reason given)",
+      );
+      return { status: "unavailable" };
+    }
     const data = await response.json();
     return { status: "identified", token: data.token, student: data.student };
   } catch (error) {
