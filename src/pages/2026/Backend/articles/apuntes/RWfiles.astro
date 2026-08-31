@@ -1,0 +1,220 @@
+---
+import CodeBlock from "../../../../../components/articles/code-block/CodeBlock.astro";
+import InlineCodeBlock from "../../../../../components/articles/code-block/InlineCodeBlock.astro";
+import ImportantBox from "../../../../../components/articles/alertbox/ImportantBox.astro";
+
+export const partial = true;
+---
+
+<h2>¿Por qué leer y escribir archivos?</h2>
+<p>
+  Cuando programamos en backend, muchas veces necesitamos <strong
+    >guardar información</strong
+  > en la computadora, o <strong>leer datos</strong> que ya están guardados.
+</p>
+<ul>
+  <li>Un sistema de notas que guarda las calificaciones de estudiantes.</li>
+  <li>Un blog que guarda los textos de los posts en archivos.</li>
+  <li>Un programa que guarda un log con las acciones realizadas.</li>
+</ul>
+<p>
+  En Node.js, esto se puede hacer gracias al <strong
+    >módulo <em>fs</em> (file system)</strong
+  >, que nos permite manipular archivos en el disco.
+</p>
+
+<h2>Importar <em>node:fs</em> con ES6 modules</h2>
+<p>
+  Como dijimos en la clase anterior, para importar archivos y/o librerías vamos
+  a usar ES6 modules, osea, <em>import</em>. De <em>fs</em> vamos a traer, entre
+  llaves, solamente las funciones que necesitamos:
+</p>
+<CodeBlock
+  lang="ts"
+  code={`import { readFileSync, writeFileSync } from "node:fs";`}
+/>
+<p>
+  El prefijo <InlineCodeBlock code="node:" lang="plaintext" /> indica que es un módulo
+  <strong>que ya viene con Node</strong> —no hay que instalarlo con <InlineCodeBlock
+    code="npm install"
+    lang="bash"
+  />— y evita confundirlo con alguna librería que alguien haya publicado con ese
+  mismo nombre.
+</p>
+<p>
+  Esto nos habilita a usar <em>readFileSync</em> y <em>writeFileSync</em> directamente,
+  sin escribir <em>fs.</em> adelante.
+</p>
+
+<h2>Escribir archivos con <em>writeFileSync</em></h2>
+<p>
+  La función <strong>writeFileSync</strong> sirve para <strong
+    >crear un archivo nuevo</strong
+  > o <strong>sobreescribir un archivo existente</strong>.
+</p>
+<p>Su sintaxis es:</p>
+<CodeBlock lang="ts" code={`writeFileSync(ruta, contenido, "utf-8");`} />
+<ul>
+  <li>
+    <em>ruta</em>: es el nombre o la ruta del archivo, un <InlineCodeBlock
+      code="string"
+      lang="ts"
+    />.
+  </li>
+  <li>
+    <em>contenido</em>: lo que queremos escribir, también un <InlineCodeBlock
+      code="string"
+      lang="ts"
+    /> (en este apunte, texto plano, <em>.txt</em>).
+  </li>
+  <li>
+    <em>encoding</em>: <em>"utf-8"</em>, para escribir texto y no datos binarios.
+  </li>
+</ul>
+<p>Ejemplo:</p>
+<CodeBlock
+  lang="ts"
+  code={`import { writeFileSync } from "node:fs";
+
+writeFileSync("mensaje.txt", "Hola, este es un archivo de prueba", "utf-8");`}
+/>
+<p>
+  Esto crea (o sobreescribe) un archivo llamado <strong>mensaje.txt</strong> en la
+  carpeta del proyecto.
+</p>
+<ImportantBox warning="writeFileSync pisa todo">
+  <p>
+    Si el archivo ya existía, <InlineCodeBlock
+      code="writeFileSync"
+      lang="ts"
+    /> reemplaza <strong>todo</strong> su contenido: lo que había antes se pierde.
+    Para agregar algo al final sin borrar lo anterior está <InlineCodeBlock
+      code="appendFileSync"
+      lang="ts"
+    />, que se importa igual desde <InlineCodeBlock
+      code="node:fs"
+      lang="plaintext"
+    />.
+  </p>
+</ImportantBox>
+
+<h2>Leer archivos con <em>readFileSync</em></h2>
+<p>
+  La función <strong>readFileSync</strong> nos permite leer el contenido de un archivo
+  ya existente.
+</p>
+<p>Su sintaxis es:</p>
+<CodeBlock
+  lang="ts"
+  code={`const contenido: string = readFileSync(ruta, "utf-8");`}
+/>
+<ul>
+  <li><em>ruta</em>: el archivo que queremos leer.</li>
+  <li>
+    <em>encoding</em>: normalmente <em>"utf-8"</em> para leer como texto y no como
+    datos binarios. Tiene que ver con Hardware, si les interesa el tema preguntenle
+    a Darío/Sofi.
+  </li>
+</ul>
+<p>Ejemplo:</p>
+<CodeBlock
+  lang="ts"
+  code={`import { readFileSync } from "node:fs";
+
+const texto: string = readFileSync("mensaje.txt", "utf-8");
+console.log(texto);`}
+/>
+<p>Salida esperada:</p>
+<CodeBlock lang="bash" code="Hola, este es un archivo de prueba" />
+<ImportantBox warning="El encoding cambia el tipo">
+  <p>
+    Si nos olvidamos del <em>"utf-8"</em>, TypeScript nos avisa enseguida: sin
+    encoding, <InlineCodeBlock code="readFileSync" lang="ts" /> no devuelve un <InlineCodeBlock
+      code="string"
+      lang="ts"
+    /> sino un <InlineCodeBlock code="Buffer" lang="ts" /> —los bytes crudos del archivo—,
+    y no lo vamos a poder usar como texto.
+  </p>
+  <CodeBlock
+    lang="ts"
+    code={`const texto: string = readFileSync("mensaje.txt"); // Error: Type 'Buffer' is not assignable to type 'string'`}
+  />
+</ImportantBox>
+
+<h2>Ejemplo completo</h2>
+<p>
+  Supongamos que queremos crear un programa que guarde el nombre de un docente
+  en un archivo <em>.txt</em> y después lo lea.
+</p>
+<p>Archivo: <strong>index.ts</strong></p>
+<CodeBlock
+  lang="ts"
+  code={`import { readFileSync, writeFileSync } from "node:fs";
+
+// Escribimos un archivo .txt
+writeFileSync("docente.txt", "Nombre: Mark Fisher", "utf-8");
+
+// Leemos el archivo .txt
+const contenido: string = readFileSync("docente.txt", "utf-8");
+
+// Mostramos el contenido en consola
+console.log("Contenido del archivo:");
+console.log(contenido);
+`}
+/>
+
+<p>Para ejecutar en la terminal:</p>
+<CodeBlock lang="bash" code="npx tsx index.ts" />
+<p>
+  O, si el proyecto ya tiene el script <em>start</em> en el <em>package.json</em
+  >, con <InlineCodeBlock code="npm run start" lang="bash" />.
+</p>
+<p>Salida esperada:</p>
+<CodeBlock
+  lang="bash"
+  code={`Contenido del archivo:
+Nombre: Mark Fisher`}
+/>
+
+<h2>Resumen</h2>
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Acción</th>
+      <th>Ejemplo</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Importar las funciones</td>
+      <td
+        ><InlineCodeBlock
+          lang="ts"
+          code='import { readFileSync, writeFileSync } from "node:fs";'
+        /></td
+      >
+    </tr>
+    <tr>
+      <td>Crear/sobreescribir un archivo</td>
+      <td
+        ><InlineCodeBlock
+          lang="ts"
+          code='writeFileSync("archivo.txt", "contenido", "utf-8");'
+        /></td
+      >
+    </tr>
+    <tr>
+      <td>Leer un archivo como texto</td>
+      <td
+        ><InlineCodeBlock
+          lang="ts"
+          code='const texto: string = readFileSync("archivo.txt", "utf-8");'
+        /></td
+      >
+    </tr>
+    <tr>
+      <td>Ejecutar el programa</td>
+      <td><InlineCodeBlock lang="bash" code="npx tsx index.ts" /></td>
+    </tr>
+  </tbody>
+</table>

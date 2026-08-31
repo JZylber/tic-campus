@@ -1,0 +1,276 @@
+---
+import CodeBlock from "../../../../../components/articles/code-block/CodeBlock.astro";
+import InlineCodeBlock from "../../../../../components/articles/code-block/InlineCodeBlock.astro";
+import ImportantBox from "../../../../../components/articles/alertbox/ImportantBox.astro";
+
+export const partial = true;
+---
+
+<h2>Introducción</h2>
+<p>
+  SubteBA es un mapa de la red de subte porteña: se toca una estación y muestra
+  cuánto falta para el próximo tren.
+</p>
+<p>
+  El frontend ya está hecho —dibuja el mapa, las ocho líneas y las estaciones, y
+  trae el listado para prender y apagar líneas—. Lo que no existe todavía es el
+  backend que le pasa los datos. <strong
+    >Toda la app de Express la escriben ustedes</strong
+  >, en <InlineCodeBlock code="src/index.ts" lang="plaintext" />.
+</p>
+
+<h2>Consigna base</h2>
+<p>Hay que armar la app, servir el frontend y registrar dos rutas:</p>
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Ruta</th>
+      <th>Qué contesta</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <InlineCodeBlock code="GET /api/recorrido/:linea" lang="plaintext" />
+      </td>
+      <td>El trazado de la línea: nombre, color y la lista de puntos.</td>
+    </tr>
+    <tr>
+      <td>
+        <InlineCodeBlock code="GET /api/estaciones/:linea" lang="plaintext" />
+      </td>
+      <td>Las estaciones de la línea, ordenadas de una punta a la otra.</td>
+    </tr>
+  </tbody>
+</table>
+<p>
+  Las líneas se piden por su nombre corto: <InlineCodeBlock
+    code="A"
+    lang="plaintext"
+  />, <InlineCodeBlock code="B" lang="plaintext" />, <InlineCodeBlock
+    code="C"
+    lang="plaintext"
+  />, <InlineCodeBlock code="D" lang="plaintext" />, <InlineCodeBlock
+    code="E"
+    lang="plaintext"
+  />, <InlineCodeBlock code="H" lang="plaintext" />, <InlineCodeBlock
+    code="PM-C"
+    lang="plaintext"
+  /> y <InlineCodeBlock code="PM-S" lang="plaintext" /> (las dos ramas del Premetro).
+</p>
+<p>
+  Leer los archivos del subte y ordenar todo eso ya está resuelto en <InlineCodeBlock
+    code="src/lib/subte.ts"
+    lang="plaintext"
+  />. De ahí vienen tres funciones, ya importadas:
+</p>
+<ul>
+  <li>
+    <InlineCodeBlock code="recorridoLinea(linea)" lang="ts" /> — el trazado, listo
+    para contestar con <InlineCodeBlock code="res.json(...)" lang="ts" />.
+  </li>
+  <li>
+    <InlineCodeBlock code="estacionesLinea(linea)" lang="ts" /> — las estaciones,
+    ya ordenadas.
+  </li>
+  <li>
+    <InlineCodeBlock code="esLinea(texto)" lang="ts" /> — dice si un texto es una
+    de las ocho líneas.
+  </li>
+</ul>
+<p>
+  Si alguien pide una línea que no existe (<InlineCodeBlock
+    code="/api/recorrido/Z"
+    lang="plaintext"
+  />), hay que contestar con código <strong>404</strong> y el cuerpo:
+</p>
+<CodeBlock lang="json" code={`{ "error": "No existe la línea Z" }`} />
+<p>
+  Para eso está <InlineCodeBlock code="esLinea" lang="ts" />.
+</p>
+<p>
+  Ejemplo de <InlineCodeBlock code="GET /api/estaciones/D" lang="plaintext" />:
+</p>
+<CodeBlock
+  lang="json"
+  code={`[
+  {
+    "id": "1118",
+    "nombre": "Catedral",
+    "lat": -34.607624420959,
+    "lon": -58.374257236745,
+    "linea": "D"
+  },
+  { "id": "1117", "nombre": "9 de Julio", "lat": -34.6038, "lon": -58.3809, "linea": "D" }
+]`}
+/>
+<p>
+  Para servir el frontend hay que usar <InlineCodeBlock
+    code="express.static"
+    lang="ts"
+  />. La carpeta ya viene resuelta en <InlineCodeBlock
+    code="carpetaFrontend"
+    lang="ts"
+  />, importada de <InlineCodeBlock
+    code="src/lib/servidor.ts"
+    lang="plaintext"
+  />. Al final de todo, <InlineCodeBlock code="iniciar(app)" lang="ts" /> pone el
+  servidor a escuchar y abre el browser.
+</p>
+
+<h2>Consigna manija</h2>
+<p>Que el mapa muestre los trenes que vienen de verdad.</p>
+<p>
+  La Ciudad publica una API con los arribos en vivo. Hay que agregar una ruta
+  más:
+</p>
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Ruta</th>
+      <th>Qué contesta</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <InlineCodeBlock code="GET /api/arribos/:estacion" lang="plaintext" />
+      </td>
+      <td>
+        Los próximos trenes a esa estación, del más próximo al más lejano.
+      </td>
+    </tr>
+  </tbody>
+</table>
+<p>La ruta tiene que pedirle los datos a:</p>
+<CodeBlock
+  lang="text"
+  code="https://datosabiertos-transporte-apis.buenosaires.gob.ar:443/subtes/forecastGTFS?client_id=XXX&client_secret=YYY"
+/>
+<p>
+  Las credenciales se sacan de <a
+    href="https://api-transporte.buenosaires.gob.ar/"
+    target="_blank"
+    rel="noopener noreferrer">api-transporte.buenosaires.gob.ar</a
+  >.
+</p>
+<ImportantBox>
+  <p>
+    Las credenciales <strong>no van escritas en el código</strong>: se copian a
+    un archivo <InlineCodeBlock code=".env" lang="plaintext" /> (hay un <InlineCodeBlock
+      code=".env.example"
+      lang="plaintext"
+    /> de modelo) y se leen con <InlineCodeBlock
+      code="process.env.CLIENT_ID"
+      lang="ts"
+    /> y <InlineCodeBlock code="process.env.CLIENT_SECRET" lang="ts" />. <InlineCodeBlock
+      code=".env"
+      lang="plaintext"
+    /> está en el <InlineCodeBlock code=".gitignore" lang="plaintext" />, así que
+    nunca se sube al repositorio. Eso es a propósito: una credencial subida a
+    GitHub es una credencial quemada.
+  </p>
+</ImportantBox>
+<p>
+  La respuesta de la API es un bicho grande y desordenado. Ordenarla no es parte
+  de la consigna: <InlineCodeBlock
+    code="ordenarArribos(datos, estacion)"
+    lang="ts"
+  />, en <InlineCodeBlock code="src/lib/arribos.ts" lang="plaintext" />, la
+  convierte en la lista que el frontend espera. Lo que sí es parte de la
+  consigna es la comunicación: armar la URL, esperar la respuesta con <InlineCodeBlock
+    code="await"
+    lang="ts"
+  />, sacarle el JSON y contestar.
+</p>
+<p>
+  Ejemplo de <InlineCodeBlock code="GET /api/arribos/1075" lang="plaintext" /> (Perú,
+  línea A):
+</p>
+<CodeBlock
+  lang="json"
+  code={`[
+  { "linea": "A", "destino": "Plaza de Mayo", "anden": "1075N", "enSegundos": 60, "enMinutos": 1 },
+  { "linea": "A", "destino": "San Pedrito", "anden": "1075S", "enSegundos": 180, "enMinutos": 3 }
+]`}
+/>
+<p>
+  Si la API contesta con un error (por ejemplo, credenciales mal puestas), hay
+  que contestar <strong>502</strong> en vez de romper.
+</p>
+<p>Tres cosas que van a ver y no son bugs, son el dato tal como viene:</p>
+<ul>
+  <li>
+    La API sólo publica las líneas <strong>A, B, D y E</strong>. Para la C, la H
+    y el Premetro <InlineCodeBlock code="ordenarArribos" lang="ts" /> devuelve una
+    lista vacía, y el mapa muestra "Sin arribos próximos".
+  </li>
+  <li>
+    El campo de la API se llama <InlineCodeBlock code="delay" lang="plaintext" />,
+    pero no es un atraso: son los segundos que faltan para que llegue el tren,
+    redondeados al minuto.
+  </li>
+  <li>
+    <strong>La línea D casi siempre informa <InlineCodeBlock
+        code="0"
+        lang="plaintext"
+      />.</strong> En las dos mediciones que hicimos, 27 y 28 de sus 32 andenes daban
+    <InlineCodeBlock code="delay: 0" lang="plaintext" /> al mismo tiempo. Que haya
+    27 trenes llegando en el mismo instante no pasa: ahí el <InlineCodeBlock
+      code="0"
+      lang="plaintext"
+    /> es un hueco de datos disfrazado de tiempo. Por eso el frontend muestra "&lt;1
+    MIN" y no "Llegando" — el dato no alcanza para prometer más.
+  </li>
+</ul>
+
+<h2>¿Qué hay que editar?</h2>
+<p>
+  <InlineCodeBlock code="src/index.ts" lang="plaintext" /> — la app de Express entera:
+  las rutas de la consigna base y, para la manija, la de arribos.
+</p>
+<p>
+  Todo lo demás ya está completo: <InlineCodeBlock
+    code="src/lib/subte.ts"
+    lang="plaintext"
+  /> y <InlineCodeBlock code="src/lib/arribos.ts" lang="plaintext" /> (los datos y
+  la traducción de la API), <InlineCodeBlock
+    code="src/lib/servidor.ts"
+    lang="plaintext"
+  />, <InlineCodeBlock code="datos/" lang="plaintext" /> (los archivos del subte)
+  y todo el <InlineCodeBlock code="frontend/" lang="plaintext" />.
+</p>
+
+<h2>Primeros pasos</h2>
+<p>
+  Antes de poder correr el programa, hay que instalar las dependencias del
+  proyecto. Esto se hace <strong>una sola vez</strong> con:
+</p>
+<CodeBlock lang="bash" code="npm install" />
+<p>Para la consigna manija, además:</p>
+<CodeBlock
+  lang="bash"
+  code="cp .env.example .env    # y pegar adentro las credenciales"
+/>
+
+<h2>Cómo correr el programa</h2>
+<CodeBlock lang="bash" code="npm run start" />
+
+<h2>Tests</h2>
+<p>
+  El proyecto incluye tests automáticos que se usan para la corrección. No hace
+  falta entenderlos ni modificarlos:
+</p>
+<CodeBlock
+  lang="bash"
+  code={`npm run test-base    # consigna base
+npm run test-manija  # consigna manija
+npm test             # todos`}
+/>
+<p>
+  Los tests de la manija no llaman a la API de verdad: usan una respuesta
+  guardada en <InlineCodeBlock
+    code="tests/forecast.ejemplo.json"
+    lang="plaintext"
+  />, así que andan sin credenciales y sin internet.
+</p>

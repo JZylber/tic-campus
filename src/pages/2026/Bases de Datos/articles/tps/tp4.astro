@@ -1,0 +1,159 @@
+---
+import CodeBlock from "../../../../../components/articles/code-block/CodeBlock.astro";
+import InlineCodeBlock from "../../../../../components/articles/code-block/InlineCodeBlock.astro";
+import ImportantBox from "../../../../../components/articles/alertbox/ImportantBox.astro";
+
+export const partial = true;
+
+const der = `erDiagram
+    usuario {
+        int id PK
+        varchar nombre
+        varchar password
+    }
+    cancion {
+        int id PK
+        varchar nombre
+    }
+    escucha {
+        int id PK
+        int usuario_id FK
+        int cancion_id FK
+        int reproducciones
+    }
+    usuario ||--o{ escucha : "usuario_id"
+    cancion ||--o{ escucha : "cancion_id"`;
+---
+
+<h2>Introducción</h2>
+<p>
+  SpoTICfy vuelve, pero esta vez con seguridad. La idea de este trabajo práctico
+  es sumarle <strong>autenticación</strong> a la API: registrar usuarios guardando
+  la contraseña hasheada, dar un token al que se loguea bien, y tener una ruta que
+  solamente conteste si ese token es válido.
+</p>
+
+<h2>Base de datos</h2>
+<p>La base de datos tiene tres tablas:</p>
+<div class="mermaid" set:html={der} />
+<p>
+  <InlineCodeBlock code="escucha" lang="sql" /> es la tabla del medio: relaciona un
+  usuario con una canción y guarda cuántas veces la escuchó.
+</p>
+
+<h2>Ejercicio 1</h2>
+<ul>
+  <li>Crear la base de datos en <strong>Neon</strong>.</li>
+  <li>Armar las tablas necesarias y poblarlas con algunos datos de prueba.</li>
+</ul>
+
+<h2>Ejercicio 2</h2>
+<p>Desarrollar los siguientes endpoints:</p>
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Ruta</th>
+      <th>Recibe</th>
+      <th>Qué hace</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><InlineCodeBlock code="/crearusuario" lang="plaintext" /></td>
+      <td>
+        <InlineCodeBlock code="userid" lang="plaintext" />, <InlineCodeBlock
+          code="nombre"
+          lang="plaintext"
+        />, <InlineCodeBlock code="password" lang="plaintext" />
+      </td>
+      <td>Crea el usuario con el password hasheado.</td>
+    </tr>
+    <tr>
+      <td><InlineCodeBlock code="/login" lang="plaintext" /></td>
+      <td>
+        <InlineCodeBlock code="userid" lang="plaintext" />, <InlineCodeBlock
+          code="password"
+          lang="plaintext"
+        />
+      </td>
+      <td>Devuelve un token JWT si los datos son correctos.</td>
+    </tr>
+    <tr>
+      <td><InlineCodeBlock code="/escucho" lang="plaintext" /></td>
+      <td><InlineCodeBlock code="token" lang="plaintext" /></td>
+      <td>Devuelve lo que escuchó el usuario logueado.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>/crearusuario</h3>
+<p>
+  Crea un registro en la tabla <InlineCodeBlock code="usuario" lang="sql" />,
+  con el password <strong>hasheado</strong> usando <InlineCodeBlock
+    code="bcrypt"
+    lang="js"
+  />.
+</p>
+<ImportantBox>
+  <p>
+    El password <strong>nunca</strong> se guarda tal cual viene. En la base de datos
+    va el hash que devuelve <InlineCodeBlock code="bcrypt" lang="js" />, y no
+    hay forma de volver de ese hash al password original: por eso, para
+    verificar el login, se compara con <InlineCodeBlock
+      code="bcrypt.compare"
+      lang="js"
+    /> en vez de buscar el password en la tabla.
+  </p>
+</ImportantBox>
+
+<h3>/login</h3>
+<ul>
+  <li>Si no existe el usuario, da un error.</li>
+  <li>Si no coincide el password, da un error.</li>
+  <li>
+    Si coinciden usuario y password, devuelve un <strong>token JWT</strong>.
+  </li>
+</ul>
+
+<h3>/escucho</h3>
+<p>
+  Recibe el token y devuelve las canciones escuchadas por el usuario logueado
+  junto con la cantidad de reproducciones de cada una.
+</p>
+<p>
+  Ojo: el usuario <strong>no se pide por parámetro</strong>. Sale del token, que
+  es lo único que prueba quién es el que está preguntando.
+</p>
+
+<h2>Ejercicio 3</h2>
+<p>Deployar el backend en <strong>Vercel</strong>.</p>
+{
+  /* <ul>
+  <li>
+    Si el proyecto de Vercel está conectado a la base de datos desde <strong
+      >Storage</strong
+    >, <InlineCodeBlock code="db.js" lang="js" /> puede usar las variables de ambiente
+    de Vercel.
+  </li>
+  <li>
+    También está permitido crear la base de datos por separado en Neon y
+    hardcodear las credenciales de acceso en <InlineCodeBlock
+      code="db.js"
+      lang="js"
+    />.
+  </li>
+</ul>
+*/
+}
+<h2>Entrega</h2>
+<p>
+  La entrega se hace tipo <strong>demo</strong>: cada grupo tiene que mostrar
+  que su backend funciona como pide la consigna.
+</p>
+<p>Un recorrido posible para la demo:</p>
+<CodeBlock
+  lang="text"
+  code={`/crearusuario  → crear un usuario nuevo
+/login         → obtener el token
+/escucho       → usar ese token y ver las canciones escuchadas`}
+/>

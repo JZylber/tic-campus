@@ -1,0 +1,204 @@
+---
+import CodeBlock from "../../../../../components/articles/code-block/CodeBlock.astro";
+import InlineCodeBlock from "../../../../../components/articles/code-block/InlineCodeBlock.astro";
+import ImportantBox from "../../../../../components/articles/alertbox/ImportantBox.astro";
+
+export const partial = true;
+---
+
+<h2>Renderizado Condicional en React</h2>
+<p>
+  En aplicaciones web es muy habitual mostrar diferentes vistas según el estado
+  de la aplicación. Por ejemplo, mostrar un formulario si el usuario no ha
+  iniciado sesión o mostrar un mensaje de bienvenida si la sesión está activa.
+  Esto se conoce como <strong>renderizado condicional</strong>.
+</p>
+
+<h2>Consigna Base</h2>
+<p>
+  Deberán construir una interfaz de autenticación desde cero creando los
+  componentes necesarios e implementando la lógica de renderizado condicional en
+  la página principal (<InlineCodeBlock
+    code="RenderizadoCondicional.tsx"
+    lang="tsx"
+  />).
+</p>
+
+<h3>1. Crear los Componentes (Cards)</h3>
+<p>
+  Deberán crear dos componentes independientes para representar las dos vistas
+  de la tarjeta:
+</p>
+<ul>
+  <li>
+    <strong
+      ><InlineCodeBlock code="<LogInForm />" lang="tsx" /> (Tarjeta de Inicio de Sesión):</strong
+    >
+    Un formulario con dos campos de texto (usuario y contraseña) y un botón de enviar.
+    Debe recibir por props el valor de los campos, sus funciones actualizadoras (<InlineCodeBlock
+      code="setName"
+      lang="tsx"
+    />, <InlineCodeBlock code="setPassword" lang="tsx" />) y la función para
+    procesar el login (<InlineCodeBlock code="onLogin" lang="tsx" />).
+  </li>
+  <li>
+    <strong
+      ><InlineCodeBlock code="<LoggedIn />" lang="tsx" /> (Tarjeta de Bienvenida):</strong
+    >
+    Una vista que salude al usuario mostrando su nombre y contenga un botón para cerrar
+    sesión. Debe recibir por props el nombre del usuario (<InlineCodeBlock
+      code="name"
+      lang="tsx"
+    />) y la función para cerrar sesión (<InlineCodeBlock
+      code="handleLogout"
+      lang="tsx"
+    />).
+  </li>
+</ul>
+
+<h3>2. Manejo del Estado en la Página Padre</h3>
+<p>
+  En el componente/página principal (<InlineCodeBlock
+    code="RenderizadoCondicional.tsx"
+    lang="tsx"
+  />) deberán declarar los siguientes estados con <InlineCodeBlock
+    code="useState"
+    lang="tsx"
+  />:
+</p>
+<ul>
+  <li>
+    <InlineCodeBlock code="isLogged" lang="tsx" /> (boolean): indica si la sesión
+    está activa (<InlineCodeBlock code="true" lang="tsx" />) o no (<InlineCodeBlock
+      code="false"
+      lang="tsx"
+    />), iniciando en <InlineCodeBlock code="false" lang="tsx" />.
+  </li>
+  <li>
+    <InlineCodeBlock code="name" lang="tsx" /> (string): almacena el nombre ingresado.
+  </li>
+  <li>
+    <InlineCodeBlock code="password" lang="tsx" /> (string): almacena la contraseña
+    ingresada.
+  </li>
+</ul>
+
+<h3>3. Funciones de Control</h3>
+<ul>
+  <li>
+    <strong>Login (<InlineCodeBlock code="handleLogin" lang="tsx" />):</strong> cambia
+    el estado <InlineCodeBlock code="isLogged" lang="tsx" /> a <InlineCodeBlock
+      code="true"
+      lang="tsx"
+    />.
+  </li>
+  <li>
+    <strong>Logout (<InlineCodeBlock code="handleLogout" lang="tsx" />):</strong
+    > cambia <InlineCodeBlock code="isLogged" lang="tsx" /> a <InlineCodeBlock
+      code="false"
+      lang="tsx"
+    /> y reinicia los campos <InlineCodeBlock code="name" lang="tsx" /> y <InlineCodeBlock
+      code="password"
+      lang="tsx"
+    /> a un string vacío (<InlineCodeBlock code='""' lang="tsx" />).
+  </li>
+</ul>
+
+<h3>4. Renderizado Condicional</h3>
+<p>
+  Dentro del contenedor principal de la página, evalúen el estado <InlineCodeBlock
+    code="isLogged"
+    lang="tsx"
+  /> para renderizar una tarjeta u otra según corresponda.
+</p>
+
+<h2>Orientación y Snippets de Guía</h2>
+
+<p>
+  En JSX pueden utilizar el <strong>operador ternario</strong> (<InlineCodeBlock
+    code="condición ? componenteA : componenteB"
+    lang="tsx"
+  />) dentro de llaves <InlineCodeBlock code="{}" lang="tsx" /> para alternar dinámicamente
+  entre ambos componentes:
+</p>
+
+<CodeBlock
+  lang="tsx"
+  code={`// Ejemplo de renderizado condicional en la página principal
+export default function RenderizadoCondicional() {
+  const [isLogged, setIsLogged] = useState(false);
+  const [name, setName] = useState('');
+  const [password, setPassword] = useState('');
+
+  // ... definir handleLogin y handleLogout ...
+
+  return (
+    <div className="card-container">
+      {isLogged ? (
+        <LoggedIn 
+            // ... dar los props correspondientes ...
+        />
+      ) : (
+        <LogInForm
+          // ... dar los props correspondientes ...
+        />
+      )}
+    </div>
+  );
+}`}
+/>
+
+<h2>Consigna Manija (Desafío Extra) 🔥</h2>
+<ul>
+  <li>
+    <strong>Validación de Nombre:</strong> Modificar <InlineCodeBlock
+      code="handleLogin"
+      lang="tsx"
+    /> para evitar iniciar sesión si el usuario no escribió un nombre (<InlineCodeBlock
+      code="name.trim() === ''"
+      lang="tsx"
+    />).
+  </li>
+  <li>
+    <strong>Estilos de las Tarjetas:</strong> Diseñar y estilar ambas tarjetas utilizando
+    clases de CSS o Tailwind para que el cambio de estado se sienta moderno y responsivo.
+  </li>
+  <li>
+    <strong>Manija Extra — Estado Global con useContext:</strong> Investigar sobre el Hook <InlineCodeBlock
+      code="useContext"
+      lang="tsx"
+    /> para manejar el estado de autenticación de forma centralizada desde un nivel superior (o Home) sin necesidad de pasar props de manera manual.
+    <ul>
+      <li>
+        <strong>¿Qué es?</strong> Es un Hook nativo de React que forma parte de la Context API.
+      </li>
+      <li>
+        <strong>¿Para qué sirve?</strong> Permite compartir estados y datos globales (como la sesión del usuario) directamente entre componentes a través del árbol de la aplicación, evitando el <em>prop drilling</em>.
+      </li>
+      <li>
+        <strong>¿Dónde investigar?</strong> Pueden consultar la <a
+          href="https://react.dev/reference/react/useContext"
+          target="_blank"
+          rel="noopener noreferrer">documentación oficial de React (useContext)</a
+        > y la guía oficial para <a
+          href="https://react.dev/learn/passing-data-deeply-with-context"
+          target="_blank"
+          rel="noopener noreferrer">pasar datos profundamente con Context</a
+        >.
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<ImportantBox>
+  <p>
+    <strong>¡Recuerden!</strong> Los componentes <InlineCodeBlock
+      code="<LogInForm />"
+      lang="tsx"
+    /> y <InlineCodeBlock code="<LoggedIn />" lang="tsx" /> no deben manejar el estado
+    de autenticación por su cuenta. El componente padre es la única fuente de verdad
+    y se encarga de transmitir los valores y funciones modificadoras a través de <strong
+      >props</strong
+    >.
+  </p>
+</ImportantBox>
