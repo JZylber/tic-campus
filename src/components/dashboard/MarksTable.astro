@@ -11,6 +11,8 @@ import Select from "../../components/misc/select/Select.astro";
     fetchTeacherSubjects,
   } from "../../scripts/APIcalls/dashboard";
   import { fetchCurrentUser } from "../../scripts/auth";
+  import type { AlpineStudentStore } from "../../scripts/alpine/stores/student";
+  import type { PageDataStore } from "../../scripts/alpine/stores/pageData";
 
   Alpine.data("subjectMarksPage", () => ({
     loadingSubjects: false,
@@ -29,6 +31,7 @@ import Select from "../../components/misc/select/Select.astro";
     },
     studentRegistry: {} as Record<string, Student>,
     loadedKeys: new Set<string>(),
+    impersonationError: "",
     async init() {
       this.loadingSubjects = true;
       const user = await fetchCurrentUser();
@@ -109,6 +112,34 @@ import Select from "../../components/misc/select/Select.astro";
     },
     selectCourse(course: string) {
       this.selectedSubject.course = course;
+    },
+    // Opening a student's page now mints an impersonation token the backend
+    // authorises, instead of writing an id into a persisted store that every
+    // downstream request took on trust.
+    async viewStudent(student: Student) {
+      // The year has to be the one being viewed, not the current one: the token
+      // is scoped to a year and the destination page verifies against it, so an
+      // archive row would otherwise mint a token the page then rejects.
+      const year = this.selectedSubject.year;
+      this.impersonationError = "";
+      const studentStore = Alpine.store("student") as AlpineStudentStore;
+      const granted = await studentStore.impersonate(
+        String(student.id),
+        student.course,
+        year,
+      );
+      if (!granted) {
+        this.impersonationError =
+          "No se pudo abrir la vista de este estudiante.";
+        return;
+      }
+      const subjectPath =
+        parseInt(student.course[2]!) === 5
+          ? "/Desarrollo%20de%20Aplicaciones%20Informáticas/"
+          : "/Tecnologías%20de%20la%20Información/";
+      window.location.href = (
+        Alpine.store("pageData") as PageDataStore
+      ).publicURL(`${year}${subjectPath}${student.course}`);
     },
     get students() {
       const { name, course, year } = this.selectedSubject;
@@ -311,7 +342,7 @@ import Select from "../../components/misc/select/Select.astro";
             <tr
               class="border-b-2 border-gray-300 hover:bg-gray-300 cursor-pointer"
               x-data="{ finalMarkData : student.getFinalMarkData(student.getSubjects()[0]) }"
-              @click="$store.student.setStudent(student.name, student.surname, student.course, student.id); window.location.href = $store.pageData.publicURL(new Date().getFullYear() + (parseInt(student.course[2]) === 5 ? '/Desarrollo%20de%20Aplicaciones%20Informáticas/': '/Tecnologías%20de%20la%20Información/') + student.course)"
+              @click="viewStudent(student)"
             >
               <td class="px-4 py-2 text-center" x-text="student.name"></td>
               <td class="px-4 py-2 text-center" x-text="student.surname"></td>
