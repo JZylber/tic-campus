@@ -8,12 +8,16 @@ import {
   moveStudentCourse,
   removeStudentFromCourse,
 } from "../../APIcalls/dashboard";
+import type { DroppedOffering } from "../../APIcalls/dashboard";
 
 type Students = Awaited<ReturnType<typeof fetchStudents>>;
 type Student = Students[number];
 type CourseEnrollment = Student["courses"][number];
 type Courses = Awaited<ReturnType<typeof fetchCourses>>;
 type Course = Courses[number];
+
+const listOfferingNames = (offerings: DroppedOffering[]) =>
+  offerings.map((o) => o.displayName).join(", ");
 
 const studentsPageData = () =>
   ({
@@ -44,6 +48,9 @@ const studentsPageData = () =>
         | { type: "change"; oldCourseId: number }
         | null,
       courseActionId: NaN as number,
+      // Optional subjects a course move or removal just took away. Not an
+      // error — the change went through — but the admin has to see it.
+      notice: null as string | null,
     },
     get yearFilterOptions() {
       return [{ value: NaN, label: "Todos" }].concat(
@@ -168,6 +175,7 @@ const studentsPageData = () =>
       };
       this.editStudent.saving = false;
       this.editStudent.error = null;
+      this.editStudent.notice = null;
       this.editStudent.courseAction = null;
       this.editStudent.courseActionId = NaN;
     },
@@ -195,6 +203,7 @@ const studentsPageData = () =>
       if (isNaN(this.editStudent.courseActionId)) return;
       this.editStudent.saving = true;
       this.editStudent.error = null;
+      this.editStudent.notice = null;
       const action = this.editStudent.courseAction!;
       const student = this.editStudent.student!;
       let result: CourseEnrollment | null = null;
@@ -211,21 +220,34 @@ const studentsPageData = () =>
           this.editStudent.error = "El alumno ya está inscripto en ese curso.";
         }
       } else {
-        result = await moveStudentCourse(
+        const oldCourseId = (action as { type: "change"; oldCourseId: number })
+          .oldCourseId;
+        const moved = await moveStudentCourse(
           student.id,
-          (action as { type: "change"; oldCourseId: number }).oldCourseId,
+          oldCourseId,
           this.editStudent.courseActionId,
         );
-        if (result) {
+        if (moved) {
+          // The optionals that could not follow the student are gone from the
+          // backend already; drop them here too so the schedule and the
+          // avanzados list do not keep showing subjects the student no longer has.
+          const { droppedOfferings, ...enrollment } = moved;
+          result = enrollment;
           const idx = this.students.findIndex((s: Student) => s.id === student.id);
           if (idx !== -1) {
             const ci = this.students[idx].courses.findIndex(
-              (c: CourseEnrollment) =>
-                c.courseId ===
-                (action as { type: "change"; oldCourseId: number }).oldCourseId,
+              (c: CourseEnrollment) => c.courseId === oldCourseId,
             );
-            if (ci !== -1) this.students[idx].courses[ci] = result;
+            if (ci !== -1) this.students[idx].courses[ci] = enrollment;
+            this.students[idx].optionalOfferingIds = this.students[
+              idx
+            ].optionalOfferingIds.filter(
+              (id: number) => !droppedOfferings.some((o) => o.offeringId === id),
+            );
             this.editStudent.student = this.students[idx];
+          }
+          if (droppedOfferings.length) {
+            this.editStudent.notice = `Se dieron de baja optativas que no se dictan en ${enrollment.course}: ${listOfferingNames(droppedOfferings)}.`;
           }
         } else {
           this.editStudent.error = "No se pudo cambiar el curso.";
@@ -241,12 +263,14 @@ const studentsPageData = () =>
     async removeCourse(courseId: number) {
       this.editStudent.saving = true;
       this.editStudent.error = null;
-      const ok = await removeStudentFromCourse(
+      this.editStudent.notice = null;
+      // An empty array is a success with nothing lost; only null is a failure.
+      const droppedOfferings = await removeStudentFromCourse(
         this.editStudent.student!.id,
         courseId,
       );
       this.editStudent.saving = false;
-      if (!ok) {
+      if (!droppedOfferings) {
         this.editStudent.error = "No se pudo eliminar el curso.";
         return;
       }
@@ -257,7 +281,15 @@ const studentsPageData = () =>
         this.students[idx].courses = this.students[idx].courses.filter(
           (c: CourseEnrollment) => c.courseId !== courseId,
         );
+        this.students[idx].optionalOfferingIds = this.students[
+          idx
+        ].optionalOfferingIds.filter(
+          (id: number) => !droppedOfferings.some((o) => o.offeringId === id),
+        );
         this.editStudent.student = this.students[idx];
+      }
+      if (droppedOfferings.length) {
+        this.editStudent.notice = `Al quitar el curso también se dieron de baja: ${listOfferingNames(droppedOfferings)}.`;
       }
     },
   }) as AlpineComponent<any>;

@@ -25,6 +25,17 @@ export type CourseEnrollment = {
   year: number;
 };
 
+// An optional-offering match the student lost because the offering does not
+// serve the course they moved into, or because they left the course entirely.
+export type DroppedOffering = {
+  offeringId: number;
+  displayName: string;
+};
+
+export type CourseMoveResult = CourseEnrollment & {
+  droppedOfferings: DroppedOffering[];
+};
+
 type StudentSubject = {
   subject: string;
   id_course: number;
@@ -228,7 +239,7 @@ export async function moveStudentCourse(
   studentId: string,
   oldCourseId: number,
   newCourseId: number,
-): Promise<CourseEnrollment | null> {
+): Promise<CourseMoveResult | null> {
   try {
     const response = await authFetch(
       `${backendURL}/students/${studentId}/course`,
@@ -241,17 +252,19 @@ export async function moveStudentCourse(
     if (!response.ok) {
       throw new Error(`Error moving student course: ${response.statusText}`);
     }
-    return (await response.json()) as CourseEnrollment;
+    return (await response.json()) as CourseMoveResult;
   } catch (error) {
     console.error("Failed to move student course:", error);
     return null;
   }
 }
 
+// Resolves to the offerings the student lost along with the course (possibly
+// empty), or null if the removal failed.
 export async function removeStudentFromCourse(
   studentId: string,
   courseId: number,
-): Promise<boolean> {
+): Promise<DroppedOffering[] | null> {
   try {
     const response = await authFetch(
       `${backendURL}/students/${studentId}/course/${courseId}`,
@@ -262,10 +275,11 @@ export async function removeStudentFromCourse(
     if (!response.ok) {
       throw new Error(`Error removing student from course: ${response.statusText}`);
     }
-    return true;
+    const removed = (await response.json()) as { droppedOfferings?: DroppedOffering[] };
+    return removed.droppedOfferings ?? [];
   } catch (error) {
     console.error("Failed to remove student from course:", error);
-    return false;
+    return null;
   }
 }
 

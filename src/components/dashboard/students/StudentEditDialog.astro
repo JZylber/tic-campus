@@ -103,6 +103,15 @@ import Dialog from "../../misc/dialog/Dialog.astro";
         x-show="editStudent.error && editStudent.courseAction !== null"></span>
     </div>
 
+    <!-- Optional subjects lost to the last move or removal. The change went
+         through, so this is a notice and not an error. -->
+    <p
+      x-show="editStudent.notice"
+      x-text="editStudent.notice ?? ''"
+      class="mt-3 p-3 bg-amber-50 border-2 border-amber-200 rounded-xl text-amber-900 text-sm"
+    >
+    </p>
+
     <button
       x-show="editStudent.courseAction === null"
       @click="editStudent.courseAction = { type: 'add' }; editStudent.courseActionId = NaN; editStudent.error = null"
