@@ -1,6 +1,5 @@
 import type { Alpine } from "alpinejs";
 import collapse from "@alpinejs/collapse";
-import persist from "@alpinejs/persist";
 import twMQDirective from "./scripts/alpine/directives/twMediaQuery";
 import swipeDirective from "./scripts/alpine/directives/swipe";
 import pageData from "./scripts/alpine/stores/pageData";
@@ -10,7 +9,6 @@ import currentUserStore from "./scripts/alpine/stores/currentUser";
 
 export default (Alpine: Alpine) => {
   Alpine.plugin(collapse);
-  Alpine.plugin(persist);
   Alpine.directive("tw", twMQDirective);
   Alpine.directive("swipe", swipeDirective);
   Alpine.store("pageData", pageData());

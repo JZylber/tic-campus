@@ -1,0 +1,20 @@
+---
+import Course from "../../../../components/templates/Course.astro";
+import Layout from "../../../../layouts/Layout.astro";
+import { fetchTemplateSubjects } from "../../../../scripts/APIcalls/subjectData";
+import { COURSE_TEMPLATES } from "../../../../scripts/courseTemplates";
+
+export async function getStaticPaths() {
+  const paths = await Promise.all(
+    Object.keys(COURSE_TEMPLATES).map(fetchTemplateSubjects),
+  );
+  return paths.flat();
+}
+
+const { dataSheetId, template } = Astro.props;
+const { subject, course, year } = Astro.params;
+---
+
+<Layout dataSheetId={dataSheetId}>
+  <Course template={template} subject={subject} course={course} year={Number(year)} />
+</Layout>

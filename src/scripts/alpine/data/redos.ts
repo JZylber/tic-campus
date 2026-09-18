@@ -1,4 +1,3 @@
-import type { AlpineComponent } from "alpinejs";
 import { submitRevisionRequest } from "../../APIcalls/studentData";
 
 type Student = {
@@ -9,33 +8,6 @@ type Student = {
   year: number;
 };
 
-type AlpineRedoData = AlpineComponent<{
-  students: Array<Student>;
-  subject: string;
-  course: string;
-  year: number;
-  studentIds: Array<string>;
-  activityId: string;
-  reason: string;
-  bonusTask: string;
-  comment: string;
-  missingFields: {
-    studentIds: boolean;
-    activityId: boolean;
-    reason: boolean;
-  };
-  status: {
-    success: boolean;
-    message: string;
-  };
-  remainingStudents: Array<Student>;
-  selectedStudents: Array<Student>;
-  sendingRequest: boolean;
-  sentRequest: boolean;
-  reset: () => void;
-  requestRedo: () => void;
-}>;
-
 const redoData = (
   students: Array<Student>,
   subject: string,
@@ -43,7 +15,7 @@ const redoData = (
   year: number,
 ) => {
   return {
-    students: students,
+    students,
     subject,
     course,
     year,
@@ -117,7 +89,7 @@ const redoData = (
       this.sendingRequest = false;
       this.sentRequest = true;
     },
-  } as AlpineRedoData;
+  };
 };
 
 export default redoData;

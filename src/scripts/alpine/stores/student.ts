@@ -129,10 +129,6 @@ const studentStore = (Alpine: Alpine) => ({
     this.unidentified = false;
     await endStudentSession();
   },
-
-  isLoading() {
-    return this.loading;
-  },
 });
 
 export type AlpineStudentStore = ReturnType<typeof studentStore>;

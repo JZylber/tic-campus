@@ -1,7 +1,4 @@
-import type { AlpineComponent } from "alpinejs";
 import type { AlpineStudentMarkStore } from "../../stores/marks";
-import type { MarkData } from "./markCalculations";
-import type { ClassActivity } from "../../../types";
 
 const markSummaryData = (subject: string) =>
   ({
@@ -41,21 +38,5 @@ const markSummaryData = (subject: string) =>
         (activity) => activity.compulsory && !activity.inRevision
       );
     },
-  } as AlpineComponent<{
-    student: AlpineStudentMarkStore["student"];
-    subject: string;
-    readonly allMarkedActivitiesPassed: boolean;
-    readonly allSpecialActivitiesDone: boolean;
-    readonly markData: MarkData;
-    readonly regularActivities: {
-      total: number;
-      done: number;
-    };
-    readonly markedActivities: {
-      total: number;
-      passed: number;
-    };
-    readonly specialActivities: Array<ClassActivity>;
-  }>);
-export type AlpineMarkSummaryData = ReturnType<typeof markSummaryData>;
+  });
 export default markSummaryData;

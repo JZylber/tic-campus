@@ -1,8 +1,11 @@
 import type { AlpineComponent } from "alpinejs";
 import { fetchOfferings, type OfferingWithSlots, type Semester } from "../../APIcalls/offeringTimeSlots";
-import { matchesSemesterFilter, defaultCuatrimestre } from "../../offeringSemester";
-import { getSlotsAtGridPos } from "../../timetableLayout";
-import { getSubjectColorClass, getSubjectSecondaryTextClass } from "../../timetableColors";
+import {
+  CUATRIMESTRE_OPTIONS,
+  matchesSemesterFilter,
+  defaultCuatrimestre,
+} from "../../offeringSemester";
+import { getSlotsAtGridPos, timetableGridMembers } from "../../timetableLayout";
 import { mandatoryOfferingsOf, groupTabsOf, fullGroupTimetableOf } from "../../proyectoTimetableGroups";
 
 type State = "loading" | "ready";
@@ -25,6 +28,7 @@ type State = "loading" | "ready";
 // just the Proyecto+seminars slice via groupTimetableOf.
 const grillaPageData = () =>
   ({
+    ...timetableGridMembers,
     loading: true,
     year: new Date().getFullYear(),
     level: 3,
@@ -33,12 +37,7 @@ const grillaPageData = () =>
     get levelOptions() {
       return [3, 4].map((level) => ({ value: level, label: level.toString() }));
     },
-    get cuatrimestreOptions() {
-      return [
-        { value: "FIRST", label: "1er Cuatrimestre" },
-        { value: "SECOND", label: "2do Cuatrimestre" },
-      ];
-    },
+    cuatrimestreOptions: CUATRIMESTRE_OPTIONS,
     get visibleOfferings(): OfferingWithSlots[] {
       return (this.offerings as OfferingWithSlots[]).filter((o) =>
         matchesSemesterFilter(o.semester, this.cuatrimestre),
@@ -66,18 +65,9 @@ const grillaPageData = () =>
       );
       return getSlotsAtGridPos(timetable, row, col);
     },
-    // No "Propios" tab in this view (showPersonalizedTab={false}), but
-    // TimetableGrid's x-effect calls this unconditionally regardless, so it
-    // must exist.
-    getSeminars(): string[] {
-      return [];
-    },
     get state(): State {
       return this.loading ? "loading" : "ready";
     },
-    subjectColorClass: getSubjectColorClass,
-    subjectSecondaryTextClass: getSubjectSecondaryTextClass,
-    slotClasses: getSubjectColorClass,
     async init() {
       this.offerings = await fetchOfferings(this.year);
       this.loading = false;

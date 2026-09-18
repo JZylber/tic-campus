@@ -1,3 +1,8 @@
+import {
+  getSubjectColorClass,
+  getSubjectSecondaryTextClass,
+} from "./timetableColors";
+
 export const DAYS = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
 
 // Row 4 is left empty in the grid to create visual space for the lunch
@@ -67,6 +72,15 @@ export const getSlotsAtGridPos = (
       if (b.subject === "Proyecto") return -1;
       return 0;
     });
+};
+
+// Members TimetableGrid reads off every host's x-data; spread into each
+// timetable page. getSeminars is overridden where there is a seminar header.
+export const timetableGridMembers = {
+  subjectColorClass: getSubjectColorClass,
+  subjectSecondaryTextClass: getSubjectSecondaryTextClass,
+  getSeminars: (_personalized?: boolean, _tab?: string | null): string[] | null =>
+    null,
 };
 
 export interface TimetableGridCell {

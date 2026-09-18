@@ -1,5 +1,5 @@
 import type { Material, Unit } from "../types";
-import { backendURL } from "./shared";
+import { api } from "./shared";
 
 type TemplatesResponse = Array<{
   name: string;
@@ -10,151 +10,76 @@ type TemplatesResponse = Array<{
   marks: boolean;
 }>;
 
-export async function fetchTemplateSubjects(templateId: string): Promise<
-  Array<{
-    params: { subject: string; course: string; year: number };
-    props: { dataSheetId: string };
-  }>
-> {
-  try {
-    const response = await fetch(
-      `${backendURL}/subjects/${encodeURIComponent(templateId)}`,
-    );
-    if (!response.ok) {
-      throw new Error(
-        `Error fetching template subjects: ${response.statusText}`,
-      );
-    }
-    const data: TemplatesResponse = await response.json();
-    // Convert to the required format and filter those without any of params
-    const cleanData = data
-      .map((item) => ({
-        params: {
-          subject: item.name,
-          course: item.course,
-          year: item.year !== "" ? Number(item.year) : NaN,
-        },
-        props: { dataSheetId: item.spreadsheet !== "" ? item.spreadsheet : "" },
-      }))
-      .filter(
-        (item) =>
-          item.params.subject !== "" &&
-          item.params.course !== "" &&
-          !isNaN(item.params.year),
-      );
-    return cleanData;
-  } catch (error) {
-    console.error("Failed to fetch template subjects:", error);
-    return [];
-  }
+const sheetQuery = (dataSheetId?: string) =>
+  dataSheetId ? `?dataSheetId=${encodeURIComponent(dataSheetId)}` : "";
+
+const coursePath = (subject: string, course: string, year: number) =>
+  `${encodeURIComponent(subject)}/${encodeURIComponent(course)}/${year}`;
+
+// Static paths for every course of a subject template, skipping rows with
+// any param missing.
+export async function fetchTemplateSubjects(template: string) {
+  const data = await api<TemplatesResponse>(
+    `/subjects/${encodeURIComponent(template)}`,
+    [],
+  );
+  return data
+    .filter(
+      (item) =>
+        item.name !== "" &&
+        item.course !== "" &&
+        item.year !== "" &&
+        !isNaN(Number(item.year)),
+    )
+    .map((item) => ({
+      params: {
+        subject: item.name,
+        course: item.course,
+        year: String(Number(item.year)),
+      },
+      props: { dataSheetId: item.spreadsheet, template },
+    }));
 }
 
-export async function fetchSubjectData(
+export const fetchSubjectData = (
   subject: string,
   course: string,
   year: number,
   dataSheetId?: string,
-): Promise<Unit[]> {
-  try {
-    const response = await fetch(
-      `${backendURL}/articles/${encodeURIComponent(
-        subject,
-      )}/${encodeURIComponent(course)}/${year}${
-        dataSheetId ? `?dataSheetId=${encodeURIComponent(dataSheetId)}` : ""
-      }`,
-    );
-    if (!response.ok) {
-      throw new Error(`Error fetching subject data: ${response.statusText}`);
-    }
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Failed to fetch subject data:", error);
-    return [];
-  }
-}
+) =>
+  api<Unit[]>(
+    `/articles/${coursePath(subject, course, year)}${sheetQuery(dataSheetId)}`,
+    [],
+  );
 
-export async function fetchHomeLinks(
-  subject: string,
-  course: string,
-  year: number,
-): Promise<{
-  group: string;
-  presentation: string;
-}> {
-  try {
-    const response = await fetch(
-      `${backendURL}/links/${encodeURIComponent(
-        subject,
-      )}/${encodeURIComponent(course)}/${year}`,
-    );
-    if (!response.ok) {
-      throw new Error(`Error fetching home links: ${response.statusText}`);
-    }
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Failed to fetch home links:", error);
-    return { group: "", presentation: "" };
-  }
-}
+export const fetchHomeLinks = (subject: string, course: string, year: number) =>
+  api<{ group: string; presentation: string }>(
+    `/links/${coursePath(subject, course, year)}`,
+    { group: "", presentation: "" },
+  );
 
-
-export async function fetchSubjectMaterial(
+export const fetchSubjectMaterial = (
   subject: string,
   course: string,
   year: number,
   dataSheetId?: string,
-): Promise<Material[]> {
-  try {
-    const response = await fetch(
-      `${backendURL}/material/${encodeURIComponent(
-        subject,
-      )}/${encodeURIComponent(course)}/${year}${
-        dataSheetId ? `?dataSheetId=${encodeURIComponent(dataSheetId)}` : ""
-      }`,
-    );
-    if (!response.ok) {
-      throw new Error(
-        `Error fetching subject material: ${response.statusText}`,
-      );
-    }
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Failed to fetch subject material:", error);
-    return [];
-  }
-}
+) =>
+  api<Material[]>(
+    `/material/${coursePath(subject, course, year)}${sheetQuery(dataSheetId)}`,
+    [],
+  );
 
-export async function fetchSubjectStudents(
+export const fetchSubjectStudents = (
   subject: string,
   course: string,
   year: number,
-): Promise<
-  Array<{
-    name: string;
-    surname: string;
-    id: string;
-    course: string;
-    year: number;
-  }>
-> {
-  try {
-    const response = await fetch(
-      `${backendURL}/students/${encodeURIComponent(
-        subject,
-      )}/${encodeURIComponent(course)}/${year}`,
-    );
-    if (!response.ok) {
-      throw new Error(
-        `Error fetching subject students: ${response.statusText}`,
-      );
-    }
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Failed to fetch subject students:", error);
-    return [];
-  }
-}
+) =>
+  api<
+    Array<{
+      name: string;
+      surname: string;
+      id: string;
+      course: string;
+      year: number;
+    }>
+  >(`/students/${coursePath(subject, course, year)}`, []);

@@ -1,6 +1,6 @@
 ---
 import Loader from "../../../components/loader/Loader.astro";
-import Sofi from "../../../components/templates/Sofi.astro";
+import Course from "../../../components/templates/Course.astro";
 import Layout from "../../../layouts/Layout.astro";
 
 import { fetchSubjects } from "../../../scripts/APIcalls/dashboard";
@@ -70,7 +70,7 @@ const filteredCourses = availableCourses.filter((course) => {
         class="w-full flex relative lg:gap-x-4"
         x-show={`division === '${div.division}'`}
       >
-        <Sofi subject="Hardware" course={div.course} year={Number(year)} />
+        <Course template="SO-1" subject="Hardware" course={div.course} year={Number(year)} />
       </div>
     ))
   }

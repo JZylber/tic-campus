@@ -4,8 +4,9 @@ import type {
   MarkedActivity,
   RedoActivity,
 } from "../types";
-import { backendURL } from "./shared";
+import { api, backendURL, jsonBody } from "./shared";
 import { studentFetch } from "./studentToken";
+import { authFetch } from "./authToken";
 
 export type CampusSessionResult =
   | {
@@ -45,10 +46,8 @@ export async function verifyCampusSession(
   if (!cookie) return { status: "unavailable" };
   try {
     const response = await fetch(`${backendURL}/auth/campus/session`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+      ...jsonBody("POST", { cookie, course, year }),
       credentials: "include",
-      body: JSON.stringify({ cookie, course, year }),
     });
     if (response.status === 404 || response.status === 409) {
       return { status: "unidentified" };
@@ -100,12 +99,9 @@ export async function impersonateStudent(
   year: number,
 ): Promise<CampusSessionResult> {
   try {
-    const { authFetch } = await import("./authToken");
     const response = await authFetch(`${backendURL}/auth/impersonate`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+      ...jsonBody("POST", { studentId: Number(studentId), course, year }),
       credentials: "include",
-      body: JSON.stringify({ studentId: Number(studentId), course, year }),
     });
     if (!response.ok) return { status: "unidentified" };
     const data = await response.json();
@@ -129,89 +125,54 @@ export async function fetchStudentMarksAndCriteria(
   redos: Array<RedoActivity>;
   fixedMarks: FixedMarks;
 }> {
-  try {
-    const response = await studentFetch(
-      `${backendURL}/marks/${encodeURIComponent(subject)}/${encodeURIComponent(
-        course,
-      )}/${year}/${encodeURIComponent(studentId)}${
-        datasheetId ? `?datasheetId=${encodeURIComponent(datasheetId)}` : ""
-      }`,
-    );
-    if (!response.ok) {
-      throw new Error(`Error fetching student marks: ${response.statusText}`);
-    }
-    const {
-      criteria,
-      markedActivities,
-      classActivities,
-      redoActivities,
-      fixedMarks,
-    } = await response.json();
-    // Make all marks, activities and redos have both madeUp and inRevision set to false
-    markedActivities.forEach((mark: MarkedActivity) => {
-      mark.madeUp = false;
-      mark.inRevision = false;
-    });
-    classActivities.forEach((activity: ClassActivity) => {
-      activity.madeUp = false;
-      activity.inRevision = false;
-      // Set compulsory to false for all activities
-      activity.compulsory = false;
-    });
-    redoActivities.forEach((redo: RedoActivity) => {
-      redo.madeUp = false;
-      redo.inRevision = false;
-    });
-
-    return {
-      criteria,
-      marks: markedActivities,
-      activities: classActivities,
-      redos: redoActivities,
-      fixedMarks,
-    };
-  } catch (error) {
-    console.error("Failed to fetch student marks:", error);
+  const data = await api<{
+    criteria: { proportion: number; specialActivities: string[] };
+    markedActivities: MarkedActivity[];
+    classActivities: ClassActivity[];
+    redoActivities: RedoActivity[];
+    fixedMarks: FixedMarks;
+  } | null>(
+    `/marks/${encodeURIComponent(subject)}/${encodeURIComponent(course)}/${year}/${encodeURIComponent(studentId)}${
+      datasheetId ? `?datasheetId=${encodeURIComponent(datasheetId)}` : ""
+    }`,
+    null,
+    { fetcher: studentFetch },
+  );
+  if (!data) {
     return {
       criteria: { proportion: 1, specialActivities: [] },
       marks: [],
       activities: [],
       redos: [],
-      fixedMarks: {
-        "1B": undefined,
-        "1C": undefined,
-        "3B": undefined,
-        F: undefined,
-      },
+      fixedMarks: { "1B": undefined, "1C": undefined, "3B": undefined, F: undefined },
     };
   }
+  // The backend doesn't send these flags; the mark store sets them later.
+  const unflagged = { madeUp: false, inRevision: false };
+  return {
+    criteria: data.criteria,
+    marks: data.markedActivities.map((mark) => ({ ...mark, ...unflagged })),
+    activities: data.classActivities.map((activity) => ({
+      ...activity,
+      ...unflagged,
+      compulsory: false,
+    })),
+    redos: data.redoActivities.map((redo) => ({ ...redo, ...unflagged })),
+    fixedMarks: data.fixedMarks,
+  };
 }
 
-export async function fetchRevisionRequests(
+export const fetchRevisionRequests = (
   subject: string,
   course: string,
   year: number,
   id: string,
-): Promise<string[]> {
-  try {
-    // URL is subject/course/year and datasheetId, name and surname go as query params
-    const response = await studentFetch(
-      `${backendURL}/revisionRequests/${encodeURIComponent(
-        subject,
-      )}/${encodeURIComponent(course)}/${year}/${encodeURIComponent(id)}`,
-    );
-    if (!response.ok) {
-      throw new Error(
-        `Error fetching revision requests: ${response.statusText}`,
-      );
-    }
-    const data: string[] = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Failed to fetch revision requests:", error);
-    return [];
-  }
-}
+) =>
+  api<string[]>(
+    `/revisionRequests/${encodeURIComponent(subject)}/${encodeURIComponent(course)}/${year}/${encodeURIComponent(id)}`,
+    [],
+    { fetcher: studentFetch },
+  );
 
 type RevisionResponse = {
   success: boolean;
@@ -229,13 +190,9 @@ export async function submitRevisionRequest(
   comment: string,
 ): Promise<RevisionResponse> {
   try {
-    // URL is subject/course/year and datasheetId, name and surname go as query params
-    const response = await studentFetch(`${backendURL}/revisionRequest`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
+    const response = await studentFetch(
+      `${backendURL}/revisionRequest`,
+      jsonBody("POST", {
         subject,
         course,
         year,
@@ -245,7 +202,7 @@ export async function submitRevisionRequest(
         bonusTasks,
         comment,
       }),
-    });
+    );
     if (!response.ok) {
       const errorBody = (await response.json()) || {
         message: "Error al enviar el pedido de revisión",

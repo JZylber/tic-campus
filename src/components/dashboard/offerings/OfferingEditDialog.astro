@@ -29,8 +29,8 @@ import Select from "../../misc/select/Select.astro";
           <input
             type="checkbox"
             class="accent-sh-purple w-5 h-5"
-            :checked="editForm.courseIds.includes(course.id)"
-            @change="toggleEditCourse(course.id)"
+            :value="course.id"
+            x-model.number="editForm.courseIds"
           />
           <span x-text="course.name"></span>
         </label>
