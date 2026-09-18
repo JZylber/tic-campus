@@ -4,4 +4,10 @@ import { Code } from "astro:components";
 const { code, lang } = Astro.props;
 ---
 
-<Code inline lang={lang} code={code} inline class="px-2 py-1 rounded-sm" />
+<!-- bg overrides Shiki's inline style; #3c3c3c is VS Code Dark Modern's inline-code bg -->
+<Code
+  inline
+  lang={lang}
+  code={code}
+  class="px-1.5 py-0.5 rounded text-[0.875em] bg-[#3c3c3c]!"
+/>

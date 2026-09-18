@@ -1,0 +1,322 @@
+---
+import CodeBlock from "../../../../../components/articles/code-block/CodeBlock.astro";
+import InlineCodeBlock from "../../../../../components/articles/code-block/InlineCodeBlock.astro";
+import ImportantBox from "../../../../../components/articles/alertbox/ImportantBox.astro";
+
+export const partial = true;
+---
+
+<h2>¿Qué es JSON?</h2>
+<p>
+  <strong>JSON</strong> significa <em>JavaScript Object Notation</em>. Es un <strong
+    >formato estándar</strong
+  > para intercambiar y guardar datos. Se parece a los objetos de JavaScript, pero
+  con reglas claras para que cualquier lenguaje lo pueda entender.
+</p>
+<ul>
+  <li>
+    Las <strong>claves</strong> de los objetos van entre comillas dobles <em
+      >""</em
+    >.
+  </li>
+  <li>
+    Tipos admitidos: <InlineCodeBlock code="string" lang="ts" />, <InlineCodeBlock
+      code="number"
+      lang="ts"
+    />, <InlineCodeBlock code="boolean" lang="ts" />, <InlineCodeBlock
+      code="null"
+      lang="ts"
+    />, <em>array</em> y <em>object</em>.
+  </li>
+  <li>No se pueden guardar funciones ni referencias.</li>
+</ul>
+
+<h2>¿Por qué usar un estándar?</h2>
+<p>
+  Porque JSON funciona como un <strong>idioma común</strong> entre programas y lenguajes.
+  Como es común, tenemos regaladas las funciones para convertir a JSON o leer JSON.
+  Algunos usos comunes:
+</p>
+<ul>
+  <li>Guardar datos en archivos para usarlos después.</li>
+  <li>
+    Enviar y recibir información entre cliente y servidor (¡SoqueTIC usa JSON
+    para funcionar!).
+  </li>
+  <li>Manejar configuraciones y listas (usuarios, productos, etc.).</li>
+</ul>
+
+<h2>Funciones clave</h2>
+<p>
+  JavaScript trae dos funciones integradas para trabajar con JSON, y las dos
+  hacen el mismo camino en sentidos opuestos: de datos a texto, y de texto a
+  datos.
+</p>
+
+<h3>De datos a texto: <em>JSON.stringify</em></h3>
+<p>
+  <InlineCodeBlock
+    code="JSON.stringify(valor, replacer, space)"
+    lang="ts"
+  /> convierte un objeto o un array a <strong>texto JSON</strong>. Devuelve siempre
+  un <InlineCodeBlock code="string" lang="ts" />, así que TypeScript sabe de qué tipo
+  es el resultado sin que le digamos nada.
+</p>
+<CodeBlock
+  lang="ts"
+  code={`// Ejemplo básico
+let persona = { nombre: "Ana", edad: 17 };
+let jsonPersona: string = JSON.stringify(persona);
+console.log(jsonPersona); // {"nombre":"Ana","edad":17}
+
+// Con identación para que quede legible (space = 2)
+let legible: string = JSON.stringify(persona, null, 2);
+console.log(legible);
+/*
+{
+    "nombre": "Ana",
+    "edad": 17
+}
+*/`}
+/>
+
+<h3>De texto a datos: <em>JSON.parse</em></h3>
+<p>
+  <InlineCodeBlock code="JSON.parse(texto)" lang="ts" /> interpreta un <strong
+    >texto JSON</strong
+  > y lo convierte en un objeto o un array de verdad, con el que podemos trabajar.
+</p>
+<CodeBlock
+  lang="ts"
+  code={`// Ejemplo básico
+let texto: string = '{"nombre":"Luis","edad":16}';
+let obj = JSON.parse(texto);
+console.log(obj.nombre); // Luis`}
+/>
+
+<h2>Para leer JSON hay que decirle el tipo</h2>
+<p>
+  Acá aparece la diferencia importante entre las dos funciones.
+  <InlineCodeBlock code="JSON.stringify" lang="ts" /> devuelve siempre lo mismo: un
+  <InlineCodeBlock code="string" lang="ts" />.
+  <InlineCodeBlock code="JSON.parse" lang="ts" />, en cambio, recibe un texto que
+  recién se va a conocer cuando el programa se ejecute —lo que haya en el archivo,
+  o lo que mande el frontend—. TypeScript no tiene manera de saber qué hay adentro
+  de ese texto, así que le pone el tipo <InlineCodeBlock
+    code="any"
+    lang="ts"
+  />: <em>cualquier cosa</em>.
+</p>
+<p>
+  Y <InlineCodeBlock code="any" lang="ts" /> apaga todos los controles. Con un
+  <InlineCodeBlock code="any" lang="ts" /> podemos escribir cualquier disparate y
+  TypeScript no dice nada:
+</p>
+<CodeBlock
+  lang="ts"
+  code={`let obj = JSON.parse(texto); // obj: any
+
+console.log(obj.nombre);              // Luis
+console.log(obj.apellido.toUpperCase()); // TypeScript no se queja... pero explota al ejecutar`}
+/>
+<p>
+  Perdimos justamente lo que hace útil a TypeScript: enterarnos de los errores
+  <em>antes</em> de ejecutar. La solución es <strong>decirle qué esperamos</strong>,
+  y hay dos formas de hacerlo.
+</p>
+
+<h3>Anotar la variable</h3>
+<p>
+  Si guardamos el resultado en una variable, le ponemos el tipo a la variable,
+  igual que con cualquier otra:
+</p>
+<CodeBlock
+  lang="ts"
+  code={`let nombres: string[] = JSON.parse(texto);`}
+/>
+
+<h3>Aclarar con <em>as</em></h3>
+<p>
+  La otra forma es aclararlo sobre el resultado mismo, con <InlineCodeBlock
+    code="as"
+    lang="ts"
+  />. Sirve para lo mismo, y es la que vamos a ver más seguido cuando el
+  resultado no se guarda tal cual:
+</p>
+<CodeBlock
+  lang="ts"
+  code={`let nombres: string[] = JSON.parse(texto) as string[];`}
+/>
+<p>
+  Si el archivo tiene objetos y no textos sueltos, primero definimos el <InlineCodeBlock
+    code="type"
+    lang="ts"
+  /> con la forma que esperamos, y recién después lo usamos para anotar:
+</p>
+<CodeBlock
+  lang="ts"
+  code={`type Persona = {
+    nombre: string;
+    edad: number;
+};
+
+let texto: string = '[{"nombre":"Luis","edad":16},{"nombre":"Ana","edad":17}]';
+let personas: Persona[] = JSON.parse(texto) as Persona[];
+
+console.log(personas[0].nombre); // Luis
+console.log(personas[0].apellido); // Error: Property 'apellido' does not exist on type 'Persona'`}
+/>
+<p>
+  Con el tipo puesto, TypeScript vuelve a trabajar para nosotros: sabe que cada
+  elemento tiene <em>nombre</em> y <em>edad</em>, autocompleta los atributos y
+  nos avisa si escribimos uno que no existe.
+</p>
+<ImportantBox warning="El tipo es una promesa, no un control">
+  <p>
+    La anotación le dice a TypeScript qué <strong>esperamos</strong> encontrar,
+    pero nadie revisa el texto de verdad. Si el archivo tiene otra cosa —le
+    falta un atributo, o alguien lo editó a mano—, TypeScript no se entera y el
+    error va a aparecer recién cuando el programa se ejecute. El tipo lo ponemos
+    nosotros, y somos nosotros los que nos hacemos cargo de que sea el correcto.
+  </p>
+</ImportantBox>
+
+<h2>Leer y escribir archivos JSON en TypeScript</h2>
+<p>
+  Como ya saben usar <em>node:fs</em>, combinamos lectura/escritura de archivos
+  con <em>JSON.parse</em> y <em>JSON.stringify</em>. Las funciones se importan
+  igual que siempre, entre llaves:
+</p>
+<CodeBlock
+  lang="ts"
+  code={`import { readFileSync, writeFileSync } from "node:fs";`}
+/>
+
+<p>Archivo inicial: <em>nombres.json</em></p>
+<CodeBlock
+  lang="json"
+  code={`[
+    "Luka",
+    "Nikola",
+    "Domantas"
+]`}
+/>
+
+<p>Script de TypeScript: leer, agregar y guardar</p>
+<CodeBlock
+  lang="ts"
+  code={`import { readFileSync, writeFileSync } from "node:fs";
+
+// 1) Leer el archivo como texto (UTF-8)
+let data: string = readFileSync("nombres.json", "utf-8");
+
+// 2) Interpretar el texto JSON, diciéndole a TypeScript qué esperamos
+let nombres: string[] = JSON.parse(data) as string[];
+
+// 3) Agregar un nuevo nombre
+nombres.push("Slavoj");
+
+// 4) Convertir el array a JSON con identación (2 espacios)
+let nuevoJson: string = JSON.stringify(nombres, null, 2);
+
+// 5) Escribir el archivo actualizado
+writeFileSync("nombres.json", nuevoJson, "utf-8");
+
+console.log("Nombre agregado con éxito!");`}
+/>
+<p>
+  Fijate que el paso 2 es el único que necesita una aclaración nuestra: el
+  archivo es un array de textos, así que el tipo es <InlineCodeBlock
+    code="string[]"
+    lang="ts"
+  />. Si el archivo tuviera objetos, ahí iría el <InlineCodeBlock
+    code="type"
+    lang="ts"
+  /> que hayamos definido.
+</p>
+
+<p>Resultado esperado en <em>nombres.json</em></p>
+<CodeBlock
+  lang="json"
+  code={`[
+  "Luka",
+  "Nikola",
+  "Domantas",
+  "Slavoj"
+]`}
+/>
+
+<p>Para ejecutar en la terminal:</p>
+<CodeBlock lang="bash" code="npx tsx index.ts" />
+
+<ImportantBox warning="JSON.parse necesita JSON válido">
+  <p>
+    Asegurate de que el archivo <em>nombres.json</em> exista y tenga JSON
+    válido. Si está vacío, o le sobra una coma, <InlineCodeBlock
+      code="JSON.parse"
+      lang="ts"
+    /> falla y el programa se corta. Un archivo que arranca vacío tiene que tener
+    al menos <InlineCodeBlock code="[]" lang="json" /> adentro.
+  </p>
+</ImportantBox>
+
+<h2>Resumen</h2>
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Acción</th>
+      <th>Ejemplo</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Importar las funciones de archivos</td>
+      <td
+        ><InlineCodeBlock
+          lang="ts"
+          code='import { readFileSync, writeFileSync } from "node:fs";'
+        /></td
+      >
+    </tr>
+    <tr>
+      <td>Objeto o array a texto JSON</td>
+      <td
+        ><InlineCodeBlock
+          lang="ts"
+          code="let texto: string = JSON.stringify(datos, null, 2);"
+        /></td
+      >
+    </tr>
+    <tr>
+      <td>Texto JSON a datos (¡tipado!)</td>
+      <td
+        ><InlineCodeBlock
+          lang="ts"
+          code="let datos: Persona[] = JSON.parse(texto) as Persona[];"
+        /></td
+      >
+    </tr>
+    <tr>
+      <td>Leer un archivo JSON</td>
+      <td
+        ><InlineCodeBlock
+          lang="ts"
+          code='let guardado: string = readFileSync("datos.json", "utf-8");'
+        /></td
+      >
+    </tr>
+    <tr>
+      <td>Escribir un archivo JSON</td>
+      <td
+        ><InlineCodeBlock
+          lang="ts"
+          code='writeFileSync("datos.json", texto, "utf-8");'
+        /></td
+      >
+    </tr>
+    <tr>
+      <td>Ejecutar el programa</td>
+      <td><InlineCodeBlock lang="bash" code="npx tsx index.ts" /></td>
+    </tr>
+  </tbody>
+</table>

@@ -1,0 +1,298 @@
+---
+import CodeBlock from "../../../../../components/articles/code-block/CodeBlock.astro";
+import InlineCodeBlock from "../../../../../components/articles/code-block/InlineCodeBlock.astro";
+import ImportantBox from "../../../../../components/articles/alertbox/ImportantBox.astro";
+
+export const partial = true;
+
+const der = `erDiagram
+    usuario {
+        int id PK
+        varchar nombre
+        varchar password
+        char rol
+        boolean fan
+    }
+    cancion {
+        int id PK
+        varchar nombre
+    }
+    escucha {
+        int id PK
+        int usuario_id FK
+        int cancion_id FK
+        int reproducciones
+    }
+    usuario ||--o{ escucha : "usuario_id"
+    cancion ||--o{ escucha : "cancion_id"`;
+---
+
+<h2>Introducción</h2>
+<p>
+  SpoTICfy sigue creciendo. En el <strong>TP4-A</strong> la API ya sabía quién
+  era cada usuario; ahora hay que decidir <strong>qué puede hacer cada uno</strong>.
+  Aparecen los roles, los middlewares que los controlan y una estructura de proyecto
+  separada por capas.
+</p>
+<p>
+  Se reutiliza el <strong>mismo repositorio del TP4-A</strong>: este trabajo
+  práctico continúa aquel proyecto, no arranca uno nuevo.
+</p>
+
+<h2>Arquitectura</h2>
+<p>
+  Partimos de la base de datos de tres tablas del TP4-A, con los campos nuevos
+  que se agregan en el <strong>Ejercicio 1</strong>:
+</p>
+<div class="mermaid" set:html={der} />
+<p>
+  <InlineCodeBlock code="escucha" lang="sql" /> sigue siendo la tabla del medio: relaciona
+  un usuario con una canción y guarda cuántas veces la escuchó.
+</p>
+
+<h2>Ejercicio 1</h2>
+<p>
+  Agregar dos campos nuevos a la tabla <InlineCodeBlock
+    code="usuario"
+    lang="sql"
+  />:
+</p>
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Campo</th>
+      <th>Tipo</th>
+      <th>Valores</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><InlineCodeBlock code="rol" lang="sql" /></td>
+      <td>Caracter</td>
+      <td>
+        <InlineCodeBlock code="A" lang="plaintext" /> (admin) o <InlineCodeBlock
+          code="U"
+          lang="plaintext"
+        /> (usuario)
+      </td>
+      <td><InlineCodeBlock code="U" lang="plaintext" /></td>
+    </tr>
+    <tr>
+      <td><InlineCodeBlock code="fan" lang="sql" /></td>
+      <td>Booleano</td>
+      <td>
+        <InlineCodeBlock code="true" lang="sql" /> o <InlineCodeBlock
+          code="false"
+          lang="sql"
+        />
+      </td>
+      <td><InlineCodeBlock code="false" lang="sql" /></td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Ejercicio 2</h2>
+<p>
+  Asociar a <strong>todos</strong> los usuarios a un rol: los que ya estaban en la
+  tabla también tienen que quedar con un valor en <InlineCodeBlock
+    code="rol"
+    lang="sql"
+  />, y al menos uno tiene que ser admin para poder probar los endpoints del
+  Ejercicio 5.
+</p>
+
+<h2>Ejercicio 3</h2>
+<p>Desarrollar dos middlewares:</p>
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Middleware</th>
+      <th>Qué chequea</th>
+      <th>Si está bien</th>
+      <th>Si está mal</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><InlineCodeBlock code="verifyToken" lang="js" /></td>
+      <td>
+        Que el header del <InlineCodeBlock code="req" lang="js" /> traiga un token
+        y que sea válido.
+      </td>
+      <td>
+        Asigna el contenido del token a un atributo nuevo <InlineCodeBlock
+          code="req.user"
+          lang="js"
+        /> y continúa (<InlineCodeBlock code="next()" lang="js" />).
+      </td>
+      <td>Devuelve error.</td>
+    </tr>
+    <tr>
+      <td><InlineCodeBlock code="verifyAdmin" lang="js" /></td>
+      <td>
+        Que el <InlineCodeBlock code="req.user" lang="js" /> tenga asociado el rol
+        admin.
+      </td>
+      <td>Continúa (<InlineCodeBlock code="next()" lang="js" />).</td>
+      <td>Devuelve error.</td>
+    </tr>
+  </tbody>
+</table>
+<ImportantBox>
+  <p>
+    <InlineCodeBlock code="verifyAdmin" lang="js" /> no vuelve a leer el token: trabaja
+    sobre <InlineCodeBlock code="req.user" lang="js" />, que lo dejó <InlineCodeBlock
+      code="verifyToken"
+      lang="js"
+    />. Por eso el orden importa — siempre corre <strong>después</strong>.
+  </p>
+</ImportantBox>
+
+<h2>Ejercicio 4</h2>
+<p>
+  Refactorizar el código para usar las rutas como middleware y separar la
+  funcionalidad por capas:
+</p>
+<CodeBlock
+  lang="text"
+  code={`index.js
+/routes
+/controllers
+/services
+/middlewares`}
+/>
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Capa</th>
+      <th>De qué se ocupa</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><InlineCodeBlock code="index.js" lang="js" /></td>
+      <td>Levanta el servidor y monta las rutas.</td>
+    </tr>
+    <tr>
+      <td><InlineCodeBlock code="/routes" lang="bash" /></td>
+      <td>Define qué ruta responde a qué método y con qué middlewares.</td>
+    </tr>
+    <tr>
+      <td><InlineCodeBlock code="/controllers" lang="bash" /></td>
+      <td>
+        Lee lo que viene en el <InlineCodeBlock code="req" lang="js" />, llama al
+        servicio y arma la respuesta.
+      </td>
+    </tr>
+    <tr>
+      <td><InlineCodeBlock code="/services" lang="bash" /></td>
+      <td>La lógica y las consultas a la base de datos.</td>
+    </tr>
+    <tr>
+      <td><InlineCodeBlock code="/middlewares" lang="bash" /></td>
+      <td>
+        Los middlewares del Ejercicio 3 (<InlineCodeBlock
+          code="verifyToken"
+          lang="js"
+        />, <InlineCodeBlock code="verifyAdmin" lang="js" />).
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Ejercicio 5</h2>
+<p>Desarrollar los siguientes endpoints:</p>
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Método</th>
+      <th>Ruta</th>
+      <th>Recibe</th>
+      <th>Qué hace</th>
+      <th>Quién puede</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><InlineCodeBlock code="POST" lang="plaintext" /></td>
+      <td><InlineCodeBlock code="/cancion" lang="plaintext" /></td>
+      <td><InlineCodeBlock code="nombre" lang="plaintext" /></td>
+      <td>Crea la canción.</td>
+      <td>Sólo admin</td>
+    </tr>
+    <tr>
+      <td><InlineCodeBlock code="PUT" lang="plaintext" /></td>
+      <td><InlineCodeBlock code="/cancion" lang="plaintext" /></td>
+      <td>
+        <InlineCodeBlock code="id" lang="plaintext" />, <InlineCodeBlock
+          code="nombre"
+          lang="plaintext"
+        />
+      </td>
+      <td>Modifica el nombre de esa canción.</td>
+      <td>Sólo admin</td>
+    </tr>
+    <tr>
+      <td><InlineCodeBlock code="DELETE" lang="plaintext" /></td>
+      <td><InlineCodeBlock code="/cancion" lang="plaintext" /></td>
+      <td><InlineCodeBlock code="id" lang="plaintext" /></td>
+      <td>Borra esa canción.</td>
+      <td>Sólo admin</td>
+    </tr>
+    <tr>
+      <td><InlineCodeBlock code="POST" lang="plaintext" /></td>
+      <td><InlineCodeBlock code="/escucho" lang="plaintext" /></td>
+      <td>
+        <InlineCodeBlock code="id" lang="plaintext" /> (de la canción)
+      </td>
+      <td>
+        Graba el registro en <InlineCodeBlock code="escucha" lang="sql" />,
+        asociando el id del usuario (que viene en el token) al id de la canción
+        recibida.
+      </td>
+      <td>Cualquier usuario logueado</td>
+    </tr>
+  </tbody>
+</table>
+<ImportantBox>
+  <p>
+    Los tres endpoints de <InlineCodeBlock code="/cancion" lang="plaintext" /> sólo
+    pueden ser ejecutados por usuarios con rol <strong>admin</strong>. Eso no se pregunta
+    dentro del controller: se resuelve encadenando <InlineCodeBlock
+      code="verifyToken"
+      lang="js"
+    /> y <InlineCodeBlock code="verifyAdmin" lang="js" /> en la ruta.
+  </p>
+</ImportantBox>
+<p>
+  En <InlineCodeBlock code="/escucho" lang="plaintext" /> el usuario <strong
+    >no se pide por parámetro</strong
+  >: sale del token, que es lo único que prueba quién es el que está
+  escuchando.
+</p>
+
+<h2>Ejercicio 6</h2>
+<p>
+  Si un usuario escuchó más de <strong>10 canciones</strong>, hay que marcar en <InlineCodeBlock
+    code="true"
+    lang="sql"
+  /> su campo <InlineCodeBlock code="fan" lang="sql" />.
+</p>
+
+<h2>Entrega</h2>
+<p>
+  La entrega se hace tipo <strong>demo</strong>: cada grupo tiene que mostrar
+  que su backend funciona <strong>desde Vercel</strong>. Se reutiliza el repo
+  del TP4-A.
+</p>
+<p>Un recorrido posible para la demo:</p>
+<CodeBlock
+  lang="text"
+  code={`/login              → obtener el token de un usuario común
+POST /cancion       → con ese token: da error (no es admin)
+/login              → obtener el token de un admin
+POST /cancion       → con ese token: crea la canción
+POST /escucho       → registrar escuchas hasta pasar las 10 canciones
+                      → el usuario queda marcado como fan`}
+/>

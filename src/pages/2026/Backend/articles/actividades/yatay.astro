@@ -1,0 +1,298 @@
+---
+import CodeBlock from "../../../../../components/articles/code-block/CodeBlock.astro";
+import InlineCodeBlock from "../../../../../components/articles/code-block/InlineCodeBlock.astro";
+import ImportantBox from "../../../../../components/articles/alertbox/ImportantBox.astro";
+
+export const partial = true;
+---
+
+<h2>Introducción</h2>
+<p>
+  Yatay Yatay, un restaurante del Barrio Chino, quiere tomar los pedidos del
+  salón desde una web. El frontend ya está: falta el backend.
+</p>
+
+<h2>Consigna base</h2>
+<p>
+  El frontend ya está hecho: muestra la carta con un contador <InlineCodeBlock
+    code="[− n +]"
+    lang="plaintext"
+  /> en cada plato y un campo para el nombre del cliente. Al tocar "Hacer pedido"
+  manda el pedido y pasa a <InlineCodeBlock
+    code="pedidos.html"
+    lang="plaintext"
+  />, que lista los pedidos de todos los clientes. Lo que falta es el backend que
+  lee y escribe los archivos. Va en <InlineCodeBlock
+    code="src/index.ts"
+    lang="plaintext"
+  />, con tres rutas:
+</p>
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Ruta</th>
+      <th>Qué hace</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><InlineCodeBlock code="GET /api/menu" lang="plaintext" /></td>
+      <td>La carta entera.</td>
+    </tr>
+    <tr>
+      <td>
+        <InlineCodeBlock code="POST /api/pedir/:nombreCliente" lang="plaintext" />
+      </td>
+      <td>Guarda el pedido de ese cliente. No contesta nada: sólo 200.</td>
+    </tr>
+    <tr>
+      <td><InlineCodeBlock code="GET /api/pedidos" lang="plaintext" /></td>
+      <td>Todos los pedidos guardados.</td>
+    </tr>
+  </tbody>
+</table>
+<p>
+  En <InlineCodeBlock code="src/index.ts" lang="plaintext" /> ya está armado el servidor:
+  arriba de todo el <InlineCodeBlock code="app" lang="ts" /> de Express (que entiende
+  JSON y sirve la página de <InlineCodeBlock
+    code="frontend/"
+    lang="plaintext"
+  />) y abajo de todo el <InlineCodeBlock code="app.listen" lang="ts" /> que lo arranca.
+  Las rutas van en el medio, entre esas dos cosas.
+</p>
+
+<h3>Los datos</h3>
+<p>
+  Los dos archivos viven en <InlineCodeBlock code="data/" lang="plaintext" />, que ya
+  está declarada como <InlineCodeBlock code="carpetaDatos" lang="ts" /> arriba de todo
+  en <InlineCodeBlock code="src/index.ts" lang="plaintext" />.
+</p>
+<p>
+  <InlineCodeBlock code="data/menu.json" lang="plaintext" /> es una lista de platos:
+</p>
+<CodeBlock
+  lang="json"
+  code={`[
+  {
+    "id": 21,
+    "nombre": "Ramen",
+    "descripcion": "Shio ramen, fideos, huevo, pollo, naruto, nori, shitake y verdeo.",
+    "precio": 27000,
+    "vegetariano": false,
+    "picante": 1,
+    "glutenFree": false,
+    "delivery": true,
+    "categoria": "principal"
+  }
+]`}
+/>
+<p>
+  <InlineCodeBlock code="data/pedidos.json" lang="plaintext" /> arranca vacío (<InlineCodeBlock
+    code="{}"
+    lang="json"
+  />). No es una lista sino un objeto: cada cliente es una clave, y lo que pidió
+  es una lista de <InlineCodeBlock code="{ idProducto, cantidad }" lang="plaintext" />:
+</p>
+<CodeBlock
+  lang="json"
+  code={`{
+  "Ana": [
+    { "idProducto": 21, "cantidad": 2 },
+    { "idProducto": 23, "cantidad": 1 }
+  ]
+}`}
+/>
+<p>
+  Cada cliente tiene un solo pedido: si vuelve a pedir, el nuevo <strong
+    >reemplaza</strong
+  > al anterior.
+</p>
+
+<h3>El pedido viaja en el cuerpo</h3>
+<p>
+  Una lista de platos no entra cómoda en la URL, así que el frontend manda el
+  pedido con <strong>POST</strong>: el nombre va en la URL y la lista en el
+  cuerpo, como JSON.
+</p>
+<CodeBlock
+  lang="text"
+  code={`POST /api/pedir/Ana
+[{ "idProducto": 21, "cantidad": 2 }, { "idProducto": 23, "cantidad": 1 }]`}
+/>
+<p>
+  En la ruta, el nombre se lee de <InlineCodeBlock
+    code="req.params.nombreCliente"
+    lang="ts"
+  /> y la lista de <InlineCodeBlock code="req.body" lang="ts" />. El <InlineCodeBlock
+    code="app.use(express.json())"
+    lang="ts"
+  /> que ya está arriba es el que convierte ese cuerpo en una lista.
+</p>
+<p>
+  TypeScript no sabe qué hay en <InlineCodeBlock code="req.body" lang="ts" />: hay
+  que decírselo en el tipo del <InlineCodeBlock code="req" lang="ts" />.
+</p>
+<CodeBlock
+  lang="ts"
+  code={`app.post(
+  '/api/pedir/:nombreCliente',
+  (req: Request<{ nombreCliente: string }, unknown, ItemPedido[]>, res: Response) => {
+    // ...
+  },
+);`}
+/>
+<p>
+  Lo que va entre <InlineCodeBlock code="< >" lang="plaintext" /> es, en orden: qué trae
+  <InlineCodeBlock code="req.params" lang="ts" />, qué se contesta (<InlineCodeBlock
+    code="unknown"
+    lang="ts"
+  />: no importa) y qué trae <InlineCodeBlock code="req.body" lang="ts" />. <InlineCodeBlock
+    code="ItemPedido"
+    lang="ts"
+  /> es un <InlineCodeBlock code="type" lang="ts" /> que definen ustedes.
+</p>
+<ImportantBox>
+  <p>
+    A diferencia de otras veces que asignaban un atributo a un objeto, la clave <strong
+      >no se conoce de antemano</strong
+    >: llega como parámetro de la ruta (<InlineCodeBlock
+      code="req.params.nombreCliente"
+      lang="ts"
+    />). ¿Cómo hago entonces? Hay otra forma de asignarle un valor a una clave,
+    usando <InlineCodeBlock code="objeto[<clave en string>]" lang="plaintext" />. Se ve
+    muy claro con un ejemplo:
+  </p>
+  <CodeBlock
+    lang="ts"
+    code={`let alumnos: Record<string, number> = {
+  Tomás: 10,
+  María: 5,
+};
+let nuevoAlumno: string = 'José';
+alumnos[nuevoAlumno] = 7;
+console.log(alumnos); // { 'Tomás': 10, 'María': 5, 'José': 7 }`}
+  />
+  <p>
+    <InlineCodeBlock code="Record<string, number>" lang="ts" /> es el tipo de un objeto
+    que puede tener cualquier cantidad de claves de tipo <InlineCodeBlock
+      code="string"
+      lang="ts"
+    />, todas con valores <InlineCodeBlock code="number" lang="ts" />.
+  </p>
+</ImportantBox>
+<p>
+  Como no hay nada para devolver, alcanza con <InlineCodeBlock
+    code="res.end()"
+    lang="ts"
+  />: el 200 ya dice que salió bien.
+</p>
+
+<h2>Consigna manija</h2>
+<p>
+  La página de pedidos muestra lo que pidió cada cliente, pero falta lo más
+  importante: <strong>cuánto hay que cobrarle</strong>. El frontend ya pide el
+  total, pero le falta la ruta:
+</p>
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Ruta</th>
+      <th>Qué contesta</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <InlineCodeBlock code="GET /api/total/:nombreCliente" lang="plaintext" />
+      </td>
+      <td>El total del pedido de ese cliente.</td>
+    </tr>
+  </tbody>
+</table>
+<p>
+  Va en el mismo <InlineCodeBlock code="src/index.ts" lang="plaintext" />, abajo de todo,
+  donde dice <InlineCodeBlock
+    code="---- Consigna manija ----"
+    lang="plaintext"
+  />.
+</p>
+<p>
+  El pedido guarda sólo el <InlineCodeBlock code="idProducto" lang="plaintext" /> y la
+  <InlineCodeBlock code="cantidad" lang="plaintext" />, no el precio. Para sacar la
+  cuenta hay que cruzar los dos archivos: por cada item del pedido, buscar en el
+  menú el plato con ese <InlineCodeBlock code="id" lang="plaintext" /> y sumar <InlineCodeBlock
+    code="precio × cantidad"
+    lang="plaintext"
+  />.
+</p>
+<p>
+  Con el pedido de Ana de arriba (2 Ramen a $27.000 y 1 Handroll de langostinos
+  a $4.900), <InlineCodeBlock code="GET /api/total/Ana" lang="plaintext" /> contesta:
+</p>
+<CodeBlock lang="json" code={`{ "total": 58900 }`} />
+<p>
+  Si ese cliente no hizo ningún pedido, no hay nada que sumar: hay que contestar <strong
+    >404</strong
+  >, sin cuerpo.
+</p>
+<CodeBlock lang="ts" code="res.status(404).end();" />
+<p>
+  Mientras la ruta no exista, la página de pedidos muestra los pedidos igual, sin
+  el total y con un aviso de que falta la ruta.
+</p>
+
+<h2>¿Qué hay que editar?</h2>
+<p>
+  <InlineCodeBlock code="src/index.ts" lang="plaintext" /> — las tres rutas de la consigna
+  base y, para la manija, la del total.
+</p>
+<p>
+  Todo lo demás ya está completo: <InlineCodeBlock code="data/" lang="plaintext" /> (el
+  menú y los pedidos) y todo el <InlineCodeBlock code="frontend/" lang="plaintext" />.
+</p>
+
+<h2>Primeros pasos</h2>
+<p>
+  Antes de poder correr el programa, hay que instalar las dependencias del
+  proyecto. Esto se hace <strong>una sola vez</strong> con:
+</p>
+<CodeBlock lang="bash" code="npm install" />
+
+<h2>Cómo correr el programa</h2>
+<CodeBlock lang="bash" code="npm run start" />
+<p>
+  Se abre solo el browser en <InlineCodeBlock
+    code="http://localhost:3000"
+    lang="plaintext"
+  />, con la carta. Después de hacer un pedido, la página pasa a <InlineCodeBlock
+    code="pedidos.html"
+    lang="plaintext"
+  />.
+</p>
+<p>
+  Mientras falten rutas, la página lo avisa con el mensaje del error: si dice que
+  la ruta no está escrita, es que falta declararla; si dice que nunca contestó,
+  es que la ruta existe pero se olvidaron del <InlineCodeBlock
+    code="res.json(...)"
+    lang="ts"
+  /> o del <InlineCodeBlock code="res.end()" lang="ts" />.
+</p>
+
+<h2>Tests</h2>
+<p>
+  El proyecto incluye tests automáticos que se usan para la corrección. No hace
+  falta entenderlos ni modificarlos:
+</p>
+<CodeBlock
+  lang="bash"
+  code={`npm run test-base    # consigna base
+npm run test-manija  # consigna manija
+npm test             # todos`}
+/>
+<p>
+  Los tests se guardan lo que haya en <InlineCodeBlock
+    code="data/pedidos.json"
+    lang="plaintext"
+  /> antes de empezar y lo dejan como estaba al terminar: no les van a borrar los
+  pedidos de prueba.
+</p>

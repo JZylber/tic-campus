@@ -1,0 +1,323 @@
+---
+import CodeBlock from "../../../../../components/articles/code-block/CodeBlock.astro";
+import InlineCodeBlock from "../../../../../components/articles/code-block/InlineCodeBlock.astro";
+import ImportantBox from "../../../../../components/articles/alertbox/ImportantBox.astro";
+
+export const partial = true;
+---
+
+<h2>Introducción</h2>
+<p>
+  Los pelados tienen una heladería. Tienen una web online para registrar
+  pedidos, pero hay que ayudarlos a hacer el backend.
+</p>
+<p>
+  El frontend ya está hecho: muestra la carta, deja armar el pedido eligiendo
+  producto y sabores, y lista los pedidos que se hicieron. Lo que falta es el
+  backend que lee y escribe los archivos.
+</p>
+
+<h2>Consigna base</h2>
+<p>
+  Va en <InlineCodeBlock code="src/index.ts" lang="plaintext" />, con cuatro
+  rutas:
+</p>
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Ruta</th>
+      <th>Qué hace</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <InlineCodeBlock code="GET /api/sabores" lang="plaintext" />
+      </td>
+      <td>La lista de sabores.</td>
+    </tr>
+    <tr>
+      <td>
+        <InlineCodeBlock code="GET /api/productos" lang="plaintext" />
+      </td>
+      <td>La lista de productos.</td>
+    </tr>
+    <tr>
+      <td>
+        <InlineCodeBlock
+          code="GET /api/pedir?nombre=...&producto=...&sabores=..."
+          lang="plaintext"
+        />
+      </td>
+      <td>
+        Guarda un pedido nuevo. No contesta nada: sólo <InlineCodeBlock
+          code="200"
+          lang="plaintext"
+        />.
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <InlineCodeBlock code="GET /api/pedidos" lang="plaintext" />
+      </td>
+      <td>La lista de pedidos hechos.</td>
+    </tr>
+  </tbody>
+</table>
+<p>
+  En <InlineCodeBlock code="src/index.ts" lang="plaintext" /> ya está armado el servidor:
+  arriba de todo el <InlineCodeBlock code="app" lang="ts" /> de Express (que entiende
+  JSON y sirve la página de <InlineCodeBlock
+    code="frontend/"
+    lang="plaintext"
+  />) y abajo de todo el <InlineCodeBlock code="app.listen" lang="ts" /> que lo arranca.
+  Las rutas van en el medio, entre esas dos cosas.
+</p>
+
+<h3>Los datos</h3>
+<p>
+  Los tres archivos viven en <InlineCodeBlock code="data/" lang="plaintext" /> y <InlineCodeBlock
+    code="carpetaDatos"
+    lang="ts"
+  /> ya está declarada arriba de todo en <InlineCodeBlock
+    code="src/index.ts"
+    lang="plaintext"
+  />, así que la ruta de cada uno se arma pegando el nombre: <InlineCodeBlock
+    code="carpetaDatos + 'sabores.json'"
+    lang="ts"
+  />.
+</p>
+<p>
+  <InlineCodeBlock code="data/sabores.json" lang="plaintext" /> es una lista de textos:
+</p>
+<CodeBlock
+  lang="json"
+  code={`["Chocolate", "Chocolate Amargo", "Sambayón", "Pistacho", "..."]`}
+/>
+<p>
+  <InlineCodeBlock code="data/productos.json" lang="plaintext" /> es una lista de
+  objetos:
+</p>
+<CodeBlock
+  lang="json"
+  code={`[
+  { "nombre": "cucurucho", "precio": 50, "maxGustos": 2 },
+  { "nombre": "1 kilo", "precio": 350, "maxGustos": 5 }
+]`}
+/>
+<p>
+  <InlineCodeBlock code="data/pedidos.json" lang="plaintext" /> arranca vacío (<InlineCodeBlock
+    code="[]"
+    lang="json"
+  />) y se va llenando con lo que pidan:
+</p>
+<CodeBlock
+  lang="json"
+  code={`[{ "producto": "1 kilo", "sabores": ["Chocolate", "Mantecol"], "nombre": "Ana" }]`}
+/>
+
+<h3>Leer y escribir JSON</h3>
+<p>
+  Para tocar los archivos están estas dos funciones de <InlineCodeBlock
+    code="node:fs"
+    lang="plaintext"
+  />, que <strong>tienen que importar</strong>:
+</p>
+<ul>
+  <li>
+    <InlineCodeBlock code="readFileSync(archivo, 'utf-8')" lang="ts" /> — devuelve
+    todo el contenido como un <InlineCodeBlock code="string" lang="ts" />.
+  </li>
+  <li>
+    <InlineCodeBlock code="writeFileSync(archivo, texto, 'utf-8')" lang="ts" /> —
+    pisa el archivo con ese <InlineCodeBlock code="string" lang="ts" />.
+  </li>
+</ul>
+<p>
+  Ojo con eso: un archivo es siempre <strong>texto</strong>, nunca una lista ni
+  un objeto. Lo que hace que sea JSON es que ese texto está escrito con la forma
+  que JavaScript entiende, y hay dos funciones para pasar de una cosa a la otra:
+</p>
+<ul>
+  <li>
+    <InlineCodeBlock code="JSON.parse(texto)" lang="ts" /> — el texto del archivo
+    se convierte en una lista o un objeto de verdad, con el que se puede trabajar.
+  </li>
+  <li>
+    <InlineCodeBlock code="JSON.stringify(datos, null, 2)" lang="ts" /> — al revés:
+    los datos vuelven a ser texto, para poder escribirlos. Ese <InlineCodeBlock
+      code="null, 2"
+      lang="ts"
+    /> es para que el archivo quede indentado y se pueda leer.
+  </li>
+</ul>
+<p>
+  Como <InlineCodeBlock code="JSON.parse" lang="ts" /> no tiene manera de saber qué
+  hay adentro del archivo, TypeScript tampoco lo sabe. Si el resultado se guarda en
+  una variable, hay que decirle qué esperás con <InlineCodeBlock
+    code="as"
+    lang="ts"
+  />:
+</p>
+<CodeBlock
+  lang="ts"
+  code={`let guardado: string = readFileSync(archivo, 'utf-8');
+let pedidos: object[] = JSON.parse(guardado) as object[];`}
+/>
+<p>
+  Si en cambio lo mandás derecho al browser (<InlineCodeBlock
+    code="res.json(JSON.parse(guardado))"
+    lang="ts"
+  />), no hace falta aclarar nada.
+</p>
+<ImportantBox>
+  <p>
+    Ojo con <InlineCodeBlock code="object[]" lang="ts" />. Ahí va lo que sea que
+    el JSON sea en tipo de datos. ¡Definan ustedes los <InlineCodeBlock
+      code="type"
+      lang="ts"
+    />!
+  </p>
+</ImportantBox>
+
+<h3>Los sabores</h3>
+<p>
+  El pedido llega entero por la URL, después del <InlineCodeBlock
+    code="?"
+    lang="plaintext"
+  />, y eso se lee con <InlineCodeBlock code="req.query" lang="ts" />:
+</p>
+<CodeBlock
+  lang="text"
+  code={`/api/pedir?nombre=Ana&producto=1%20kilo&sabores=Chocolate,Mantecol`}
+/>
+<p>
+  Como una URL es siempre texto, los sabores viajan todos juntos separados por
+  comas. Para volver a tenerlos de a uno está <InlineCodeBlock
+    code="separarSabores"
+    lang="ts"
+  /> en <InlineCodeBlock code="src/lib/sabores.ts" lang="plaintext" />, que ya viene
+  importada:
+</p>
+<CodeBlock
+  lang="ts"
+  code={`separarSabores('Chocolate,Mantecol'); // ['Chocolate', 'Mantecol']`}
+/>
+<p>
+  El pedido se guarda con los sabores ya separados, en una lista.
+</p>
+
+<h3>Contestar sin contestar nada</h3>
+<p>
+  <InlineCodeBlock code="GET /api/pedir" lang="plaintext" /> guarda el pedido y no
+  tiene nada para devolver. Eso en HTTP no es raro: <strong
+    >el status ES la respuesta</strong
+  >. Si todo salió bien, el <InlineCodeBlock code="200" lang="plaintext" /> ya lo
+  dice, y alcanza con:
+</p>
+<CodeBlock lang="ts" code={`res.end();`} />
+<p>
+  Los pedidos se guardan de verdad en <InlineCodeBlock
+    code="data/pedidos.json"
+    lang="plaintext"
+  />, así que el archivo se va a ir llenando mientras prueban.
+</p>
+
+<h2>Consigna manija</h2>
+<p>
+  Cada pedido de la lista tiene un botón para cancelarlo. El frontend ya lo tiene
+  listo, pero le falta la ruta:
+</p>
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Ruta</th>
+      <th>Qué hace</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <InlineCodeBlock code="DELETE /api/pedido/:nombre" lang="plaintext" />
+      </td>
+      <td>Cancela los pedidos que hizo esa persona.</td>
+    </tr>
+  </tbody>
+</table>
+<p>
+  Va en el mismo <InlineCodeBlock code="src/index.ts" lang="plaintext" />, abajo
+  de todo, donde dice <InlineCodeBlock
+    code="---- Consigna manija ----"
+    lang="plaintext"
+  />.
+</p>
+<p>
+  Acá aparece lo nuevo, y es lo que tienen que averiguar solos: esta ruta <strong
+    >no es GET</strong
+  >. Busquen cómo se declara en Express una ruta con otro verbo.
+</p>
+<p>
+  Del resto ya saben todo: leer el archivo, sacar de la lista los pedidos de esa
+  persona (si pidió más de una vez, se van todos) y volver a escribirla. Si esa
+  persona no tiene ningún pedido, no hay nada que borrar y hay que avisarlo con
+  el status que corresponde: <strong>404</strong>, sin cuerpo.
+</p>
+<CodeBlock lang="ts" code={`res.status(404).end();`} />
+
+<h2>¿Qué hay que editar?</h2>
+<p>
+  <InlineCodeBlock code="src/index.ts" lang="plaintext" /> — las cuatro rutas de la
+  consigna base y, para la manija, la de cancelar.
+</p>
+<p>
+  Todo lo demás ya está completo: <InlineCodeBlock
+    code="src/lib/sabores.ts"
+    lang="plaintext"
+  /> (la función que separa los sabores de la URL), <InlineCodeBlock
+    code="data/"
+    lang="plaintext"
+  /> (la carta y los pedidos) y todo el <InlineCodeBlock
+    code="frontend/"
+    lang="plaintext"
+  />.
+</p>
+
+<h2>Primeros pasos</h2>
+<p>
+  Antes de poder correr el programa, hay que instalar las dependencias del
+  proyecto. Esto se hace <strong>una sola vez</strong> con:
+</p>
+<CodeBlock lang="bash" code="npm install" />
+
+<h2>Cómo correr el programa</h2>
+<CodeBlock lang="bash" code="npm run start" />
+<p>
+  Se abre solo el browser en <InlineCodeBlock
+    code="http://localhost:3000"
+    lang="plaintext"
+  />. Mientras falten rutas, la página lo avisa arriba de todo con el mensaje del
+  error: si dice que la ruta no está escrita, es que falta declararla; si dice
+  que nunca contestó, es que la ruta existe pero se olvidaron del <InlineCodeBlock
+    code="res.json(...)"
+    lang="ts"
+  /> o del <InlineCodeBlock code="res.end()" lang="ts" />.
+</p>
+
+<h2>Tests</h2>
+<p>
+  El proyecto incluye tests automáticos que se usan para la corrección. No hace
+  falta entenderlos ni modificarlos:
+</p>
+<CodeBlock
+  lang="bash"
+  code={`npm run test-base    # consigna base
+npm run test-manija  # consigna manija
+npm test             # todos`}
+/>
+<p>
+  Los tests se guardan lo que haya en <InlineCodeBlock
+    code="data/pedidos.json"
+    lang="plaintext"
+  /> antes de empezar y lo dejan como estaba al terminar: no les van a borrar los
+  pedidos de prueba.
+</p>

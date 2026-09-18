@@ -1,0 +1,383 @@
+---
+import CodeBlock from "../../../../../components/articles/code-block/CodeBlock.astro";
+import InlineCodeBlock from "../../../../../components/articles/code-block/InlineCodeBlock.astro";
+import ImportantBox from "../../../../../components/articles/alertbox/ImportantBox.astro";
+
+export const partial = true;
+---
+
+<h2>¿Qué es un servidor web y qué es Express?</h2>
+<p>
+  Hasta ahora ejecutamos scripts en Node.js que hacen una tarea y terminan. Un <strong
+    >servidor web</strong
+  > es un programa que nunca se apaga: se queda escuchando peticiones por la red
+  y responde a cada una según lo que le pidan.
+</p>
+<p>
+  <strong>Express</strong> es la biblioteca más popular de Node.js para construir
+  servidores y APIs. Nos ahorra lidiar con los detalles de bajo nivel de los protocolos
+  de red y nos da herramientas simples para manejar rutas y datos.
+</p>
+
+<h2>El modelo Cliente-Servidor</h2>
+<p>
+  En la web, dos partes dialogan constantemente mediante peticiones y
+  respuestas:
+</p>
+<ul>
+  <li>
+    <strong>Cliente (Frontend)</strong>: la aplicación que corre en el navegador
+    del usuario o en el celular y envía una petición (<em>Request</em>)
+    solicitando o enviando datos.
+  </li>
+  <li>
+    <strong>Servidor (Backend)</strong>: el proceso en Express que recibe la
+    petición, ejecuta lógica, consulta o guarda datos y devuelve una respuesta (<em
+      >Response</em
+    >).
+  </li>
+</ul>
+
+<h2>¿Cómo se define un endpoint en Express?</h2>
+<p>
+  En Express, cada petición que nuestro servidor puede responder se configura
+  mediante una instrucción que recibe dos parámetros principales:
+</p>
+<CodeBlock
+  lang="ts"
+  code={`app.PETICION('ruta', funcionHandler); // PETICION será el método HTTP correspondiente`}
+/>
+<ul>
+  <li>
+    <strong>La ruta</strong> (<InlineCodeBlock code="string" lang="ts" />): es el
+    camino o dirección URL que el cliente escribe para pedir algo (por ejemplo: <InlineCodeBlock
+      code="'/materias'"
+      lang="ts"
+    /> o <InlineCodeBlock code="'/libro/:nombre'" lang="ts" />).
+  </li>
+  <li>
+    <strong>La función handler</strong> (controlador): es la función que se ejecuta
+    cada vez que alguien hace una petición a esa ruta. Esta función siempre recibe
+    dos parámetros obligatorios:
+    <ul>
+      <li>
+        <em>req</em> (de tipo <em>Request</em>, o “Pedido” en nuestros TPs): un objeto
+        con toda la información que nos manda el cliente (parámetros, datos del formulario,
+        filtros).
+      </li>
+      <li>
+        <em>res</em> (de tipo <em>Response</em>, o “Respuesta” en nuestros TPs): un
+        objeto con herramientas para contestarle al cliente (como <InlineCodeBlock
+          code="res.json(...)"
+          lang="ts"
+        /> o <InlineCodeBlock code="res.status(...)" lang="ts" />).
+      </li>
+    </ul>
+  </li>
+</ul>
+<p>Estructura base de cualquier handler:</p>
+<CodeBlock
+  lang="ts"
+  code={`function miHandler(req: Pedido, res: Respuesta): void {
+    // 1. Leo lo que mandó el cliente usando req
+    // 2. Proceso los datos
+    // 3. Le respondo al cliente usando res
+    res.status(200).json({ mensaje: "Todo salió bien!" });
+}`}
+/>
+
+<h2>¿Cómo viajan los datos en la URL?</h2>
+<p>
+  Cuando el cliente (Frontend) hace una petición al servidor (o sea, llama a una
+  ruta específica), puede mandarnos información directamente dentro de la
+  dirección URL de dos maneras: mediante <strong>parámetros de ruta</strong> (<em
+    >params</em
+  >) o mediante <strong>parámetros de búsqueda</strong> (<em>query</em>).
+</p>
+
+<h3>Parámetros de ruta (<em>req.params</em>)</h3>
+<p>
+  Son variables que forman parte del camino (<em>path</em>) de la URL. Se
+  definen en Express anteponiendo dos puntos (<InlineCodeBlock
+    code=":"
+    lang="ts"
+  />) al nombre de la variable.
+</p>
+<ul>
+  <li>
+    <strong>Uso</strong>: identificar un recurso único y puntual (un libro por su
+    nombre, un alumno por su ID, una materia, etc).
+  </li>
+  <li>
+    <strong>URL en Express</strong>: <InlineCodeBlock
+      code="'/libro/:nombre'"
+      lang="ts"
+    />
+  </li>
+  <li>
+    <strong>URL en el navegador</strong>: <InlineCodeBlock
+      code="http://localhost:3000/libro/la-cenicienta"
+      lang="plaintext"
+    />
+  </li>
+</ul>
+<p>
+  Podés tener más de un parámetro en la misma ruta separándolos con barras: <InlineCodeBlock
+    code="'/libro/:nombre/:pagina'"
+    lang="ts"
+  />. Express guardará en <em>req.params.nombre</em> el texto <InlineCodeBlock
+    code='"la-cenicienta"'
+    lang="ts"
+  /> y en <em>req.params.pagina</em> el texto <InlineCodeBlock
+    code='"5"'
+    lang="ts"
+  />, por ejemplo.
+</p>
+
+<h3>Parámetros de consulta (<em>req.query</em>)</h3>
+<p>
+  Son datos que se agregan al final de la URL a partir del signo de pregunta (<InlineCodeBlock
+    code="?"
+    lang="plaintext"
+  />) en pares de <em>clave=valor</em>. Si hay varios parámetros, se separan con
+  el símbolo <InlineCodeBlock code="&" lang="plaintext" />.
+</p>
+<ul>
+  <li>
+    <strong>Uso</strong>: para búsquedas, filtros, ordenamiento o datos
+    adicionales que modifican la consulta.
+  </li>
+  <li>
+    <strong>URL en Express</strong>: la ruta se define limpia, sin signos de
+    pregunta: <InlineCodeBlock code="'/alumnos'" lang="ts" />
+  </li>
+  <li>
+    <strong>URL en el navegador</strong>: <InlineCodeBlock
+      code="http://localhost:3000/alumnos?curso=3TIC&division=A"
+      lang="plaintext"
+    />
+  </li>
+</ul>
+<p>
+  Express guardará en <em>req.query.curso</em> el texto <InlineCodeBlock
+    code='"3TIC"'
+    lang="ts"
+  /> y en <em>req.query.division</em> el texto <InlineCodeBlock
+    code='"A"'
+    lang="ts"
+  />.
+</p>
+<p>
+  Ambos mecanismos pueden convivir en una misma llamada: los <em>:params</em> definen
+  el recurso principal y los <em>?query</em> aportan detalles o configuraciones extras.
+</p>
+
+<h2>Los métodos HTTP</h2>
+
+<h3>GET</h3>
+<p>
+  Se usa para <strong>obtener información</strong> del servidor. Toda la información
+  enviada en una petición GET es visible en la URL (por ejemplo, a través de parámetros
+  de ruta o de búsqueda).
+</p>
+<CodeBlock
+  lang="ts"
+  code={`// GET /materias -> Devuelve la lista completa de materias
+
+function getMaterias(req: Pedido, res: Respuesta): void {
+    let listaMaterias = [
+        { id: 1, nombre: 'Programación', curso: '3° TIC' },
+        { id: 2, nombre: 'Redes', curso: '3° TIC' }
+    ];
+    res.status(200).send(listaMaterias);
+}
+
+app.get('/materias', getMaterias);`}
+/>
+
+<h3>POST</h3>
+<p>
+  Se usa para <strong>crear o enviar información</strong> al servidor. La información
+  enviada desde el Frontend no es visible en la URL, sino que viaja adentro del cuerpo
+  (<em>body</em>) de la petición.
+</p>
+<CodeBlock
+  lang="ts"
+  code={`// POST /retiros -> Registra un nuevo retiro de netbooks
+
+function solicitarRetiro(req: Pedido, res: Respuesta): void {
+    let dia: string = req.body.dia;
+    let bloque: string = req.body.bloque;
+    let ambito: string = req.body.ambito;
+    res.status(201).json({
+        mensaje: 'Retiro registrado con éxito',
+        retiro: { dia: dia, bloque: bloque, ambito: ambito }
+    });
+}
+
+app.post('/retiros', solicitarRetiro);`}
+/>
+
+<h3>PUT</h3>
+<p>
+  Se usa para <strong>actualizar información</strong> que ya existe en el servidor.
+  Se suele enviar información combinada: en la URL (para indicar qué elemento modificar
+  mediante su ID) y en el cuerpo de la petición (con los datos nuevos a modificar).
+</p>
+<CodeBlock
+  lang="ts"
+  code={`// PUT /alumnos/:id -> Modifica los datos de un alumno existente
+
+function modificarAlumno(req: Pedido, res: Respuesta): void {
+    let id: string = req.params.id;
+    let nombre: string = req.body.nombre;
+    let curso: string = req.body.curso;
+    res.status(200).json({
+        mensaje: \`Alumno \${id} actualizado\`,
+        datosNuevos: { nombre: nombre, curso: curso }
+    });
+}
+
+app.put('/alumnos/:id', modificarAlumno);`}
+/>
+
+<h3>DELETE</h3>
+<p>
+  Se usa para <strong>eliminar información</strong> del servidor. Generalmente el
+  identificador viaja en la URL, pero un DELETE también puede recibir datos complementarios
+  en el <em>body</em> si se necesita.
+</p>
+<CodeBlock
+  lang="ts"
+  code={`// DELETE /retiros/:id -> Cancela un retiro de PCs por su identificador
+
+function eliminarRetiro(req: Pedido, res: Respuesta): void {
+    let id: string = req.params.id;
+
+    res.status(200).json({
+        mensaje: \`Retiro con id \${id} eliminado\`
+    });
+}
+
+app.delete('/retiros/:id', eliminarRetiro);`}
+/>
+
+<ImportantBox warning="Los métodos HTTP no hacen magia">
+  <p>
+    Que uses el método DELETE o POST no significa que Express borre o guarde
+    cosas automáticamente. Los métodos HTTP son solo una <strong
+      >etiqueta de intención</strong
+    >: le avisan al servidor qué quiere hacer el cliente. La acción real sobre
+    los datos vive adentro del cuerpo de tu función:
+  </p>
+  <ul>
+    <li>
+      En un <strong>POST</strong>, vos tenés que programar el <InlineCodeBlock
+        code=".push()"
+        lang="ts"
+      /> para agregarlo a la lista.
+    </li>
+    <li>
+      En un <strong>PUT</strong>, vos tenés que buscar el elemento y actualizar
+      sus propiedades.
+    </li>
+    <li>
+      En un <strong>DELETE</strong>, vos tenés que buscar la posición y quitarlo
+      del array.
+    </li>
+  </ul>
+  <p>
+    Si tu función no modifica la lista o la base de datos, los datos quedan
+    exactamente iguales aunque la respuesta diga <em>"eliminado con éxito"</em>.
+  </p>
+</ImportantBox>
+
+<h2>Resumen</h2>
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Acción</th>
+      <th>Ejemplo</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Obtener información (GET)</td>
+      <td
+        ><InlineCodeBlock
+          lang="ts"
+          code="app.get('/materias', getMaterias);"
+        /></td
+      >
+    </tr>
+    <tr>
+      <td>Crear información (POST)</td>
+      <td
+        ><InlineCodeBlock
+          lang="ts"
+          code="app.post('/retiros', solicitarRetiro);"
+        /></td
+      >
+    </tr>
+    <tr>
+      <td>Actualizar información (PUT)</td>
+      <td
+        ><InlineCodeBlock
+          lang="ts"
+          code="app.put('/alumnos/:id', modificarAlumno);"
+        /></td
+      >
+    </tr>
+    <tr>
+      <td>Eliminar información (DELETE)</td>
+      <td
+        ><InlineCodeBlock
+          lang="ts"
+          code="app.delete('/retiros/:id', eliminarRetiro);"
+        /></td
+      >
+    </tr>
+    <tr>
+      <td>Definir un handler</td>
+      <td
+        ><InlineCodeBlock
+          lang="ts"
+          code="function miHandler(req: Pedido, res: Respuesta): void { }"
+        /></td
+      >
+    </tr>
+    <tr>
+      <td>Leer un parámetro de ruta</td>
+      <td
+        ><InlineCodeBlock lang="ts" code="let id: string = req.params.id;" /></td
+      >
+    </tr>
+    <tr>
+      <td>Leer un parámetro de consulta</td>
+      <td
+        ><InlineCodeBlock
+          lang="ts"
+          code="let curso = req.query.curso;"
+        /></td
+      >
+    </tr>
+    <tr>
+      <td>Leer datos del cuerpo</td>
+      <td
+        ><InlineCodeBlock
+          lang="ts"
+          code="let nombre: string = req.body.nombre;"
+        /></td
+      >
+    </tr>
+    <tr>
+      <td>Responder al cliente</td>
+      <td
+        ><InlineCodeBlock
+          lang="ts"
+          code='res.status(200).json({ mensaje: "Listo" });'
+        /></td
+      >
+    </tr>
+  </tbody>
+</table>
