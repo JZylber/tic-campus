@@ -1,0 +1,55 @@
+---
+import InlineCodeBlock from "../../../../../components/articles/code-block/InlineCodeBlock.astro";
+
+export const partial = true;
+---
+
+<p>Si tu rol en proyecto es backend, estos son los criterios de aprobación:</p>
+<ul>
+  <li>
+    La aplicación fue hecha por ustedes, y entienden el código que está ahí.
+  </li>
+  <li>La aplicación corre, es decir, levanta sin crashear.</li>
+  <li>La aplicación persiste datos.</li>
+  <li>
+    La aplicación cumple con los requisitos establecidos en el anteproyecto.
+  </li>
+  <li>
+    La aplicación tiene documentadas sus rutas en el <em>README.md</em> correctamente.
+  </li>
+  <li>
+    La aplicación tiene rutas que procesan y/o validan datos de alguna forma. No
+    pueden todas las rutas escribir datos o leer datos como vienen. Esto no
+    quiere decir que tiene que haber rutas que no lean ni escriban archivos,
+    quiere decir que tiene que haber rutas que hagan algo más que solo leer y
+    escribir.
+  </li>
+  <li>
+    El programa corre <InlineCodeBlock code="npm run lint" lang="bash" />, es decir,
+    está tipado correctamente.
+  </li>
+  <li>
+    No hay type <InlineCodeBlock code="any" lang="ts" /> en ningún lado.
+  </li>
+  <li>
+    Las rutas están correctamente tipadas (<InlineCodeBlock
+      code="Request"
+      lang="ts"
+    /> y <InlineCodeBlock code="Response" lang="ts" />), con tipos de datos lo
+    más restrictivos posibles. Si el body es <InlineCodeBlock
+      code="{usuario: string, contraseña: string}"
+      lang="ts"
+    />, poner ese tipo, no vale usar <InlineCodeBlock
+      code="Record<string, string>"
+      lang="ts"
+    /> porque es más amplio.
+  </li>
+  <li>
+    Las rutas fueron probadas con Insomnia, y tienen una colección de pruebas
+    guardadas, ya sea en la nube de Insomnia o el repositorio.
+  </li>
+  <li>
+    Previo a la presentación, se hizo una demostración con el tutor
+    correspondiente (Luu o Shulian).
+  </li>
+</ul>
