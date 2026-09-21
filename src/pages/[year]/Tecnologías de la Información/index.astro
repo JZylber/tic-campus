@@ -1,7 +1,6 @@
 ---
 import Loader from "../../../components/loader/Loader.astro";
-import Lu from "../../../components/templates/Lu.astro";
-import Shulian3 from "../../../components/templates/Shulian3.astro";
+import Course from "../../../components/templates/Course.astro";
 import Layout from "../../../layouts/Layout.astro";
 
 import { fetchSubjects } from "../../../scripts/APIcalls/dashboard";
@@ -66,35 +65,18 @@ const filteredCourses = availableCourses.filter((course) => {
     </main>
   </template>
   {
-    filteredCourses
-      .filter((c) => c.template === "SH-2")
-      .map((div) => (
-        <div
-          class="w-full flex relative lg:gap-x-4"
-          x-show={`division === '${div.division}'`}
-        >
-          <Shulian3
-            subject="Tecnologías de la Información"
-            course={div.course}
-            year={Number(year)}
-          />
-        </div>
-      ))
-  }
-  {
-    filteredCourses
-      .filter((c) => c.template === "LU-1")
-      .map((div) => (
-        <div
-          class="w-full flex relative lg:gap-x-4"
-          x-show={`division === '${div.division}'`}
-        >
-          <Lu
-            subject="Tecnologías de la Información"
-            course={div.course}
-            year={Number(year)}
-          />
-        </div>
-      ))
+    filteredCourses.map((div) => (
+      <div
+        class="w-full flex relative lg:gap-x-4"
+        x-show={`division === '${div.division}'`}
+      >
+        <Course
+          template={div.template}
+          subject="Tecnologías de la Información"
+          course={div.course}
+          year={Number(year)}
+        />
+      </div>
+    ))
   }
 </Layout>

@@ -9,6 +9,7 @@ import {
 } from "../../APIcalls/offerings";
 import { fetchOfferings } from "../../APIcalls/offeringTimeSlots";
 import { fetchCourses } from "../../APIcalls/dashboard";
+import { SEMESTER_OPTIONS } from "../../offeringSemester";
 
 type Offerings = Offering[];
 type SubjectsCatalog = Awaited<ReturnType<typeof fetchSubjectsCatalog>>;
@@ -50,13 +51,7 @@ const offeringsPageData = () =>
     get levelOptions() {
       return LEVELS.map((level) => ({ value: level, label: String(level) }));
     },
-    get semesterOptions() {
-      return [
-        { value: "FIRST", label: "1er Cuatrimestre" },
-        { value: "SECOND", label: "2do Cuatrimestre" },
-        { value: "BOTH", label: "Anual" },
-      ];
-    },
+    semesterOptions: SEMESTER_OPTIONS,
     get subjectOptions() {
       return (this.subjectsCatalog as SubjectsCatalog).map((s) => ({
         value: s.id,
@@ -97,7 +92,7 @@ const offeringsPageData = () =>
         .join(", ");
     },
     semesterLabel(semester: Offering["semester"]): string {
-      return this.semesterOptions.find((o: { value: string }) => o.value === semester)?.label ?? "";
+      return SEMESTER_OPTIONS.find((o) => o.value === semester)?.label ?? "";
     },
     init() {
       Promise.all([
@@ -120,11 +115,6 @@ const offeringsPageData = () =>
         semester: "FIRST",
       };
       this.error = null;
-    },
-    toggleCreateCourse(courseId: number) {
-      const idx = this.createForm.courseIds.indexOf(courseId);
-      if (idx === -1) this.createForm.courseIds.push(courseId);
-      else this.createForm.courseIds.splice(idx, 1);
     },
     async submitCreate() {
       if (isNaN(this.createForm.subjectId) || this.createForm.courseIds.length === 0) {
@@ -156,11 +146,6 @@ const offeringsPageData = () =>
         semester: offering.semester,
       };
       this.error = null;
-    },
-    toggleEditCourse(courseId: number) {
-      const idx = this.editForm.courseIds.indexOf(courseId);
-      if (idx === -1) this.editForm.courseIds.push(courseId);
-      else this.editForm.courseIds.splice(idx, 1);
     },
     async saveEdit() {
       if (!this.editForm.offering || this.editForm.courseIds.length === 0) {

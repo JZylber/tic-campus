@@ -20,55 +20,35 @@ export async function renderArticleInto(
   element: HTMLElement,
   rawHTML: string,
 ): Promise<void> {
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(rawHTML, "text/html");
-  // Get all script tags
+  const doc = new DOMParser().parseFromString(rawHTML, "text/html");
+  // Scripts inserted via innerHTML never run, so pull them out and re-create them.
   const scripts = [...doc.querySelectorAll("script")];
-  // Remove from doc
-  scripts.forEach((el) => {
-    el.remove();
-  });
-  // Clear previous content
-  element.innerHTML = "";
-  // Set new content
-  element.innerHTML += doc.body.innerHTML;
-  const loadScripts = scripts.map((el) => {
-    return new Promise((resolve) => {
-      // Check if the script has inline code
-      if (el.textContent) {
-        const inlineScript = document.createElement("script");
-        inlineScript.textContent = el.textContent;
-        document.head.appendChild(inlineScript);
-        resolve(true);
-      } else if (!el.src) {
-        // If no src and no inline code, resolve
-        resolve(true);
-      } else {
-        // If has src, create a new script tag and set the src
-        const newScript = document.createElement("script");
-        // Copy all attributes from the original script tag
-        for (let i = 0; i < el.attributes.length; i++) {
-          newScript.setAttribute(
-            el.attributes[i].name,
-            el.attributes[i].value,
-          );
-        }
-        if (el.src) {
-          // If the source is a relative path, add the base URL at the front
-          if (el.src.startsWith("https://campus.ort.edu.ar/tic-campus")) {
-            newScript.src = el.src.replace("https://campus.ort.edu.ar/", baseURL);
-          } else {
-            newScript.src = el.src;
-          }
-        }
-        // onload resolve the promise
-        newScript.onload = () => {
+  scripts.forEach((el) => el.remove());
+  element.innerHTML = doc.body.innerHTML;
+  const loadScripts = scripts.map(
+    (el) =>
+      new Promise((resolve) => {
+        if (el.textContent) {
+          const inlineScript = document.createElement("script");
+          inlineScript.textContent = el.textContent;
+          document.head.appendChild(inlineScript);
           resolve(true);
-        };
-        element.appendChild(newScript);
-      }
-    });
-  });
+        } else if (!el.src) {
+          resolve(true);
+        } else {
+          const newScript = document.createElement("script");
+          for (const { name, value } of el.attributes) {
+            newScript.setAttribute(name, value);
+          }
+          // Relative srcs resolved against campus.ort; point them at GitHub Pages.
+          newScript.src = el.src.startsWith("https://campus.ort.edu.ar/tic-campus")
+            ? el.src.replace("https://campus.ort.edu.ar/", baseURL)
+            : el.src;
+          newScript.onload = () => resolve(true);
+          element.appendChild(newScript);
+        }
+      }),
+  );
   await Promise.all(loadScripts);
   window.Alpine.initTree(element);
   const mermaidNodes = element.querySelectorAll<HTMLElement>(".mermaid");

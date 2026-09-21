@@ -1,5 +1,5 @@
 import type { ClassActivity, MarkedActivity, RedoActivity } from "../types";
-import { backendURL } from "./shared";
+import { api, jsonBody } from "./shared";
 import { authFetch } from "./authToken";
 
 export type Subject = {
@@ -52,33 +52,10 @@ export type Student = {
   optionalOfferingIds: number[];
 };
 
-export async function fetchSubjects() {
-  try {
-    const response = await fetch(`${backendURL}/subjects`);
-    if (!response.ok) {
-      throw new Error(`Error fetching subjects: ${response.statusText}`);
-    }
-    const data: Subject[] = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Failed to fetch subjects:", error);
-    return [];
-  }
-}
+export const fetchSubjects = () => api<Subject[]>("/subjects", []);
 
-export async function fetchStudents() {
-  try {
-    const response = await authFetch(`${backendURL}/students`);
-    if (!response.ok) {
-      throw new Error(`Error fetching students: ${response.statusText}`);
-    }
-    const data: Student[] = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Failed to fetch students:", error);
-    return [];
-  }
-}
+export const fetchStudents = () =>
+  api<Student[]>("/students", [], { fetcher: authFetch });
 
 type RevisionRequest = {
   revisionRequestId: string;
@@ -97,73 +74,25 @@ type RevisionRequest = {
 };
 
 export async function fetchRevisionsByTeacher(teacherId: string, year: number) {
-  // For now, stuck at 1
-  try {
-    const response = await authFetch(
-      `${backendURL}/revisionRequests/teacher/${year}/${teacherId}`,
-    );
-    if (!response.ok) {
-      throw new Error(
-        `Error fetching revision requests: ${response.statusText}`,
-      );
-    }
-    const data: RevisionRequest[] = await response.json().then((requests) =>
-      requests
-        .map((request: any) => ({
-          ...request,
-          date: new Date(request.date),
-        }))
-        .sort(
-          (a: RevisionRequest, b: RevisionRequest) =>
-            a.date.getTime() - b.date.getTime(),
-        ),
-    );
-    return data;
-  } catch (error) {
-    console.error("Failed to fetch revision requests:", error);
-    return [];
-  }
+  const requests = await api<Array<Omit<RevisionRequest, "date"> & { date: string }>>(
+    `/revisionRequests/teacher/${year}/${teacherId}`,
+    [],
+    { fetcher: authFetch },
+  );
+  return requests
+    .map((request): RevisionRequest => ({ ...request, date: new Date(request.date) }))
+    .sort((a, b) => a.date.getTime() - b.date.getTime());
 }
 
-export async function toggleRevisionReviewed(id: string, reviewed: boolean) {
-  try {
-    const response = await authFetch(
-      `${backendURL}/revisionRequests/${id}/reviewed`,
-      {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ reviewed }),
-      },
-    );
-    if (!response.ok) {
-      throw new Error(
-        `Error toggling revision reviewed: ${response.statusText}`,
-      );
-    }
-    return (await response.json()) as { id: number; reviewed: boolean };
-  } catch (error) {
-    console.error("Failed to toggle revision reviewed:", error);
-    return null;
-  }
-}
+export const toggleRevisionReviewed = (id: string, reviewed: boolean) =>
+  api<{ id: number; reviewed: boolean } | null>(
+    `/revisionRequests/${id}/reviewed`,
+    null,
+    { fetcher: authFetch, ...jsonBody("PATCH", { reviewed }) },
+  );
 
-export async function fetchTeacherSubjects(teacherId: string) {
-  try {
-    const response = await authFetch(
-      `${backendURL}/subjects/teacher/${teacherId}`,
-    );
-    if (!response.ok) {
-      throw new Error(
-        `Error fetching teacher subjects: ${response.statusText}`,
-      );
-    }
-    const data: Subject[] = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Failed to fetch teacher subjects:", error);
-    return [];
-  }
-}
+export const fetchTeacherSubjects = (teacherId: string) =>
+  api<Subject[]>(`/subjects/teacher/${teacherId}`, [], { fetcher: authFetch });
 
 type SubjectMarks = {
   marksByStudent: Record<
@@ -179,131 +108,53 @@ type SubjectMarks = {
   criteria: { proportion: number; specialActivities: string[] };
 };
 
-export async function fetchCourses(): Promise<Course[]> {
-  try {
-    const response = await authFetch(`${backendURL}/courses`);
-    if (!response.ok) {
-      throw new Error(`Error fetching courses: ${response.statusText}`);
-    }
-    return (await response.json()) as Course[];
-  } catch (error) {
-    console.error("Failed to fetch courses:", error);
-    return [];
-  }
-}
+export const fetchCourses = () =>
+  api<Course[]>("/courses", [], { fetcher: authFetch });
 
-export async function updateStudent(
+export const updateStudent = (
   studentId: string,
   data: Partial<{ name: string; surname: string; email: string; dni: string }>,
-): Promise<Student | null> {
-  try {
-    const response = await authFetch(`${backendURL}/students/${studentId}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });
-    if (!response.ok) {
-      throw new Error(`Error updating student: ${response.statusText}`);
-    }
-    return (await response.json()) as Student;
-  } catch (error) {
-    console.error("Failed to update student:", error);
-    return null;
-  }
-}
+) =>
+  api<Student | null>(`/students/${studentId}`, null, {
+    fetcher: authFetch,
+    ...jsonBody("PATCH", data),
+  });
 
-export async function enrollStudentInCourse(
-  studentId: string,
-  courseId: number,
-): Promise<CourseEnrollment | null> {
-  try {
-    const response = await authFetch(
-      `${backendURL}/students/${studentId}/course`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ courseId }),
-      },
-    );
-    if (!response.ok) {
-      throw new Error(`Error enrolling student in course: ${response.statusText}`);
-    }
-    return (await response.json()) as CourseEnrollment;
-  } catch (error) {
-    console.error("Failed to enroll student in course:", error);
-    return null;
-  }
-}
+export const enrollStudentInCourse = (studentId: string, courseId: number) =>
+  api<CourseEnrollment | null>(`/students/${studentId}/course`, null, {
+    fetcher: authFetch,
+    ...jsonBody("POST", { courseId }),
+  });
 
-export async function moveStudentCourse(
+export const moveStudentCourse = (
   studentId: string,
   oldCourseId: number,
   newCourseId: number,
-): Promise<CourseMoveResult | null> {
-  try {
-    const response = await authFetch(
-      `${backendURL}/students/${studentId}/course`,
-      {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ oldCourseId, newCourseId }),
-      },
-    );
-    if (!response.ok) {
-      throw new Error(`Error moving student course: ${response.statusText}`);
-    }
-    return (await response.json()) as CourseMoveResult;
-  } catch (error) {
-    console.error("Failed to move student course:", error);
-    return null;
-  }
-}
+) =>
+  api<CourseMoveResult | null>(`/students/${studentId}/course`, null, {
+    fetcher: authFetch,
+    ...jsonBody("PATCH", { oldCourseId, newCourseId }),
+  });
 
 // Resolves to the offerings the student lost along with the course (possibly
 // empty), or null if the removal failed.
-export async function removeStudentFromCourse(
-  studentId: string,
-  courseId: number,
-): Promise<DroppedOffering[] | null> {
-  try {
-    const response = await authFetch(
-      `${backendURL}/students/${studentId}/course/${courseId}`,
-      {
-        method: "DELETE",
-      },
-    );
-    if (!response.ok) {
-      throw new Error(`Error removing student from course: ${response.statusText}`);
-    }
-    const removed = (await response.json()) as { droppedOfferings?: DroppedOffering[] };
-    return removed.droppedOfferings ?? [];
-  } catch (error) {
-    console.error("Failed to remove student from course:", error);
-    return null;
-  }
-}
+export const removeStudentFromCourse = (studentId: string, courseId: number) =>
+  api<DroppedOffering[] | null>(`/students/${studentId}/course/${courseId}`, null, {
+    fetcher: authFetch,
+    method: "DELETE",
+    read: async (r) =>
+      ((await r.json()) as { droppedOfferings?: DroppedOffering[] })
+        .droppedOfferings ?? [],
+  });
 
-export async function fetchSubjectMarks(
+export const fetchSubjectMarks = (
   subject: string,
   year: number,
   course: string,
   dataSheetId?: string,
-) {
-  try {
-    // "/marks/:subject/:course/:year"
-    const response = await authFetch(
-      `${backendURL}/marks/${subject}/${course}/${year}${dataSheetId ? `?dataSheetId=${encodeURIComponent(dataSheetId)}` : ""}`,
-    );
-    if (!response.ok) {
-      throw new Error(`Error fetching subject marks: ${response.statusText}`);
-    }
-    const data: SubjectMarks = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Failed to fetch subject marks:", error);
-    return {
-      marksByStudent: {},
-      criteria: { proportion: 0, specialActivities: [] },
-    };
-  }
-}
+) =>
+  api<SubjectMarks>(
+    `/marks/${subject}/${course}/${year}${dataSheetId ? `?dataSheetId=${encodeURIComponent(dataSheetId)}` : ""}`,
+    { marksByStudent: {}, criteria: { proportion: 0, specialActivities: [] } },
+    { fetcher: authFetch },
+  );

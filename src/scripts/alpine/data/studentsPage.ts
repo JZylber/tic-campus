@@ -9,12 +9,21 @@ import {
   removeStudentFromCourse,
 } from "../../APIcalls/dashboard";
 import type { DroppedOffering } from "../../APIcalls/dashboard";
+import { fold } from "../../csv";
 
 type Students = Awaited<ReturnType<typeof fetchStudents>>;
 type Student = Students[number];
 type CourseEnrollment = Student["courses"][number];
 type Courses = Awaited<ReturnType<typeof fetchCourses>>;
 type Course = Courses[number];
+
+const maxCourseYear = (s: Student) =>
+  s.courses.length ? Math.max(...s.courses.map((c) => c.year)) : 0;
+
+// Most recent enrollment year first, then by surname.
+const byLatestYearThenSurname = (a: Student, b: Student) =>
+  maxCourseYear(b) - maxCourseYear(a) ||
+  (a.surname < b.surname ? -1 : a.surname > b.surname ? 1 : 0);
 
 const listOfferingNames = (offerings: DroppedOffering[]) =>
   offerings.map((o) => o.displayName).join(", ");
@@ -82,65 +91,24 @@ const studentsPageData = () =>
     init() {
       Promise.all([fetchStudents(), fetchCourses()]).then(([students, courses]) => {
         this.allCourses = courses;
-        this.students = students.sort((a, b) => {
-          const aMaxYear = a.courses.length
-            ? Math.max(...a.courses.map((c) => c.year))
-            : 0;
-          const bMaxYear = b.courses.length
-            ? Math.max(...b.courses.map((c) => c.year))
-            : 0;
-          if (aMaxYear !== bMaxYear) return bMaxYear - aMaxYear;
-          if (a.surname < b.surname) return -1;
-          if (a.surname > b.surname) return 1;
-          return 0;
-        });
-        this.filter.text = "";
+        this.students = students;
         this.loading = false;
       });
     },
     get filteredStudents() {
+      const text = fold(this.filter.text);
       return this.students
-        .filter((s: Student) => {
-          let courseFilter = true;
-          let textFilter = true;
-          let yearFilter = true;
-          const normalizedText = this.filter.text
-            .toLowerCase()
-            .normalize("NFD")
-            .replace(/[̀-ͯ]/g, "");
-          if (this.filter.text !== "") {
-            textFilter =
-              s.name
-                .toLowerCase()
-                .normalize("NFD")
-                .replace(/[̀-ͯ]/g, "")
-                .includes(normalizedText) ||
-              s.surname
-                .toLowerCase()
-                .normalize("NFD")
-                .replace(/[̀-ͯ]/g, "")
-                .includes(normalizedText);
-          }
-          if (!isNaN(this.filter.courseId)) {
-            courseFilter = s.courses.some((c: CourseEnrollment) => c.courseId === this.filter.courseId);
-          }
-          if (!isNaN(this.filter.year)) {
-            yearFilter = s.courses.some((c: CourseEnrollment) => c.year === this.filter.year);
-          }
-          return yearFilter && textFilter && courseFilter;
-        })
-        .sort((a: Student, b: Student) => {
-          const aMaxYear = a.courses.length
-            ? Math.max(...a.courses.map((c: CourseEnrollment) => c.year))
-            : 0;
-          const bMaxYear = b.courses.length
-            ? Math.max(...b.courses.map((c: CourseEnrollment) => c.year))
-            : 0;
-          if (aMaxYear !== bMaxYear) return bMaxYear - aMaxYear;
-          if (a.surname < b.surname) return -1;
-          if (a.surname > b.surname) return 1;
-          return 0;
-        });
+        .filter(
+          (s: Student) =>
+            (text === "" ||
+              fold(s.name).includes(text) ||
+              fold(s.surname).includes(text)) &&
+            (isNaN(this.filter.courseId) ||
+              s.courses.some((c) => c.courseId === this.filter.courseId)) &&
+            (isNaN(this.filter.year) ||
+              s.courses.some((c) => c.year === this.filter.year)),
+        )
+        .sort(byLatestYearThenSurname);
     },
     selectStudent(student: Student) {
       this.selectedStudent.student = student;

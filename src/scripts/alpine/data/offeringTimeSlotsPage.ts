@@ -8,15 +8,15 @@ import {
   type OfferingTimeSlot,
   type Semester,
 } from "../../APIcalls/offeringTimeSlots";
-import { matchesSemesterFilter } from "../../offeringSemester";
+import { SEMESTER_OPTIONS, matchesSemesterFilter } from "../../offeringSemester";
 import { fetchCourses, type Course } from "../../APIcalls/dashboard";
 import {
   DAY_TO_WEEKDAY,
   WEEKDAY_TO_DAY,
   getSlotsAtGridPos,
+  timetableGridMembers,
   type TimetableBySubject,
 } from "../../timetableLayout";
-import { getSubjectColorClass, getSubjectSecondaryTextClass } from "../../timetableColors";
 
 type SlotDialogState = {
   mode: "create" | "edit";
@@ -30,6 +30,7 @@ type TimetableState = "empty" | "ready";
 
 const offeringTimeSlotsPageData = () =>
   ({
+    ...timetableGridMembers,
     loading: true,
     saving: false,
     error: null as string | null,
@@ -59,13 +60,7 @@ const offeringTimeSlotsPageData = () =>
         disabled: !offerings.some((o) => o.level === level),
       }));
     },
-    get semesterFilterOptions() {
-      return [
-        { value: "FIRST", label: "1er Cuatrimestre" },
-        { value: "SECOND", label: "2do Cuatrimestre" },
-        { value: "BOTH", label: "Anual" },
-      ];
-    },
+    semesterFilterOptions: SEMESTER_OPTIONS,
     get offeringOptions() {
       if (isNaN(this.level)) return [];
       return (this.offerings as OfferingWithSlots[])
@@ -89,9 +84,6 @@ const offeringTimeSlotsPageData = () =>
     get state(): TimetableState {
       return this.selectedOffering ? "ready" : "empty";
     },
-    getSeminars() {
-      return null;
-    },
     get timetable(): TimetableBySubject {
       const offering = this.selectedOffering as OfferingWithSlots | null;
       if (!offering) return {};
@@ -107,9 +99,6 @@ const offeringTimeSlotsPageData = () =>
     getTimetableByGridPos(row: number, col: number) {
       return getSlotsAtGridPos(this.timetable, row, col);
     },
-    subjectColorClass: getSubjectColorClass,
-    subjectSecondaryTextClass: getSubjectSecondaryTextClass,
-    slotClasses: getSubjectColorClass,
     async init() {
       this.allCourses = await fetchCourses();
       await this.loadOfferingsForYear();

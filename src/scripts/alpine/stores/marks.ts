@@ -33,21 +33,12 @@ const studentMarkStore = () => ({
       fetchStudentMarksAndCriteria(subject, course, year, id, dataSheetId),
       fetchRevisionRequests(subject, course, year, id),
     ]);
-    this.student.setProportion(subject, proportion);
-    this.student.setFixedMarks(subject, fixedMarks);
-    activities.forEach((activity) => {
-      // Check if activity is special
-      activity.compulsory = specialActivities.some(
-        (spAct) => spAct === activity.id,
-      );
-      this.student!.setClassActivity(subject, activity);
-    });
-    marks.forEach((mark) => {
-      this.student!.setMarkedActivity(subject, mark);
-    });
-    studentRedos.forEach((redo) => {
-      this.student!.setRedo(subject, redo);
-    });
+    this.student
+      .setClassActivities(subject, activities)
+      .setMarkedActivities(subject, marks)
+      .setRedos(subject, studentRedos)
+      .setCriteria(subject, proportion, specialActivities)
+      .setFixedMarks(subject, fixedMarks);
     inRevisionIds.forEach((activityId) => {
       this.student!.setInRevision(subject, activityId);
     });
@@ -83,13 +74,6 @@ const studentMarkStore = () => ({
         ?.getActivities(this.subject)
         .filter((activity) => activity.compulsory)
         .map((activity) => activity.id) || []
-    );
-  },
-  specialActivities() {
-    return (
-      this.student
-        ?.getActivities(this.subject)
-        .filter((activity) => activity.compulsory) || []
     );
   },
 });

@@ -9,7 +9,4 @@ export default [
       parser: tsParser,
     },
   },
-  {
-    rules: {},
-  },
 ];

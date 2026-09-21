@@ -15,23 +15,22 @@ export interface MarkData {
   finalMark: number;
 }
 
+type SubjectData = {
+  classActivities: ClassActivity[];
+  markedActivities: MarkedActivity[];
+  redoActivities: RedoActivity[];
+  fixedMarks: FixedMarks;
+  redos: Record<string, number>;
+  finalMark: MarkData;
+};
+
 export class Student {
   name: string;
   surname: string;
   id: string;
   course: string;
-  withRevisions: boolean;
-  private subjectData: Record<
-    string,
-    {
-      classActivities: ClassActivity[];
-      markedActivities: MarkedActivity[];
-      redoActivities: RedoActivity[];
-      fixedMarks: FixedMarks;
-      redos: Record<string, number>;
-      finalMark: MarkData;
-    }
-  >;
+  withRevisions = false;
+  private subjectData: Record<string, SubjectData> = {};
 
   constructor(
     name: string,
@@ -39,43 +38,12 @@ export class Student {
     id: string,
     course: string,
     subjects: string[],
-    withRevisions: boolean = false,
   ) {
     this.name = name;
     this.surname = surname;
     this.id = id;
     this.course = course;
-    this.withRevisions = withRevisions;
-    this.subjectData = subjects.reduce(
-      (acc, subject) => {
-        acc[subject] = {
-          classActivities: [],
-          markedActivities: [],
-          redoActivities: [],
-          redos: {},
-          fixedMarks: {
-            "1B": undefined,
-            "1C": undefined,
-            "3B": undefined,
-            F: undefined,
-          },
-          finalMark: {
-            averageMark: 0,
-            classActivitiesContribution: 0,
-            markedActivitiesContribution: 0,
-            proportion: 0.7,
-            allMarkedActivitiesPassed: true,
-            allCompulsoryClassActivitiesDone: true,
-            finalMark: 0,
-          },
-        };
-        return acc;
-      },
-      {} as Student["subjectData"],
-    );
-  }
-  setClassActivity(subject: string, activity: ClassActivity) {
-    this.subjectData[subject].classActivities.push(activity);
+    subjects.forEach((subject) => this.addSubject(subject));
   }
   setClassActivities(subject: string, activities: ClassActivity[]) {
     this.subjectData[subject].classActivities = activities;
@@ -90,9 +58,6 @@ export class Student {
       (a) => a.id === activityId,
     );
     if (activity) activity.compulsory = compulsory;
-  }
-  setMarkedActivity(subject: string, activity: MarkedActivity) {
-    this.subjectData[subject].markedActivities.push(activity);
   }
   setMarkedActivities(subject: string, activities: MarkedActivity[]) {
     this.subjectData[subject].markedActivities = activities;
@@ -137,9 +102,7 @@ export class Student {
   }
   setFixedMarks(subject: string, fixedMarks: FixedMarks) {
     this.subjectData[subject].fixedMarks = fixedMarks;
-  }
-  setProportion(subject: string, proportion: number) {
-    this.subjectData[subject].finalMark.proportion = proportion;
+    return this;
   }
   setCriteria(
     subject: string,
@@ -279,8 +242,7 @@ export class Student {
     return this.subjectData[subject].fixedMarks;
   }
   addSubject(subject: string): this {
-    if (this.subjectData[subject]) return this;
-    this.subjectData[subject] = {
+    this.subjectData[subject] ??= {
       classActivities: [],
       markedActivities: [],
       redoActivities: [],
@@ -314,141 +276,3 @@ export class Student {
 export const round = (num: number, decimals: number) => {
   return Math.round(num * Math.pow(10, decimals)) / Math.pow(10, decimals);
 };
-/*export default () =>
-  ({
-    students: [],
-    loading: true,
-    async init() {
-      const sheetId = "1VZ_KPk4aZJFPlAgx188y0wW8p3psbbtZgix1L8a-5kE";
-      const subjects = [
-        "Tecnologías de la Información",
-        "Desarrollo de Aplicaciones Informáticas",
-      ];
-      const [
-        students,
-        classActivities,
-        markedActivities,
-        redoActivities,
-        subjectData,
-        unitData,
-        coursesData,
-      ] = await Promise.all([
-        getStudents(sheetId),
-        getAllActivities(sheetId),
-        getAllMarks(sheetId),
-        getAllRedos(sheetId),
-        await Promise.all(
-          subjects.map((subject) =>
-            getSubjectMarkingCriteria(subject, sheetId),
-          ),
-        ),
-        getSubjectIds(sheetId),
-        getAllCourses(sheetId),
-      ]);
-      // Map subjectData to an object with subject name as key
-      const subjectDataMap = subjects.reduce(
-        (acc, subject, index) => {
-          acc[subject] = subjectData[index];
-          return acc;
-        },
-        {} as Record<
-          string,
-          Awaited<ReturnType<typeof getSubjectMarkingCriteria>>
-        >,
-      );
-      // Create students and map them by student DNI
-      const studentMap = students.reduce(
-        (acc, student) => {
-          acc[student.DNI] = new Student(
-            student.name,
-            student.surname,
-            student.DNI.toString(),
-            student.course,
-            [coursesData.find((c) => c.id === student.course)?.subject || ""],
-          );
-          return acc;
-        },
-        {} as Record<string, Student>,
-      );
-      // Cast all activities to ClassActivity and add them to the corresponding student
-      classActivities.forEach((activity) => {
-        // Find if activity is compulsory if is in some special activities list of subjectData
-        const activitySubject = unitData[activity.id];
-        const isSpecialActivity = subjectDataMap[
-          activitySubject
-        ].specialActivities.includes(activity.id);
-        const classActivity: ClassActivity = {
-          id: activity.id.toString(),
-          name: activity.name,
-          madeUp: false,
-          comment: activity.comment || "",
-          done: activity.done,
-          compulsory: isSpecialActivity || false,
-          inRevision: false,
-        };
-        studentMap[activity.studentId].setClassActivity(
-          activitySubject,
-          classActivity,
-        );
-      });
-      // Cast all marked activities to MarkedActivity and add them to the corresponding student
-      markedActivities.forEach((activity) => {
-        const activitySubject = unitData[activity.id];
-        const markedActivity: MarkedActivity = {
-          id: activity.id.toString(),
-          name: activity.name,
-          madeUp: false,
-          comment: activity.comment || "",
-          mark: activity.mark,
-          inRevision: false,
-        };
-        studentMap[activity.studentId].setMarkedActivity(
-          activitySubject,
-          markedActivity,
-        );
-      });
-      // Cast all redo activities to RedoActivity and add them to the corresponding student
-      redoActivities.forEach((activity) => {
-        // Get first covered activity to determine subject
-        const coveredActivity = activity.coveredActivities[0];
-        const activitySubject = unitData[coveredActivity];
-        const redoActivity: RedoActivity = {
-          id: "0",
-          name: activity.name,
-          madeUp: false,
-          comment: activity.comment || "",
-          mark: activity.mark,
-          coveredActivities: activity.coveredActivities.map((id) =>
-            id.toString(),
-          ),
-          inRevision: false,
-        };
-        studentMap[activity.studentId].setRedo(activitySubject, redoActivity);
-      });
-      // Set proportion for each student and subject
-      Object.values(studentMap).forEach((student) => {
-        student.getSubjects().forEach((subject) => {
-          const proportion = subjectDataMap[subject].proportion;
-          student.setProportion(subject, proportion);
-          // Calculate final mark
-          student.calculateFinalMark(subject);
-        });
-      });
-      this.students = Object.values(studentMap);
-      // Sort students by course, surname, name
-      this.students.sort((a, b) => {
-        if (a.course < b.course) return -1;
-        if (a.course > b.course) return 1;
-        if (a.surname < b.surname) return -1;
-        if (a.surname > b.surname) return 1;
-        if (a.name < b.name) return -1;
-        if (a.name > b.name) return 1;
-        return 0;
-      });
-      this.loading = false;
-    },
-  }) as {
-    students: Student[];
-    loading: boolean;
-    init: () => Promise<void>;
-  };*/

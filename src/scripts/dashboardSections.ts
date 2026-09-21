@@ -96,14 +96,10 @@ export const DASHBOARD_SECTIONS: DashboardSection[] = [
   },
 ];
 
-export function sectionByKey(key: string): DashboardSection {
+export function rolesFor(key: string): DashboardRole[] {
   const section = DASHBOARD_SECTIONS.find((s) => s.key === key);
   if (!section) throw new Error(`Unknown dashboard section: ${key}`);
-  return section;
-}
-
-export function rolesFor(key: string): DashboardRole[] {
-  return sectionByKey(key).roles;
+  return section.roles;
 }
 
 export function sectionsInGroup(group: DashboardGroupKey): DashboardSection[] {

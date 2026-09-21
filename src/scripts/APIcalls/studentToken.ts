@@ -49,13 +49,9 @@ export function readStudentTokenClaims(
   const payload = token.split(".")[1];
   if (!payload) return null;
   try {
-    const json = atob(payload.replace(/-/g, "+").replace(/_/g, "/"));
+    const bytes = atob(payload.replace(/-/g, "+").replace(/_/g, "/"));
     const claims = JSON.parse(
-      decodeURIComponent(
-        Array.from(json)
-          .map((char) => `%${char.charCodeAt(0).toString(16).padStart(2, "0")}`)
-          .join(""),
-      ),
+      new TextDecoder().decode(Uint8Array.from(bytes, (c) => c.charCodeAt(0))),
     ) as Partial<StudentTokenClaims>;
     if (typeof claims.exp !== "number" || claims.exp * 1000 <= Date.now()) {
       return null;

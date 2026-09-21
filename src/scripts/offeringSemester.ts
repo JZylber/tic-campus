@@ -1,5 +1,14 @@
 import type { Semester } from "./APIcalls/offeringTimeSlots";
 
+export const CUATRIMESTRE_OPTIONS = [
+  { value: "FIRST", label: "1er Cuatrimestre" },
+  { value: "SECOND", label: "2do Cuatrimestre" },
+];
+export const SEMESTER_OPTIONS = [
+  ...CUATRIMESTRE_OPTIONS,
+  { value: "BOTH", label: "Anual" },
+];
+
 // An offering tagged BOTH runs all year, so it matches every semester filter
 // except the BOTH filter itself, which is used to isolate full-year offerings.
 export function matchesSemesterFilter(offeringSemester: Semester, filter: Semester): boolean {

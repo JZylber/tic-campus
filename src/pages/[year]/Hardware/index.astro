@@ -1,6 +1,6 @@
 ---
 import Loader from "../../../components/loader/Loader.astro";
-import Sofi from "../../../components/templates/Sofi.astro";
+import Course from "../../../components/templates/Course.astro";
 import Layout from "../../../layouts/Layout.astro";
 
 import { fetchSubjects } from "../../../scripts/APIcalls/dashboard";
@@ -17,7 +17,7 @@ export async function getStaticPaths() {
 
 const { year } = Astro.params;
 
-const subjects = ["Tecnologías de la Información"];
+const subjects = ["Hardware"];
 const availableCourses = await fetchSubjects();
 // Keep only courses that match the years and subjects we want
 const filteredCourses = availableCourses.filter((course) => {
@@ -30,7 +30,7 @@ const filteredCourses = availableCourses.filter((course) => {
   <template x-if="division === '' && !$store.student.loading">
     <main
       class="relative grow bg-gray-50 border-y sm:border-r lg:border-l border-gray-300 sm:rounded-r-xl lg:rounded-l-xl overflow-hidden flex flex-col items-center text-center gap-y-8 p-8"
-      x-init="$store.student.getStudentData('Tecnologías de la Información',2026)"
+      x-init="$store.student.getStudentData('Hardware',2026)"
       x-effect="if($store.student.course[2] === '3')division = $store.student.course[3];$watch('$store.student.course', (course) => {
         if (course[2] === 3) {
           division = course[3];
@@ -70,7 +70,7 @@ const filteredCourses = availableCourses.filter((course) => {
         class="w-full flex relative lg:gap-x-4"
         x-show={`division === '${div.division}'`}
       >
-        <Sofi subject="Hardware" course={div.course} year={Number(year)} />
+        <Course template={div.template} subject="Hardware" course={div.course} year={Number(year)} />
       </div>
     ))
   }
