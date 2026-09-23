@@ -134,12 +134,11 @@ export const partial = true;
 </p>
 <CodeBlock
   lang="ts"
-  code={`app.post(
-  '/api/pedir/:nombreCliente',
-  (req: Request<{ nombreCliente: string }, unknown, ItemPedido[]>, res: Response) => {
-    // ...
-  },
-);`}
+  code={`function pedir(req: Request<{ nombreCliente: string }, unknown, ItemPedido[]>, res: Response) {
+  // ...
+}
+
+app.post('/api/pedir/:nombreCliente', pedir);`}
 />
 <p>
   Lo que va entre <InlineCodeBlock code="< >" lang="plaintext" /> es, en orden: qué trae
