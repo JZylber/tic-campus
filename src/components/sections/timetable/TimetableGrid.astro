@@ -200,7 +200,7 @@ const daysJson = JSON.stringify(DAYS);
                 <template x-for="{subject,room,teacher,conflict} in slotData">
                   <div
                     class="flex flex-col items-center justify-center grow gap-y-0.5 py-1 transition-opacity"
-                    :class="[slotClasses(subject), conflict && 'ring-2 ring-inset ring-sh-red']"
+                    :class="[subjectColorClass(subject), conflict && 'ring-2 ring-inset ring-sh-red']"
                   >
                     <span
                       class="text-[10px] md:text-[11px] font-bold text-sh-red"
@@ -306,7 +306,7 @@ const daysJson = JSON.stringify(DAYS);
                         <template x-for="{subject,room,teacher,conflict} in slotData">
                           <div
                             class="flex flex-col items-center justify-center grow gap-y-0.5 py-1"
-                            :class="[slotClasses(subject), conflict && 'ring-2 ring-inset ring-sh-red']"
+                            :class="[subjectColorClass(subject), conflict && 'ring-2 ring-inset ring-sh-red']"
                           >
                             <span
                               class="text-[10px] font-bold text-sh-red"

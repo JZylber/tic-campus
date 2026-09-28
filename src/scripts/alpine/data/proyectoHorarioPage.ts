@@ -1,9 +1,16 @@
 import type { AlpineComponent } from "alpinejs";
 import { fetchPublicOfferingSchedule, type OfferingWithSlots, type Semester } from "../../APIcalls/offeringTimeSlots";
-import { matchesSemesterFilter, defaultCuatrimestre } from "../../offeringSemester";
-import { getSlotsAtGridPos, type TimetableBySubject } from "../../timetableLayout";
+import {
+  CUATRIMESTRE_OPTIONS,
+  matchesSemesterFilter,
+  defaultCuatrimestre,
+} from "../../offeringSemester";
+import {
+  getSlotsAtGridPos,
+  timetableGridMembers,
+  type TimetableBySubject,
+} from "../../timetableLayout";
 import { resolveOfferingsTimetable } from "../../timetableResolve";
-import { getSubjectColorClass, getSubjectSecondaryTextClass } from "../../timetableColors";
 import {
   mandatoryOfferingsOf,
   groupTabsOf,
@@ -16,6 +23,7 @@ type State = "loading" | "ready";
 
 const proyectoHorarioPageData = (year: number, level: number) =>
   ({
+    ...timetableGridMembers,
     loading: true,
     year,
     level,
@@ -23,12 +31,7 @@ const proyectoHorarioPageData = (year: number, level: number) =>
     offerings: [] as OfferingWithSlots[],
     studentDetected: false,
     studentCourse: "",
-    get cuatrimestreOptions() {
-      return [
-        { value: "FIRST", label: "1er Cuatrimestre" },
-        { value: "SECOND", label: "2do Cuatrimestre" },
-      ];
-    },
+    cuatrimestreOptions: CUATRIMESTRE_OPTIONS,
     get visibleOfferings() {
       return (this.offerings as OfferingWithSlots[]).filter((o) =>
         matchesSemesterFilter(o.semester, this.cuatrimestre),
@@ -106,9 +109,6 @@ const proyectoHorarioPageData = (year: number, level: number) =>
         : this.getGroupTimetable(groupId ?? (this.groupTabs[0]?.id ?? null));
       return getSlotsAtGridPos(timetable, row, col);
     },
-    subjectColorClass: getSubjectColorClass,
-    subjectSecondaryTextClass: getSubjectSecondaryTextClass,
-    slotClasses: getSubjectColorClass,
     async init() {
       const studentStore = Alpine.store("student") as AlpineStudentStore;
       await studentStore.getStudentData("Proyecto", this.year);

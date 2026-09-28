@@ -1,7 +1,11 @@
 import type { AlpineComponent } from "alpinejs";
 import { fetchOfferings, type OfferingWithSlots, type Semester } from "../../APIcalls/offeringTimeSlots";
 import { fetchOfferingStudents, type OfferingStudent } from "../../APIcalls/offerings";
-import { matchesSemesterFilter, defaultCuatrimestre } from "../../offeringSemester";
+import {
+  CUATRIMESTRE_OPTIONS,
+  matchesSemesterFilter,
+  defaultCuatrimestre,
+} from "../../offeringSemester";
 import { toCsv, downloadCsv, slugify } from "../../csv";
 
 type Offerings = OfferingWithSlots[];
@@ -23,12 +27,7 @@ const listadosPageData = () =>
     offeringId: NaN as number,
     allOfferings: [] as Offerings,
     students: [] as Students,
-    get semesterOptions() {
-      return [
-        { value: "FIRST", label: "1er Cuatrimestre" },
-        { value: "SECOND", label: "2do Cuatrimestre" },
-      ];
-    },
+    semesterOptions: CUATRIMESTRE_OPTIONS,
     get levelOptions() {
       return LEVELS.map((level) => ({ value: level, label: String(level) }));
     },

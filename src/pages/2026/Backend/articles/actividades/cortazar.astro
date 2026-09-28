@@ -9,8 +9,8 @@ export const partial = true;
 <h2>Introducción</h2>
 <p>
   Cortázar anotado es una edición web de <em>Todos los fuegos el fuego</em> que se
-  puede escribir al margen: las anotaciones quedan guardadas adentro del archivo
-  del cuento.
+  puede escribir al margen: las anotaciones quedan guardadas adentro del archivo del
+  cuento.
 </p>
 <p>
   El frontend ya está hecho: arma el índice, muestra el cuento y, al tocar
@@ -20,7 +20,8 @@ export const partial = true;
 
 <h2>Consigna base</h2>
 <p>
-  Va en <InlineCodeBlock code="src/index.ts" lang="plaintext" />, con tres rutas:
+  Va en <InlineCodeBlock code="src/index.ts" lang="plaintext" />, con tres
+  rutas:
 </p>
 <table class="data-table">
   <thead>
@@ -36,8 +37,8 @@ export const partial = true;
       </td>
       <td>
         Devuelve <InlineCodeBlock code="{ texto }" lang="json" /> (objeto con una
-        única clave <InlineCodeBlock code="texto" lang="plaintext" />) con el cuento
-        entero, tal cual está guardado.
+        única clave <InlineCodeBlock code="texto" lang="plaintext" />) con el
+        cuento entero, tal cual está guardado.
       </td>
     </tr>
     <tr>
@@ -73,13 +74,15 @@ export const partial = true;
 <p>
   En <InlineCodeBlock code="src/index.ts" lang="plaintext" /> ya está armado el servidor:
   arriba de todo el <InlineCodeBlock code="app" lang="ts" /> de Express (que entiende
-  JSON y sirve la página de <InlineCodeBlock code="frontend/" lang="plaintext" />)
-  y abajo de todo el <InlineCodeBlock code="app.listen" lang="ts" /> que lo arranca.
+  JSON y sirve la página de <InlineCodeBlock
+    code="frontend/"
+    lang="plaintext"
+  />) y abajo de todo el <InlineCodeBlock code="app.listen" lang="ts" /> que lo arranca.
   Las rutas van en el medio, entre esas dos cosas.
 </p>
 <p>
-  Los ocho cuentos viven en <InlineCodeBlock code="data/" lang="plaintext" />, uno
-  por archivo: <InlineCodeBlock
+  Los ocho cuentos viven en <InlineCodeBlock code="data/" lang="plaintext" />,
+  uno por archivo: <InlineCodeBlock
     code="data/05-la-isla-a-mediodia.txt"
     lang="plaintext"
   />. El <InlineCodeBlock code=":nombre" lang="plaintext" /> que llega por la ruta
@@ -87,7 +90,7 @@ export const partial = true;
     code=".txt"
     lang="plaintext"
   />, así que el archivo se arma con <InlineCodeBlock
-    code="join(carpetaDatos, nombre + '.txt')"
+    code="carpetaDatos + nombre + '.txt')"
     lang="ts"
   /> (<InlineCodeBlock code="carpetaDatos" lang="ts" /> ya está declarada arriba de
   todo en <InlineCodeBlock code="src/index.ts" lang="plaintext" />).
@@ -117,7 +120,8 @@ export const partial = true;
 <ul>
   <li>
     <InlineCodeBlock code="agregarAnotacion(texto, en, anotacion)" lang="ts" /> —
-    devuelve <strong>un texto nuevo</strong>, con la anotación metida en la posición
+    devuelve <strong>un texto nuevo</strong>, con la anotación metida en la
+    posición
     <InlineCodeBlock code="en" lang="ts" />.
   </li>
   <li>
@@ -129,8 +133,9 @@ export const partial = true;
   </li>
 </ul>
 <p>
-  Ninguna de las dos toca el archivo: eso es trabajo de ustedes. Anotar es siempre
-  lo mismo, tres pasos: <strong>leer</strong> el archivo, pasar el texto por la función,
+  Ninguna de las dos toca el archivo: eso es trabajo de ustedes. Anotar es
+  siempre lo mismo, tres pasos: <strong>leer</strong> el archivo, pasar el texto por
+  la función,
   <strong>escribir</strong> el resultado de vuelta en el mismo archivo. Después se
   contesta <InlineCodeBlock code="{ texto }" lang="json" /> con el cuento ya modificado,
   que es lo que el frontend usa para volver a dibujar la página.
@@ -164,7 +169,10 @@ export const partial = true;
   así que el cuento con anotaciones sigue siendo un <InlineCodeBlock
     code="string"
     lang="ts"
-  /> común y corriente. La posición <InlineCodeBlock code=":en" lang="plaintext" />
+  /> común y corriente. La posición <InlineCodeBlock
+    code=":en"
+    lang="plaintext"
+  />
   es un número: cuántos caracteres hay antes del lugar donde va la anotación, contando
   sobre el texto tal como está guardado (marcas incluidas). El frontend ya lo calcula
   y lo manda en la URL: ustedes lo reciben como <InlineCodeBlock
@@ -179,7 +187,8 @@ export const partial = true;
   Lo que se escribe en la anotación viaja en la URL, después del <InlineCodeBlock
     code="?"
     lang="plaintext"
-  />: <InlineCodeBlock code="?texto=lo que sea" lang="plaintext" />. Eso se lee con
+  />: <InlineCodeBlock code="?texto=lo que sea" lang="plaintext" />. Eso se lee
+  con
   <InlineCodeBlock code="req.query.texto" lang="ts" />.
 </p>
 <ImportantBox>
@@ -188,9 +197,9 @@ export const partial = true;
     las dos que escriben. En una API de verdad, agregar sería <InlineCodeBlock
       code="POST"
       lang="plaintext"
-    /> y borrar sería <InlineCodeBlock code="DELETE" lang="plaintext" />. Eso llega
-    en la consigna manija; por ahora todo entra por la URL, que es lo que ya saben
-    hacer.
+    /> y borrar sería <InlineCodeBlock code="DELETE" lang="plaintext" />. Eso
+    llega en la consigna manija; por ahora todo entra por la URL, que es lo que
+    ya saben hacer.
   </p>
 </ImportantBox>
 <p>
@@ -232,15 +241,18 @@ export const partial = true;
     </tr>
     <tr>
       <td>
-        <InlineCodeBlock code="DELETE /api/resaltado/:nombre" lang="plaintext" />
+        <InlineCodeBlock
+          code="DELETE /api/resaltado/:nombre"
+          lang="plaintext"
+        />
       </td>
       <td>Borra uno.</td>
     </tr>
   </tbody>
 </table>
 <p>
-  Va en el mismo <InlineCodeBlock code="src/index.ts" lang="plaintext" />, abajo de
-  todo, donde dice <InlineCodeBlock
+  Va en el mismo <InlineCodeBlock code="src/index.ts" lang="plaintext" />, abajo
+  de todo, donde dice <InlineCodeBlock
     code="---- Consigna manija ----"
     lang="plaintext"
   />.
@@ -265,23 +277,26 @@ export const partial = true;
     code="POST /api/resaltar/:nombre"
     lang="plaintext"
   /> y <InlineCodeBlock code="DELETE /api/resaltado/:nombre" lang="plaintext" /> traen
-  <InlineCodeBlock code="{ desde, hasta }" lang="json" /> en el <strong>cuerpo</strong
-  > del pedido. Hay que buscar dos cosas: cómo se declara en Express una ruta que no
-  es GET, y de dónde se saca el cuerpo que llega con ella. Para que no pierdan tiempo:
-  el <InlineCodeBlock code="app.use(express.json())" lang="ts" /> que está arriba de
-  todo en <InlineCodeBlock code="src/index.ts" lang="plaintext" /> es lo que hace que
-  ese cuerpo llegue como un objeto y no como texto.
+  <InlineCodeBlock code="{ desde, hasta }" lang="json" /> en el <strong
+    >cuerpo</strong
+  > del pedido. Hay que buscar dos cosas: cómo se declara en Express una ruta que
+  no es GET, y de dónde se saca el cuerpo que llega con ella. Para que no pierdan
+  tiempo: el <InlineCodeBlock code="app.use(express.json())" lang="ts" /> que está
+  arriba de todo en <InlineCodeBlock code="src/index.ts" lang="plaintext" /> es lo
+  que hace que ese cuerpo llegue como un objeto y no como texto.
 </p>
 <p>Del lado del archivo:</p>
 <ul>
   <li>
-    El resaltado nuevo va <strong>al final</strong>, sin pisar los que ya estaban:
-    para eso está <InlineCodeBlock
+    El resaltado nuevo va <strong>al final</strong>, sin pisar los que ya
+    estaban: para eso está <InlineCodeBlock
       code="appendFileSync(archivo, texto, 'utf-8')"
       lang="ts"
     />, de <InlineCodeBlock code="node:fs" lang="plaintext" />.
   </li>
-  <li>Para borrar hay que leer todo, sacar esa línea y volver a escribir el resto.</li>
+  <li>
+    Para borrar hay que leer todo, sacar esa línea y volver a escribir el resto.
+  </li>
   <li>
     Ojo con las líneas vacías: partir el archivo con <InlineCodeBlock
       code={`split('\\n')`}
@@ -290,8 +305,8 @@ export const partial = true;
   </li>
 </ul>
 <p>
-  Las tres rutas contestan lo mismo: la lista de resaltados de ese cuento, como quedó
-  después del pedido.
+  Las tres rutas contestan lo mismo: la lista de resaltados de ese cuento, como
+  quedó después del pedido.
 </p>
 <p>
   Ejemplo de <InlineCodeBlock
@@ -311,16 +326,16 @@ export const partial = true;
     code="hasta"
     lang="plaintext"
   /> son posiciones, como el <InlineCodeBlock code=":en" lang="plaintext" /> de las
-  anotaciones, pero contadas sobre el cuento <strong>sin</strong> las anotaciones (el
-  texto que devuelve <InlineCodeBlock code="sinAnotaciones" lang="ts" />): así un resaltado
-  no se corre de lugar cuando alguien anota más arriba. Las calcula el frontend; ustedes
-  las reciben y las guardan tal cual.
+  anotaciones, pero contadas sobre el cuento <strong>sin</strong> las anotaciones
+  (el texto que devuelve <InlineCodeBlock code="sinAnotaciones" lang="ts" />):
+  así un resaltado no se corre de lugar cuando alguien anota más arriba. Las
+  calcula el frontend; ustedes las reciben y las guardan tal cual.
 </p>
 
 <h2>¿Qué hay que editar?</h2>
 <p>
-  <InlineCodeBlock code="src/index.ts" lang="plaintext" /> — las tres rutas de la consigna
-  base y, para la manija, las tres de resaltado.
+  <InlineCodeBlock code="src/index.ts" lang="plaintext" /> — las tres rutas de la
+  consigna base y, para la manija, las tres de resaltado.
 </p>
 <p>
   Todo lo demás ya está completo: <InlineCodeBlock

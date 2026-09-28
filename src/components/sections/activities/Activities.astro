@@ -23,8 +23,9 @@ const { subject, course, year, position } = Astro.props;
     MarkedActivity,
     Unit,
   } from "../../../scripts/types";
-  import setAlpineData from "../../../scripts/alpine/setAlpineData";
-  import type { AlpineComponent } from "alpinejs";
+  import setAlpineData, {
+    alpineData,
+  } from "../../../scripts/alpine/setAlpineData";
   import { fetchSubjectData } from "../../../scripts/APIcalls/subjectData";
 
   setAlpineData(
@@ -68,125 +69,89 @@ const { subject, course, year, position } = Astro.props;
       },
     }),
   );
-  setAlpineData(
-    "contentData",
-    (content: Content) =>
-      ({
-        content: content,
-        passed: false,
-        pending: true,
-        redo: false,
-        optional: content.optional,
-        init() {
-          if (this.content.type === "Actividad") {
-            if (Alpine.store("marks")) {
-              this.updateClassActivity();
-              this.$watch("$store.marks.allClassActivities", () =>
-                this.updateClassActivity(),
-              );
-            }
-          } else if (
-            this.content.type === "Trabajo Práctico" ||
-            this.content.type === "Encuesta"
-          ) {
-            if (Alpine.store("marks")) {
-              this.updateMarkedActivity();
-              this.updateClassActivity();
-              this.$watch("$store.marks.markedActivities", () =>
-                this.updateMarkedActivity(),
-              );
-              this.$watch("$store.marks.allClassActivities", () =>
-                this.updateClassActivity(),
-              );
-            }
-          }
-        },
-        get symbol() {
-          switch (this.content.type) {
-            case "Trabajo Práctico":
-              return "workspace_premium";
-            case "Encuesta":
-              return "checklist";
-            case "Recuperatorio":
-              return "refresh";
-            case "Actividad":
-              return "shovel";
-            case "Consigna":
-              return "work";
-            default:
-              return "description";
-          }
-        },
-        get typeLabel() {
-          switch (this.content.type) {
-            case "Trabajo Práctico":
-              return "TP";
-            case "Encuesta":
-              return "Encuesta";
-            case "Recuperatorio":
-              return "Recuperatorio";
-            case "Actividad":
-              return "Actividad";
-            case "Consigna":
-              return "Consigna";
-            default:
-              return "Artículo";
-          }
-        },
-        get markSymbol() {
-          if (this.pending || this.redo) {
-            return "pending";
-          } else if (this.passed) {
-            return "check_circle";
-          } else {
-            return "cancel";
-          }
-        },
-        updateClassActivity() {
-          const contentId = this.content.id;
-          const activities = (Alpine.store("marks") as AlpineStudentMarkStore)
-            .allClassActivities as ClassActivity[];
-          const results = activities.find(
-            (activity) => activity.id === contentId,
+  const SYMBOLS: Record<string, string> = {
+    "Trabajo Práctico": "workspace_premium",
+    Encuesta: "checklist",
+    Recuperatorio: "refresh",
+    Actividad: "shovel",
+    Consigna: "work",
+  };
+  const TYPE_LABELS: Record<string, string> = {
+    "Trabajo Práctico": "TP",
+    Encuesta: "Encuesta",
+    Recuperatorio: "Recuperatorio",
+    Actividad: "Actividad",
+    Consigna: "Consigna",
+  };
+
+  setAlpineData("contentData", (content: Content) =>
+    alpineData({
+      content: content,
+      passed: false,
+      pending: true,
+      redo: false,
+      optional: content.optional,
+      init() {
+        const tracksClass = this.content.type === "Actividad";
+        const tracksMark =
+          this.content.type === "Trabajo Práctico" ||
+          this.content.type === "Encuesta";
+        if (!Alpine.store("marks") || !(tracksClass || tracksMark)) return;
+        if (tracksMark) {
+          this.updateMarkedActivity();
+          this.$watch("$store.marks.markedActivities", () =>
+            this.updateMarkedActivity(),
           );
-          if (results) {
-            this.updateStatus(results.done, false, results.inRevision);
-          }
-        },
-        updateMarkedActivity() {
-          const contentId = this.content.id;
-          const markedActivities = (
-            Alpine.store("marks") as AlpineStudentMarkStore
-          ).markedActivities as MarkedActivity[];
-          const results = markedActivities.find(
-            (mark: MarkedActivity) => mark.id === contentId,
-          );
-          if (results) {
-            this.updateStatus(results.mark >= 6, false, results.inRevision);
-          }
-        },
-        updateStatus(passed: boolean, pending: boolean, redo: boolean) {
-          this.passed = passed;
-          this.pending = pending;
-          this.redo = redo;
-        },
-      }) as AlpineComponent<{
-        content: Content;
-        passed: boolean;
-        pending: boolean;
-        redo: boolean;
-        optional: boolean;
-        symbol: string;
-        typeLabel: string;
-        markSymbol: string;
-        updateClassActivity: () => void;
-        updateMarkedActivity: () => void;
-        updateStatus: (
-          passed: boolean,
-          pending: boolean,
-          redo: boolean,
-        ) => void;
-      }>,
+        }
+        this.updateClassActivity();
+        this.$watch("$store.marks.allClassActivities", () =>
+          this.updateClassActivity(),
+        );
+      },
+      get symbol() {
+        return SYMBOLS[this.content.type] ?? "description";
+      },
+      get typeLabel() {
+        return TYPE_LABELS[this.content.type] ?? "Artículo";
+      },
+      get markSymbol() {
+        if (this.pending || this.redo) {
+          return "pending";
+        } else if (this.passed) {
+          return "check_circle";
+        } else {
+          return "cancel";
+        }
+      },
+      updateClassActivity() {
+        const contentId = this.content.id;
+        const activities = (Alpine.store("marks") as AlpineStudentMarkStore)
+          .allClassActivities as ClassActivity[];
+        const results = activities.find(
+          (activity) => activity.id === contentId,
+        );
+        if (results) {
+          this.updateStatus(results.done, false, results.inRevision);
+        }
+      },
+      updateMarkedActivity() {
+        const contentId = this.content.id;
+        const markedActivities = (
+          Alpine.store("marks") as AlpineStudentMarkStore
+        ).markedActivities as MarkedActivity[];
+        const results = markedActivities.find(
+          (mark: MarkedActivity) => mark.id === contentId,
+        );
+        if (results) {
+          this.updateStatus(results.mark >= 6, false, results.inRevision);
+        }
+      },
+      updateStatus(passed: boolean, pending: boolean, redo: boolean) {
+        this.passed = passed;
+        this.pending = pending;
+        this.redo = redo;
+      },
+    }),
   );
 </script>
 

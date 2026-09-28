@@ -1,4 +1,3 @@
-import type { AlpineComponent } from "alpinejs";
 import type { CurrentUserStore } from "../stores/currentUser";
 import {
   firstAccessibleSection,
@@ -29,9 +28,6 @@ const dashboardNavData = () =>
       const section = firstAccessibleSection(group, role);
       return section ? `${import.meta.env.BASE_URL}${section.path}` : "#";
     },
-  }) as AlpineComponent<{
-    canSee: (roles: DashboardRole[]) => boolean;
-    groupHref: (group: DashboardGroupKey) => string;
-  }>;
+  });
 
 export default dashboardNavData;

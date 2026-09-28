@@ -13,15 +13,16 @@ const { open, articleURL, content, course } = Astro.props;
 ---
 
 <script>
-  import type { AlpineComponent } from "alpinejs";
-  import setAlpineData from "../../../scripts/alpine/setAlpineData";
+  import setAlpineData, {
+    alpineData,
+  } from "../../../scripts/alpine/setAlpineData";
   import type { Content } from "../../../scripts/types";
   import { renderArticleInto } from "../../../scripts/articles/renderArticle";
 
   setAlpineData(
     "articleData",
     () =>
-      ({
+      alpineData({
         loading: true,
         error: false,
         errorMessage: "",
@@ -58,13 +59,7 @@ const { open, articleURL, content, course } = Astro.props;
         async initArticle(rawHTML: string) {
           await renderArticleInto(this.$refs.content as HTMLElement, rawHTML);
         },
-      }) as AlpineComponent<{
-        loading: boolean;
-        error: boolean;
-        errorMessage: string;
-        updateArticle: (content: Content, articleURL: string) => Promise<void>;
-        initArticle: (rawHTML: string) => Promise<void>;
-      }>,
+      }),
   );
 </script>
 

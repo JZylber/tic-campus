@@ -1,4 +1,4 @@
-import { backendURL } from "./shared";
+import { api, jsonBody, succeeded } from "./shared";
 import { authFetch } from "./authToken";
 
 export type AvanzadoMatch = {
@@ -18,55 +18,24 @@ export type AvanzadoStudent = {
   avanzados: AvanzadoMatch[];
 };
 
-export async function fetchAvanzadoStudents(year: number): Promise<AvanzadoStudent[]> {
-  try {
-    const response = await authFetch(`${backendURL}/avanzados/students?year=${year}`);
-    if (!response.ok) {
-      throw new Error(`Error fetching avanzado students: ${response.statusText}`);
-    }
-    return (await response.json()) as AvanzadoStudent[];
-  } catch (error) {
-    console.error("Failed to fetch avanzado students:", error);
-    return [];
-  }
-}
+export const fetchAvanzadoStudents = (year: number) =>
+  api<AvanzadoStudent[]>(`/avanzados/students?year=${year}`, [], {
+    fetcher: authFetch,
+  });
 
-export async function matchStudentAvanzado(
+export const matchStudentAvanzado = (
   studentId: number,
   offeringId: number,
   courseId: number,
-): Promise<AvanzadoMatch | null> {
-  try {
-    const response = await authFetch(`${backendURL}/avanzados/students/${studentId}/matches`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ offeringId, courseId }),
-    });
-    if (!response.ok) {
-      throw new Error(`Error matching student to avanzado: ${response.statusText}`);
-    }
-    return (await response.json()) as AvanzadoMatch;
-  } catch (error) {
-    console.error("Failed to match student to avanzado:", error);
-    return null;
-  }
-}
+) =>
+  api<AvanzadoMatch | null>(`/avanzados/students/${studentId}/matches`, null, {
+    fetcher: authFetch,
+    ...jsonBody("POST", { offeringId, courseId }),
+  });
 
-export async function unmatchStudentAvanzado(
-  studentId: number,
-  offeringId: number,
-): Promise<boolean> {
-  try {
-    const response = await authFetch(
-      `${backendURL}/avanzados/students/${studentId}/matches/${offeringId}`,
-      { method: "DELETE" },
-    );
-    if (!response.ok) {
-      throw new Error(`Error unmatching student from avanzado: ${response.statusText}`);
-    }
-    return true;
-  } catch (error) {
-    console.error("Failed to unmatch student from avanzado:", error);
-    return false;
-  }
-}
+export const unmatchStudentAvanzado = (studentId: number, offeringId: number) =>
+  api(`/avanzados/students/${studentId}/matches/${offeringId}`, false, {
+    fetcher: authFetch,
+    method: "DELETE",
+    read: succeeded,
+  });

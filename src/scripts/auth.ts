@@ -31,21 +31,15 @@ export async function fetchCurrentUser(): Promise<UserInfo | null> {
 export async function requireAuth(
   allowed: DashboardRole[],
 ): Promise<UserInfo | null> {
-  try {
-    const response = await authFetch(`${backendURL}/user/info`);
-    if (!response.ok) {
-      window.location.href = `${backendURL}/auth/google?returnTo=${encodeURIComponent(window.location.href)}`;
-      return null;
-    }
-    const user: UserInfo = await response.json();
-    if (!allowed.includes(user.role as DashboardRole)) {
-      window.location.href = unauthorizedURL;
-      return null;
-    }
-    (Alpine.store("currentUser") as CurrentUserStore).set(user.id, user.name, user.surname, user.role);
-    return user;
-  } catch {
+  const user = await fetchCurrentUser();
+  if (!user) {
     window.location.href = `${backendURL}/auth/google?returnTo=${encodeURIComponent(window.location.href)}`;
     return null;
   }
+  if (!allowed.includes(user.role as DashboardRole)) {
+    window.location.href = unauthorizedURL;
+    return null;
+  }
+  (Alpine.store("currentUser") as CurrentUserStore).role = user.role;
+  return user;
 }

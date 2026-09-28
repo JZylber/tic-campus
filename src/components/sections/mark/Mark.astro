@@ -22,8 +22,7 @@ const { position, subject, course, year } = Astro.props;
   import studentMarkStore from "../../../scripts/alpine/stores/marks";
   import markSummaryData from "../../../scripts/alpine/data/marks/markSummary";
   import redosMarkData from "../../../scripts/alpine/data/marks/redos";
-  import setAlpineStore from "../../../scripts/alpine/setAlpineStore";
-  import setAlpineData from "../../../scripts/alpine/setAlpineData";
+  import setAlpineData, { setAlpineStore } from "../../../scripts/alpine/setAlpineData";
 
   setAlpineStore("marks", studentMarkStore());
   setAlpineData("markSummary", markSummaryData);

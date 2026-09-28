@@ -31,13 +31,9 @@ export function resolveOfferingsTimetable(offerings: OfferingWithSlots[]): Timet
     })),
   );
 
-  const byPosition = new Map<string, ResolvableEntry[]>();
-  for (const entry of entries) {
-    const key = `${entry.day}-${entry.block}`;
-    const group = byPosition.get(key);
-    if (group) group.push(entry);
-    else byPosition.set(key, [entry]);
-  }
+  // ponytail: Map.groupBy needs Chrome 117 / Firefox 119 / Safari 17.4; swap
+  // back to a manual Map loop if older school browsers show blank grids.
+  const byPosition = Map.groupBy(entries, (e) => `${e.day}-${e.block}`);
 
   const timetable: TimetableBySubject = {};
   for (const group of byPosition.values()) {

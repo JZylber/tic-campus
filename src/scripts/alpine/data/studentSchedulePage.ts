@@ -1,15 +1,23 @@
 import type { AlpineComponent } from "alpinejs";
 import { fetchOfferings, type OfferingWithSlots, type Semester } from "../../APIcalls/offeringTimeSlots";
-import { matchesSemesterFilter, defaultCuatrimestre } from "../../offeringSemester";
+import {
+  CUATRIMESTRE_OPTIONS,
+  matchesSemesterFilter,
+  defaultCuatrimestre,
+} from "../../offeringSemester";
 import { fetchCourses, fetchStudents, type Course, type Student } from "../../APIcalls/dashboard";
-import { getSlotsAtGridPos, type TimetableBySubject } from "../../timetableLayout";
+import {
+  getSlotsAtGridPos,
+  timetableGridMembers,
+  type TimetableBySubject,
+} from "../../timetableLayout";
 import { resolveOfferingsTimetable } from "../../timetableResolve";
-import { getSubjectColorClass, getSubjectSecondaryTextClass } from "../../timetableColors";
 
 type TimetableState = "empty" | "ready";
 
 const studentSchedulePageData = () =>
   ({
+    ...timetableGridMembers,
     loading: true,
     year: new Date().getFullYear(),
     level: NaN as number,
@@ -41,12 +49,7 @@ const studentSchedulePageData = () =>
         .sort((a, b) => a.surname.localeCompare(b.surname, "es"))
         .map((s) => ({ value: Number(s.id), label: `${s.surname}, ${s.name}` }));
     },
-    get cuatrimestreOptions() {
-      return [
-        { value: "FIRST", label: "1er Cuatrimestre" },
-        { value: "SECOND", label: "2do Cuatrimestre" },
-      ];
-    },
+    cuatrimestreOptions: CUATRIMESTRE_OPTIONS,
     get selectedStudent(): Student | null {
       return (
         (this.allStudents as Student[]).find((s) => Number(s.id) === this.studentId) ?? null
@@ -54,9 +57,6 @@ const studentSchedulePageData = () =>
     },
     get state(): TimetableState {
       return this.selectedStudent ? "ready" : "empty";
-    },
-    getSeminars() {
-      return null;
     },
     get resolvedTimetable(): TimetableBySubject {
       const student = this.selectedStudent as Student | null;
@@ -80,9 +80,6 @@ const studentSchedulePageData = () =>
     getTimetableByGridPos(row: number, col: number) {
       return getSlotsAtGridPos(this.resolvedTimetable, row, col);
     },
-    subjectColorClass: getSubjectColorClass,
-    subjectSecondaryTextClass: getSubjectSecondaryTextClass,
-    slotClasses: getSubjectColorClass,
     async init() {
       const [courses, students, offerings] = await Promise.all([
         fetchCourses(),

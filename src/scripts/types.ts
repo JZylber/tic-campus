@@ -1,17 +1,9 @@
-export enum ContentType {
-  activity = "Actividad",
-  material = "Material",
-  finalActivity = "Trabajo Práctico",
-  survey = "Encuesta",
-  makeup = "Recuperatorio",
-  instruction = "Consigna",
-}
-
 export interface Content {
   id: string;
   name: string;
   topic: string;
-  type: ContentType;
+  // "Actividad", "Trabajo Práctico", "Encuesta", "Recuperatorio", "Consigna", "Material"
+  type: string;
   unit: string;
   imgURL: string;
   textURL: string;

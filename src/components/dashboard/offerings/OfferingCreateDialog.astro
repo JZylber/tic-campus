@@ -31,8 +31,8 @@ import Toggle from "../../misc/toggle/Toggle.astro";
           <input
             type="checkbox"
             class="accent-sh-purple w-5 h-5"
-            :checked="createForm.courseIds.includes(course.id)"
-            @change="toggleCreateCourse(course.id)"
+            :value="course.id"
+            x-model.number="createForm.courseIds"
           />
           <span x-text="course.name"></span>
         </label>

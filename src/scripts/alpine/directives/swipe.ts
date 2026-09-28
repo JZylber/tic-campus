@@ -1,126 +1,44 @@
 import type { DirectiveCallback } from "alpinejs";
 
-const ALLOWED_SWIPE_TIME = 300;
+const MAX_SWIPE_MS = 300;
+const MIN_SWIPE_PX = 50;
 
-class SwipeDetect {
-  target: HTMLElement;
-  callback: (direction: string) => void;
-  threshold: number;
-  startX: number;
-  startY: number;
-  startTime: number;
-  constructor(
-    target: HTMLElement,
-    callback: (direction: string) => void,
-    threshold: number
-  ) {
-    this.target = target;
-    this.callback = callback;
-    this.threshold = threshold;
-    this.startX = 0;
-    this.startY = 0;
-    this.startTime = 0;
-
-    this.enable();
-  }
-
-  enable() {
-    this.target.addEventListener(
-      "touchstart",
-      this.recordTouchStartValues.bind(this)
-    );
-    this.target.addEventListener(
-      "touchend",
-      this.detectSwipeDirection.bind(this)
-    );
-  }
-
-  disable() {
-    this.target.removeEventListener(
-      "touchstart",
-      this.recordTouchStartValues.bind(this)
-    );
-    this.target.removeEventListener(
-      "touchend",
-      this.detectSwipeDirection.bind(this)
-    );
-  }
-
-  recordTouchStartValues(e: TouchEvent) {
-    const touch = e.changedTouches[0];
-
-    this.startX = touch.pageX;
-    this.startY = touch.pageY;
-    this.startTime = new Date().getTime();
-  }
-
-  detectSwipeDirection(e: TouchEvent) {
-    const touch = e.changedTouches[0];
-    const distX = touch.pageX - this.startX;
-    const distY = touch.pageY - this.startY;
-    const absX = Math.abs(distX);
-    const absY = Math.abs(distY);
-    const elapsedTime = new Date().getTime() - this.startTime;
-
-    if (elapsedTime > ALLOWED_SWIPE_TIME) return;
-
-    switch (true) {
-      case absX >= this.threshold && absX > absY && distX < 0:
-        this.callback("left");
-        break;
-      case absX >= this.threshold && absX > absY && distX > 0:
-        this.callback("right");
-        break;
-      case absY >= this.threshold && absY > absX && distY < 0:
-        this.callback("up");
-        break;
-      case absY >= this.threshold && absY > absX && distY > 0:
-        this.callback("down");
-        break;
-    }
-  }
-}
-
-function detectSwipe(
-  target: HTMLElement,
-  callback: (direction: string) => void,
-  threshold: number = 150
-): SwipeDetect {
-  return new SwipeDetect(target, callback, threshold);
-}
-
+// x-swipe:left="…" runs on a left swipe (likewise right/up/down); a bare
+// x-swipe="…" runs on any swipe, receiving the direction as its argument.
 const swipeDirective: DirectiveCallback = (
-  elem,
-  { value, modifiers, expression },
-  { evaluateLater, cleanup }
+  el,
+  { value, expression },
+  { evaluateLater, cleanup },
 ) => {
-  // console.log({ value, modifiers });
-  const evaluate = expression ? evaluateLater(expression) : () => {};
-  const callback = (arg: string) => {
-    evaluate(() => {}, { scope: {}, params: [arg] });
-  };
-  const threshold =
-    (modifiers[0] === "threshold" &&
-      (modifiers[1] || "").endsWith("px") &&
-      Number(modifiers[1].replace("px", ""))) ||
-    50;
+  const evaluate = evaluateLater(expression);
+  let startX = 0;
+  let startY = 0;
+  let startTime = 0;
 
-  const detectorInstance = detectSwipe(
-    elem,
-    function (direction) {
-      if (!value) {
-        callback(direction);
-        return;
-      }
-      if (direction === value) {
-        callback(direction);
-        return;
-      }
-    },
-    threshold
-  );
+  const onStart = (e: TouchEvent) => {
+    ({ pageX: startX, pageY: startY } = e.changedTouches[0]);
+    startTime = Date.now();
+  };
+  const onEnd = (e: TouchEvent) => {
+    const dx = e.changedTouches[0].pageX - startX;
+    const dy = e.changedTouches[0].pageY - startY;
+    if (Date.now() - startTime > MAX_SWIPE_MS) return;
+    if (Math.max(Math.abs(dx), Math.abs(dy)) < MIN_SWIPE_PX) return;
+    const direction =
+      Math.abs(dx) > Math.abs(dy)
+        ? dx < 0 ? "left" : "right"
+        : dy < 0 ? "up" : "down";
+    if (!value || value === direction) {
+      evaluate(() => {}, { scope: {}, params: [direction] });
+    }
+  };
+
+  el.addEventListener("touchstart", onStart);
+  el.addEventListener("touchend", onEnd);
   cleanup(() => {
-    detectorInstance.disable();
+    el.removeEventListener("touchstart", onStart);
+    el.removeEventListener("touchend", onEnd);
   });
 };
+
 export default swipeDirective;
