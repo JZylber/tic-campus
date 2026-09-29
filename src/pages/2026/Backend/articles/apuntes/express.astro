@@ -292,6 +292,103 @@ app.delete('/retiros/:id', eliminarRetiro);`}
   </p>
 </ImportantBox>
 
+<h2>Tipando el Request y el Response</h2>
+<p>
+  Por defecto, <em>req.params</em>, <em>req.body</em> y <em>req.query</em> son casi
+  <InlineCodeBlock code="any" lang="ts" />: TypeScript no nos avisa si nos equivocamos
+  de nombre o de tipo. Para arreglarlo, <em>Request</em> y <em>Response</em> son tipos
+  genéricos: les pasamos entre <InlineCodeBlock code="<>" lang="ts" /> los tipos
+  de lo que viaja en cada parte.
+</p>
+
+<h3>Los 5 parámetros de tipo de Request</h3>
+<CodeBlock
+  lang="ts"
+  code={`Request<Params, ResBody, ReqBody, ReqQuery, Locals>`}
+/>
+<ol>
+  <li>
+    <strong>Params</strong>: la forma de <em>req.params</em>. Un objeto con una propiedad
+    por cada <InlineCodeBlock code=":variable" lang="ts" /> de la ruta. Siempre son
+    <InlineCodeBlock code="string" lang="ts" />.
+  </li>
+  <li>
+    <strong>ResBody</strong>: el tipo del cuerpo que vamos a devolver con <em
+      >res.json / res.send</em
+    >.
+  </li>
+  <li>
+    <strong>ReqBody</strong>: la forma de <em>req.body</em>, lo que manda el
+    cliente en POST, PUT, etc.
+  </li>
+  <li>
+    <strong>ReqQuery</strong>: la forma de <em>req.query</em>, lo que viene después
+    del <InlineCodeBlock code="?" lang="plaintext" />. Los valores llegan como texto,
+    así que se tipan como <InlineCodeBlock code="string" lang="ts" /> (u opcionales).
+  </li>
+  <li>
+    <strong>Locals</strong>: la forma de <em>res.locals</em>, datos que se guardan
+    durante la petición para compartir entre funciones (por ejemplo, el usuario ya
+    identificado).
+  </li>
+</ol>
+<p>
+  <em>Response</em> recibe solo dos: <InlineCodeBlock
+    code="Response<ResBody, Locals>"
+    lang="ts"
+  />, los mismos ResBody y Locals que en el Request. Si no nos interesa tipar uno de
+  los parámetros, usamos <InlineCodeBlock code="any" lang="ts" /> o <InlineCodeBlock
+    code="{}"
+    lang="ts"
+  /> en su lugar, pero hay que completar los anteriores para llegar al que sí queremos.
+</p>
+
+<h3>Ejemplo combinando todo</h3>
+<CodeBlock
+  lang="ts"
+  code={`// PUT /alumnos/:id?notificar=true -> Modifica un alumno
+
+type ParamsAlumno = { id: string };
+type CuerpoPedido = { nombre: string; curso: string };
+type ConsultaAlumno = { notificar?: "true" | "false" };
+type CuerpoRespuesta = { mensaje: string } | { error: string };
+type Locales = { usuario: string };
+
+function modificarAlumno(
+    req: Request<ParamsAlumno, CuerpoRespuesta, CuerpoPedido, ConsultaAlumno, Locales>,
+    res: Response<CuerpoRespuesta, Locales>
+): void {
+    let id: string = req.params.id;              // Params
+    let nombre: string = req.body.nombre;        // ReqBody
+    let notificar: boolean = req.query.notificar === "true"; // ReqQuery
+    let quien: string = res.locals.usuario;      // Locals
+
+    if (nombre === "") {
+        res.status(400).json({ error: "Falta el nombre" }); // ResBody
+        return;
+    }
+    res.status(200).json({
+        mensaje: \`\${quien} actualizó al alumno \${id}\${notificar ? " y se notificó" : ""}\`
+    });
+    // res.json({ mensaje: 5 }); // Error: 5 no es un string
+    // req.params.legajo;        // Error: 'legajo' no existe en ParamsAlumno
+}
+
+app.put('/alumnos/:id', modificarAlumno);`}
+/>
+<p>
+  Ahora TypeScript nos marca un error si usamos <em>req.params.legajo</em>, si
+  leemos un campo inexistente del <em>body</em> o si respondemos con un formato
+  distinto al declarado.
+</p>
+<ImportantBox warning="Los tipos no validan nada en tiempo de ejecución">
+  <p>
+    Estos tipos solo <strong>le dicen a TypeScript qué esperamos</strong>. Si el
+    cliente manda un <em>body</em> con otra forma, Express no se queja: hay que
+    verificar los datos a mano antes de confiar en ellos.
+  </p>
+</ImportantBox>
+
 <h2>Resumen</h2>
 <table class="data-table">
   <thead>
