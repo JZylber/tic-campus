@@ -1,0 +1,89 @@
+---
+import ImportantBox from "../../../../../components/articles/alertbox/ImportantBox.astro";
+import InlineCodeBlock from "../../../../../components/articles/code-block/InlineCodeBlock.astro";
+
+export const partial = true;
+---
+
+<ImportantBox warning="Documentación oficial">
+  <p>
+    Para información completa sobre cómo usar Insomnia, vayan a <a
+      href="https://developer.konghq.com/insomnia/"
+      target="_blank"
+      rel="noopener noreferrer">developer.konghq.com/insomnia</a
+    >.
+  </p>
+</ImportantBox>
+
+<h2>¿Qué es Insomnia y para qué sirve?</h2>
+<p>
+  Cuando programamos un servidor web, probar peticiones <em>GET</em> es fácil:
+  abrimos el navegador, escribimos la URL y vemos el resultado. El problema
+  aparece con los otros métodos. El navegador no nos deja hacer peticiones <em
+    >POST</em
+  >, <em>PUT</em> o <em>DELETE</em> manualmente desde la barra de direcciones, ni
+  tampoco nos permite escribir un <em>body</em> en JSON a mano sin programar antes
+  una página web entera.
+</p>
+<p>
+  <strong>Insomnia</strong> es un cliente HTTP: una aplicación de escritorio que
+  actúa como si fuera nuestro frontend de pruebas. Nos permite:
+</p>
+<ul>
+  <li>
+    Enviar peticiones con cualquier método HTTP (<em>GET</em>, <em>POST</em>, <em
+      >PUT</em
+    > o <em>DELETE</em>).
+  </li>
+  <li>Mandar datos en el <em>body</em> en formato JSON.</li>
+  <li>
+    Probar variables en la URL (<em>params</em>) y parámetros de consulta (<em
+      >query</em
+    >).
+  </li>
+  <li>
+    Ver exactamente el código de estado (<InlineCodeBlock
+      code="200"
+      lang="plaintext"
+    />, <InlineCodeBlock code="404" lang="plaintext" />, etc.) y la respuesta que
+    devuelve nuestro backend.
+  </li>
+</ul>
+
+<h2>La interfaz de Insomnia</h2>
+<p>La pantalla de trabajo se divide en tres columnas principales:</p>
+<ul>
+  <li>
+    <strong>Panel izquierdo</strong>: la lista donde organizamos y guardamos
+    nuestras peticiones para no tener que escribirlas cada vez.
+  </li>
+  <li>
+    <strong>Panel central</strong>: donde configuramos qué URL vamos a
+    peticionar, qué método vamos a usar y qué datos vamos a enviar en los <em
+      >headers</em
+    > o en el <em>body</em>.
+  </li>
+  <li>
+    <strong>Panel derecho</strong>: donde vemos lo que respondió nuestro
+    servidor de Express (el JSON devuelto, el código de estado y el tiempo de
+    respuesta).
+  </li>
+</ul>
+
+<h2>Crear una petición paso a paso</h2>
+<ol>
+  <li>
+    Hacé click en el botón <strong>+</strong> (o <em>New HTTP Request</em>) en el
+    panel izquierdo.
+  </li>
+  <li>
+    Elegí el método HTTP en el desplegable (por defecto viene en <em>GET</em>).
+  </li>
+  <li>
+    Escribí la URL de tu servidor (por ejemplo: <InlineCodeBlock
+      code="http://localhost:3000/api/cuento/la-isla-a-mediodia"
+      lang="plaintext"
+    />).
+  </li>
+  <li>Hacé click en el botón violeta <strong>Send</strong>.</li>
+</ol>
