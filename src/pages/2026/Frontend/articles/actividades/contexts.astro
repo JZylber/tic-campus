@@ -1,0 +1,52 @@
+---
+import ImportantBox from "../../../../../components/articles/alertbox/ImportantBox.astro";
+
+export const partial = true;
+---
+
+<h2>CineVault — React Context</h2>
+<p>
+  En este TP van a dotar de estado global a una aplicación en <strong>React + TypeScript + Tailwind CSS</strong> llamada <strong>CineVault</strong>, donde los usuarios pueden explorar un catálogo de películas y series obtenidas desde la API de TVMaze y armar su propia <strong>Watchlist personal</strong>.
+</p>
+<p>
+  La estructura visual, los estilos, las rutas y el consumo de datos asíncronos ya están listos (organizados como una "caja negra"). Su misión será implementar el <strong>React Context API y un Custom Hook</strong> para conectar el catálogo con el contador en tiempo real de la barra de navegación y la vista de la Watchlist.
+</p>
+
+<h2>¿Cómo arrancar?</h2>
+<p>
+  El proyecto se entrega a través de <strong>GitHub Classroom</strong>. Al aceptar
+  la asignación se creará automáticamente un repositorio individual en tu cuenta.
+</p>
+<ol>
+  <li>
+    Aceptá la asignación desde este link:{" "}
+    <a
+      href="https://classroom50.org/Avanzado-FrontEnd-4to/avanzado-frontend-2026/assignments/usando-react-contexts/accept"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      classroom50.org — Aceptar asignación
+    </a>
+  </li>
+  <li>Cloná el repositorio que se creó en tu cuenta.</li>
+  <li>Corré <code>npm install</code> y luego <code>npm run dev</code>.</li>
+</ol>
+
+<h2>¿Qué tienen que hacer?</h2>
+<p>
+  En el código van a encontrar comentarios <code>// TODO:</code> numerados del Paso 1 al 12 que los guían en cada archivo:
+</p>
+<ul>
+  <li><strong>Paso 1 y 2:</strong> Definir los tipos y crear el <code>WatchlistContext</code> (<code>src/context/WatchlistContext.tsx</code>).</li>
+  <li><strong>Paso 3 al 7:</strong> Implementar el estado y las funciones en <code>WatchlistProvider</code> (<code>src/context/WatchlistProvider.tsx</code>).</li>
+  <li><strong>Paso 8:</strong> Crear el custom hook <code>useWatchlist</code> con validación defensiva (<code>src/hooks/useWatchlist.ts</code>).</li>
+  <li><strong>Paso 9:</strong> Envolver la aplicación con el Provider en <code>src/App.tsx</code>.</li>
+  <li><strong>Paso 10 al 12:</strong> Consumir el hook en <code>MovieCard</code>, <code>Navbar</code> y <code>WatchlistPage</code>.</li>
+</ul>
+
+<ImportantBox>
+  <p>
+    <strong>Leé el <code>README.md</code> del repositorio</strong> antes de empezar —
+    tiene la guía detallada paso a paso, pistas similares al ejemplo de Pokémon visto en clase y una checklist de verificación para chequear que todo funcione.
+  </p>
+</ImportantBox>
