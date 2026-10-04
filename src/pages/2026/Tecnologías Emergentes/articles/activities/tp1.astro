@@ -1,0 +1,116 @@
+---
+import InlineCodeBlock from "../../../../../components/articles/code-block/InlineCodeBlock.astro";
+
+export const partial = true;
+---
+
+<h1>Trabajo Práctico 1 - Intro al Machine Learning</h1>
+<h2>Consigna</h2>
+<p>
+  A partir de lo trabajado en el seminario, para este trabajo deberán entregar
+  en un Jupyter Notebook lo siguiente:
+</p>
+<ul>
+  <li>
+    El origen del conjunto de datos que eligieron para la clasificación binaria.
+    Tiene que tener datos numéricos continuos y categóricos.
+  </li>
+  <li>Justificación del problema de clasificación.</li>
+  <li>
+    Descripción del dataset y su adecuada exploración de los datos. ¿Qué
+    columnas tiene? ¿Qué representan? ¿Pueden encontrar algún tipo de
+    correlación?
+  </li>
+  <li>
+    Utilizando Scikit Learn, construir un modelo para clasificación binaria a
+    partir de los datos del dataset. Se deben construir 2 modelos distintos:
+    <ul>
+      <li>
+        A partir de solo los atributos numéricos continuos, un modelo de
+        clasificación binaria.
+      </li>
+      <li>
+        Otro modelo a partir de tanto los atributos numéricos continuos como los
+        atributos categóricos del dataset. Para este último modelo se debe hacer
+        una exploración de sus posibles hiperparámetros para hallar la mejor
+        performance en Validación. Deben utilizar <InlineCodeBlock
+          code="GridSearchCV"
+          lang="python"
+        />.
+      </li>
+    </ul>
+  </li>
+  <li>
+    Para todos los modelos se debe evaluar:
+    <ul>
+      <li>
+        La performance haciendo uso de las métricas Accuracy, Precision y Recall
+        en el conjunto de test (ya implementadas en SK-Learn).
+      </li>
+      <li>Mostrar una Matriz de Confusión sobre los datos de Test.</li>
+    </ul>
+  </li>
+</ul>
+<p>
+  El notebook debe ejecutarse sin errores y debe incluir comentarios
+  explicativos de cada paso. Debe haber cohesión entre las secciones y los
+  análisis realizados.
+</p>
+<h2>🔋 Bonus</h2>
+<p>
+  Pueden investigar otros modelos para mejorar la performance de los modelos.
+  Por ejemplo, Random Forest o XGBoost.
+</p>
+<h2>Fecha de entrega</h2>
+<p>📅 <strong>AC:</strong> 10/10, <strong>BD:</strong> 14/10</p>
+<p>
+  Se debe entregar un notebook llamado <InlineCodeBlock
+    code="apellido1_apellido2_(AC/BD).ipynb"
+    lang="bash"
+  /> con el análisis realizado en el siguiente <a
+    href="https://forms.gle/2noFSMwuW4mb7bpL8"
+    target="_blank">Google Forms</a
+  >.
+</p>
+<h2>Links Útiles</h2>
+<ul>
+  <li>
+    <a
+      href="https://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeClassifier.html#decisiontreeclassifier"
+      target="_blank">DecisionTreeClassifier</a
+    >
+  </li>
+  <li>
+    <a
+      href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.precision_score.html"
+      target="_blank">precision_score</a
+    >
+  </li>
+  <li>
+    <a
+      href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html"
+      target="_blank">GridSearchCV</a
+    >
+  </li>
+  <li>
+    <a
+      href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.RandomizedSearchCV.html"
+      target="_blank">RandomizedSearchCV</a
+    >
+  </li>
+  <li>
+    <a
+      href="https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html"
+      target="_blank">RandomForestClassifier</a
+    >
+  </li>
+  <li>
+    <a href="https://xgboost.readthedocs.io/en/stable/" target="_blank"
+      >XGBoost</a
+    >
+  </li>
+</ul>
+<p>
+  Además pueden (y deben) utilizar los notebooks vistos en clase que están en este Repo de
+  GitHub.
+</p>
