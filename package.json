@@ -2,7 +2,6 @@
   "name": "tic-campus",
   "type": "module",
   "version": "2.9.0",
-  "packageManager": "pnpm@10.34.6",
   "scripts": {
     "dev": "node scripts/choose-backend.mjs",
     "preview:articles": "astro dev --open /tic-campus/preview",
