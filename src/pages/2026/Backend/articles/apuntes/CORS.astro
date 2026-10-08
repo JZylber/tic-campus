@@ -1,0 +1,119 @@
+---
+import CodeBlock from "../../../../../components/articles/code-block/CodeBlock.astro";
+import InlineCodeBlock from "../../../../../components/articles/code-block/InlineCodeBlock.astro";
+import ImportantBox from "../../../../../components/articles/alertbox/ImportantBox.astro";
+
+export const partial = true;
+---
+
+<h2>El problema</h2>
+<p>
+  Tenemos buenas y malas noticias. Arranquemos con las malas: el template de
+  TypeScript que usamos para el TP no configuraba <strong>CORS</strong> (<em
+    >Cross-Origin Resource Sharing</em
+  >), y eso hace que no se pueda probar el frontend de forma local. Al intentar
+  llamar a la API desde el navegador aparece un error parecido a este en la
+  consola:
+</p>
+<CodeBlock
+  lang="plaintext"
+  code={`Access to fetch at 'http://localhost:3000/materias' from origin 'http://localhost:5173'
+has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present
+on the requested resource.`}
+/>
+
+<h2>¿Qué es CORS?</h2>
+<p>
+  Un <em>origen</em> es la combinación de protocolo, dominio y puerto. Nuestro
+  frontend (por ejemplo <InlineCodeBlock
+    code="http://localhost:5173"
+    lang="plaintext"
+  />) y nuestro backend (<InlineCodeBlock
+    code="http://localhost:3000"
+    lang="plaintext"
+  />) tienen <strong>orígenes distintos</strong> porque cambia el puerto. Por
+  seguridad, el navegador bloquea las respuestas a pedidos entre orígenes
+  distintos, salvo que el servidor diga explícitamente que lo permite, agregando
+  el header <InlineCodeBlock
+    code="Access-Control-Allow-Origin"
+    lang="plaintext"
+  /> a la respuesta.
+</p>
+<p>
+  Ahora las buenas: <strong>es bastante fácil de arreglar</strong>. Hay que
+  hacer cuatro pasos en su proyecto.
+</p>
+
+<h2>Cómo arreglarlo</h2>
+
+<h3>1. Instalar cors y sus tipos</h3>
+<p>
+  Como usamos TypeScript, los tipos de las librerías se instalan por separado
+  (y solo en desarrollo):
+</p>
+<CodeBlock
+  lang="bash"
+  code={`npm install cors
+npm install --save-dev @types/cors`}
+/>
+
+<h3>2. Importar cors en server.ts</h3>
+<p>
+  Arriba de todo en <InlineCodeBlock code="src/server.ts" lang="plaintext" />:
+</p>
+<CodeBlock lang="ts" code={`import cors from 'cors';`} />
+
+<h3>3. Decirle a Express que lo use</h3>
+<p>
+  Con <InlineCodeBlock code="app.use" lang="ts" /> le indicamos a Express que
+  permita pedidos de cualquier puerto de <em>localhost</em>. Tiene que ir
+  <strong>antes</strong> de definir las rutas:
+</p>
+<CodeBlock
+  lang="ts"
+  code={`const app: Express = express();
+
+/** CORS: permite pedidos desde cualquier puerto de localhost. */
+app.use(cors({ origin: /^https?:\\/\\/(localhost|127\\.0\\.0\\.1)(:\\d+)?$/ }));
+
+app.use(express.json());`}
+/>
+<p>
+  El valor de <em>origin</em> es una <strong>expresión regular</strong>: acepta
+  <InlineCodeBlock code="http" lang="plaintext" /> o <InlineCodeBlock
+    code="https"
+    lang="plaintext"
+  />, con host <InlineCodeBlock code="localhost" lang="plaintext" /> o <InlineCodeBlock
+    code="127.0.0.1"
+    lang="plaintext"
+  />, y con cualquier puerto (o ninguno).
+</p>
+
+<h3>4. Probar</h3>
+<p>
+  Si levantaste el servidor con <InlineCodeBlock code="npm run dev" lang="bash" />
+  se reinicia solo al guardar. Si no, frenalo y volvelo a iniciar:
+</p>
+<CodeBlock lang="bash" code={`npm run dev`} />
+<p>
+  Recargá el frontend y el error de CORS ya no debería aparecer. ¡Listo! No era
+  tan terrible.
+</p>
+
+<ImportantBox warning="Si usan HosTICer">
+  <p>
+    Si usan HosTICer, CORS no es un problema porque tanto el back como el front
+    están hosteados en el mismo "origen".
+  </p>
+</ImportantBox>
+
+<ImportantBox warning="Solo para desarrollo local">
+  <p>
+    Esta configuración únicamente permite pedidos desde <em>localhost</em>. Si
+    más adelante publican el frontend en otro dominio, hay que agregar ese
+    origen a la configuración de <em>cors</em>. No usen <InlineCodeBlock
+      code="cors()"
+      lang="ts"
+    /> sin opciones en un servidor real: eso habilita pedidos desde cualquier sitio.
+  </p>
+</ImportantBox>
