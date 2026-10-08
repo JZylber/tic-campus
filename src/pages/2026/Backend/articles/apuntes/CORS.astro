@@ -103,20 +103,19 @@ app.use(express.json());`}
   tan terrible.
 </p>
 
-<ImportantBox warning="Si usan HosTICer">
-  <p>
-    Si usan HosTICer, CORS no es un problema porque tanto el back como el front
-    están hosteados en el mismo "origen".
-  </p>
-</ImportantBox>
+<h2>Si usan HosTICer</h2>
+<p>
+  Si usan HosTICer, CORS no es un problema porque tanto el back como el front
+  están hosteados en el mismo "origen".
+</p>
 
-<ImportantBox warning="Solo para desarrollo local">
-  <p>
-    Esta configuración únicamente permite pedidos desde <em>localhost</em>. Si
-    más adelante publican el frontend en otro dominio, hay que agregar ese
-    origen a la configuración de <em>cors</em>. No usen <InlineCodeBlock
-      code="cors()"
-      lang="ts"
-    /> sin opciones en un servidor real: eso habilita pedidos desde cualquier sitio.
-  </p>
-</ImportantBox>
+<h2>Solo para desarrollo local</h2>
+<p>
+  Esta configuración únicamente permite pedidos desde <em>localhost</em>. Si
+  más adelante publican el frontend en otro dominio, hay que agregar ese
+  origen a la configuración de <em>cors</em>. No usen <InlineCodeBlock
+    code="cors()"
+    lang="ts"
+  /> sin opciones en un servidor real: eso habilita pedidos desde cualquier sitio.
+</p>
+
