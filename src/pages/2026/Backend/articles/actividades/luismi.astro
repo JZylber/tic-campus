@@ -18,8 +18,8 @@ export const partial = true;
     href="https://docs.google.com/spreadsheets/d/1wGbQxRiyhveML1M2_1L6jJedhaDmcFZ3Hkx0c82oCx4/edit?usp=sharing"
     target="_blank"
     rel="noopener noreferrer">ver acá</a
-  >) y los resultados de Luismi
-  fueron:
+  >, o en la tabla de más abajo, que tiene exactamente los mismos datos) y los
+  resultados de Luismi fueron:
 </p>
 <table class="data-table">
   <thead>
@@ -39,6 +39,182 @@ export const partial = true;
     </tr>
   </tbody>
 </table>
+
+<p>
+  Esta es la base de datos del link, con la frecuencia con que aparece cada alelo
+  en cada zona:
+</p>
+<div class="freq-wrap">
+  <table class="data-table freq-table">
+    <thead>
+      <tr>
+        <th rowspan="2">Gen</th>
+        <th rowspan="2">Alelo</th>
+        <th colspan="8">Frecuencias alélicas por zona</th>
+      </tr>
+      <tr>
+        <th>México</th>
+        <th>Bolivia</th>
+        <th>Madrid (Spa)</th>
+        <th>Barcelona (Spa)</th>
+        <th>Portugal</th>
+        <th>Roma (It)</th>
+        <th>Venezia (It)</th>
+        <th>Sudáfrica</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="gene-start">
+        <th scope="rowgroup" rowspan="2">Rh</th>
+        <th scope="row">Rh +</th>
+        <td>0,4</td>
+        <td>0,2</td>
+        <td>0,4</td>
+        <td>0</td>
+        <td>0,1</td>
+        <td>0,6</td>
+        <td>0,7</td>
+        <td>0,1</td>
+      </tr>
+      <tr>
+        <th scope="row">Rh -</th>
+        <td>0,6</td>
+        <td>0,8</td>
+        <td>0,6</td>
+        <td>1</td>
+        <td>0,9</td>
+        <td>0,4</td>
+        <td>0,3</td>
+        <td>0,9</td>
+      </tr>
+      <tr class="gene-start">
+        <th scope="rowgroup" rowspan="3">ABO</th>
+        <th scope="row">A</th>
+        <td>0</td>
+        <td>0,7</td>
+        <td>0,9</td>
+        <td>0,4</td>
+        <td>1</td>
+        <td>0,3</td>
+        <td>0,9</td>
+        <td>0,2</td>
+      </tr>
+      <tr>
+        <th scope="row">B</th>
+        <td>0,8</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0,2</td>
+        <td>0</td>
+        <td>0,5</td>
+        <td>0</td>
+        <td>0,6</td>
+      </tr>
+      <tr>
+        <th scope="row">O</th>
+        <td>0,2</td>
+        <td>0,3</td>
+        <td>0,1</td>
+        <td>0,4</td>
+        <td>0</td>
+        <td>0,2</td>
+        <td>0,1</td>
+        <td>0,2</td>
+      </tr>
+      <tr class="gene-start">
+        <th scope="rowgroup" rowspan="3">Gen X</th>
+        <th scope="row">X1</th>
+        <td>0,7</td>
+        <td>0,2</td>
+        <td>0</td>
+        <td>0,3</td>
+        <td>0,9</td>
+        <td>0,7</td>
+        <td>0</td>
+        <td>0,8</td>
+      </tr>
+      <tr>
+        <th scope="row">X2</th>
+        <td>0,1</td>
+        <td>0,6</td>
+        <td>0,4</td>
+        <td>0,5</td>
+        <td>0</td>
+        <td>0,2</td>
+        <td>0,4</td>
+        <td>0,1</td>
+      </tr>
+      <tr>
+        <th scope="row">X3</th>
+        <td>0,2</td>
+        <td>0,2</td>
+        <td>0,6</td>
+        <td>0,2</td>
+        <td>0,1</td>
+        <td>0,1</td>
+        <td>0,6</td>
+        <td>0,1</td>
+      </tr>
+      <tr class="gene-start">
+        <th scope="rowgroup" rowspan="2">Rocu</th>
+        <th scope="row">R40</th>
+        <td>1</td>
+        <td>0,5</td>
+        <td>0</td>
+        <td>0,4</td>
+        <td>0,2</td>
+        <td>0</td>
+        <td>0,9</td>
+        <td>1</td>
+      </tr>
+      <tr>
+        <th scope="row">R12</th>
+        <td>0</td>
+        <td>0,5</td>
+        <td>1</td>
+        <td>0,6</td>
+        <td>0,8</td>
+        <td>1</td>
+        <td>0,1</td>
+        <td>0</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<style>
+  .freq-wrap {
+    overflow-x: auto;
+    margin: 0.5rem 1rem;
+  }
+  .freq-table {
+    margin: 0;
+    width: 100%;
+    font-size: 0.9rem;
+    white-space: nowrap;
+  }
+  .freq-table thead th {
+    padding: 0.4rem 0.6rem;
+    border-bottom: 1px solid rgb(255 255 255 / 0.25);
+  }
+  .freq-table tbody th {
+    padding: 0.4rem 0.6rem;
+    text-align: center;
+    background: rgb(0 0 0 / 0.06);
+  }
+  .freq-table tbody td {
+    padding: 0.4rem 0.6rem;
+  }
+  .freq-table tbody tr:hover td {
+    background: rgb(0 0 0 / 0.06);
+  }
+  .freq-table .gene-start > * {
+    border-top: 2px solid rgb(0 0 0 / 0.25);
+  }
+  .freq-table tbody tr:first-child > * {
+    border-top: 0;
+  }
+</style>
 
 <h2>Consigna global</h2>
 <p>¿Sus abuelos le decían la verdad?</p>
