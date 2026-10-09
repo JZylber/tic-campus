@@ -1,0 +1,394 @@
+---
+import CodeBlock from "../../../../../components/articles/code-block/CodeBlock.astro";
+import InlineCodeBlock from "../../../../../components/articles/code-block/InlineCodeBlock.astro";
+import ImportantBox from "../../../../../components/articles/alertbox/ImportantBox.astro";
+
+export const partial = true;
+---
+
+<h2>Introducción</h2>
+<p>
+  Hay 441 muestras de ADN de seis lugares de la Argentina. De cada persona se
+  leyeron 99 posiciones del genoma, siempre las mismas. El objetivo es armar una
+  tabla de frecuencias: cuánta gente de cada ciudad tiene cada genotipo en una
+  posición dada.
+</p>
+<p>
+  El frontend ya está hecho: muestra una tabla con una fila por genotipo y una
+  columna por ciudad, y un desplegable para elegir la posición. Las rutas
+  también están hechas. Lo que falta son las <strong>cinco funciones</strong> que
+  calculan los números de la tabla.
+</p>
+
+<h2>Los datos</h2>
+<p>
+  Los tres JSON viven en <InlineCodeBlock code="data/" lang="plaintext" /> y ya
+  están leídos arriba de todo en <InlineCodeBlock
+    code="src/index.ts"
+    lang="plaintext"
+  />: no hay que abrir ningún archivo.
+</p>
+<p>
+  <InlineCodeBlock code="data/snps.json" lang="plaintext" /> es la lista de las 99
+  posiciones que se midieron, con el nombre que les da el catálogo internacional:
+</p>
+<CodeBlock lang="json" code={`["rs1004704", "rs10131076", "rs1013459", "..."]`} />
+<p>
+  <InlineCodeBlock code="data/muestras.json" lang="plaintext" /> son las 441 muestras:
+</p>
+<CodeBlock
+  lang="json"
+  code={`{
+  "ciudad": "Salta",
+  "id": "412",
+  "genotipos": ["AG", "GG", ".", "AA", "..."]
+}`}
+/>
+<p>
+  <strong>La clave de todo el ejercicio está en <InlineCodeBlock
+    code="genotipos"
+    lang="ts"
+  />:</strong> es una lista que va en el mismo orden que <InlineCodeBlock
+    code="snps"
+    lang="ts"
+  />. O sea que <InlineCodeBlock code="genotipos[5]" lang="ts" /> es lo que se
+  leyó en la posición <InlineCodeBlock code="snps[5]" lang="ts" />, que es <InlineCodeBlock
+    code="rs1036543"
+    lang="plaintext"
+  />. Las dos listas están alineadas, y por eso siempre se trabaja con el <strong
+    >índice</strong
+  > de la posición, no con su nombre.
+</p>
+<p>
+  Cada genotipo son las dos letras que esa persona tiene en esa posición (<InlineCodeBlock
+    code="'AG'"
+    lang="ts"
+  />, <InlineCodeBlock code="'CC'" lang="ts" />, <InlineCodeBlock
+    code="'TT'"
+    lang="ts"
+  />, ...), porque de cada posición del genoma hay dos copias, una de cada padre.
+  Cuando la máquina no pudo leer una posición, en lugar de las dos letras hay un
+  punto:
+</p>
+<CodeBlock lang="ts" code={`let SIN_DATO: string = '.';`} />
+<p>
+  Eso pasa seguido y es el detalle que hace o rompe el ejercicio.
+</p>
+
+<h2>Consigna base</h2>
+<p>
+  Van en <InlineCodeBlock code="src/index.ts" lang="plaintext" />. Hay dos
+  funciones que ya están hechas:
+</p>
+<ul>
+  <li>
+    <InlineCodeBlock code="indiceDeSnp('rs1036543')" lang="ts" /> devuelve <InlineCodeBlock
+      code="5"
+      lang="ts"
+    />: traduce el nombre de una posición al índice que ocupa en <InlineCodeBlock
+      code="genotipos"
+      lang="ts"
+    />. La usa la ruta, no hace falta tocarla.
+  </li>
+  <li>
+    <InlineCodeBlock code="ciudades()" lang="ts" /> devuelve las ciudades que
+    aparecen en las muestras, sin repetir. <strong>Está escrita como ejemplo</strong
+    >: es exactamente la forma que tienen las funciones que hay que escribir, un
+    ciclo que recorre <InlineCodeBlock code="muestras" lang="ts" /> de principio
+    a fin y un acumulador que se va armando con lo que se encuentra en el camino.
+    Leerla antes de empezar.
+  </li>
+</ul>
+<p>Las cinco que hay que completar:</p>
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Función</th>
+      <th>Qué devuelve</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><InlineCodeBlock code="contarMuestras(ciudad)" lang="ts" /></td>
+      <td>Cuántas muestras son de esa ciudad.</td>
+    </tr>
+    <tr>
+      <td>
+        <InlineCodeBlock code="contarConDato(ciudad, indiceSnp)" lang="ts" />
+      </td>
+      <td>Cuántas de esa ciudad tienen algo leído en esa posición.</td>
+    </tr>
+    <tr>
+      <td>
+        <InlineCodeBlock
+          code="contarGenotipo(ciudad, indiceSnp, genotipo)"
+          lang="ts"
+        />
+      </td>
+      <td>Cuántas de esa ciudad tienen ese genotipo en esa posición.</td>
+    </tr>
+    <tr>
+      <td>
+        <InlineCodeBlock
+          code="frecuencia(ciudad, indiceSnp, genotipo)"
+          lang="ts"
+        />
+      </td>
+      <td>
+        Qué proporción de esa ciudad tiene ese genotipo. Un número de 0 a 1.
+      </td>
+    </tr>
+    <tr>
+      <td><InlineCodeBlock code="genotiposPresentes(indiceSnp)" lang="ts" /></td>
+      <td>Los genotipos que aparecen en esa posición, sin repetir.</td>
+    </tr>
+  </tbody>
+</table>
+<p>Conviene hacerlas en ese orden: cada una se parece a la anterior.</p>
+<p>
+  <InlineCodeBlock code="contarMuestras" lang="ts" /> es la más chica de todas:
+  un contador en 0, un ciclo que recorre las 441 muestras, un <InlineCodeBlock
+    code="if"
+    lang="ts"
+  /> y sumar 1 cuando corresponde. <InlineCodeBlock
+    code="contarMuestras('Salta')"
+    lang="ts"
+  /> tiene que dar <InlineCodeBlock code="37" lang="ts" />.
+</p>
+<p>
+  <InlineCodeBlock code="contarConDato" lang="ts" /> es la misma función con un <InlineCodeBlock
+    code="if"
+    lang="ts"
+  /> de dos condiciones: que la muestra sea de esa ciudad <strong>y</strong> que
+  lo que tenga en esa posición no sea <InlineCodeBlock
+    code="SIN_DATO"
+    lang="ts"
+  />.
+</p>
+<p>
+  <InlineCodeBlock code="contarGenotipo" lang="ts" /> es otra vez la misma,
+  cambiando con qué se compara. Si parece repetitivo, es porque lo es: son tres
+  contadores con la misma forma.
+</p>
+<p>
+  <InlineCodeBlock code="frecuencia" lang="ts" /> no lleva ningún ciclo: es una
+  división que se arma llamando a las dos funciones anteriores.
+</p>
+<ImportantBox>
+  <p>
+    <strong>La trampa de <InlineCodeBlock code="frecuencia" lang="ts" /> está en
+    el denominador.</strong> Si una muestra no se pudo leer en esa posición, no
+    cuenta ni arriba ni abajo: no se sabe qué tiene esa persona ahí, así que no
+    participa de la cuenta. El denominador es <InlineCodeBlock
+      code="contarConDato"
+      lang="ts"
+    />, <strong>no</strong> <InlineCodeBlock code="contarMuestras" lang="ts" />.
+  </p>
+  <p>
+    La diferencia es real: en Bahía Blanca hay 95 muestras, pero en la posición
+    5 hay 93 con dato. Si se divide por 95, todos los números salen un poco bajos,
+    y más bajos en las ciudades que tienen más datos faltantes. Es un error que
+    da números creíbles, y por eso es difícil de ver.
+  </p>
+  <p>
+    También hay que cuidar el caso en el que no hay <strong>ninguna</strong>
+    muestra con dato: no hay nada que dividir y la frecuencia es 0. Si no, la
+    división da <InlineCodeBlock code="NaN" lang="ts" /> y la tabla se llena de
+    "NaN%".
+  </p>
+</ImportantBox>
+<p>
+  <InlineCodeBlock code="genotiposPresentes" lang="ts" /> son las filas de la
+  tabla. No se pueden escribir a mano porque cambian de una posición a otra: en
+  algunas hay tres genotipos y en otras dos. Es la misma forma que <InlineCodeBlock
+    code="ciudades()"
+    lang="ts"
+  />, pero recorriendo una posición de todas las muestras en lugar de las
+  ciudades, y sin contar <InlineCodeBlock code="SIN_DATO" lang="ts" />.
+</p>
+<p>
+  Ejemplos de lo que tienen que dar:
+</p>
+<CodeBlock
+  lang="ts"
+  code={`contarMuestras('Salta');                // 37
+contarConDato('Bahía Blanca', 5);       // 93  (de 95 muestras, 2 no se pudieron leer)
+contarGenotipo('Salta', 5, 'CT');       // 15
+frecuencia('Salta', 5, 'CT');           // 0.40540540540540543  (15 de 37)
+genotiposPresentes(5);                  // ['CC', 'CT', 'TT']  (en algún orden)`}
+/>
+
+<h3>Lo que no hay que escribir</h3>
+<p>
+  La ruta <InlineCodeBlock code="GET /api/tabla/:snp" lang="plaintext" /> ya está
+  hecha, y es la que arma la tabla llamando a estas cinco funciones: recorre las
+  ciudades, recorre los genotipos, y pide una frecuencia para cada cruce. Vale la
+  pena leerla para ver cómo cinco funciones de un solo ciclo alcanzan para armar
+  una tabla de dos dimensiones.
+</p>
+
+<h3>Qué se ve cuando funciona</h3>
+<p>
+  La página abre en <InlineCodeBlock code="rs1036543" lang="plaintext" />. Si
+  todo está bien, las seis columnas muestran números distintos: el genotipo <InlineCodeBlock
+    code="TT"
+    lang="plaintext"
+  /> está en el 61% de las muestras de AMBA y en el 13% de las de Salta, y el <InlineCodeBlock
+    code="CC"
+    lang="plaintext"
+  /> al revés: 8% en AMBA y 46% en Salta. Ahora cambiar el desplegable a <InlineCodeBlock
+    code="rs1013459"
+    lang="plaintext"
+  /> y mirar de nuevo: las seis columnas dan casi lo mismo.
+</p>
+<p>
+  Esa diferencia entre las dos posiciones es el ejercicio. De las 99 posiciones,
+  unas pocas distinguen bastante entre ciudades y la mayoría no distingue casi
+  nada. Buscar en el desplegable alguna otra que se parezca a <InlineCodeBlock
+    code="rs1036543"
+    lang="plaintext"
+  />.
+</p>
+<p>
+  Mientras las funciones estén vacías, la página lo avisa arriba de la tabla:
+  dice cuál falta.
+</p>
+
+<h2>Consigna manija</h2>
+<p>
+  Si cada ciudad tiene sus frecuencias, ¿se puede ir para el otro lado? Dada una
+  muestra, ¿se puede adivinar de qué ciudad es?
+</p>
+<p>
+  En <InlineCodeBlock code="data/muestrasFalsas.json" lang="plaintext" /> hay
+  seis muestras <strong>inventadas</strong>: <em>Martina</em>, <em>Facundo</em>,
+  <em>Camila</em>, <em>Bruno</em>, <em>Abril</em> y <em>Mateo</em>. Cada una fue
+  armada imitando a una ciudad: en cada posición se le puso un genotipo elegido al
+  azar respetando las frecuencias de esa ciudad. Son seis personas que no existen.
+</p>
+<p>
+  La idea es darle a cada ciudad un <strong>puntaje</strong> para una muestra:
+  recorrer las 99 posiciones y sumar, en cada una, la frecuencia que tiene en esa
+  ciudad el genotipo que la muestra tiene ahí. Si la muestra tiene genotipos que
+  en esa ciudad son comunes, suma mucho; si tiene genotipos que ahí son raros, suma
+  poco. Después gana la ciudad con el puntaje más alto.
+</p>
+<p>
+  Van en el mismo <InlineCodeBlock code="src/index.ts" lang="plaintext" />, abajo
+  de todo, donde dice <InlineCodeBlock
+    code="---- Consigna manija ----"
+    lang="plaintext"
+  />:
+</p>
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Función</th>
+      <th>Qué devuelve</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><InlineCodeBlock code="buscarMuestra(lista, id)" lang="ts" /></td>
+      <td>La muestra de esa lista con ese id, o <InlineCodeBlock code="undefined" lang="ts" />.</td>
+    </tr>
+    <tr>
+      <td><InlineCodeBlock code="puntaje(muestra, ciudad)" lang="ts" /></td>
+      <td>La suma de las frecuencias de esa ciudad, posición por posición.</td>
+    </tr>
+    <tr>
+      <td><InlineCodeBlock code="ciudadMasParecida(muestra)" lang="ts" /></td>
+      <td>La ciudad que le da el puntaje más alto.</td>
+    </tr>
+  </tbody>
+</table>
+<p>
+  <InlineCodeBlock code="buscarMuestra" lang="ts" /> es una búsqueda lineal, igual
+  que la de Neurosys pero por <InlineCodeBlock code="id" lang="ts" />. Recibe la
+  lista por parámetro porque sirve para las dos: <InlineCodeBlock
+    code="muestras"
+    lang="ts"
+  /> y <InlineCodeBlock code="muestrasFalsas" lang="ts" />.
+</p>
+<p>
+  <InlineCodeBlock code="puntaje" lang="ts" /> es un acumulador igual a los
+  contadores de la base, con una diferencia: en lugar de sumar 1 suma una
+  fracción, la que devuelve <InlineCodeBlock code="frecuencia" lang="ts" />. Las
+  posiciones con <InlineCodeBlock code="SIN_DATO" lang="ts" /> se saltean: no suman
+  nada. El resultado da unos 45 y pico, porque son unas 95 posiciones leídas
+  sumando cada una entre 0 y 1.
+</p>
+<p>
+  <InlineCodeBlock code="ciudadMasParecida" lang="ts" /> recorre <InlineCodeBlock
+    code="ciudades()"
+    lang="ts"
+  /> y se queda con la del puntaje más alto. Es la misma forma que un contador,
+  pero en lugar de sumar guarda el mejor que vio hasta ahora, y hay que acordarse
+  de dos cosas a la vez: cuál es la mejor ciudad y qué puntaje saca.
+</p>
+<p>
+  La página tiene abajo un panel para probar las seis: elegir una, tocar
+  "Comparar", y ver si el puntaje más alto cae en la ciudad con la que fue armada.
+  Las seis tienen que acertar, y los tests lo verifican.
+</p>
+
+<h3>Una aclaración importante</h3>
+<p>
+  Que las seis acierten no significa que esto funcione con muestras de verdad.
+  Están armadas a partir de las frecuencias de su ciudad, así que son casos
+  fáciles por construcción: se hicieron para que el mecanismo se pueda ver andar.
+</p>
+<p>
+  Con las 441 muestras reales el método acierta apenas más que contestar siempre
+  "AMBA" sin mirar nada, que acierta el 38% de las veces nada más que porque AMBA
+  es la ciudad con más muestras. Las ciudades se diferencian de verdad en sus
+  frecuencias <strong>promedio</strong>, y eso es lo que muestra la tabla de la
+  consigna base; pero las personas de una misma ciudad son tan distintas entre sí
+  que con 99 posiciones no alcanza para ubicar a una persona concreta. Mirando los
+  puntajes de la página se ve por qué: las seis ciudades quedan siempre muy cerca
+  unas de otras.
+</p>
+
+<h2>¿Qué hay que editar?</h2>
+<p>
+  <InlineCodeBlock code="src/index.ts" lang="plaintext" /> — las cinco funciones
+  de la consigna base y, para la manija, las tres de abajo.
+</p>
+<p>
+  Todo lo demás ya está completo: <InlineCodeBlock
+    code="ciudades"
+    lang="ts"
+  /> e <InlineCodeBlock code="indiceDeSnp" lang="ts" /> (los ejemplos), las
+  rutas, <InlineCodeBlock code="src/lib/servidor.ts" lang="plaintext" />, <InlineCodeBlock
+    code="data/"
+    lang="plaintext"
+  /> y todo el <InlineCodeBlock code="frontend/" lang="plaintext" />.
+</p>
+
+<h2>Primeros pasos</h2>
+<p>
+  Antes de poder correr el programa, hay que instalar las dependencias del
+  proyecto. Esto se hace <strong>una sola vez</strong> con:
+</p>
+<CodeBlock lang="bash" code="npm install" />
+
+<h2>Cómo correr el programa</h2>
+<CodeBlock lang="bash" code="npm run start" />
+<p>
+  Se abre solo el browser en <InlineCodeBlock
+    code="http://localhost:3000"
+    lang="plaintext"
+  />.
+</p>
+
+<h2>Tests</h2>
+<p>
+  El proyecto incluye tests automáticos que se usan para la corrección. No hace
+  falta entenderlos ni modificarlos:
+</p>
+<CodeBlock
+  lang="bash"
+  code={`npm run test-base    # consigna base
+npm run test-manija  # consigna manija
+npm test             # todos`}
+/>
