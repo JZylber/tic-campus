@@ -1,0 +1,214 @@
+---
+import CodeBlock from "../../../../../components/articles/code-block/CodeBlock.astro";
+import InlineCodeBlock from "../../../../../components/articles/code-block/InlineCodeBlock.astro";
+import ImportantBox from "../../../../../components/articles/alertbox/ImportantBox.astro";
+
+export const partial = true;
+---
+
+<h2>Introducción</h2>
+<p>
+  Estamos en proyecto. Y proyecto es una locura de commits, estrés, entregas a
+  último momento, repositorios que se rompen, etc. Este trabajo está dedicado a
+  uno de esos proyectos, que relatan su historia a través de su historial de
+  commits.
+</p>
+<ImportantBox>
+  <p>
+    <strong>DISCLAIMER:</strong> Los nombres y los commits son reales. Las personas
+    involucradas no sólo dieron su consentimiento para ser una actividad, sino que
+    pidieron explícitamente que aparezcan sus nombres tal cual aparecen en los commits.
+  </p>
+</ImportantBox>
+
+<h2>Consigna base</h2>
+<p>
+  El frontend ya está hecho: un formulario para filtrar y la lista de commits.
+  Falta el backend. Dentro de <InlineCodeBlock
+    code="data/commits.json"
+    lang="plaintext"
+  /> hay la lista de commits, donde cada commit es un objeto de esta forma:
+</p>
+<CodeBlock
+  lang="json"
+  code={`{
+  "hash": "354f723316cb6b599c3bdedd8adbf669f6fee956",
+  "authorName": "WEBER JULIETA",
+  "authorEmail": "bw0007@est.ort.edu.ar",
+  "date": "2024-11-24 19:21:15-03:00",
+  "message": "ODIO CON MI VIDA PROGRAMAR"
+}`}
+/>
+<p>
+  En <InlineCodeBlock code="src/index.ts" lang="plaintext" /> hay que escribir la
+  ruta <InlineCodeBlock code="GET /api/commits" lang="plaintext" />, que recibe
+  en la URL el parámetro <InlineCodeBlock code="hash" lang="plaintext" /> (el hash
+  del commit a buscar) y contesta con la lista de commits encontrados.
+</p>
+<CodeBlock
+  lang="text"
+  code="GET /api/commits?hash=354f723316cb6b599c3bdedd8adbf669f6fee956"
+/>
+<p>
+  Los hash son únicos, y por lo tanto se debe devolver un único commit. Si el
+  parámetro <InlineCodeBlock code="hash" lang="plaintext" /> está vacío, devolver
+  todos los commits. <strong
+    >El commit debe devolverse dentro de una lista</strong
+  > (por más que sea un único elemento).
+</p>
+<p>Algunos hash divertidos para probar:</p>
+<ul>
+  <li>
+    <InlineCodeBlock
+      code="354f723316cb6b599c3bdedd8adbf669f6fee956"
+      lang="plaintext"
+    />
+  </li>
+  <li>
+    <InlineCodeBlock
+      code="6f58c3ee1fe8c7cbdc31728b18d3bdf22cd463bc"
+      lang="plaintext"
+    />
+  </li>
+  <li>
+    <InlineCodeBlock
+      code="7764054991e0e0d123d611243deb9f662d8216c8"
+      lang="plaintext"
+    />
+  </li>
+  <li>
+    <InlineCodeBlock
+      code="4a100b2e2391996d877f59f9e2e1fcdbc82521ed"
+      lang="plaintext"
+    />
+  </li>
+</ul>
+
+<h2>Consigna manija</h2>
+<p>
+  Las dos manijas modifican la misma ruta <InlineCodeBlock
+    code="GET /api/commits"
+    lang="plaintext"
+  />, en el mismo <InlineCodeBlock code="src/index.ts" lang="plaintext" />. <strong
+    >Se debe seguir cumpliendo la funcionalidad de los puntos anteriores.</strong
+  >
+</p>
+
+<h3>Manija I</h3>
+<p>
+  El frontend envía además el parámetro <InlineCodeBlock
+    code="autores"
+    lang="plaintext"
+  />, repetido una vez por cada autor tildado:
+</p>
+<CodeBlock
+  lang="text"
+  code="GET /api/commits?hash=&autores=micabod&autores=WEBER%20JULIETA"
+/>
+<p>
+  Devolver los commits cuyo <InlineCodeBlock
+    code="authorName"
+    lang="plaintext"
+  /> se encuentre entre esos autores. Si el parámetro no viene, no se filtra por
+  autor.
+</p>
+<p>
+  En Express, un parámetro que llega una vez es un <InlineCodeBlock
+    code="string"
+    lang="ts"
+  />, pero si se repite llega una lista de <InlineCodeBlock
+    code="string"
+    lang="ts"
+  />. Para no tener que distinguir los dos casos, en <InlineCodeBlock
+    code="src/index.ts"
+    lang="plaintext"
+  /> ya está escrita la función <InlineCodeBlock code="comoLista" lang="ts" /> (para
+  usar en la manija I): siempre devuelve una lista.
+</p>
+<CodeBlock
+  lang="ts"
+  code={`comoLista(req.query.autores); // ?autores=micabod                -> ['micabod']
+                              // ?autores=micabod&autores=JZylber -> ['micabod', 'JZylber']`}
+/>
+<p>
+  Si el parámetro no vino, <InlineCodeBlock code="comoLista" lang="ts" /> devuelve
+  una lista vacía: ahí no hay que filtrar por autor. Ese <InlineCodeBlock
+    code="if"
+    lang="ts"
+  /> lo escriben ustedes.
+</p>
+
+<h3>Manija II</h3>
+<p>
+  Llegan dos parámetros nuevos, <InlineCodeBlock
+    code="fechaInicio"
+    lang="plaintext"
+  /> y <InlineCodeBlock code="fechaFin" lang="plaintext" />, que, en caso de no
+  estar vacíos, deben marcar límites a las fechas de los commits retornados.
+</p>
+<ul>
+  <li>
+    Si <InlineCodeBlock code="fechaInicio" lang="plaintext" /> no es vacío, los commits
+    deben pertenecer a fechas iguales o posteriores.
+  </li>
+  <li>
+    Si <InlineCodeBlock code="fechaFin" lang="plaintext" /> no es vacío, los commits
+    deben pertenecer a fechas iguales o anteriores.
+  </li>
+  <li>
+    Si ambos no están vacíos, se debe devolver todo lo que esté entre las dos
+    fechas, inclusive.
+  </li>
+</ul>
+<ImportantBox>
+  <p>
+    <strong>TIP:</strong> comparar los strings es feo. Conviertan todo a tipo <InlineCodeBlock
+      code="Date"
+      lang="ts"
+    /> y usen las funciones de comparación de fechas. ¡Googleen!
+  </p>
+</ImportantBox>
+
+<h2>¿Qué hay que editar?</h2>
+<p>
+  <InlineCodeBlock code="src/index.ts" lang="plaintext" /> — la ruta de la consigna
+  base y, para las manijas, los filtros nuevos sobre esa misma ruta.
+</p>
+<p>
+  Todo lo demás ya está completo: <InlineCodeBlock
+    code="data/"
+    lang="plaintext"
+  />, la función <InlineCodeBlock code="comoLista" lang="ts" /> y todo el <InlineCodeBlock
+    code="frontend/"
+    lang="plaintext"
+  />.
+</p>
+
+<h2>Primeros pasos</h2>
+<p>
+  Antes de poder correr el programa, hay que instalar las dependencias del
+  proyecto. Esto se hace <strong>una sola vez</strong> con:
+</p>
+<CodeBlock lang="bash" code="npm install" />
+
+<h2>Cómo correr el programa</h2>
+<CodeBlock lang="bash" code="npm run start" />
+<p>
+  Se abre solo el browser en <InlineCodeBlock
+    code="http://localhost:3000"
+    lang="plaintext"
+  />.
+</p>
+
+<h2>Tests</h2>
+<p>
+  El proyecto incluye tests automáticos que se usan para la corrección. No hace
+  falta entenderlos ni modificarlos:
+</p>
+<CodeBlock
+  lang="bash"
+  code={`npm run test-base      # consigna base
+npm run test-manija-1  # manija I (autores)
+npm run test-manija-2  # manija II (fechas)
+npm test               # todos`}
+/>
