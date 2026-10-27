@@ -1,0 +1,377 @@
+---
+import CodeBlock from "../../../../../components/articles/code-block/CodeBlock.astro";
+import InlineCodeBlock from "../../../../../components/articles/code-block/InlineCodeBlock.astro";
+import ImportantBox from "../../../../../components/articles/alertbox/ImportantBox.astro";
+
+export const partial = true;
+---
+
+<h2>¿Qué es el puerto serie?</h2>
+<p>
+  Cuando conectamos un Arduino a la computadora por USB, además de darle
+  corriente se abre un <strong>canal de comunicación</strong>: el <strong
+    >puerto serie</strong
+  >. Por ahí el Arduino puede mandar datos a la computadora (y la computadora al
+  Arduino), <strong>de a un byte por vez</strong>, uno atrás del otro.
+</p>
+<p>
+  Hasta ahora, esos datos los mirábamos en el <em>Monitor Serie</em> del IDE de
+  Arduino. La idea de este apunte es leerlos desde <strong>nuestro programa</strong
+  > en Node, para poder guardarlos, procesarlos o mandarlos a una página web.
+</p>
+<p>Para eso hacen falta dos datos:</p>
+<ul>
+  <li>
+    <em>path</em>: el nombre del puerto, algo como <InlineCodeBlock
+      code="COM3"
+      lang="plaintext"
+    />. Es el mismo que aparece en <em>Herramientas → Puerto</em> en el IDE de
+    Arduino.
+  </li>
+  <li>
+    <em>baudRate</em>: la velocidad de la comunicación, en bits por segundo. Tiene
+    que ser <strong>la misma</strong> que pusimos en <InlineCodeBlock
+      code="Serial.begin()"
+      lang="cpp"
+    /> del Arduino.
+  </li>
+</ul>
+
+<h2>El Arduino de ejemplo</h2>
+<p>
+  Para todo el apunte vamos a usar un Arduino que lee un sensor (acá, un
+  potenciómetro en <em>A0</em>) y manda el valor <strong>una vez por línea</strong
+  >, 10 veces por segundo:
+</p>
+<CodeBlock
+  lang="cpp"
+  code={`void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  int valor = analogRead(A0);
+  Serial.println(valor);
+  delay(100);
+}`}
+/>
+<p>
+  <InlineCodeBlock code="Serial.println" lang="cpp" /> manda el número como texto
+  y, al final, un salto de línea: los caracteres <InlineCodeBlock
+    code="\r\n"
+    lang="plaintext"
+  />. Eso va a ser importante más adelante.
+</p>
+<ImportantBox warning="Un puerto, un programa">
+  <p>
+    El puerto serie lo puede usar <strong>un solo programa a la vez</strong>. Si
+    el Monitor Serie del IDE de Arduino está abierto, nuestro programa no va a
+    poder conectarse (y al revés). Lo mismo pasa al querer subir un sketch
+    nuevo: hay que cortar el programa de Node primero.
+  </p>
+</ImportantBox>
+
+<h2>Instalar <em>serialport</em></h2>
+<p>
+  A diferencia de <em>node:fs</em>, el puerto serie no viene con Node: usamos la
+  librería <strong>serialport</strong>, que se instala con npm:
+</p>
+<CodeBlock lang="bash" code="npm install serialport" />
+
+<h2>Abrir el puerto</h2>
+<p>
+  Importamos la clase <em>SerialPort</em> y creamos un objeto con el
+  <em>path</em> y el <em>baudRate</em>:
+</p>
+<CodeBlock
+  lang="ts"
+  code={`import { SerialPort } from "serialport";
+
+const port = new SerialPort({ path: "COM3", baudRate: 9600 });`}
+/>
+<p>
+  Con eso el puerto ya se abre solo. Pero puede fallar (el Arduino no está
+  enchufado, el nombre está mal, el Monitor Serie lo está usando...), así que
+  conviene escuchar el evento <em>error</em>:
+</p>
+<CodeBlock
+  lang="ts"
+  code={`function mostrarError(err: Error) {
+  console.log("Error en el puerto:", err.message);
+}
+
+port.on("error", mostrarError);`}
+/>
+<p>
+  <InlineCodeBlock code="port.on(evento, función)" lang="ts" /> significa: "cada
+  vez que pase <em>evento</em>, ejecutá esta <em>función</em>". Es la misma idea
+  que <InlineCodeBlock code="addEventListener" lang="ts" /> en el frontend: no
+  sabemos <strong>cuándo</strong> va a pasar, así que dejamos preparado qué hacer.
+</p>
+<ImportantBox warning="Sin paréntesis">
+  <p>
+    A <InlineCodeBlock code="port.on" lang="ts" /> le pasamos <InlineCodeBlock
+      code="mostrarError"
+      lang="ts"
+    />, no <InlineCodeBlock code="mostrarError()" lang="ts" />. Con paréntesis
+    la estaríamos <strong>ejecutando ahora</strong>, en vez de entregarla para
+    que el puerto la ejecute cuando haya un error. El <em>err</em> lo completa
+    el puerto al llamarla.
+  </p>
+</ImportantBox>
+
+<h2>Leer datos con el evento <em>data</em></h2>
+<p>
+  El evento que nos interesa es <em>data</em>: se dispara cada vez que llegan
+  bytes por el puerto. Lo que recibimos es un <InlineCodeBlock
+    code="Buffer"
+    lang="ts"
+  /> (bytes crudos, como cuando leíamos un archivo sin <em>"utf-8"</em>), así que
+  lo pasamos a texto con <InlineCodeBlock code=".toString()" lang="ts" />:
+</p>
+<CodeBlock
+  lang="ts"
+  code={`import { SerialPort } from "serialport";
+
+const port = new SerialPort({ path: "COM3", baudRate: 9600 });
+
+function mostrarError(err: Error) {
+  console.log("Error en el puerto:", err.message);
+}
+
+function mostrarDatos(chunk: Buffer) {
+  console.log("Llegó:", JSON.stringify(chunk.toString()));
+}
+
+port.on("error", mostrarError);
+port.on("data", mostrarDatos);`}
+/>
+<p>
+  Usamos <InlineCodeBlock code="JSON.stringify" lang="ts" /> solo para que se vean
+  los <InlineCodeBlock code="\r\n" lang="plaintext" /> en la consola. Lo ejecutamos
+  y... parece andar:
+</p>
+<CodeBlock
+  lang="bash"
+  code={`Llegó: "512\\r\\n"
+Llegó: "513\\r\\n"
+Llegó: "511\\r\\n"`}
+/>
+
+<h2>El problema: el stream no respeta las líneas</h2>
+<p>
+  Ahora queremos hacer algo útil con el número, por ejemplo avisar si el
+  potenciómetro pasa de la mitad:
+</p>
+<CodeBlock
+  lang="ts"
+  code={`function revisarValor(chunk: Buffer) {
+  const valor = Number(chunk.toString());
+  if (valor > 512) {
+    console.log("¡Arriba de la mitad!", valor);
+  } else {
+    console.log("Abajo de la mitad", valor);
+  }
+}
+
+port.on("data", revisarValor);`}
+/>
+<p>
+  Si lo dejamos corriendo un rato (o si bajamos el <em>delay</em> del Arduino),
+  tarde o temprano aparece esto:
+</p>
+<CodeBlock
+  lang="bash"
+  code={`Abajo de la mitad 498
+Abajo de la mitad 5
+Abajo de la mitad 1
+Abajo de la mitad NaN
+Abajo de la mitad 497`}
+/>
+<p>¿De dónde salieron ese <em>5</em>, ese <em>1</em> y ese <em>NaN</em>? Miremos qué llegó realmente en cada <em>data</em>:</p>
+<CodeBlock
+  lang="bash"
+  code={`Llegó: "498\\r\\n"
+Llegó: "5"
+Llegó: "1"
+Llegó: "0\\r\\n512\\r\\n"
+Llegó: "497\\r\\n"`}
+/>
+<p>
+  El Arduino mandó <em>498</em>, <em>510</em>, <em>512</em> y <em>497</em>, pero
+  el <em>510</em> llegó <strong>partido en tres pedazos</strong>, y uno de esos
+  pedazos vino <strong>pegado</strong> al número siguiente.
+</p>
+<p>
+  Esto pasa porque el puerto serie es un <strong>stream</strong>: un chorro de
+  bytes, uno atrás del otro, sin ninguna noción de "mensaje" o "línea". El evento
+  <em>data</em> nos entrega <strong>lo que haya llegado hasta ese momento</strong>:
+  a veces una línea entera, a veces medio número, a veces dos líneas juntas.
+  Que en la primera prueba saliera bien fue pura suerte.
+</p>
+<ImportantBox warning="Un data no es un mensaje">
+  <p>
+    Nunca asumir que cada evento <em>data</em> trae exactamente un mensaje
+    completo. Lo único garantizado es que los bytes llegan <strong
+      >en orden</strong
+    >; cómo se agrupan en cada <em>data</em> no lo controlamos nosotros.
+  </p>
+</ImportantBox>
+<p>
+  Lo que necesitamos es ir <strong>juntando</strong> los pedazos y recién
+  procesar cuando aparece el fin de línea. Lo podríamos programar a mano, pero
+  <em>serialport</em> ya trae algo que lo hace.
+</p>
+
+<h2>La solución: <em>ReadlineParser</em></h2>
+<p>
+  Un <strong>parser</strong> se "enchufa" al puerto con <InlineCodeBlock
+    code=".pipe()"
+    lang="ts"
+  />: recibe todos los bytes, los va acumulando y, cada vez que encuentra el
+  separador (<em>delimiter</em>), emite <strong>una línea completa</strong>. El
+  <em>ReadlineParser</em> hace justamente eso:
+</p>
+<CodeBlock
+  lang="ts"
+  code={`import { SerialPort, ReadlineParser } from "serialport";
+
+const port = new SerialPort({ path: "COM3", baudRate: 9600 });
+const parser = port.pipe(new ReadlineParser({ delimiter: "\\r\\n" }));
+
+function mostrarError(err: Error) {
+  console.log("Error en el puerto:", err.message);
+}
+
+function revisarValor(linea: string) {
+  const valor = Number(linea);
+  if (valor > 512) {
+    console.log("¡Arriba de la mitad!", valor);
+  } else {
+    console.log("Abajo de la mitad", valor);
+  }
+}
+
+port.on("error", mostrarError);
+parser.on("data", revisarValor);`}
+/>
+<p>Las diferencias con la versión anterior:</p>
+<ul>
+  <li>
+    Escuchamos <em>data</em> en el <strong>parser</strong>, no en el puerto.
+  </li>
+  <li>
+    Lo que llega ya es un <InlineCodeBlock code="string" lang="ts" /> (no hace
+    falta <em>.toString()</em>) y es <strong>siempre una línea entera</strong>,
+    sin el separador.
+  </li>
+  <li>
+    El <em>delimiter</em> es <InlineCodeBlock code="\r\n" lang="plaintext" />
+    porque eso es lo que agrega <InlineCodeBlock
+      code="Serial.println"
+      lang="cpp"
+    />.
+  </li>
+</ul>
+<p>Ahora, aunque los bytes lleguen partidos, la salida es siempre correcta:</p>
+<CodeBlock
+  lang="bash"
+  code={`Abajo de la mitad 498
+Abajo de la mitad 510
+Abajo de la mitad 512
+Abajo de la mitad 497`}
+/>
+<ImportantBox warning="Las dos puntas se tienen que poner de acuerdo">
+  <p>
+    El parser solo funciona si el Arduino termina cada mensaje con el mismo
+    separador que le pasamos en <em>delimiter</em>. Si en el Arduino usamos <InlineCodeBlock
+      code="Serial.print"
+      lang="cpp"
+    /> (sin <em>ln</em>), nunca llega un fin de línea y el parser no emite nada.
+  </p>
+</ImportantBox>
+
+<h2>Mandar datos al Arduino</h2>
+<p>
+  El puerto también sirve en la otra dirección. Para mandar datos usamos <InlineCodeBlock
+    code="port.write()"
+    lang="ts"
+  />, y conviene terminar cada mensaje con un salto de línea, por la misma razón
+  de antes:
+</p>
+<CodeBlock lang="ts" code={`port.write("PRENDER\\n");`} />
+<p>
+  Del lado del Arduino, <InlineCodeBlock
+    code="Serial.readStringUntil('\n')"
+    lang="cpp"
+  /> hace lo mismo que nuestro parser: junta caracteres hasta el salto de línea.
+</p>
+<CodeBlock
+  lang="cpp"
+  code={`void loop() {
+  if (Serial.available()) {
+    String mensaje = Serial.readStringUntil('\\n');
+    if (mensaje == "PRENDER") {
+      digitalWrite(LED_BUILTIN, HIGH);
+    }
+  }
+}`}
+/>
+
+<h2>Resumen</h2>
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Acción</th>
+      <th>Ejemplo</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Instalar la librería</td>
+      <td><InlineCodeBlock lang="bash" code="npm install serialport" /></td>
+    </tr>
+    <tr>
+      <td>Importar</td>
+      <td
+        ><InlineCodeBlock
+          lang="ts"
+          code='import { SerialPort, ReadlineParser } from "serialport";'
+        /></td
+      >
+    </tr>
+    <tr>
+      <td>Abrir el puerto</td>
+      <td
+        ><InlineCodeBlock
+          lang="ts"
+          code='const port = new SerialPort({ path: "COM3", baudRate: 9600 });'
+        /></td
+      >
+    </tr>
+    <tr>
+      <td>Leer de a líneas completas</td>
+      <td
+        ><InlineCodeBlock
+          lang="ts"
+          code='const parser = port.pipe(new ReadlineParser({ delimiter: "\r\n" }));'
+        /></td
+      >
+    </tr>
+    <tr>
+      <td>Reaccionar a cada línea</td>
+      <td
+        ><InlineCodeBlock
+          lang="ts"
+          code='parser.on("data", revisarValor);'
+        /></td
+      >
+    </tr>
+    <tr>
+      <td>Escribir al Arduino</td>
+      <td
+        ><InlineCodeBlock lang="ts" code='port.write("PRENDER\n");' /></td
+      >
+    </tr>
+  </tbody>
+</table>
