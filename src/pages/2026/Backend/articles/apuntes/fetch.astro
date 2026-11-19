@@ -1,0 +1,225 @@
+---
+import CodeBlock from "../../../../../components/articles/code-block/CodeBlock.astro";
+import InlineCodeBlock from "../../../../../components/articles/code-block/InlineCodeBlock.astro";
+import ImportantBox from "../../../../../components/articles/alertbox/ImportantBox.astro";
+
+export const partial = true;
+---
+
+<h2>¿Qué es <em>fetch</em>?</h2>
+<p>
+  Hasta ahora nuestro programa recibía pedidos (era el <strong>servidor</strong
+  >). Con <strong>fetch</strong> hacemos lo contrario: <strong
+    >le hacemos un pedido a otra API</strong
+  > y esperamos su respuesta, igual que hace Insomnia o el navegador.
+</p>
+<p>
+  <InlineCodeBlock code="fetch" lang="ts" /> ya viene con Node: no hay que instalar
+  nada ni importar nada.
+</p>
+
+<h2>Paso 1: un <em>GET</em> simple</h2>
+<p>
+  En su forma más simple, <InlineCodeBlock code="fetch" lang="ts" /> recibe solo la
+  URL y hace un <strong>GET</strong>:
+</p>
+<CodeBlock
+  lang="ts"
+  code={`const respuesta: Response = await fetch("https://jsonplaceholder.typicode.com/posts/1");`}
+/>
+<p>
+  Lo que devuelve es un objeto <InlineCodeBlock code="Response" lang="ts" />: la
+  respuesta del servidor, con su código de estado, sus headers y su cuerpo.
+</p>
+
+<h2>Paso 2: <em>await</em>, porque tarda</h2>
+<p>
+  Hablar con otra computadora por internet <strong>lleva tiempo</strong>. Por eso <InlineCodeBlock
+    code="fetch"
+    lang="ts"
+  /> no devuelve la respuesta directamente, sino una <strong>promesa</strong>: un
+  "te aviso cuando llegue". Con <InlineCodeBlock code="await" lang="ts" /> le decimos
+  al programa que espere ahí hasta que llegue.
+</p>
+<p>
+  Y para poder usar <InlineCodeBlock code="await" lang="ts" /> la función tiene que
+  declararse <InlineCodeBlock code="async" lang="ts" />:
+</p>
+<CodeBlock
+  lang="ts"
+  code={`async function pedirPost() {
+  const respuesta: Response = await fetch("https://jsonplaceholder.typicode.com/posts/1");
+  console.log(respuesta.status); // 200
+}
+
+pedirPost();`}
+/>
+<ImportantBox warning="Sin await no hay respuesta">
+  <p>
+    Si te olvidás el <InlineCodeBlock code="await" lang="ts" />, lo que queda en
+    la variable no es la respuesta sino la promesa, y todo lo que hagas después
+    con ella falla.
+  </p>
+</ImportantBox>
+
+<h2>Paso 3: un <em>POST</em> con JSON</h2>
+<p>
+  Para mandar datos hay que cambiar el método a <strong>POST</strong> y mandar el
+  cuerpo. <InlineCodeBlock code="fetch" lang="ts" /> recibe un segundo parámetro, un
+  objeto con las opciones:
+</p>
+<ul>
+  <li>
+    <InlineCodeBlock code="method" lang="ts" />: <em>"POST"</em>.
+  </li>
+  <li>
+    <InlineCodeBlock code="headers" lang="ts" />: avisamos que el cuerpo es JSON con
+    <InlineCodeBlock code="Content-Type" lang="plaintext" />.
+  </li>
+  <li>
+    <InlineCodeBlock code="body" lang="ts" />: el cuerpo, <strong>como texto</strong
+    >. Por eso el objeto se convierte con <InlineCodeBlock
+      code="JSON.stringify"
+      lang="ts"
+    />.
+  </li>
+</ul>
+<CodeBlock
+  lang="ts"
+  code={`async function crearPost(titulo: string, texto: string) {
+  const respuesta: Response = await fetch("https://jsonplaceholder.typicode.com/posts", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ title: titulo, body: texto, userId: 1 }),
+  });
+  console.log(respuesta.status); // 201
+}
+
+crearPost("Hola", "Mi primer post");`}
+/>
+<p>
+  Esta API de práctica (<em>JSONPlaceholder</em>) simula guardar el post y lo devuelve con un <InlineCodeBlock code="id" lang="ts" /> nuevo. Es lo mismo que, en Insomnia, elegir POST, poner el body en JSON y agregar el
+  header: solo que escrito en código.
+</p>
+
+<h2>Paso 4: leer el cuerpo con <em>.json()</em></h2>
+<p>
+  Hasta acá tenemos la <InlineCodeBlock code="Response" lang="ts" />, pero el
+  contenido que nos interesa (el cuerpo) todavía <strong>no fue leído</strong>.
+  Para convertirlo en un objeto se usa el método <InlineCodeBlock
+    code=".json()"
+    lang="ts"
+  />, que <strong>también tarda</strong>, así que lleva su propio <InlineCodeBlock
+    code="await"
+    lang="ts"
+  />:
+</p>
+<CodeBlock
+  lang="ts"
+  code={`type Post = {
+  id: number;
+  title: string;
+  body: string;
+  userId: number;
+};
+
+async function crearPost(titulo: string, texto: string) {
+  const respuesta: Response = await fetch("https://jsonplaceholder.typicode.com/posts", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ title: titulo, body: texto, userId: 1 }),
+  });
+  const datos: Post = await respuesta.json();
+  console.log(datos.id); // 101
+}
+
+crearPost("Hola", "Mi primer post");`}
+/>
+<p>
+  Son <strong>dos esperas distintas</strong>: primero el <InlineCodeBlock
+    code="await fetch(...)"
+    lang="ts"
+  /> (llega la respuesta) y después el <InlineCodeBlock
+    code="await respuesta.json()"
+    lang="ts"
+  /> (se lee el cuerpo). Como TypeScript no sabe qué trae el JSON, le decimos la
+  forma con un <InlineCodeBlock code="type" lang="ts" />.
+</p>
+
+<h2>Paso 5: devolver el resultado</h2>
+<p>
+  Una función <InlineCodeBlock code="async" lang="ts" /> también puede devolver un
+  valor con <InlineCodeBlock code="return" lang="ts" />, pero entonces <strong
+    >el que la llama también tiene que usar <InlineCodeBlock
+      code="await"
+      lang="ts"
+    /></strong
+  >. En el tipo de retorno va <InlineCodeBlock code="Promise<...>" lang="ts" />:
+</p>
+<CodeBlock
+  lang="ts"
+  code={`async function crearPost(titulo: string, texto: string): Promise<Post> {
+  const respuesta: Response = await fetch("https://jsonplaceholder.typicode.com/posts", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ title: titulo, body: texto, userId: 1 }),
+  });
+  const datos: Post = await respuesta.json();
+  return datos;
+}
+
+async function main() {
+  const nuevo: Post = await crearPost("Hola", "Mi primer post");
+  console.log(nuevo.title); // "Hola"
+}
+
+main();`}
+/>
+
+<h2>Cuando el servidor dice que no</h2>
+<p>
+  Si mandamos algo inválido o pedimos algo que no existe, el servidor contesta con un error como <InlineCodeBlock
+    code="400"
+    lang="plaintext"
+  /> o <InlineCodeBlock code="404" lang="plaintext" />. <InlineCodeBlock code="fetch" lang="ts" /> <strong>no se queja</strong>: un 400
+  también es una respuesta. Para detectarlo está <InlineCodeBlock
+    code="respuesta.ok"
+    lang="ts"
+  />, que es <InlineCodeBlock code="true" lang="ts" /> si el código es 2xx:
+</p>
+<CodeBlock
+  lang="ts"
+  code={`const respuesta: Response = await fetch(url, opciones);
+if (!respuesta.ok) {
+  console.log("La API contestó con error", respuesta.status);
+}`}
+/>
+
+<h2>Resumen</h2>
+<ol>
+  <li>
+    <InlineCodeBlock code="fetch(url, opciones)" lang="ts" /> hace el pedido. Con <InlineCodeBlock
+      code="method"
+      lang="ts"
+    />, <InlineCodeBlock code="headers" lang="ts" /> y <InlineCodeBlock
+      code="body"
+      lang="ts"
+    /> se hace un POST con JSON.
+  </li>
+  <li>
+    Se espera con <InlineCodeBlock code="await" lang="ts" />, dentro de una función <InlineCodeBlock
+      code="async"
+      lang="ts"
+    />.
+  </li>
+  <li>
+    El cuerpo se convierte en objeto con <InlineCodeBlock
+      code="await respuesta.json()"
+      lang="ts"
+    />.
+  </li>
+  <li>
+    Se puede chequear <InlineCodeBlock code="respuesta.ok" lang="ts" /> para saber
+    si salió bien.
+  </li>
+</ol>

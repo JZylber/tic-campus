@@ -1,0 +1,197 @@
+---
+import CodeBlock from "../../../../../components/articles/code-block/CodeBlock.astro";
+import InlineCodeBlock from "../../../../../components/articles/code-block/InlineCodeBlock.astro";
+import ImportantBox from "../../../../../components/articles/alertbox/ImportantBox.astro";
+
+export const partial = true;
+---
+
+<h2>Consigna base</h2>
+<p>
+  ¡La carrera por la bomba está en marcha! Los Estados Unidos llevan a cabo el
+  proyecto Manhattan, en donde las mentes más brillantes del mundo científico
+  trabajan a contrarreloj para desarrollar la primera bomba atómica y derrotar a
+  la Alemania nazi.
+</p>
+<p>
+  La primera detonación de prueba fue llamada Trinity. Te encomendaron hacer el
+  sistema que autentica a quien intenta detenerla (o detonarla). Pero la bomba no
+  acepta una contraseña fija: <strong>te lanza un desafío distinto cada vez</strong
+  >, y la única que sabe resolverlo es la API del laboratorio de Los Álamos. Tu
+  programa es el que está en el medio: lee el desafío de la placa, se lo pregunta
+  a la API y le devuelve la respuesta a la placa.
+</p>
+<p>
+  Para practicar tenés placas de prueba que se comportan igual que la bomba, pero
+  <strong>te dejan intentar todas las veces que quieras</strong>.
+</p>
+
+<h3>Cómo habla la placa</h3>
+<p>
+  La placa tiene un puerto serial que se conecta a la computadora por USB. El
+  baudrate es de <InlineCodeBlock code="115200" lang="plaintext" />. Cada mensaje
+  es <strong>un objeto JSON en una línea</strong> (termina con <InlineCodeBlock
+    code="\n"
+    lang="plaintext"
+  />), tanto los que manda ella como los que le mandás vos. Para leer de a una
+  línea por vez se usa un <InlineCodeBlock code="ReadlineParser" lang="ts" /> (ya
+  importado, junto con <InlineCodeBlock code="SerialPort" lang="ts" />); cada línea
+  es un texto que tenés que convertir con <InlineCodeBlock
+    code="JSON.parse"
+    lang="ts"
+  />.
+</p>
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Quién</th>
+      <th>Mensaje</th>
+      <th>Qué significa</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>placa</td>
+      <td><InlineCodeBlock code={`{"tipo":"disponible"}`} lang="json" /></td>
+      <td>La placa está lista. Lo repite cada segundo hasta que le contestes.</td>
+    </tr>
+    <tr>
+      <td>vos</td>
+      <td><InlineCodeBlock code={`{"dni":"2151"}`} lang="json" /></td>
+      <td>
+        Los últimos 4 dígitos de tu DNI, <strong>como texto</strong> (puede empezar
+        con 0).
+      </td>
+    </tr>
+    <tr>
+      <td>placa</td>
+      <td>
+        <InlineCodeBlock code={`{"tipo":"desafio","nonce":483921}`} lang="json" />
+      </td>
+      <td>El desafío: un número distinto en cada intento.</td>
+    </tr>
+    <tr>
+      <td>vos</td>
+      <td>
+        <InlineCodeBlock code={`{"respuesta":"0986d4ed"}`} lang="json" />
+      </td>
+      <td>La respuesta que te da la API.</td>
+    </tr>
+    <tr>
+      <td>placa</td>
+      <td>
+        <InlineCodeBlock code={`{"tipo":"resultado","ok":true}`} lang="json" />
+      </td>
+      <td>Si la respuesta fue correcta o no.</td>
+    </tr>
+    <tr>
+      <td>placa</td>
+      <td>
+        <InlineCodeBlock code={`{"tipo":"error","detalle":"..."}`} lang="json" />
+      </td>
+      <td>Algo salió mal (JSON inválido, sin intentos, etc.).</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>Cómo habla la API</h3>
+<p>
+  <InlineCodeBlock
+    code="POST https://proyectos-tic.ort.edu.ar/trinity/api/respuesta"
+    lang="plaintext"
+  />, con un JSON en el body:
+</p>
+<CodeBlock lang="json" code={`{ "dni": "2151", "nonce": 483921 }`} />
+<p>
+  Responde <InlineCodeBlock code={`{ "respuesta": "0986d4ed" }`} lang="json" />. Si
+  el <InlineCodeBlock code="dni" lang="plaintext" /> no son 4 dígitos en texto o el
+  <InlineCodeBlock code="nonce" lang="plaintext" /> no es un número entero, responde
+  con error <InlineCodeBlock code="400" lang="plaintext" />. Acordate de mandar el
+  header <InlineCodeBlock code="Content-Type: application/json" lang="plaintext" />.
+</p>
+
+<h3>Qué hay que hacer</h3>
+<ol>
+  <li>
+    Abrir el puerto de tu placa. El puerto lo ves en el Arduino IDE (Herramientas
+    → Puerto) o en el Administrador de dispositivos (Puertos COM y LPT); se parece
+    a <InlineCodeBlock code="COM3" lang="plaintext" />.
+  </li>
+  <li>
+    Leer los mensajes de la placa de a una línea por vez y convertirlos a <InlineCodeBlock
+      code="Mensaje"
+      lang="ts"
+    />.
+  </li>
+  <li>
+    Cuando la placa avisa que está <InlineCodeBlock
+      code="disponible"
+      lang="plaintext"
+    />, enviarle tu DNI.
+  </li>
+  <li>
+    Cuando manda el <InlineCodeBlock code="desafio" lang="plaintext" />, pedirle la
+    respuesta a la API con <InlineCodeBlock code="fetch" lang="ts" /> y enviársela
+    a la placa.
+  </li>
+  <li>
+    Cuando manda el <InlineCodeBlock code="resultado" lang="plaintext" />, mostrar
+    por consola si fue correcto (<InlineCodeBlock code="true" lang="ts" /> o <InlineCodeBlock
+      code="false"
+      lang="ts"
+    />) y cerrar el puerto.
+  </li>
+</ol>
+<p>También hay que completar tu DNI.</p>
+
+<h3>Ejemplo</h3>
+<CodeBlock lang="text" code="true" />
+
+<h2>La bomba real</h2>
+<p>
+  Ahora sí: la bomba "real" que tenemos los profes. Es el mismo programa,
+  apuntando al puerto de la bomba. La diferencia es que <strong
+    >tiene un solo intento</strong
+  >: si le mandás una respuesta incorrecta, no te deja volver a probar.
+</p>
+<p>
+  La actividad se considera hecha cuando se acercan a la mesa y logren desactivar
+  la bomba. ¡Tienen un solo intento!
+</p>
+
+<h2>¿Qué hay que editar?</h2>
+<CodeBlock lang="text" code="src/index.ts" />
+<p>
+  La dirección de la API y el tipo <InlineCodeBlock code="Mensaje" lang="ts" /> ya
+  están completos y no hace falta tocarlos.
+</p>
+
+<h2>Primeros pasos</h2>
+<p>
+  Antes de poder correr el programa, hay que instalar las dependencias del
+  proyecto (incluye la librería <InlineCodeBlock code="serialport" lang="plaintext" />).
+  Esto se hace <strong>una sola vez</strong> con:
+</p>
+<CodeBlock lang="bash" code="npm install" />
+<ImportantBox>
+  <p>
+    El proyecto ya trae un <InlineCodeBlock code=".gitignore" lang="plaintext" /> que excluye lo que no hay que commitear: <strong>no lo borren</strong>. Veo un <InlineCodeBlock
+      code="node_modules"
+      lang="plaintext"
+    /> pusheado y se llevan la materia automáticamente.
+  </p>
+</ImportantBox>
+
+<h2>Cómo correr el programa</h2>
+<p>Con la placa conectada por USB:</p>
+<CodeBlock lang="bash" code="npm run start" />
+
+<h2>Tests</h2>
+<p>
+  El proyecto incluye tests automáticos que se usan para la corrección:
+</p>
+<CodeBlock lang="bash" code="npm test" />
+<p>
+  No hace falta entenderlos ni modificarlos. Son para verificar que el programa
+  funciona correctamente.
+</p>

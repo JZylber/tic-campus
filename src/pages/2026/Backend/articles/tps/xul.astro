@@ -1,0 +1,167 @@
+---
+import CodeBlock from "../../../../../components/articles/code-block/CodeBlock.astro";
+import InlineCodeBlock from "../../../../../components/articles/code-block/InlineCodeBlock.astro";
+import ImportantBox from "../../../../../components/articles/alertbox/ImportantBox.astro";
+
+export const partial = true;
+---
+
+<h2>Consigna</h2>
+<p>
+  El Museo Xul Solar quiere que sus visitantes puedan recorrer la colección
+  online y marcar las obras que más les gustan. Para eso necesita una
+  <strong>API HTTP</strong> que después va a usar su página web.
+</p>
+<p>
+  La colección ya está cargada en <InlineCodeBlock
+    code="data/obras.json"
+    lang="plaintext"
+  />: 84 obras, cada una de esta forma:
+</p>
+<CodeBlock
+  lang="json"
+  code={`{
+  "id": 1,
+  "título": "Dos Anjos",
+  "año": 1915,
+  "imagen": "/imagenes/1.jpg"
+}`}
+/>
+<p>
+  Las imágenes están en la carpeta <InlineCodeBlock
+    code="imagenes/"
+    lang="plaintext"
+  /> y el servidor ya las sirve. Por ejemplo, con el servidor corriendo, <InlineCodeBlock
+    code="http://localhost:3000/imagenes/1.jpg"
+    lang="plaintext"
+  /> muestra la primera obra.
+</p>
+<p>
+  <strong>Ustedes diseñan la API</strong>: qué rutas existen, qué método HTTP
+  usa cada una, qué datos recibe, qué devuelve y cómo se guardan los datos. No
+  hay una única respuesta correcta.
+</p>
+
+<h3>Funcionalidades requeridas</h3>
+<p>La API tiene que permitir:</p>
+<ol>
+  <li>
+    <strong>Registrarse</strong>: crear un usuario nuevo con nombre de usuario y
+    contraseña.
+  </li>
+  <li><strong>Iniciar sesión</strong>: con nombre de usuario y contraseña.</li>
+  <li><strong>Ver todas las obras</strong> de la colección.</li>
+  <li><strong>Dar like</strong> a una obra.</li>
+  <li><strong>Sacar el like</strong> de una obra.</li>
+  <li><strong>Ver las obras a las que un usuario le dio like.</strong></li>
+</ol>
+
+<h3>Reglas</h3>
+<ul>
+  <li>No puede haber dos usuarios con el mismo nombre de usuario.</li>
+  <li>Iniciar sesión con datos incorrectos tiene que fallar.</li>
+  <li>Un usuario no puede darle like dos veces a la misma obra.</li>
+  <li>
+    Solo se puede dar like a una obra que exista, y lo tiene que dar un usuario
+    que exista.
+  </li>
+  <li>
+    Cada error responde con un código de estado HTTP que tenga sentido y un
+    mensaje que explique qué pasó.
+  </li>
+  <li>
+    Los usuarios y los likes se guardan en archivos dentro de <InlineCodeBlock
+      code="data/"
+      lang="plaintext"
+    />: si se reinicia el servidor, no se pierde nada.
+  </li>
+</ul>
+
+<h2>Entregables</h2>
+<ol>
+  <li>
+    <strong>La API</strong>, en <InlineCodeBlock
+      code="src/server.ts"
+      lang="plaintext"
+    />.
+  </li>
+  <li>
+    <strong>La tabla de Endpoints</strong> del <InlineCodeBlock
+      code="README.md"
+      lang="plaintext"
+    />, completa: cada ruta con su método, qué recibe y qué responde (incluyendo
+    los errores).
+  </li>
+  <li>
+    <strong>Una colección de Insomnia</strong> exportada (<InlineCodeBlock
+      code="insomnia.json"
+      lang="plaintext"
+    /> en la raíz del proyecto) con un pedido por cada funcionalidad <strong
+      >y</strong
+    > por cada caso de error de las reglas.
+  </li>
+</ol>
+
+<h2>Aprobación</h2>
+<p>
+  Para aprobar este trabajo práctico no alcanza con entregar el código y las
+  pruebas: también va a haber una instancia oral en la que tienen que:
+</p>
+<ul>
+  <li>Mostrar el proyecto funcionando con Insomnia.</li>
+  <li>Demostrar que lo hicieron ustedes.</li>
+  <li>Hacer pequeñas modificaciones a pedido del docente.</li>
+</ul>
+
+<h2>¿Qué hay que editar?</h2>
+<CodeBlock lang="text" code={`src/server.ts\ndata/\nREADME.md`} />
+<p>
+  En <InlineCodeBlock code="src/server.ts" lang="plaintext" /> van todas las
+  rutas; la ruta <InlineCodeBlock code="/health" lang="plaintext" /> y el servicio
+  de imágenes ya están hechos. En <InlineCodeBlock code="data/" lang="plaintext" />
+  pueden crear los archivos JSON que necesiten. En el <InlineCodeBlock
+    code="README.md"
+    lang="plaintext"
+  /> completan la tabla de Endpoints.
+</p>
+<ImportantBox>
+  <p>
+    No modifiquen <InlineCodeBlock code="data/obras.json" lang="plaintext" /> ni
+    la carpeta <InlineCodeBlock code="imagenes/" lang="plaintext" />.
+  </p>
+</ImportantBox>
+
+<h2>Primeros pasos</h2>
+<p>
+  Antes de poder correr el servidor, hay que instalar las dependencias del
+  proyecto. Esto se hace <strong>una sola vez</strong> con:
+</p>
+<CodeBlock lang="bash" code="npm install" />
+<ImportantBox>
+  <p>
+    El proyecto ya trae un <InlineCodeBlock code=".gitignore" lang="plaintext" /> que excluye lo que no hay que commitear: <strong>no lo borren</strong>. Veo un <InlineCodeBlock
+      code="node_modules"
+      lang="plaintext"
+    /> pusheado y se llevan la materia automáticamente.
+  </p>
+</ImportantBox>
+
+<h2>Cómo correr el servidor</h2>
+<CodeBlock
+  lang="bash"
+  code={`npm run dev     # se reinicia solo al guardar cambios en src/
+npm run start   # sin recarga automática`}
+/>
+<p>
+  El servidor queda en <InlineCodeBlock
+    code="http://localhost:3000"
+    lang="plaintext"
+  />. Prueben las rutas con Insomnia.
+</p>
+
+<h2>Chequeos</h2>
+<CodeBlock
+  lang="bash"
+  code={`npm run lint
+npm run typecheck`}
+/>
