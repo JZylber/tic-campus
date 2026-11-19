@@ -1,0 +1,268 @@
+---
+export const partial = true;
+---
+
+<div class="mt-10 mb-8">
+  <div class="mb-4">
+    <h2 class="text-2xl font-bold text-gray-800">Estado de Entregas</h2>
+    <span class="text-gray-600"
+      >Seguimiento de Trabajos Prácticos y Correcciones</span
+    >
+  </div>
+
+  <!-- Leyenda de colores -->
+  <div
+    class="mb-4 flex gap-4 text-sm text-gray-700 bg-gray-50 p-3 rounded-md border border-gray-200"
+  >
+    <div><span>✅</span> Aprobado / Entregado</div>
+    <div><span class="text-orange-500 font-bold">R</span> Reentregar (&lt; 6)</div>
+    <div><span class="text-red-600 font-bold">NE</span> No Entregado</div>
+  </div>
+
+  <div class="overflow-x-auto shadow-sm rounded-lg border border-gray-200">
+    <table class="min-w-full bg-white text-sm text-left">
+      <thead class="bg-gray-100 text-gray-700 font-semibold">
+        <tr>
+          <th class="px-4 py-3 border-b">Apellido y Nombre</th>
+          <th class="px-4 py-3 border-b text-center">TP 0</th>
+          <th class="px-4 py-3 border-b text-center">TP 1: Servo</th>
+          <th class="px-4 py-3 border-b text-center">TP: Vectores</th>
+          <th class="px-4 py-3 border-b text-center">TP 2: Vúmetro</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200 text-gray-800">
+        <tr class="hover:bg-gray-50">
+          <td class="px-4 py-2 font-medium">Bordoli, Valentino</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center text-red-600 font-bold">NE</td>
+        </tr>
+        <tr class="hover:bg-gray-50">
+          <td class="px-4 py-2 font-medium">Cabral, Catalina Isabel</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+        </tr>
+        <tr class="hover:bg-gray-50">
+          <td class="px-4 py-2 font-medium">Cerruti, Lucas</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center text-red-600 font-bold">NE</td>
+          <td class="px-4 py-2 text-center">✅</td>
+        </tr>
+        <tr class="hover:bg-gray-50">
+          <td class="px-4 py-2 font-medium">Chinski, Enzo</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center text-red-600 font-bold">NE</td>
+          <td class="px-4 py-2 text-center text-red-600 font-bold">NE</td>
+        </tr>
+        <tr class="hover:bg-gray-50">
+          <td class="px-4 py-2 font-medium">Coello Cohen, Tobias</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+        </tr>
+        <tr class="hover:bg-gray-50">
+          <td class="px-4 py-2 font-medium">Córdoba Dip, Ulises</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center text-red-600 font-bold">NE</td>
+          <td class="px-4 py-2 text-center text-red-600 font-bold">NE</td>
+        </tr>
+        <tr class="hover:bg-gray-50">
+          <td class="px-4 py-2 font-medium">Dejtiar, Joaquin</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+        </tr>
+        <tr class="hover:bg-gray-50">
+          <td class="px-4 py-2 font-medium">Donnewald, Chloé</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+        </tr>
+        <tr class="hover:bg-gray-50">
+          <td class="px-4 py-2 font-medium">Erosa, Santiago</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center text-red-600 font-bold">NE</td>
+        </tr>
+        <tr class="hover:bg-gray-50">
+          <td class="px-4 py-2 font-medium">Fogolin Lagares, Facundo</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center text-red-600 font-bold">NE</td>
+          <td class="px-4 py-2 text-center">✅</td>
+        </tr>
+        <tr class="hover:bg-gray-50">
+          <td class="px-4 py-2 font-medium">Furman, Emanuel</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+        </tr>
+        <tr class="hover:bg-gray-50">
+          <td class="px-4 py-2 font-medium">Ganci, Valentino</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center text-red-600 font-bold">NE</td>
+          <td class="px-4 py-2 text-center">✅</td>
+        </tr>
+        <tr class="hover:bg-gray-50">
+          <td class="px-4 py-2 font-medium">García Santucci, Tomás</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+        </tr>
+        <tr class="hover:bg-gray-50">
+          <td class="px-4 py-2 font-medium">Gaudio, Tomás</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+        </tr>
+        <tr class="hover:bg-gray-50">
+          <td class="px-4 py-2 font-medium">Gravano, Gaston</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center text-orange-500 font-bold">R</td>
+        </tr>
+        <tr class="hover:bg-gray-50">
+          <td class="px-4 py-2 font-medium">Grodek, Agustín</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+        </tr>
+        <tr class="hover:bg-gray-50">
+          <td class="px-4 py-2 font-medium">Gutkind, Eli</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center text-orange-500 font-bold">R</td>
+        </tr>
+        <tr class="hover:bg-gray-50">
+          <td class="px-4 py-2 font-medium">Hochbaum, Noah</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center text-red-600 font-bold">NE</td>
+          <td class="px-4 py-2 text-center">✅</td>
+        </tr>
+        <tr class="hover:bg-gray-50">
+          <td class="px-4 py-2 font-medium">Mai, Ramiro</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+        </tr>
+        <tr class="hover:bg-gray-50">
+          <td class="px-4 py-2 font-medium">Mazziotti, Facundo</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+        </tr>
+        <tr class="hover:bg-gray-50">
+          <td class="px-4 py-2 font-medium">Micenmacher, Uriel</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center text-red-600 font-bold">NE</td>
+          <td class="px-4 py-2 text-center text-red-600 font-bold">NE</td>
+          <td class="px-4 py-2 text-center text-red-600 font-bold">NE</td>
+        </tr>
+        <tr class="hover:bg-gray-50">
+          <td class="px-4 py-2 font-medium">Michkin, Mateo</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+        </tr>
+        <tr class="hover:bg-gray-50">
+          <td class="px-4 py-2 font-medium">Nitkin, Joaquin</td>
+          <td class="px-4 py-2 text-center text-orange-500 font-bold">R</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center text-orange-500 font-bold">R</td>
+        </tr>
+        <tr class="hover:bg-gray-50">
+          <td class="px-4 py-2 font-medium">Orti, Dante</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center text-red-600 font-bold">NE</td>
+          <td class="px-4 py-2 text-center text-red-600 font-bold">NE</td>
+        </tr>
+        <tr class="hover:bg-gray-50">
+          <td class="px-4 py-2 font-medium">Pipino, Delfina</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+        </tr>
+        <tr class="hover:bg-gray-50">
+          <td class="px-4 py-2 font-medium">Ramon, Santino</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+        </tr>
+        <tr class="hover:bg-gray-50">
+          <td class="px-4 py-2 font-medium">Schultschik, Bautista</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center text-red-600 font-bold">NE</td>
+          <td class="px-4 py-2 text-center">✅</td>
+        </tr>
+        <tr class="hover:bg-gray-50">
+          <td class="px-4 py-2 font-medium">Seoane, Constantino</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center text-orange-500 font-bold">R</td>
+          <td class="px-4 py-2 text-center text-red-600 font-bold">NE</td>
+        </tr>
+        <tr class="hover:bg-gray-50">
+          <td class="px-4 py-2 font-medium">Serpero, Valentino</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+        </tr>
+        <tr class="hover:bg-gray-50">
+          <td class="px-4 py-2 font-medium">Siraly, Franco</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+        </tr>
+        <tr class="hover:bg-gray-50">
+          <td class="px-4 py-2 font-medium">Wymerszberg, Felipe Simon</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center">✅</td>
+        </tr>
+        <tr class="hover:bg-gray-50">
+          <td class="px-4 py-2 font-medium">Yukelson, Marcos</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center text-red-600 font-bold">NE</td>
+          <td class="px-4 py-2 text-center text-red-600 font-bold">NE</td>
+          <td class="px-4 py-2 text-center">✅</td>
+        </tr>
+        <tr class="hover:bg-gray-50">
+          <td class="px-4 py-2 font-medium">Zalazar, Maximo</td>
+          <td class="px-4 py-2 text-center text-orange-500 font-bold">R</td>
+          <td class="px-4 py-2 text-center">✅</td>
+          <td class="px-4 py-2 text-center text-red-600 font-bold">NE</td>
+          <td class="px-4 py-2 text-center text-red-600 font-bold">NE</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
