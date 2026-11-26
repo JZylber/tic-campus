@@ -28,10 +28,13 @@ const { subject, position, course, year } = Astro.props;
     <h1 class="text-[30px] md:text-[36px] font-bold text-center p-4">
       Reentregas
     </h1>
+    <p class="text-sh-red font-bold text-center text-[18px]">
+      Reentregas deshabilitadas
+    </p>
     <div class="flex items-center justify-center pt-4">
       <div
-        @click="formOpen = !formOpen"
-        class="w-full md:w-1/2 flex justify-center items-center rounded-xl gap-x-4 bg-sh-purple px-4 py-2 cursor-pointer hover:shadow-lg"
+        aria-disabled="true"
+        class="w-full md:w-1/2 flex justify-center items-center rounded-xl gap-x-4 bg-sh-purple px-4 py-2 opacity-50 cursor-not-allowed"
       >
         <span class="max-md:hidden material-symbols-outlined !text-[30px]"
           >redo</span
